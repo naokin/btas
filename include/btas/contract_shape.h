@@ -150,17 +150,18 @@ void indexed_contract_shape(const TinyVector<int, NA>& a_symbols,
 {
   std::map<int, int> map_a_symbl;
   for(int i = 0; i < NA; ++i) map_a_symbl.insert(std::make_pair(a_symbols[i], i));
-  BTAS_THROW(map_a_symbl.size() != NA, "btas::get_indexed_contract: found duplicate symbols in A");
+  BTAS_THROW(map_a_symbl.size() == NA, "btas::get_indexed_contract: found duplicate symbols in A");
 
   std::map<int, int> map_b_symbl;
   for(int i = 0; i < NB; ++i) map_b_symbl.insert(std::make_pair(b_symbols[i], i));
-  BTAS_THROW(map_b_symbl.size() != NB, "btas::get_indexed_contract: found duplicate symbols in B");
+  BTAS_THROW(map_b_symbl.size() == NB, "btas::get_indexed_contract: found duplicate symbols in B");
 
   std::vector<int> a_cont_tmp;
   std::vector<int> b_cont_tmp;
   std::vector<int> axbsym_tmp;
   for(int i = 0; i < NA; ++i) {
-    if(typename std::map<int, int>::iterator ib = map_b_symbl.find(a_symbols[i]) != map_b_symbl.end()) {
+    typename std::map<int, int>::iterator ib = map_b_symbl.find(a_symbols[i]);
+    if(ib != map_b_symbl.end()) {
       a_cont_tmp.push_back(i);
       b_cont_tmp.push_back(ib->second);
     }
@@ -173,8 +174,8 @@ void indexed_contract_shape(const TinyVector<int, NA>& a_symbols,
       axbsym_tmp.push_back(b_symbols[i]);
     }
   }
-  BTAS_THROW(a_cont_tmp.size() != K,         "btas::get_indexed_contract: # of contracted symbols is inconsistent");
-  BTAS_THROW(axbsym_tmp.size() != NA+NB-K-K, "btas::get_indexed_contract: # of uncontracted symbols != ranks of C");
+  BTAS_THROW(a_cont_tmp.size() == K,         "btas::get_indexed_contract: # of contracted symbols is inconsistent");
+  BTAS_THROW(axbsym_tmp.size() == NA+NB-K-K, "btas::get_indexed_contract: # of uncontracted symbols != ranks of C");
 
   for(int i = 0; i < K; ++i) {
     a_contract[i] = a_cont_tmp[i];

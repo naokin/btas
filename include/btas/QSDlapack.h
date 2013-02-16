@@ -2,12 +2,12 @@
 #define _BTAS_QSDLAPACK_H 1
 
 #include <btas/btas_defs.h>
-#include <btas/QSDArray.h>
-#include <btas/DiagonalQSDArray.h>
-#include <btas/QSDmerge.h>
-#include <btas/SDblas.h>
-#include <btas/auglist.h>
 #include <btas/Dlapack.h>
+#include <btas/SDblas.h>
+#include <btas/QSDArray.h>
+#include <btas/QSDmerge.h>
+#include <btas/DiagonalQSDArray.h>
+#include <btas/auglist.h>
 
 namespace btas
 {

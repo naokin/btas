@@ -565,6 +565,29 @@ void SDgemm(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb,
   }
 }
 
+// (general matrix) * (diagonal matrix)
+template<int NA, int NB>
+void SDdimd(SDArray<NA>& a, const SDArray<NB>& b)
+{
+  int stride = b.size_total();
+  for(typename SDArray<NA>::iterator ia = a.begin(); ia != a.end(); ++ia) {
+    typename SDArray<NB>::const_iterator ib = b.find(ia->first % stride);
+    if(ib != b.end()) Ddimd((*ia->second), (*ib->second));
+  }
+}
+
+// (diagonal matrix) * (general matrix)
+template<int NA, int NB>
+void SDdidm(const SDArray<NA>& a, SDArray<NB>& b)
+{
+  const TinyVector<int, NB>& b_shape = b.shape();
+  int stride = std::accumulate(b_shape.begin()+NA, b_shape.end(), 1, std::multiplies<int>());
+  for(typename SDArray<NB>::iterator ib = b.begin(); ib != b.end(); ++ib) {
+    typename SDArray<NA>::const_iterator ia = a.find(ib->first / stride);
+    if(ia != a.end()) Ddidm((*ia->second), (*ib->second));
+  }
+}
+
 // BLAS WRAPPER
 template<int NA, int NB, int NC>
 void SDblas_wrapper(const double& alpha, const SDArray<NA>& a, const SDArray<NB>& b,

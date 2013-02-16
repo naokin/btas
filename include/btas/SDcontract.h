@@ -65,7 +65,7 @@ void SDindexed_contract
  double beta,
        SDArray<NC>& c, const TinyVector<int, NC>& c_symbols)
 {
-  int K = (NA + NB - NC) / 2;
+  const int K = (NA + NB - NC) / 2;
   TinyVector<int, K> a_contract;
   TinyVector<int, K> b_contract;
   TinyVector<int, NC> axb_symbols;

@@ -287,7 +287,77 @@ QSDgesvd
   QSDindexed_contract
 ####################################################################################################
 
+####################################################################################################
++ Convenient Driver Routines
+----------------------------------------------------------------------------------------------------
+  [Q,S,D]: DArray, SDArray, and QSDArray are supported
+  [Q,D]  : DArray,          and QSDArray are supported
+----------------------------------------------------------------------------------------------------
 
+#include <contract.h>
 
+//
+// cf) calling by a(i,j,k,l) with index [1,3] and b(p,q,r,s) with index[2,1]
+//     contracts (j,r) and (l,q) indices to result in c(i,k,p,s)
+//
+void contract
+(double alpha, const [Q,S,D]Array<NA>& a, const TinyVector<int, NA>& a_index_contract,
+               const [Q,S,D]Array<NB>& b, const TinyVector<int, NB>& b_index_contract,
+ double beta,        [Q,S,D]Array<NC>& c);
 
+//
+// cf) calling by a(i,j,k,l), b(k,p,i,q), and c(q,j,l,p) contracts i and k indices
+//     then resulting c'(j,l,p,q) tensor is permuted to c(q,j,l,p)
+//
+void indexed_contract
+(double alpha, const [Q,S,D]Array<NA>& a, const TinyVector<int, NA>& a_symbols,
+               const [Q,S,D]Array<NB>& b, const TinyVector<int, NB>& b_symbols,
+ double beta,        [Q,S,D]Array<NC>& c, const TinyVector<int, NC>& c_symbols);
+
+----------------------------------------------------------------------------------------------------
+
+#include <permute.h>
+
+//
+// cf) x(i,j,k,l) with index(2,1,3,0) returns y(k,j,l,i)
+//
+void permute
+(const [Q,S,D]Array<N>& x, const TinyVector<int, N>& index_permute,
+       [Q,S,D]Array<N>& y);
+
+//
+// cf) automatically computes index_permute, call by x(i,j,k,l) and y(k,j,l,i) directly 
+//
+void indexed_permute
+(const [Q,S,D]Array<N>& x, const TinyVector<int, N>& x_symbols,
+       [Q,S,D]Array<N>& y, const TinyVector<int, N>& y_symbols);
+
+----------------------------------------------------------------------------------------------------
+
+#include <decompose.h>
+
+//
+// tensor factorization using SVD, returns "reference weight (w)"
+// tensor 'r' scaled by 1/sqrt(w) preserve norm of factorized tensors
+// cf) a(p,q,r,s) with index(0,3) factorizes it into l(q,r,x) and r(x,p,s)
+//     max. dimension of x can be specified by D (=0 means all non-zero singular values are kept)
+//
+// NOTE: NL = NA - K + 1, NR = K + 1
+//
+double decompose
+(const [Q,D]Array<NA>& a,
+ const TinyVector<int, K>& index_decompose,
+       [Q,D]Array<NL>& l,
+       [Q,D]Array<NR>& r, int D = 0);
+
+//
+// indexed-wise decomposition
+// cf) calling with a(p,q,r,s), l(r,x,s), and r(p,q,x)
+//
+// NOTE: NR = NA - NL + 2
+//
+double decompose
+(const [Q,D]Array<NA>& a, const TinyVector<int, NA>& a_symbols,
+       [Q,D]Array<NL>& l, const TinyVector<int, NL>& l_symbols,
+       [Q,D]Array<NR>& r, const TinyVector<int, NR>& r_symbols, int D = 0);
 

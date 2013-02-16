@@ -13,13 +13,14 @@ namespace btas
 
 // BLAS LEVEL 1
 template<int N>
-void Dcopy(const Array<double, N>& x, Array<double, N>& y)
+void Dcopy(const DArray<N>& x, DArray<N>& y)
 {
   if(!x.data()) return;
   y.resize(x.shape());
   cblas_dcopy(x.size(), x.data(), 1, y.data(), 1);
 }
 
+// NOTE: cast to blitz::Array on calling
 template<int NX, int NY>
 void Dcopy_direct(const Array<double, NX>& x, const Array<double, NY>& y)
 {
@@ -32,21 +33,21 @@ void Dcopy_direct(const Array<double, NX>& x, const Array<double, NY>& y)
 }
 
 template<int NX, int NY>
-void Dreshape(const Array<double, NX>& x, const TinyVector<int, NY>& y_shape, Array<double, NY>& y)
+void Dreshape(const DArray<NX>& x, const TinyVector<int, NY>& y_shape, DArray<NY>& y)
 {
   y.resize(y_shape);
   Dcopy_direct(x, y);
 }
 
 template<int N>
-void Dscal(const double& alpha, Array<double, N>& x)
+void Dscal(const double& alpha, DArray<N>& x)
 {
   if(!x.data()) return;
   cblas_dscal(x.size(), alpha, x.data(), 1);
 }
 
 template<int N>
-void Daxpy(const double& alpha, const Array<double, N>& x, Array<double, N>& y)
+void Daxpy(const double& alpha, const DArray<N>& x, DArray<N>& y)
 {
   if(!x.data())
     BTAS_THROW(false, "btas::Daxpy: array data not found");
@@ -62,7 +63,7 @@ void Daxpy(const double& alpha, const Array<double, N>& x, Array<double, N>& y)
 }
 
 template<int N>
-double Ddot(const Array<double, N>& x, const Array<double, N>& y)
+double Ddot(const DArray<N>& x, const DArray<N>& y)
 {
   if(!std::equal(x.shape().begin(), x.shape().end(), y.shape().data()))
     BTAS_THROW(false, "btas::Ddot: data size mismatched");
@@ -70,7 +71,7 @@ double Ddot(const Array<double, N>& x, const Array<double, N>& y)
 }
 
 template<int N>
-double Dnrm2(const Array<double, N>& x)
+double Dnrm2(const DArray<N>& x)
 {
   return cblas_dnrm2(x.size(), x.data(), 1);
 }
@@ -78,8 +79,8 @@ double Dnrm2(const Array<double, N>& x)
 // BLAS LEVEL 2
 template<int NA, int NB, int NC>
 void Dgemv(const BTAS_TRANSPOSE& transa,
-           const double& alpha, const Array<double, NA>& a, const Array<double, NB>& b,
-           const double& beta, Array<double, NC>& c)
+           const double& alpha, const DArray<NA>& a, const DArray<NB>& b,
+           const double& beta,        DArray<NC>& c)
 {
   if(!a.data() || !b.data())
     BTAS_THROW(false, "btas::Dgemv: array data not found");
@@ -103,7 +104,7 @@ void Dgemv(const BTAS_TRANSPOSE& transa,
 }
 
 template<int NA, int NB, int NC>
-void Dger(const double& alpha, const Array<double, NA>& a, const Array<double, NB>& b, Array<double, NC>& c)
+void Dger(const double& alpha, const DArray<NA>& a, const DArray<NB>& b, DArray<NC>& c)
 {
   if(!a.data() || !b.data())
     BTAS_THROW(false, "btas::Dger: array data not found");
@@ -128,8 +129,8 @@ void Dger(const double& alpha, const Array<double, NA>& a, const Array<double, N
 // BLAS LEVEL 3
 template<int NA, int NB, int NC>
 void Dgemm(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb,
-           const double& alpha, const Array<double, NA>& a, const Array<double, NB>& b,
-           const double& beta, Array<double, NC>& c)
+           const double& alpha, const DArray<NA>& a, const DArray<NB>& b,
+           const double& beta,        DArray<NC>& c)
 {
   const int K = (NA + NB - NC) / 2;
   if(!a.data() || !b.data())
@@ -156,8 +157,9 @@ void Dgemm(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb,
   cblas_dgemm(RowMajor, transa, transb, arows, bcols, acols, alpha, a.data(), lda, b.data(), ldb, beta, c.data(), bcols);
 }
 
+// (general matrix) * (diagonal matrix)
 template<int NA, int NB>
-void Dleft_update(Array<double, NA>& a, const Array<double, NB>& b)
+void Ddimd(DArray<NA>& a, const DArray<NB>& b)
 {
   const TinyVector<int, NA>& a_shape = a.shape();
         TinyVector<int, NB>  b_shape;
@@ -178,8 +180,9 @@ void Dleft_update(Array<double, NA>& a, const Array<double, NB>& b)
   }
 }
 
+// (diagonal matrix) * (general matrix)
 template<int NA, int NB>
-void Dright_update(const Array<double, NA>& a, Array<double, NB>& b)
+void Ddidm(const DArray<NA>& a, DArray<NB>& b)
 {
         TinyVector<int, NA>  a_shape;
   const TinyVector<int, NB>& b_shape = b.shape();
@@ -200,8 +203,8 @@ void Dright_update(const Array<double, NA>& a, Array<double, NB>& b)
 
 // BLAS WRAPPER
 template<int NA, int NB, int NC>
-void Dblas_wrapper(const double& alpha, const Array<double, NA>& a, const Array<double, NB>& b,
-                   const double& beta, Array<double, NC>& c)
+void Dblas_wrapper(const double& alpha, const DArray<NA>& a, const DArray<NB>& b,
+                   const double& beta,        DArray<NC>& c)
 {
   const int CNT = (NA + NB - NC) / 2;
 
@@ -218,14 +221,14 @@ void Dblas_wrapper(const double& alpha, const Array<double, NA>& a, const Array<
 
 // NORMALIZE & ORTHOGONALIZE
 template<int N>
-void Dnormalize(Array<double, N>& x)
+void Dnormalize(DArray<N>& x)
 {
   double nrm2 = Dnrm2(x);
   Dscal(1.0/nrm2, x);
 }
 
 template<int N>
-void Dorthogonalize(const Array<double, N>& x, Array<double, N>& y)
+void Dorthogonalize(const DArray<N>& x, DArray<N>& y)
 {
   double ovlp = Ddot(x, y);
   Daxpy(-ovlp, x, y);
