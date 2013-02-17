@@ -34,7 +34,7 @@ void QSDpermute(const QSDArray<N>& x, const TinyVector<int, N>& ipmute, QSDArray
 
 template<int N>
 void QSDindexed_permute(const QSDArray<N>& x, const TinyVector<int, N>& x_symbols,
-                             QSDArray<N>& y, const TinyVector<int, N>& y_symbols)
+                              QSDArray<N>& y, const TinyVector<int, N>& y_symbols)
 {
   if(std::equal(x_symbols.begin(), x_symbols.end(), y_symbols.begin())) {
     QSDcopy(x, y);

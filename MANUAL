@@ -18,7 +18,7 @@
 + Build your code with BTAS library (with MKL library)
 
   g++ -O2 -fopnemp -I$BTAS_ROOT/include $BTAS_ROOT/lib/libbtas.a -lblitz -lboost_serialization
-      -lmkl_core -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_guide -lpthread
+      -lmkl_core -lmkl_intel_lp64 -lmkl_sequential
 
 - For coding, $BTAS_ROOT/lib/test.C involves helpful example to use BTAS
 ####################################################################################################
