@@ -12,13 +12,13 @@ namespace btas
 //
 // QSDArray contraction subroutines
 //
-template<int NA, int NB, int K>
+template<int NA, int NB, int NC, int K>
 void QSDcontract
 (double alpha,
  const QSDArray<NA>& a, const TinyVector<int, K>& a_contract,
  const QSDArray<NB>& b, const TinyVector<int, K>& b_contract,
  double beta,
-       QSDArray<NA+NB-K-K>& c)
+       QSDArray<NC>& c)
 {
   TinyVector<int, NA> a_permute;
   TinyVector<int, NB> b_permute;

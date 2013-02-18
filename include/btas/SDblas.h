@@ -144,11 +144,11 @@ public:
 //####################################################################################################
 // BLAS auglist for threaded call derived from T_contraction_auglist
 //####################################################################################################
-template<int NA, int NB>
-class Dgemv_auglist : public T_contraction_auglist<NA, NB, NA-NB>
+template<int NA, int NB, int NC>
+class Dgemv_auglist : public T_contraction_auglist<NA, NB, NC>
 {
-  using T_contraction_auglist<NA, NB, NA-NB>::m_auglist;
-  using T_contraction_auglist<NA, NB, NA-NB>::m_c_ptr;
+  using T_contraction_auglist<NA, NB, NC>::m_auglist;
+  using T_contraction_auglist<NA, NB, NC>::m_c_ptr;
 private:
   BTAS_TRANSPOSE
     m_transa;
@@ -174,15 +174,15 @@ public:
   }
   inline void add(const shared_ptr<DArray<NA> >& a_ptr, const shared_ptr<DArray<NB> >& b_ptr)
   {
-    T_contraction_auglist<NA, NB, NA-NB>::add(a_ptr, b_ptr, a_ptr->size());
+    T_contraction_auglist<NA, NB, NC>::add(a_ptr, b_ptr, a_ptr->size());
   }
 };
 
-template<int NA, int NB>
-class Dger_auglist : public T_contraction_auglist<NA, NB, NA+NB>
+template<int NA, int NB, int NC>
+class Dger_auglist : public T_contraction_auglist<NA, NB, NC>
 {
-  using T_contraction_auglist<NA, NB, NA+NB>::m_auglist;
-  using T_contraction_auglist<NA, NB, NA+NB>::m_c_ptr;
+  using T_contraction_auglist<NA, NB, NC>::m_auglist;
+  using T_contraction_auglist<NA, NB, NC>::m_c_ptr;
 private:
   double
     m_alpha;
@@ -204,7 +204,7 @@ public:
   }
   inline void add(const shared_ptr<DArray<NA> >& a_ptr, const shared_ptr<DArray<NB> >& b_ptr)
   {
-    T_contraction_auglist<NA, NB, NA+NB>::add(a_ptr, b_ptr, a_ptr->size());
+    T_contraction_auglist<NA, NB, NC>::add(a_ptr, b_ptr, a_ptr->size());
   }
 };
 
@@ -301,14 +301,14 @@ void ThreadSDaxpy(const double& alpha, const SDArray<N>& x, SDArray<N>& y)
   parallel_call(task_list);
 }
 
-template<int NA, int NB>
+template<int NA, int NB, int NC>
 void ThreadSDgemv(const BTAS_TRANSPOSE& transa,
-                  const double& alpha, const SDArray<NA>& a, const SDArray<NB>& b, SDArray<NA-NB>& c)
+                  const double& alpha, const SDArray<NA>& a, const SDArray<NB>& b, SDArray<NC>& c)
 {
-  int nrows  = std::accumulate(a.shape().begin(), a.shape().begin()+NA-NB, 1, std::multiplies<int>());
-  int stride = std::accumulate(b.shape().begin(), b.shape().end(),         1, std::multiplies<int>());
+  int nrows  = std::accumulate(a.shape().begin(), a.shape().begin()+NC, 1, std::multiplies<int>());
+  int stride = std::accumulate(b.shape().begin(), b.shape().end(),      1, std::multiplies<int>());
   // contraction list for thread parallelism
-  std::vector<Dgemv_auglist<NA, NB> > task_list;
+  std::vector<Dgemv_auglist<NA, NB, NC> > task_list;
   task_list.reserve(a.size());
   // block contraction
   for(int i = 0; i < nrows; ++i) {
@@ -319,7 +319,7 @@ void ThreadSDgemv(const BTAS_TRANSPOSE& transa,
     if(ialo == iaup) continue;
     if(!c.allowed(i)) continue;
 
-    Dgemv_auglist<NA, NB> gemv_list(transa, alpha, 1.0);
+    Dgemv_auglist<NA, NB, NC> gemv_list(transa, alpha, 1.0);
     for(typename SDArray<NA>::const_iterator ia = ialo; ia != iaup; ++ia) {
       typename SDArray<NB>::const_iterator ib = b.find(ia->first % stride);
       if(ib != b.end()) {
@@ -329,7 +329,7 @@ void ThreadSDgemv(const BTAS_TRANSPOSE& transa,
     if(gemv_list.size() == 0) continue;
 
     // allocate block element @ i
-    typename SDArray<NA-NB>::iterator ic = c.reserve(i);
+    typename SDArray<NC>::iterator ic = c.reserve(i);
     if(ic == c.end())
       BTAS_THROW(false, "btas::ThreadSDgemv required block could not be allocated");
 
@@ -339,12 +339,12 @@ void ThreadSDgemv(const BTAS_TRANSPOSE& transa,
   parallel_call(task_list);
 }
 
-template<int NA, int NB>
-void ThreadSDger(const double& alpha, const SDArray<NA>& a, const SDArray<NB>& b, SDArray<NA+NB>& c)
+template<int NA, int NB, int NC>
+void ThreadSDger(const double& alpha, const SDArray<NA>& a, const SDArray<NB>& b, SDArray<NC>& c)
 {
   int stride = std::accumulate(b.shape().begin(), b.shape().end(), 1, std::multiplies<int>());
   // contraction list for thread parallelism
-  std::vector<Dger_auglist<NA, NB> > task_list;
+  std::vector<Dger_auglist<NA, NB, NC> > task_list;
   task_list.reserve(a.size() * b.size());
   // block contraction
   for(typename SDArray<NA>::const_iterator ia = a.begin(); ia != a.end(); ++ia) {
@@ -353,11 +353,11 @@ void ThreadSDger(const double& alpha, const SDArray<NA>& a, const SDArray<NB>& b
       int c_tag = c_irow + ib->first;
       if(!c.allowed(c_tag)) continue;
 
-      Dger_auglist<NA, NB> ger_list(alpha);
+      Dger_auglist<NA, NB, NC> ger_list(alpha);
       ger_list.add(ia->second, ib->second);
 
       // allocate block element @ c_tag
-      typename SDArray<NA+NB>::iterator ic = c.reserve(c_tag);
+      typename SDArray<NC>::iterator ic = c.reserve(c_tag);
       if(ic == c.end())
         BTAS_THROW(false, "btas::ThreadSDger required block could not be allocated");
 

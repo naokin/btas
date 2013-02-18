@@ -13,14 +13,12 @@ namespace btas
 // quantum number contractions for QSDArray-BLAS
 //####################################################################################################
 
-template<int NA, int NB>
+template<int NA, int NB, int NC>
 void gemv_contract_qshape(const BTAS_TRANSPOSE& transa,
                           const Quantum& a_qnum, const TinyVector<Qshapes, NA>& a_qshape,
                           const Quantum& b_qnum, const TinyVector<Qshapes, NB>& b_qshape,
-                                Quantum& c_qnum,       TinyVector<Qshapes, NA-NB>& c_qshape)
+                                Quantum& c_qnum,       TinyVector<Qshapes, NC>& c_qshape)
 {
-  const int NC = NA - NB;
-
   c_qnum = Quantum::zero();
   if(transa == NoTrans) {
     c_qnum =  a_qnum * b_qnum;
@@ -45,10 +43,10 @@ void gemv_contract_qshape(const BTAS_TRANSPOSE& transa,
   }
 }
 
-template<int NA, int NB>
+template<int NA, int NB, int NC>
 void ger_contract_qshape(const Quantum& a_qnum, const TinyVector<Qshapes, NA>& a_qshape,
                          const Quantum& b_qnum, const TinyVector<Qshapes, NB>& b_qshape,
-                               Quantum& c_qnum,       TinyVector<Qshapes, NA+NB>& c_qshape)
+                               Quantum& c_qnum,       TinyVector<Qshapes, NC>& c_qshape)
 {
   c_qnum = a_qnum * b_qnum;
   for(int i = 0; i < NA; ++i) c_qshape[i]    = a_qshape[i];

@@ -7,6 +7,7 @@
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/base_object.hpp>
 
+#include <btas/btas_defs.h>
 #include <btas/SDArray.h>
 #include <btas/SDpermute.h>
 #include <btas/Quantum.h>
@@ -89,6 +90,16 @@ public:
   {
     m_q_total = other.m_q_total;
     m_q_shape = other.m_q_shape;
+  }
+
+  // initializer
+  void operator= (const double& value)
+  {
+    SDArray<N>::operator= (value);
+  }
+  void operator= (const function<double(void)>& f_random_generator)
+  {
+    SDArray<N>::operator= (f_random_generator);
   }
 
 // ####################################################################################################
@@ -208,7 +219,7 @@ public:
   QSDArray<N> conjugate() const
   {
     QSDArray<N> conj_ref;
-    conj_ref.conjugate(*this);
+    conj_ref.conjugateRef(*this);
     return conj_ref;
   }
 

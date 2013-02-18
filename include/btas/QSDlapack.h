@@ -184,8 +184,9 @@ double QSDgesvd(BTAS_CANONICALITY q_cano,
     cutoff = fabs(T) * pow(10.0, D);
 
   int nnz = 0;
-  typename Qshapes::iterator itq = q_sval.begin();
-  for(typename SDArray<1>::iterator its = s_value.begin(); its != s_value.end(); ++its, ++itq) {
+//typename Qshapes::iterator itq = q_sval.begin();
+//for(typename SDArray<1>::iterator its = s_value.begin(); its != s_value.end(); ++its, ++itq) {
+  for(typename SDArray<1>::iterator its = s_value.begin(); its != s_value.end(); ++its) {
     typename DArray<1>::iterator itd = its->second->begin();
     int D_kept = 0;
     for(; itd != its->second->end(); ++itd) {
@@ -196,7 +197,8 @@ double QSDgesvd(BTAS_CANONICALITY q_cano,
       dnorm += (*itd) * (*itd);
     }
     if(D_kept > 0) {
-      q_sval_tr.push_back(*itq);
+//    q_sval_tr.push_back(*itq);
+      q_sval_tr.push_back(q_sval[its->first]);
       d_sval_tr.push_back(D_kept);
       map_sval_tr.insert(std::make_pair(its->first, nnz++));
     }
@@ -223,6 +225,7 @@ double QSDgesvd(BTAS_CANONICALITY q_cano,
     typename std::map<int, int>::iterator imap = map_sval_tr.find(icol);
     if(imap != map_sval_tr.end()) {
       typename QSDArray<2>::iterator jt = u_merge_tr.reserve(irow * nnz + imap->second);
+      assert(jt != u_merge_tr.end()); // if aborted here, there's a bug in btas::QSDgesvd
       int Ds = d_sval_tr[imap->second];
       jt->second->resize(it->second->rows(), Ds);
       Dcopy_direct((*it->second)(Range::all(), Range(0, Ds-1)), (*jt->second));
@@ -238,6 +241,7 @@ double QSDgesvd(BTAS_CANONICALITY q_cano,
     typename std::map<int, int>::iterator imap = map_sval_tr.find(irow);
     if(imap != map_sval_tr.end()) {
       typename QSDArray<2>::iterator jt = vt_merge_tr.reserve(imap->second * n_cols + icol);
+      assert(jt != vt_merge_tr.end()); // if aborted here, there's a bug in btas::QSDgesvd
       int Ds = d_sval_tr[imap->second];
       jt->second->resize(Ds, it->second->cols());
       Dcopy_direct((*it->second)(Range(0, Ds-1), Range::all()), (*jt->second));

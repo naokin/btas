@@ -109,7 +109,7 @@ public:
       *(it->second) = value;
     }
   }
-  void operator= (function<double(void)>& f_random_generator)
+  void operator= (const function<double(void)>& f_random_generator)
   {
     for(iterator it = m_data.begin(); it != m_data.end(); ++it) {
       for(typename DArray<N>::iterator id = it->second->begin(); id != it->second->end(); ++id) {

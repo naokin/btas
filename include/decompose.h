@@ -225,7 +225,7 @@ double decompose
   QSDArray<NA> a_copy;
   QSDpermute(a, a_permute, a_copy);
 
-  SDArray<1> s;
+  DiagonalQSDArray<1> s;
   double dnorm = QSDgesvd(LeftCanonical, a_copy, s, l, r, D);
   SDdidm(s, r);
 
@@ -251,7 +251,7 @@ double indexed_decompose
   QSDArray<NA> a_copy;
   QSDpermute(a, a_permute, a_copy);
 
-  SDArray<1> s;
+  DiagonalQSDArray<1> s;
   QSDArray<NL> l_tmp;
   QSDArray<NL> r_tmp;
   double dnorm = QSDgesvd(LeftCanonical, a_copy, s, l_tmp, r_tmp, D);
