@@ -341,9 +341,12 @@ public:
       if(it != end()) {
         BTAS_THROW(false, "btas::SDArray::reserve; non-zero block already exists despite it must be zero");
       }
-//    else {
+#ifdef _PRINT_WARNINGS
+      else {
 //      BTAS_THROW(false, "btas::SDArray::reserve; requested block must be zero");
-//    }
+        BTAS_DEBUG("warning in btas::SDArray::reserve; requested block must be zero, returns end()");
+      }
+#endif
     }
     return it;
   }
@@ -361,9 +364,12 @@ public:
       if(it != end()) {
         BTAS_THROW(false, "btas::SDArray::reserve; non-zero block already exists despite it must be zero");
       }
-//    else {
+#ifdef _PRINT_WARNINGS
+      else {
 //      BTAS_THROW(false, "btas::SDArray::reserve; requested block must be zero");
-//    }
+        BTAS_DEBUG("warning in btas::SDArray::reserve; requested block must be zero, returns end()");
+      }
+#endif
     }
     return it;
   }
@@ -382,9 +388,12 @@ public:
         Dcopy(block, *(it->second));
       }
     }
-//  else {
+#ifdef _PRINT_WARNINGS
+    else {
 //    BTAS_THROW(false, "btas::SDArray::insert; requested block must be zero");
-//  }
+      BTAS_DEBUG("warning in btas::SDArray::insert; requested block must be zero, could not to be inserted");
+    }
+#endif
     return it;
   }
   iterator insert(const TinyVector<int, N>& block_index, const DArray<N>& block)
@@ -402,9 +411,12 @@ public:
         Dcopy(block, *(it->second));
       }
     }
-//  else {
+#ifdef _PRINT_WARNINGS
+    else {
 //    BTAS_THROW(false, "btas::SDArray::insert; requested block must be zero");
-//  }
+      BTAS_DEBUG("warning in btas::SDArray::insert; requested block must be zero, could not to be inserted");
+    }
+#endif
     return it;
   }
 

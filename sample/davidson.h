@@ -13,6 +13,7 @@
 #include <btas/QSDblas.h>
 #include <btas/Dlapack.h>
 
+#include "btas_template_specialize.h"
 #include "utils.h"
 
 namespace davidson

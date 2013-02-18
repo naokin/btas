@@ -40,18 +40,18 @@ int main(int argc, char* argv[])
   // Nz = 1 / M = 10
   //
 
-  int M = 4;
+  int M = 10;
   initialize(sites, btas::Quantum::zero(), Nz, M);
 
   double energy = 0.0;
 
-//energy = dmrg(sites, TWOSITE, M);
-//cout.precision(16);
-//cout << endl << "\tGround state energy (two-site) = " << setw(20) << fixed << energy << endl;
-
-  energy = dmrg(sites, ONESITE, 0);
+  energy = dmrg(sites, TWOSITE, M);
   cout.precision(16);
-  cout << endl << "\tGround state energy (one-site) = " << setw(20) << fixed << energy << endl;
+  cout << "\tGround state energy (two-site) = " << setw(20) << fixed << energy << endl << endl;
+
+  energy = dmrg(sites, ONESITE, M);
+  cout.precision(16);
+  cout << "\tGround state energy (one-site) = " << setw(20) << fixed << energy << endl << endl;
 
   return 0;
 }

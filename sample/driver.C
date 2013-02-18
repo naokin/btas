@@ -9,9 +9,10 @@ namespace btas { typedef SpinQuantum Quantum; };
 #include <btas/QSDlapack.h>
 #include <btas/SDdiagonal.h>
 #include <contract.h>
-using namespace btas;
+#include "btas_template_specialize.h"
 
 #include "driver.h"
+using namespace btas;
 
 void prototype::ComputeGuess
 (bool forward, const btas::QSDArray<3>& mps0,

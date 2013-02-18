@@ -8,11 +8,12 @@ namespace btas { typedef SpinQuantum Quantum; };
 
 #include <btas/QSDArray.h>
 #include <btas/QSDblas.h>
-using namespace btas;
+#include "btas_template_specialize.h"
 
 #include "dmrg.h"
 #include "driver.h"
 #include "davidson.h"
+using namespace btas;
 
 //
 // random number generator
@@ -45,15 +46,15 @@ void prototype::construct_heisenberg_mpo(MpStorages& sites, int Nz, double J, do
 
   Qshapes qi; // quantum index comes in
   qi.push_back(Quantum( 0)); // I
-  qi.push_back(Quantum(-2)); // S-
-  qi.push_back(Quantum(+2)); // S+
+  qi.push_back(Quantum(+2)); // S- (from S+)
+  qi.push_back(Quantum(-2)); // S+ (from S-)
   qi.push_back(Quantum( 0)); // Sz
   qi.push_back(Quantum( 0)); // I
 
   Qshapes qo; // quantum index comes out
   qo.push_back(Quantum( 0)); // I
-  qo.push_back(Quantum(+2)); // S+
-  qo.push_back(Quantum(-2)); // S-
+  qo.push_back(Quantum(-2)); // S+ (to S-)
+  qo.push_back(Quantum(+2)); // S- (to S+)
   qo.push_back(Quantum( 0)); // Sz
   qo.push_back(Quantum( 0)); // I
 
@@ -134,10 +135,13 @@ void prototype::initialize(MpStorages& sites, const Quantum& qt, int Nz, int M)
   // create random wavefunction
   //
 
+  int M0 = 1;
+  int Mx = M;
+
   Qshapes ql(qz);
   Dshapes dl(ql.size(), 1);
   Qshapes qr(qp);
-  Dshapes dr(qr.size(), M);
+  Dshapes dr(qr.size(), M0);
   TinyVector<Qshapes, 3> qshape(-ql, qp, qr);
   TinyVector<Dshapes, 3> dshape( dl, dp, dr);
   sites[ 0 ].wfnc.resize(Quantum::zero(), qshape, dshape);
@@ -147,7 +151,7 @@ void prototype::initialize(MpStorages& sites, const Quantum& qt, int Nz, int M)
     ql = qr;
     dl = dr;
     qr = ql & qp; // get unique elements of { q(left) x q(phys) }
-    dr = Dshapes(qr.size(), M);
+    dr = Dshapes(qr.size(), M0);
     qshape = TinyVector<Qshapes, 3>(-ql, qp, qr);
     dshape = TinyVector<Dshapes, 3>( dl, dp, dr);
     sites[i].wfnc.resize(Quantum::zero(), qshape, dshape);
@@ -175,7 +179,7 @@ void prototype::initialize(MpStorages& sites, const Quantum& qt, int Nz, int M)
 
   for(int i = L-1; i > 0; --i) {
     util::Normalize(sites[i].wfnc);
-    Canonicalize(0, sites[i].wfnc, sites[i].rmps, 0);
+    Canonicalize(0, sites[i].wfnc, sites[i].rmps, Mx);
     QSDcopy(sites[i-1].wfnc, sites[i-1].lmps);
     ComputeGuess(0, sites[i].rmps, sites[i].wfnc, sites[i-1].lmps, sites[i-1].wfnc);
     sites[i-1].ropr.clear();
@@ -229,11 +233,11 @@ double prototype::optimize_twosite(bool forward, MpSite& sysdot, MpSite& envdot,
     ComputeDiagonal(envdot.mpo, sysdot.mpo, envdot.lopr, sysdot.ropr, diag);
   }
 
-  cout << "====================================================================================================" << endl;
-  cout << "debug: optimize_twosite $ wfnc: " << wfnc << endl;
-  cout << "====================================================================================================" << endl;
-  cout << "debug: optimize_twosite $ diag: " << diag << endl;
-  cout << "====================================================================================================" << endl;
+//cout << "====================================================================================================" << endl;
+//cout << "debug: optimize_twosite $ wfnc: " << wfnc << endl;
+//cout << "====================================================================================================" << endl;
+//cout << "debug: optimize_twosite $ diag: " << diag << endl;
+//cout << "====================================================================================================" << endl;
 
   double energy = davidson::diagonalize(f_contract, diag, wfnc);
 
@@ -288,6 +292,16 @@ double prototype::dmrg_sweep(MpStorages& sites, DMRG_ALGORITHM algo, int M)
 
 double prototype::dmrg(MpStorages& sites, DMRG_ALGORITHM algo, int M)
 {
+//int L = sites.size();
+//cout << "\t====================================================================================================" << endl;
+//cout << "\t\tDEBUG PRINT FOR MPOs " << endl;
+//cout << "\t====================================================================================================" << endl;
+//for(int i = 0; i < L; ++i) {
+//  cout.precision(4);
+//  cout << "sites[" << setw(2) << i << "].mpo: " << fixed << sites[i].mpo << endl;
+//  cout << "\t====================================================================================================" << endl;
+//}
+
   double esav = 1.0e8;
   for(int iter = 0; iter < 100; ++iter) {
     cout << "\t====================================================================================================" << endl;

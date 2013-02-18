@@ -21,6 +21,9 @@
       -lmkl_core -lmkl_intel_lp64 -lmkl_sequential
 
 - For coding, $BTAS_ROOT/lib/test.C involves helpful example to use BTAS
+- If '-D_PRINT_WARNINGS' is specified, turns to print warning
+  when SDArray::reserve or SDArray::insert is called with prohibited (quantum number) block
+  it is recommended to use this option to avoid undesirable behavior upon reservation and insertion
 ####################################################################################################
 
 ####################################################################################################

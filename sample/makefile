@@ -21,7 +21,7 @@ BTASLIB=  $(BTASDIR)/lib
 INCLUDEFLAGS=-I. $(BLITZINC) $(BLASINC) $(BOOSTINC) $(BTASINC)
 LIBRARYFLAGS=    $(BLITZLIB) $(BLASLIB) $(BOOSTLIB)
 
-SRC_SAMPLE = main.C dmrg.C driver.C
+SRC_SAMPLE = main.C dmrg.C driver.C btas_template_specialize.C
 
 OBJ_SAMPLE = $(SRC_SAMPLE:.C=.o)
 
