@@ -1,5 +1,5 @@
-CXX=g++
-CXXFLAGS=-O3 -fopenmp -DMKL_CBLAS
+CXX=g++44
+CXXFLAGS=-g -O3
 #CXXFLAGS=-O3 -DSERIAL -DMKL_CBLAS
 
 BLITZDIR=/home/naokin/blitz/0.9
