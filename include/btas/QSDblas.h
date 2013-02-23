@@ -5,6 +5,7 @@
 #include <btas/QSDArray.h>
 #include <btas/SDblas.h>
 #include <btas/contract_shape.h>
+#include <btas/Transpose.h>
 
 namespace btas
 {
@@ -279,6 +280,147 @@ void QSDgemm(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb,
 //  // calling block-sparse blas wrapper
 //  ThreadSDger(alpha, a, b, c);
 //}
+
+//####################################################################################################
+// index-based contraction scaling function
+//####################################################################################################
+
+template<int NA, int NB, int NC>
+double f_indexbase_scale(const TinyVector<Qshapes, NA>& a_qshape,
+                         const TinyVector<Qshapes, NB>& b_qshape,
+                         const TinyVector<Qshapes, NC>& c_qshape,
+                         const TinyVector<int, NA>& a_index,
+                         const TinyVector<int, NB>& b_index,
+                         const TinyVector<int, NC>& c_index,
+                         const function<double(const TinyVector<Quantum, NA>&,
+                                               const TinyVector<Quantum, NB>&,
+                                               const TinyVector<Quantum, NC>&)>& f_scale)
+{
+  TinyVector<Quantum, NA> a_qindex;
+  for(int i = 0; i < NA; ++i) a_qindex[i] = a_qshape[i][a_index[i]];
+  TinyVector<Quantum, NB> b_qindex;
+  for(int i = 0; i < NB; ++i) b_qindex[i] = b_qshape[i][b_index[i]];
+  TinyVector<Quantum, NC> c_qindex;
+  for(int i = 0; i < NC; ++i) c_qindex[i] = c_qshape[i][c_index[i]];
+  return f_scale(a_qindex, b_qindex, c_qindex);
+}
+
+//####################################################################################################
+// BLAS-like wrappers with index-based contraction scaling functor
+//####################################################################################################
+
+//
+// BLAS level 2
+//
+template<int NA, int NB, int NC>
+void QSDgemv(const function<double(const TinyVector<Quantum, NA>&,
+                                   const TinyVector<Quantum, NB>&,
+                                   const TinyVector<Quantum, NC>&)>& f_scale,
+             const BTAS_TRANSPOSE& transa,
+             const double& alpha, const QSDArray<NA>& a, const QSDArray<NB>& b, const double& beta, QSDArray<NC>& c)
+{
+  // check/resize contraction shape
+  Quantum q_total;
+  TinyVector<Qshapes, NC> q_shape;
+  gemv_contract_qshape(transa, a.q(), a.qshape(), b.q(), b.qshape(), q_total, q_shape);
+
+  if(c.size() > 0) {
+    if(q_total != c.q())
+      BTAS_THROW(false, "btas::QSDgemv: quantum # of c mismatched");
+    if(q_shape != c.qshape())
+      BTAS_THROW(false, "btas::QSDgemv: quantum # shape of c mismatched");
+    SDscal(beta, c);
+  }
+  else {
+    c.resize(q_total, q_shape);
+  }
+  // calling block-sparse blas wrapper
+  if(transa == NoTrans) {
+    function<double(const TinyVector<int, NA>&, const TinyVector<int, NB>&, const TinyVector<int, NC>&)>
+    scale_functor = bind(f_indexbase_scale<NA, NB, NC>, a.qshape(), b.qshape(), c.qshape(), _1, _2, _3, f_scale);
+    ThreadSDgemv(scale_functor, transa, alpha, a, b, c);
+  }
+  else {
+    function<double(const TinyVector<int, NA>&, const TinyVector<int, NB>&, const TinyVector<int, NC>&)>
+    scale_functor = bind(f_indexbase_scale<NA, NB, NC>, Transpose(a.qshape(), NB), b.qshape(), c.qshape(), _1, _2, _3, f_scale);
+    ThreadSDgemv(scale_functor, transa, alpha, a.transpose_view(NB), b, c);
+  }
+}
+
+template<int NA, int NB, int NC>
+void QSDger(const function<double(const TinyVector<Quantum, NA>&,
+                                  const TinyVector<Quantum, NB>&,
+                                  const TinyVector<Quantum, NC>&)>& f_scale,
+            const double& alpha, const QSDArray<NA>& a, const QSDArray<NB>& b, QSDArray<NC>& c)
+{
+  // check/resize contraction shape
+  Quantum q_total;
+  TinyVector<Qshapes, NC> q_shape;
+  ger_contract_qshape(a.q(), a.qshape(), b.q(), b.qshape(), q_total, q_shape);
+
+  if(c.size() > 0) {
+    if(q_total != c.q())
+      BTAS_THROW(false, "btas::QSDger: quantum # of c mismatched");
+    if(q_shape != c.qshape())
+      BTAS_THROW(false, "btas::QSDger: quantum # shape of c mismatched");
+  }
+  else {
+    c.resize(q_total, q_shape);
+  }
+  // calling block-sparse blas wrapper
+  function<double(const TinyVector<int, NA>&, const TinyVector<int, NB>&, const TinyVector<int, NC>&)>
+  scale_functor = bind(f_indexbase_scale<NA, NB, NC>, a.qshape(), b.qshape(), c.qshape(), _1, _2, _3, f_scale);
+  ThreadSDger(scale_functor, alpha, a, b, c);
+}
+
+//
+// BLAS level 3
+//
+template<int NA, int NB, int NC>
+void QSDgemm(const function<double(const TinyVector<Quantum, NA>&,
+                                   const TinyVector<Quantum, NB>&,
+                                   const TinyVector<Quantum, NC>&)>& f_scale,
+             const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb,
+             const double& alpha, const QSDArray<NA>& a, const QSDArray<NB>& b, const double& beta, QSDArray<NC>& c)
+{
+  const int K = (NA + NB - NC) / 2;
+  // check/resize contraction qshape
+  Quantum q_total;
+  TinyVector<Qshapes, NC> q_shape;
+  gemm_contract_qshape(transa, transb, a.q(), a.qshape(), b.q(), b.qshape(), q_total, q_shape);
+
+  if(c.size() > 0) {
+    if(q_total != c.q())
+      BTAS_THROW(false, "btas::QSDgemm: quantum # of c mismatched");
+    if(q_shape != c.qshape())
+      BTAS_THROW(false, "btas::QSDgemm: quantum # shape of c mismatched");
+    SDscal(beta, c);
+  }
+  else {
+    c.resize(q_total, q_shape);
+  }
+  // calling block-sparse blas wrapper
+  if(transa == NoTrans && transb == NoTrans) {
+    function<double(const TinyVector<int, NA>&, const TinyVector<int, NB>&, const TinyVector<int, NC>&)>
+    scale_functor = bind(f_indexbase_scale<NA, NB, NC>, a.qshape(), Transpose(b.qshape(), K), c.qshape(), _1, _2, _3, f_scale);
+    ThreadSDgemm(scale_functor, transa, transb, alpha, a, b.transpose_view(K), c);
+  }
+  else if(transa == NoTrans && transb != NoTrans) {
+    function<double(const TinyVector<int, NA>&, const TinyVector<int, NB>&, const TinyVector<int, NC>&)>
+    scale_functor = bind(f_indexbase_scale<NA, NB, NC>, a.qshape(), b.qshape(), c.qshape(), _1, _2, _3, f_scale);
+    ThreadSDgemm(scale_functor, transa, transb, alpha, a, b, c);
+  }
+  else if(transa != NoTrans && transb == NoTrans) {
+    function<double(const TinyVector<int, NA>&, const TinyVector<int, NB>&, const TinyVector<int, NC>&)>
+    scale_functor = bind(f_indexbase_scale<NA, NB, NC>, Transpose(a.qshape(), K), Transpose(b.qshape(), K), c.qshape(), _1, _2, _3, f_scale);
+    ThreadSDgemm(scale_functor, transa, transb, alpha, a.transpose_view(K), b.transpose_view(K), c);
+  }
+  else if(transa != NoTrans && transb != NoTrans) {
+    function<double(const TinyVector<int, NA>&, const TinyVector<int, NB>&, const TinyVector<int, NC>&)>
+    scale_functor = bind(f_indexbase_scale<NA, NB, NC>, Transpose(a.qshape(), K), b.qshape(), c.qshape(), _1, _2, _3, f_scale);
+    ThreadSDgemm(scale_functor, transa, transb, alpha, a.transpose_view(K), b, c);
+  }
+}
 
 }; // namespace btas
 

@@ -8,9 +8,12 @@ using namespace std;
 #include "tstamp.h"
 
 #include "SpinQuantum.h"
+#include <btas/TVector.h>
 namespace btas
 {
+
 typedef SpinQuantum Quantum;
+
 };
 
 #include <contract.h>
@@ -24,6 +27,18 @@ ranlib::Uniform<double> uniform;
 double urandom()
 {
   return 2.0 * uniform.random() - 1.0;
+}
+
+// return 1.0, meaningless function, just for a test
+template<int NA, int NB, int NC>
+double ScaleFunctor(const TinyVector<SpinQuantum, NA>& a_qindex,
+                    const TinyVector<SpinQuantum, NB>& b_qindex,
+                    const TinyVector<SpinQuantum, NC>& c_qindex)
+{
+  //
+  // here, compute scaling factor depending on quantum numbers
+  //
+  return 1.0;
 }
 
 int tests_Dblas(int iprint = 0)
@@ -176,21 +191,84 @@ int tests_QSDblas(int iprint = 0)
     QSDgemv(NoTrans, 1.0, a, b, 1.0, c);
     if(iprint > 0) {
       cout << "====================================================================================================" << endl;
-      cout << "[tests_Dblas] [QSDgemv(Trans, 1.0, a, b, 1.0, c)] print matrix [c]: " << c << endl;
+      cout << "[tests_QSDblas] [QSDgemv(Trans, 1.0, a, b, 1.0, c)] print matrix [c]: " << c << endl;
     }
     // QSDger
     QSDArray<4> d;
     QSDger(1.0, b, b, d);
     if(iprint > 0) {
       cout << "====================================================================================================" << endl;
-      cout << "[tests_Dblas] [QSDger(1.0, b, b, d)] print tensor [d]: " << d << endl;
+      cout << "[tests_QSDblas] [QSDger(1.0, b, b, d)] print tensor [d]: " << d << endl;
     }
     // QSDgemm
     QSDArray<4> e;
     QSDgemm(NoTrans, NoTrans, 1.0, d, a, 1.0, e);
     if(iprint > 0) {
       cout << "====================================================================================================" << endl;
-      cout << "[tests_Dblas] [QSDgemm(NoTrans, NoTrans, 1.0, d, a, 1.0, e)] print tensor [e]: " << e << endl;
+      cout << "[tests_QSDblas] [QSDgemm(NoTrans, NoTrans, 1.0, d, a, 1.0, e)] print tensor [e]: " << e << endl;
+    }
+  }
+
+  return 0;
+}
+
+int tests_QSDblas_scale(int iprint = 0)
+{
+  SpinQuantum qt(0);
+
+  Qshapes qi;
+  qi.reserve(3);
+  qi.push_back(SpinQuantum(-1));
+  qi.push_back(SpinQuantum( 0));
+  qi.push_back(SpinQuantum(+1));
+
+  Dshapes di(qi.size(), 2);
+
+  TinyVector<Qshapes, 4> a_qshape( qi,-qi, qi,-qi);
+  TinyVector<Dshapes, 4> a_dshape( di, di, di, di);
+  QSDArray<4> a(qt, a_qshape, a_dshape, urandom);
+
+  TinyVector<Qshapes, 2> b_qshape(-qi, qi);
+  TinyVector<Dshapes, 2> b_dshape( di, di);
+  QSDArray<2> b(qt, b_qshape, b_dshape, urandom);
+
+  if(iprint > 0) {
+    cout << "====================================================================================================" << endl;
+    cout << "[tests_QSDblas_scale] print tensor [a]: " << a << endl;
+    cout << "====================================================================================================" << endl;
+    cout << "[tests_QSDblas_scale] print matrix [b]: " << b << endl;
+  }
+
+  {
+  }
+
+  {
+    // QSDgemv
+    function<double(const TinyVector<Quantum, 4>&, const TinyVector<Quantum, 2>&, const TinyVector<Quantum, 2>&)>
+    f_scale_gemv = bind(ScaleFunctor<4, 2, 2>, _1, _2, _3);
+    QSDArray<2> c;
+    QSDgemv(f_scale_gemv, NoTrans, 1.0, a, b, 1.0, c);
+    if(iprint > 0) {
+      cout << "====================================================================================================" << endl;
+      cout << "[tests_QSDblas_scale] [QSDgemv(Trans, 1.0, a, b, 1.0, c)] print matrix [c]: " << c << endl;
+    }
+    // QSDger
+    function<double(const TinyVector<Quantum, 2>&, const TinyVector<Quantum, 2>&, const TinyVector<Quantum, 4>&)>
+    f_scale_ger = bind(ScaleFunctor<2, 2, 4>, _1, _2, _3);
+    QSDArray<4> d;
+    QSDger(f_scale_ger, 1.0, b, b, d);
+    if(iprint > 0) {
+      cout << "====================================================================================================" << endl;
+      cout << "[tests_QSDblas_scale] [QSDger(1.0, b, b, d)] print tensor [d]: " << d << endl;
+    }
+    // QSDgemm
+    function<double(const TinyVector<Quantum, 4>&, const TinyVector<Quantum, 4>&, const TinyVector<Quantum, 4>&)>
+    f_scale_gemm = bind(ScaleFunctor<4, 4, 4>, _1, _2, _3);
+    QSDArray<4> e;
+    QSDgemm(f_scale_gemm, NoTrans, NoTrans, 1.0, d, a, 1.0, e);
+    if(iprint > 0) {
+      cout << "====================================================================================================" << endl;
+      cout << "[tests_QSDblas_scale] [QSDgemm(NoTrans, NoTrans, 1.0, d, a, 1.0, e)] print tensor [e]: " << e << endl;
     }
   }
 
@@ -276,15 +354,29 @@ int tests_driver_contract(int iprint = 0)
 
 int main()
 {
-  tests_Dblas    (0);
+  TimeStamp ts; ts.start();
 
-  tests_QSDblas  (0);
+  tests_Dblas(0);
+  cout << "LAP[tests_Dblas]: " << ts.lap() << " sec. " << endl;
+
+  uniform.seed(123456789);
+  tests_QSDblas(1);
+  cout << "LAP[tests_QSDblas]: " << ts.lap() << " sec. " << endl;
+
+  uniform.seed(123456789);
+  tests_QSDblas_scale(1);
+  cout << "LAP[tests_QSDblas_scale]: " << ts.lap() << " sec. " << endl;
 
   tests_QSDlapack(0);
+  cout << "LAP[tests_QSDlapack]: " << ts.lap() << " sec. " << endl;
 
   tests_Dcontract(0);
+  cout << "LAP[tests_Dcontract]: " << ts.lap() << " sec. " << endl;
 
-  tests_driver_contract(1);
+  tests_driver_contract(0);
+  cout << "LAP[tests_driver_contract]: " << ts.lap() << " sec. " << endl;
+
+  cout << "TOTAL TIME: " << ts.total() << " sec. " << endl;
 
   return 0;
 }

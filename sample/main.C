@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
   // define working space for 20 sites chain
   //
 
-  int L = 10;
+  int L = 20;
   MpStorages sites(L);
 
   //
@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
   // Nz = 1 / M = 10
   //
 
-  int M = 10;
+  int M = 30;
   initialize(sites, btas::Quantum::zero(), Nz, M);
 
   double energy = 0.0;

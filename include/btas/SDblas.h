@@ -150,6 +150,8 @@ class Dgemv_auglist : public T_contraction_auglist<NA, NB, NC>
   using T_contraction_auglist<NA, NB, NC>::m_auglist;
   using T_contraction_auglist<NA, NB, NC>::m_c_ptr;
 private:
+  std::vector<double>
+    m_scale;
   BTAS_TRANSPOSE
     m_transa;
   double
@@ -161,7 +163,7 @@ public:
   void call() const
   {
     for(int i = 0; i < m_auglist.size(); ++i) {
-      Dgemv(m_transa, m_alpha, *(m_auglist[i].first), *(m_auglist[i].second), m_beta, *(m_c_ptr));
+      Dgemv(m_transa, m_scale[i] * m_alpha, *(m_auglist[i].first), *(m_auglist[i].second), m_beta, *(m_c_ptr));
     }
   }
   Dgemv_auglist()
@@ -172,8 +174,9 @@ public:
   : m_transa(transa), m_alpha(alpha), m_beta(beta)
   {
   }
-  inline void add(const shared_ptr<DArray<NA> >& a_ptr, const shared_ptr<DArray<NB> >& b_ptr)
+  void add(const shared_ptr<DArray<NA> >& a_ptr, const shared_ptr<DArray<NB> >& b_ptr, double scale = 1.0)
   {
+    m_scale.push_back(scale);
     T_contraction_auglist<NA, NB, NC>::add(a_ptr, b_ptr, a_ptr->size());
   }
 };
@@ -184,6 +187,8 @@ class Dger_auglist : public T_contraction_auglist<NA, NB, NC>
   using T_contraction_auglist<NA, NB, NC>::m_auglist;
   using T_contraction_auglist<NA, NB, NC>::m_c_ptr;
 private:
+  std::vector<double>
+    m_scale;
   double
     m_alpha;
 public:
@@ -191,7 +196,7 @@ public:
   void call() const
   {
     for(int i = 0; i < m_auglist.size(); ++i) {
-      Dger(m_alpha, *(m_auglist[i].first), *(m_auglist[i].second), *(m_c_ptr));
+      Dger(m_scale[i] * m_alpha, *(m_auglist[i].first), *(m_auglist[i].second), *(m_c_ptr));
     }
   }
   Dger_auglist()
@@ -202,8 +207,9 @@ public:
   : m_alpha(alpha)
   {
   }
-  inline void add(const shared_ptr<DArray<NA> >& a_ptr, const shared_ptr<DArray<NB> >& b_ptr)
+  void add(const shared_ptr<DArray<NA> >& a_ptr, const shared_ptr<DArray<NB> >& b_ptr, double scale = 1.0)
   {
+    m_scale.push_back(scale);
     T_contraction_auglist<NA, NB, NC>::add(a_ptr, b_ptr, a_ptr->size());
   }
 };
@@ -214,6 +220,8 @@ class Dgemm_auglist : public T_contraction_auglist<NA, NB, NC>
   using T_contraction_auglist<NA, NB, NC>::m_auglist;
   using T_contraction_auglist<NA, NB, NC>::m_c_ptr;
 private:
+  std::vector<double>
+    m_scale;
   BTAS_TRANSPOSE
     m_transa;
   BTAS_TRANSPOSE
@@ -241,7 +249,7 @@ public:
   void call() const
   {
     for(int i = 0; i < m_auglist.size(); ++i) {
-      Dgemm(m_transa, m_transb, m_alpha, *(m_auglist[i].first), *(m_auglist[i].second), m_beta, *(m_c_ptr));
+      Dgemm(m_transa, m_transb, m_scale[i] * m_alpha, *(m_auglist[i].first), *(m_auglist[i].second), m_beta, *(m_c_ptr));
     }
   }
   Dgemm_auglist()
@@ -252,8 +260,9 @@ public:
   : m_transa(transa), m_transb(transb), m_alpha(alpha), m_beta(beta)
   {
   }
-  inline void add(const shared_ptr<DArray<NA> >& a_ptr, const shared_ptr<DArray<NB> >& b_ptr)
+  void add(const shared_ptr<DArray<NA> >& a_ptr, const shared_ptr<DArray<NB> >& b_ptr, double scale = 1.0)
   {
+    m_scale.push_back(scale);
     T_contraction_auglist<NA, NB, NC>::add(a_ptr, b_ptr, mf_compute_flops(*a_ptr, *b_ptr));
   }
 };
@@ -403,6 +412,142 @@ void ThreadSDgemm(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb,
         for(typename SDArray<NB>::const_iterator ib = iblo; ib != ibup; ++ib) {
           if((ia->first % stride) == (ib->first % stride)) {
             gemm_list.add(ia->second, ib->second);
+          }
+        }
+      }
+      if(gemm_list.size() == 0) continue;
+
+      // allocate block element @ c_tag
+      typename SDArray<NC>::iterator ic = c.reserve(c_tag);
+      if(ic == c.end())
+        BTAS_THROW(false, "btas::ThreadSDgemm required block could not be allocated");
+
+      gemm_list.set(ic->second);
+      task_list.push_back(gemm_list);
+    }
+  }
+  parallel_call(task_list);
+}
+
+//####################################################################################################
+// Sparse BLAS wrappers with index-based contraction scaling functor
+//####################################################################################################
+
+template<int NA, int NB, int NC>
+void ThreadSDgemv(const function<double(const TinyVector<int, NA>&,
+                                        const TinyVector<int, NB>&,
+                                        const TinyVector<int, NC>&)>& f_scale,
+                  const BTAS_TRANSPOSE& transa,
+                  const double& alpha, const SDArray<NA>& a, const SDArray<NB>& b, SDArray<NC>& c)
+{
+  int nrows  = std::accumulate(a.shape().begin(), a.shape().begin()+NC, 1, std::multiplies<int>());
+  int stride = std::accumulate(b.shape().begin(), b.shape().end(),      1, std::multiplies<int>());
+  // contraction list for thread parallelism
+  std::vector<Dgemv_auglist<NA, NB, NC> > task_list;
+  task_list.reserve(a.size());
+  // block contraction
+  for(int i = 0; i < nrows; ++i) {
+    int a_lbound = i * stride;
+    int a_ubound = a_lbound + stride - 1;
+    typename SDArray<NA>::const_iterator ialo = a.lower_bound(a_lbound);
+    typename SDArray<NA>::const_iterator iaup = a.upper_bound(a_ubound);
+    if(ialo == iaup) continue;
+    if(!c.allowed(i)) continue;
+
+    TinyVector<int, NC> c_index(c.index(i));
+    Dgemv_auglist<NA, NB, NC> gemv_list(transa, alpha, 1.0);
+    for(typename SDArray<NA>::const_iterator ia = ialo; ia != iaup; ++ia) {
+      typename SDArray<NB>::const_iterator ib = b.find(ia->first % stride);
+      if(ib != b.end()) {
+        gemv_list.add(ia->second, ib->second, f_scale(a.index(ia->first), b.index(ib->first), c_index));
+      }
+    }
+    if(gemv_list.size() == 0) continue;
+
+    // allocate block element @ i
+    typename SDArray<NC>::iterator ic = c.reserve(i);
+    if(ic == c.end())
+      BTAS_THROW(false, "btas::ThreadSDgemv required block could not be allocated");
+
+    gemv_list.set(ic->second);
+    task_list.push_back(gemv_list);
+  }
+  parallel_call(task_list);
+}
+
+template<int NA, int NB, int NC>
+void ThreadSDger(const function<double(const TinyVector<int, NA>&,
+                                       const TinyVector<int, NB>&,
+                                       const TinyVector<int, NC>&)>& f_scale,
+                 const double& alpha, const SDArray<NA>& a, const SDArray<NB>& b, SDArray<NC>& c)
+{
+  int stride = std::accumulate(b.shape().begin(), b.shape().end(), 1, std::multiplies<int>());
+  // contraction list for thread parallelism
+  std::vector<Dger_auglist<NA, NB, NC> > task_list;
+  task_list.reserve(a.size() * b.size());
+  // block contraction
+  for(typename SDArray<NA>::const_iterator ia = a.begin(); ia != a.end(); ++ia) {
+    int c_irow = ia->first * stride;
+    TinyVector<int, NA> a_index(a.index(ia->first));
+
+    for(typename SDArray<NB>::const_iterator ib = b.begin(); ib != b.end(); ++ib) {
+      int c_tag = c_irow + ib->first;
+      if(!c.allowed(c_tag)) continue;
+
+      Dger_auglist<NA, NB, NC> ger_list(alpha);
+      ger_list.add(ia->second, ib->second, f_scale(a_index, b.index(ib->first), c.index(c_tag)));
+
+      // allocate block element @ c_tag
+      typename SDArray<NC>::iterator ic = c.reserve(c_tag);
+      if(ic == c.end())
+        BTAS_THROW(false, "btas::ThreadSDger required block could not be allocated");
+
+      ger_list.set(ic->second);
+      task_list.push_back(ger_list);
+    }
+  }
+  parallel_call(task_list);
+}
+
+template<int NA, int NB, int NC>
+void ThreadSDgemm(const function<double(const TinyVector<int, NA>&,
+                                        const TinyVector<int, NB>&,
+                                        const TinyVector<int, NC>&)>& f_scale,
+                  const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb,
+                  const double& alpha, const SDArray<NA>& a, const SDArray<NB>& b, SDArray<NC>& c)
+{
+  const int K = ( NA + NB - NC ) / 2;
+  int nrows  = std::accumulate(a.shape().begin(), a.shape().begin()+NA-K, 1, std::multiplies<int>());
+  int stride = std::accumulate(a.shape().begin()+NA-K, a.shape().end(),   1, std::multiplies<int>());
+  int ncols  = std::accumulate(b.shape().begin(), b.shape().begin()+NB-K, 1, std::multiplies<int>());
+  // contraction list for thread parallelism
+  std::vector<Dgemm_auglist<NA, NB, NC> > task_list;
+  task_list.reserve(std::max(a.size(), b.size()));
+  // block contraction
+  for(int i = 0; i < nrows; ++i) {
+    int a_lbound = i * stride;
+    int a_ubound = a_lbound + stride - 1;
+    typename SDArray<NA>::const_iterator ialo = a.lower_bound(a_lbound);
+    typename SDArray<NA>::const_iterator iaup = a.upper_bound(a_ubound);
+    if(ialo == iaup) continue;
+
+    int c_irow = i * ncols;
+    for(int j = 0; j < ncols; ++j) {
+      int c_tag = c_irow + j;
+      if(!c.allowed(c_tag)) continue;
+
+      int b_lbound = j * stride;
+      int b_ubound = b_lbound + stride - 1;
+      typename SDArray<NB>::const_iterator iblo = b.lower_bound(b_lbound);
+      typename SDArray<NB>::const_iterator ibup = b.upper_bound(b_ubound);
+      if(iblo == ibup) continue;
+
+      Dgemm_auglist<NA, NB, NC> gemm_list(transa, transb, alpha, 1.0);
+      for(typename SDArray<NA>::const_iterator ia = ialo; ia != iaup; ++ia) {
+        TinyVector<int, NA> a_index(a.index(ia->first));
+        for(typename SDArray<NB>::const_iterator ib = iblo; ib != ibup; ++ib) {
+          if((ia->first % stride) == (ib->first % stride)) {
+            gemm_list.add(ia->second, ib->second, f_scale(a_index, b.index(ib->first), c.index(c_tag)));
           }
         }
       }
