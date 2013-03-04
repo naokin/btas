@@ -1,5 +1,5 @@
-#include "SpinQuantum.h"
-namespace btas { typedef SpinQuantum Quantum; }
+#include "FermiQuantum.h"
+namespace btas { typedef FermiQuantum Quantum; }
 
 #include <btas/Dblas.h>
 #include <btas/SDblas.h>

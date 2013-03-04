@@ -1,6 +1,6 @@
 CXX=g++44
+#CXXFLAGS=-g -O2 -fopenmp -D_PRINT_WARNINGS
 CXXFLAGS=-g -O2 -fopenmp
-#CXXFLAGS=-O3 -DSERIAL
 
 BLITZDIR=/home/naokin/blitz/0.9
 BLITZINC=-I$(BLITZDIR)/include
@@ -14,7 +14,7 @@ BOOSTDIR=/home/naokin/boost/1.52.0
 BOOSTINC=-I$(BOOSTDIR)/include
 BOOSTLIB=-L$(BOOSTDIR)/lib -lboost_serialization
 
-BTASDIR=..
+BTASDIR=/home/naokin/btas-0.2.4
 BTASINC=-I$(BTASDIR)/include
 BTASLIB=  $(BTASDIR)/lib
 

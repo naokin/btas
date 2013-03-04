@@ -165,8 +165,8 @@ int main()
 
   ofstream fout("btas_template_specialize.C");
 
-  fout << "#include \"SpinQuantum.h\"" << endl;
-  fout << "namespace btas { typedef SpinQuantum Quantum; }" << endl;
+  fout << "#include \"FermiQuantum.h\"" << endl;
+  fout << "namespace btas { typedef FermiQuantum Quantum; }" << endl;
   fout << endl;
   fout << "#include <btas/Dblas.h>" << endl;
   fout << "#include <btas/SDblas.h>" << endl;

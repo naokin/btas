@@ -2,8 +2,8 @@
 #include <iomanip>
 using namespace std;
 
-#include "SpinQuantum.h"
-namespace btas { typedef SpinQuantum Quantum; };
+#include "FermiQuantum.h"
+namespace btas { typedef FermiQuantum Quantum; };
 
 #include "mpsite.h"
 #include "dmrg.h"
@@ -15,33 +15,38 @@ int main(int argc, char* argv[])
   // define working space for 20 sites chain
   //
 
-  int L = 20;
+  int L = 10;
+  int M = 100;
+
   MpStorages sites(L);
 
   //
   // matrix product oeprator (spin-1/2 Heisenberg model)
   //
 
-  //
-  // Nz = 2 * Sz / J = Jz = 1.0 / Hz = 0.0
-  //
-
-  int    Nz = 1;
-  double J  = 1.0;
-  double Jz = 1.0;
-  double Hz = 0.0;
-  construct_heisenberg_mpo(sites, Nz, J, Jz, Hz);
-
-  //
-  // dmrg optimization with M = 10
-  //
-
-  //
-  // Nz = 1 / M = 10
-  //
-
-  int M = 30;
-  initialize(sites, btas::Quantum::zero(), Nz, M);
+  if(0) {
+    //
+    // Nz = 2 * Sz / J = Jz = 1.0 / Hz = 0.0
+    //
+    int    Nz = 1;
+    int    Sz = 0;
+    double J  = 1.0;
+    double Jz = 1.0;
+    double Hz = 0.0;
+    Heisenberg::construct_mpo(sites, Nz, J, Jz, Hz);
+    Heisenberg::initialize(sites, FermiQuantum(0, Sz), Nz, M);
+  }
+  else {
+    //
+    // Half-filling / t = 1.0 / U = 1.0
+    //
+    int    Ne = L;
+    int    Sz = 0;
+    double t  = 1.0;
+    double U  = 1.0;
+    Hubbard::construct_mpo(sites, t, U);
+    Hubbard::initialize(sites, FermiQuantum(Ne, Sz), M);
+  }
 
   double energy = 0.0;
 

@@ -3,8 +3,8 @@
 #include <vector>
 using namespace std;
 
-#include "SpinQuantum.h"
-namespace btas { typedef SpinQuantum Quantum; };
+#include "FermiQuantum.h"
+namespace btas { typedef FermiQuantum Quantum; };
 
 #include <btas/QSDArray.h>
 #include <btas/QSDblas.h>
@@ -20,7 +20,10 @@ using namespace btas;
 //
 double rgen() { return 2.0*(static_cast<double>(rand())/RAND_MAX) - 1.0; }
 
-void prototype::construct_heisenberg_mpo(MpStorages& sites, int Nz, double J, double Jz, double Hz)
+//
+// Heisenberg model
+//
+void prototype::Heisenberg::construct_mpo(MpStorages& sites, int Nz, double J, double Jz, double Hz)
 {
   int    L  = sites.size();
   int    d  = Nz + 1;
@@ -38,32 +41,32 @@ void prototype::construct_heisenberg_mpo(MpStorages& sites, int Nz, double J, do
   Qshapes qp; // physical index
   for(int i = 0; i < d; ++i) {
     int iz = Nz - 2 * i;
-    qp.push_back(Quantum(iz));
+    qp.push_back(Quantum(0, iz));
   }
 
   Qshapes qz; // 0 quantum number
-  qz.push_back(Quantum( 0));
+  qz.push_back(Quantum(0,  0));
 
   Qshapes qi; // quantum index comes in
-  qi.push_back(Quantum( 0)); // I
-  qi.push_back(Quantum(-2)); // S- (from S+)
-  qi.push_back(Quantum(+2)); // S+ (from S-)
-  qi.push_back(Quantum( 0)); // Sz
-  qi.push_back(Quantum( 0)); // I
+  qi.push_back(Quantum(0,  0)); // I
+  qi.push_back(Quantum(0, +2)); // S- (from S+)
+  qi.push_back(Quantum(0, -2)); // S+ (from S-)
+  qi.push_back(Quantum(0,  0)); // Sz
+  qi.push_back(Quantum(0,  0)); // I
 
   Qshapes qo; // quantum index comes out
-  qo.push_back(Quantum( 0)); // I
-  qo.push_back(Quantum(+2)); // S+ (to S-)
-  qo.push_back(Quantum(-2)); // S- (to S+)
-  qo.push_back(Quantum( 0)); // Sz
-  qo.push_back(Quantum( 0)); // I
+  qo.push_back(Quantum(0,  0)); // I
+  qo.push_back(Quantum(0, -2)); // S+ (to S-)
+  qo.push_back(Quantum(0, +2)); // S- (to S+)
+  qo.push_back(Quantum(0,  0)); // Sz
+  qo.push_back(Quantum(0,  0)); // I
 
   // resize & set to 0
-  sites[ 0 ].mpo.resize(Quantum::zero(), TinyVector<Qshapes, 4>(qz,-qp, qp, qo));
+  sites[ 0 ].mpo.resize(Quantum::zero(), TinyVector<Qshapes, 4>(qz, qp,-qp, qo));
   for(int i = 1; i < L-1; ++i) {
-    sites[i].mpo.resize(Quantum::zero(), TinyVector<Qshapes, 4>(qi,-qp, qp, qo));
+    sites[i].mpo.resize(Quantum::zero(), TinyVector<Qshapes, 4>(qi, qp,-qp, qo));
   }
-  sites[L-1].mpo.resize(Quantum::zero(), TinyVector<Qshapes, 4>(qi,-qp, qp, qz));
+  sites[L-1].mpo.resize(Quantum::zero(), TinyVector<Qshapes, 4>(qi, qp,-qp, qz));
 
   // construct mpos for spin-hamiltonian
   double mz = sz;
@@ -115,7 +118,7 @@ void prototype::construct_heisenberg_mpo(MpStorages& sites, int Nz, double J, do
   }
 }
 
-void prototype::initialize(MpStorages& sites, const Quantum& qt, int Nz, int M)
+void prototype::Heisenberg::initialize(MpStorages& sites, const Quantum& qt, int Nz, int M)
 {
   int L = sites.size();
   int d  = Nz + 1;
@@ -123,12 +126,12 @@ void prototype::initialize(MpStorages& sites, const Quantum& qt, int Nz, int M)
   Qshapes qp; // physical index
   for(int i = 0; i < d; ++i) {
     int iz = Nz - 2 * i;
-    qp.push_back(Quantum(iz));
+    qp.push_back(Quantum(0, iz));
   }
   Dshapes dp(qp.size(), 1);
 
   Qshapes qz; // 0 quantum number
-  qz.push_back(Quantum( 0));
+  qz.push_back(Quantum(0,  0));
   Dshapes dz(qz.size(), 1);
 
   //
@@ -142,7 +145,7 @@ void prototype::initialize(MpStorages& sites, const Quantum& qt, int Nz, int M)
   Dshapes dl(ql.size(), 1);
   Qshapes qr(qp);
   Dshapes dr(qr.size(), M0);
-  TinyVector<Qshapes, 3> qshape(-ql,-qp, qr);
+  TinyVector<Qshapes, 3> qshape( ql, qp,-qr);
   TinyVector<Dshapes, 3> dshape( dl, dp, dr);
   sites[ 0 ].wfnc.resize(Quantum::zero(), qshape, dshape);
   sites[ 0 ].wfnc = rgen;
@@ -152,7 +155,7 @@ void prototype::initialize(MpStorages& sites, const Quantum& qt, int Nz, int M)
     dl = dr;
     qr = ql & qp; // get unique elements of { q(left) x q(phys) }
     dr = Dshapes(qr.size(), M0);
-    qshape = TinyVector<Qshapes, 3>(-ql,-qp, qr);
+    qshape = TinyVector<Qshapes, 3>( ql, qp,-qr);
     dshape = TinyVector<Dshapes, 3>( dl, dp, dr);
     sites[i].wfnc.resize(Quantum::zero(), qshape, dshape);
     sites[i].wfnc = rgen;
@@ -162,7 +165,7 @@ void prototype::initialize(MpStorages& sites, const Quantum& qt, int Nz, int M)
   dl = dr;
   qr = qz;
   dr = dz;
-  qshape = TinyVector<Qshapes, 3>(-ql,-qp, qr);
+  qshape = TinyVector<Qshapes, 3>( ql, qp,-qr);
   dshape = TinyVector<Dshapes, 3>( dl, dp, dr);
   sites[L-1].wfnc.resize(qt, qshape, dshape);
   sites[L-1].wfnc = rgen;
@@ -172,6 +175,196 @@ void prototype::initialize(MpStorages& sites, const Quantum& qt, int Nz, int M)
   //
 
   qshape = TinyVector<Qshapes, 3>( qz, qz, qz);
+  dshape = TinyVector<Dshapes, 3>( dz, dz, dz);
+
+  sites[L-1].ropr.resize(Quantum::zero(), qshape, dshape);
+  sites[L-1].ropr = 1.0;
+
+  for(int i = L-1; i > 0; --i) {
+    util::Normalize(sites[i].wfnc);
+    Canonicalize(0, sites[i].wfnc, sites[i].rmps, Mx);
+    QSDcopy(sites[i-1].wfnc, sites[i-1].lmps);
+    ComputeGuess(0, sites[i].rmps, sites[i].wfnc, sites[i-1].lmps, sites[i-1].wfnc);
+    sites[i-1].ropr.clear();
+    Renormalize (0, sites[i].mpo, sites[i].ropr, sites[i].rmps, sites[i].rmps, sites[i-1].ropr);
+  }
+  util::Normalize(sites[0].wfnc);
+
+  sites[ 0 ].lopr.resize(Quantum::zero(), qshape, dshape);
+  sites[ 0 ].lopr = 1.0;
+}
+
+//
+// Hubbard model
+//
+void prototype::Hubbard::construct_mpo(MpStorages& sites, double t, double U)
+{
+  int    L  = sites.size();
+
+  cout << "\t====================================================================================================" << endl;
+  cout << "\t\tCONSTRUCT MATRIX PRODUCT OPERATORS (MPOs) "                                                         << endl;
+  cout.precision(4);
+  cout << "\t\t\t+ coupling coefficient t  : " << setw(8) << fixed << t  << endl; 
+  cout << "\t\t\t+ coupling coefficient U  : " << setw(8) << fixed << U  << endl;
+  cout << "\t====================================================================================================" << endl;
+
+  Qshapes qp; // physical index { |0>, |a>, |b>, |ab> }
+  qp.push_back(Quantum( 0,  0));
+  qp.push_back(Quantum( 1,  1));
+  qp.push_back(Quantum( 1, -1));
+  qp.push_back(Quantum( 2,  0));
+
+  Qshapes qz; // 0 quantum number
+  qz.push_back(Quantum( 0,  0));
+
+  Qshapes qi; // quantum index comes in
+  qi.push_back(Quantum( 0,  0)); // 0
+  qi.push_back(Quantum( 1,  1)); // a-
+  qi.push_back(Quantum(-1, -1)); // a+
+  qi.push_back(Quantum( 1, -1)); // b-
+  qi.push_back(Quantum(-1,  1)); // b+
+  qi.push_back(Quantum( 0,  0)); // I
+
+  Qshapes qo; // quantum index comes out
+  qo.push_back(Quantum( 0,  0)); // I
+  qo.push_back(Quantum(-1, -1)); // a+
+  qo.push_back(Quantum( 1,  1)); // a-
+  qo.push_back(Quantum(-1,  1)); // b+
+  qo.push_back(Quantum( 1, -1)); // b-
+  qo.push_back(Quantum( 0,  0)); // 0
+
+  // resize & set to 0
+  sites[ 0 ].mpo.resize(Quantum::zero(), TinyVector<Qshapes, 4>(qz, qp,-qp, qo));
+  for(int i = 1; i < L-1; ++i) {
+    sites[i].mpo.resize(Quantum::zero(), TinyVector<Qshapes, 4>(qi, qp,-qp, qo));
+  }
+  sites[L-1].mpo.resize(Quantum::zero(), TinyVector<Qshapes, 4>(qi, qp,-qp, qz));
+
+  // set block elements
+  DArray<4> data_Ip(1, 1, 1, 1); data_Ip = 1.0;
+  DArray<4> data_Im(1, 1, 1, 1); data_Im =-1.0;
+  DArray<4> data_tp(1, 1, 1, 1); data_tp = t;
+  DArray<4> data_tm(1, 1, 1, 1); data_tm =-t;
+  DArray<4> data_Un(1, 1, 1, 1); data_Un = U;
+  // insert blocks
+  sites[ 0 ].mpo.insert(shape(0, 3, 3, 0), data_Un); //  U
+  sites[ 0 ].mpo.insert(shape(0, 1, 0, 1), data_tp); //  t a+
+  sites[ 0 ].mpo.insert(shape(0, 3, 2, 1), data_tm); //  t a+ [x(-1) due to P(a,b)]
+  sites[ 0 ].mpo.insert(shape(0, 0, 1, 2), data_tm); // -t a-
+  sites[ 0 ].mpo.insert(shape(0, 2, 3, 2), data_tp); // -t a- [x(-1) due to P(a,b)]
+  sites[ 0 ].mpo.insert(shape(0, 2, 0, 3), data_tp); //  t b+
+  sites[ 0 ].mpo.insert(shape(0, 3, 1, 3), data_tp); //  t b+
+  sites[ 0 ].mpo.insert(shape(0, 0, 2, 4), data_tm); // -t b-
+  sites[ 0 ].mpo.insert(shape(0, 1, 3, 4), data_tm); // -t b-
+  sites[ 0 ].mpo.insert(shape(0, 0, 0, 5), data_Ip); //  I
+  sites[ 0 ].mpo.insert(shape(0, 1, 1, 5), data_Ip); //  I
+  sites[ 0 ].mpo.insert(shape(0, 2, 2, 5), data_Ip); //  I
+  sites[ 0 ].mpo.insert(shape(0, 3, 3, 5), data_Ip); //  I
+  for(int i = 1; i < L-1; ++i) {
+    sites[i].mpo.insert(shape(0, 0, 0, 0), data_Ip); //  I
+    sites[i].mpo.insert(shape(0, 1, 1, 0), data_Ip); //  I
+    sites[i].mpo.insert(shape(0, 2, 2, 0), data_Ip); //  I
+    sites[i].mpo.insert(shape(0, 3, 3, 0), data_Ip); //  I
+    sites[i].mpo.insert(shape(1, 0, 1, 0), data_Ip); //  a-
+    sites[i].mpo.insert(shape(1, 2, 3, 0), data_Im); //  a- [x(-1) due to P(a,b)]
+    sites[i].mpo.insert(shape(2, 1, 0, 0), data_Ip); //  a+
+    sites[i].mpo.insert(shape(2, 3, 2, 0), data_Im); //  a+ [x(-1) due to P(a,b)]
+    sites[i].mpo.insert(shape(3, 0, 2, 0), data_Ip); //  b-
+    sites[i].mpo.insert(shape(3, 1, 3, 0), data_Ip); //  b-
+    sites[i].mpo.insert(shape(4, 2, 0, 0), data_Ip); //  b+
+    sites[i].mpo.insert(shape(4, 3, 1, 0), data_Ip); //  b+
+    sites[i].mpo.insert(shape(5, 3, 3, 0), data_Un); //  U
+    sites[i].mpo.insert(shape(5, 1, 0, 1), data_tp); //  t a+
+    sites[i].mpo.insert(shape(5, 3, 2, 1), data_tm); //  t a+ [x(-1) due to P(a,b)]
+    sites[i].mpo.insert(shape(5, 0, 1, 2), data_tm); // -t a-
+    sites[i].mpo.insert(shape(5, 2, 3, 2), data_tp); // -t a- [x(-1) due to P(a,b)]
+    sites[i].mpo.insert(shape(5, 2, 0, 3), data_tp); //  t b+
+    sites[i].mpo.insert(shape(5, 3, 1, 3), data_tp); //  t b+
+    sites[i].mpo.insert(shape(5, 0, 2, 4), data_tm); // -t b-
+    sites[i].mpo.insert(shape(5, 1, 3, 4), data_tm); // -t b-
+    sites[i].mpo.insert(shape(5, 0, 0, 5), data_Ip); //  I
+    sites[i].mpo.insert(shape(5, 1, 1, 5), data_Ip); //  I
+    sites[i].mpo.insert(shape(5, 2, 2, 5), data_Ip); //  I
+    sites[i].mpo.insert(shape(5, 3, 3, 5), data_Ip); //  I
+  }
+  sites[L-1].mpo.insert(shape(0, 0, 0, 0), data_Ip); //  I
+  sites[L-1].mpo.insert(shape(0, 1, 1, 0), data_Ip); //  I
+  sites[L-1].mpo.insert(shape(0, 2, 2, 0), data_Ip); //  I
+  sites[L-1].mpo.insert(shape(0, 3, 3, 0), data_Ip); //  I
+  sites[L-1].mpo.insert(shape(1, 0, 1, 0), data_Ip); //  a-
+  sites[L-1].mpo.insert(shape(1, 2, 3, 0), data_Im); //  a- [x(-1) due to P(a,b)]
+  sites[L-1].mpo.insert(shape(2, 1, 0, 0), data_Ip); //  a+
+  sites[L-1].mpo.insert(shape(2, 3, 2, 0), data_Im); //  a+ [x(-1) due to P(a,b)]
+  sites[L-1].mpo.insert(shape(3, 0, 2, 0), data_Ip); //  b-
+  sites[L-1].mpo.insert(shape(3, 1, 3, 0), data_Ip); //  b-
+  sites[L-1].mpo.insert(shape(4, 2, 0, 0), data_Ip); //  b+
+  sites[L-1].mpo.insert(shape(4, 3, 1, 0), data_Ip); //  b+
+  sites[L-1].mpo.insert(shape(5, 3, 3, 0), data_Un); //  U
+
+  // taking operator parity P(O(l),<n|)
+  std::vector<int> indx1(1, 0); // left mpo index [0]
+  std::vector<int> indx2(1, 1); // phys bra index [1]
+  for(int i = 0; i < L; ++i) {
+    sites[i].mpo.parity(indx1, indx2);
+  }
+}
+
+void prototype::Hubbard::initialize(MpStorages& sites, const Quantum& qt, int M)
+{
+  int L = sites.size();
+
+  Qshapes qp; // physical index
+  qp.push_back(Quantum( 0,  0));
+  qp.push_back(Quantum( 1,  1));
+  qp.push_back(Quantum( 1, -1));
+  qp.push_back(Quantum( 2,  0));
+  Dshapes dp(qp.size(), 1);
+
+  Qshapes qz; // 0 quantum number
+  qz.push_back(Quantum(0,  0));
+  Dshapes dz(qz.size(), 1);
+
+  //
+  // create random wavefunction
+  //
+
+  int M0 = 1;
+  int Mx = M;
+
+  Qshapes ql(qz);
+  Dshapes dl(ql.size(), 1);
+  Qshapes qr(qp);
+  Dshapes dr(qr.size(), M0);
+  TinyVector<Qshapes, 3> qshape( ql, qp,-qr);
+  TinyVector<Dshapes, 3> dshape( dl, dp, dr);
+  sites[ 0 ].wfnc.resize(Quantum::zero(), qshape, dshape);
+  sites[ 0 ].wfnc = rgen;
+
+  for(int i = 1; i < L-1; ++i) {
+    ql = qr;
+    dl = dr;
+    qr = ql & qp; // get unique elements of { q(left) x q(phys) }
+    dr = Dshapes(qr.size(), M0);
+    qshape = TinyVector<Qshapes, 3>( ql, qp,-qr);
+    dshape = TinyVector<Dshapes, 3>( dl, dp, dr);
+    sites[i].wfnc.resize(Quantum::zero(), qshape, dshape);
+    sites[i].wfnc = rgen;
+  }
+
+  ql = qr;
+  dl = dr;
+  qr = qz;
+  dr = dz;
+  qshape = TinyVector<Qshapes, 3>( ql, qp,-qr);
+  dshape = TinyVector<Dshapes, 3>( dl, dp, dr);
+  sites[L-1].wfnc.resize(qt, qshape, dshape);
+  sites[L-1].wfnc = rgen;
+
+  //
+  // canonicalize & renormalize
+  //
+
+  qshape = TinyVector<Qshapes, 3>( qz,-qz,-qz);
   dshape = TinyVector<Dshapes, 3>( dz, dz, dz);
 
   sites[L-1].ropr.resize(Quantum::zero(), qshape, dshape);

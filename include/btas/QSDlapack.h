@@ -64,6 +64,9 @@ void ThreadQSDgesvd(BTAS_CANONICALITY q_cano, const QSDArray<2>& a, SDArray<1>& 
   task_list.reserve(a.size());
   // set task list
   for(QSDArray<2>::const_iterator ia = a.begin(); ia != a.end(); ++ia) {
+
+    if(ia->second->size() == 0) continue;
+
     int irow = ia->first / ncols;
     int icol = ia->first % ncols;
     int stag, utag, vtag;
@@ -145,8 +148,8 @@ double QSDgesvd(BTAS_CANONICALITY q_cano,
   }
 
    s_value.resize(shape(q_sval.size()));
-   u_merge.resize(Quantum::zero(), TinyVector<Qshapes, 2>(q_rows, -q_sval));
-  vt_merge.resize(a.q(), TinyVector<Qshapes, 2>(q_sval, q_cols));
+   u_merge.resize( u_q_total, TinyVector<Qshapes, 2>(q_rows, -q_sval));
+  vt_merge.resize(vt_q_total, TinyVector<Qshapes, 2>(q_sval, q_cols));
 
   ThreadQSDgesvd(q_cano, a_merge, s_value, u_merge, vt_merge);
 

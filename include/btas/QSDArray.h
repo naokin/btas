@@ -184,7 +184,7 @@ public:
         qsum = qsum * m_q_shape[p1[i]][block_index[p1[i]]];
       }
       if(qsum.parity()) {
-        Dscal(-1.0, it->second);
+        Dscal(-1.0, *it->second);
       }
     }
   }
@@ -200,7 +200,7 @@ public:
                     && m_q_shape[p2[i]][block_index[p2[i]]].parity();
       }
       if(flip_parity) {
-        Dscal(-1.0, it->second);
+        Dscal(-1.0, *it->second);
       }
     }
   }

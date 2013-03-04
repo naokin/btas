@@ -2,8 +2,8 @@
 #include <iomanip>
 using namespace std;
 
-#include "SpinQuantum.h"
-namespace btas { typedef SpinQuantum Quantum; };
+#include "FermiQuantum.h"
+namespace btas { typedef FermiQuantum Quantum; };
 
 #include <btas/QSDblas.h>
 #include <btas/QSDlapack.h>
