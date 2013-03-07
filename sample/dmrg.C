@@ -118,82 +118,6 @@ void prototype::Heisenberg::construct_mpo(MpStorages& sites, int Nz, double J, d
   }
 }
 
-void prototype::Heisenberg::initialize(MpStorages& sites, const Quantum& qt, int Nz, int M)
-{
-  int L = sites.size();
-  int d  = Nz + 1;
-
-  Qshapes qp; // physical index
-  for(int i = 0; i < d; ++i) {
-    int iz = Nz - 2 * i;
-    qp.push_back(Quantum(0, iz));
-  }
-  Dshapes dp(qp.size(), 1);
-
-  Qshapes qz; // 0 quantum number
-  qz.push_back(Quantum(0,  0));
-  Dshapes dz(qz.size(), 1);
-
-  //
-  // create random wavefunction
-  //
-
-  int M0 = 1;
-  int Mx = M;
-
-  Qshapes ql(qz);
-  Dshapes dl(ql.size(), 1);
-  Qshapes qr(qp);
-  Dshapes dr(qr.size(), M0);
-  TinyVector<Qshapes, 3> qshape( ql, qp,-qr);
-  TinyVector<Dshapes, 3> dshape( dl, dp, dr);
-  sites[ 0 ].wfnc.resize(Quantum::zero(), qshape, dshape);
-  sites[ 0 ].wfnc = rgen;
-
-  for(int i = 1; i < L-1; ++i) {
-    ql = qr;
-    dl = dr;
-    qr = ql & qp; // get unique elements of { q(left) x q(phys) }
-    dr = Dshapes(qr.size(), M0);
-    qshape = TinyVector<Qshapes, 3>( ql, qp,-qr);
-    dshape = TinyVector<Dshapes, 3>( dl, dp, dr);
-    sites[i].wfnc.resize(Quantum::zero(), qshape, dshape);
-    sites[i].wfnc = rgen;
-  }
-
-  ql = qr;
-  dl = dr;
-  qr = qz;
-  dr = dz;
-  qshape = TinyVector<Qshapes, 3>( ql, qp,-qr);
-  dshape = TinyVector<Dshapes, 3>( dl, dp, dr);
-  sites[L-1].wfnc.resize(qt, qshape, dshape);
-  sites[L-1].wfnc = rgen;
-
-  //
-  // canonicalize & renormalize
-  //
-
-  qshape = TinyVector<Qshapes, 3>( qz, qz, qz);
-  dshape = TinyVector<Dshapes, 3>( dz, dz, dz);
-
-  sites[L-1].ropr.resize(Quantum::zero(), qshape, dshape);
-  sites[L-1].ropr = 1.0;
-
-  for(int i = L-1; i > 0; --i) {
-    util::Normalize(sites[i].wfnc);
-    Canonicalize(0, sites[i].wfnc, sites[i].rmps, Mx);
-    QSDcopy(sites[i-1].wfnc, sites[i-1].lmps);
-    ComputeGuess(0, sites[i].rmps, sites[i].wfnc, sites[i-1].lmps, sites[i-1].wfnc);
-    sites[i-1].ropr.clear();
-    Renormalize (0, sites[i].mpo, sites[i].ropr, sites[i].rmps, sites[i].rmps, sites[i-1].ropr);
-  }
-  util::Normalize(sites[0].wfnc);
-
-  sites[ 0 ].lopr.resize(Quantum::zero(), qshape, dshape);
-  sites[ 0 ].lopr = 1.0;
-}
-
 //
 // Hubbard model
 //
@@ -309,20 +233,76 @@ void prototype::Hubbard::construct_mpo(MpStorages& sites, double t, double U)
   }
 }
 
-void prototype::Hubbard::initialize(MpStorages& sites, const Quantum& qt, int M)
+void prototype::set_quantum_blocks(const MpStorages& sites, const Quantum& qt, std::vector<Qshapes>& qb, int QMAX_SIZE)
 {
   int L = sites.size();
 
-  Qshapes qp; // physical index
-  qp.push_back(Quantum( 0,  0));
-  qp.push_back(Quantum( 1,  1));
-  qp.push_back(Quantum( 1, -1));
-  qp.push_back(Quantum( 2,  0));
-  Dshapes dp(qp.size(), 1);
+  // physical index
+  Qshapes qp;
+  // 0 quantum number
+  Qshapes qz(1, Quantum::zero());
 
-  Qshapes qz; // 0 quantum number
-  qz.push_back(Quantum(0,  0));
+  qb.resize(L);
+
+  // quantum blocks from the entire Fock space
+  qb[0] =-sites[0].mpo.qshape(2);
+  for(int i = 1; i < L-1; ++i) {
+    qp    =-sites[i].mpo.qshape(2);
+    qb[i] = qb[i-1] & qp; // get unique elements of { q(left) x q(phys) }
+  }
+  qp      =-sites[L-1].mpo.qshape(2);
+  qb[L-1] = Qshapes(1, qt);
+
+  // reduce zero quantum blocks
+  for(int i = L-1; i > 0; --i) {
+    qp =-sites[i].mpo.qshape(2);
+    Qshapes& ql = qb[i-1];
+    Qshapes& qr = qb[i];
+
+    // check non-zero for each ql index
+    Qshapes::iterator lt = ql.begin();
+    while(lt != ql.end()) {
+      bool non_zero = false;
+      for(int p = 0; p < qp.size(); ++p) {
+        for(int r = 0; r < qr.size(); ++r) {
+          non_zero |= (qr[r] == (qp[p] * (*lt)));
+        }
+      }
+      if(non_zero)
+        ++lt;
+      else
+        ql.erase(lt);
+    }
+    // further reduction
+    if(QMAX_SIZE > 0 && ql.size() > QMAX_SIZE) {
+      int offs = (ql.size() - QMAX_SIZE) / 2;
+      ql = Qshapes(ql.begin()+offs, ql.begin()+offs+QMAX_SIZE);
+    }
+  }
+}
+
+void prototype::initialize(MpStorages& sites, const Quantum& qt, int M)
+{
+  int L = sites.size();
+
+  // physical index
+  Qshapes qp;
+  Dshapes dp;
+  // left state index
+  Qshapes ql;
+  Dshapes dl;
+  // right state index
+  Qshapes qr;
+  Dshapes dr;
+  // 0 quantum number
+  Qshapes qz(1, Quantum::zero());
   Dshapes dz(qz.size(), 1);
+
+  // non-zero quantum numbers for each site
+  std::vector<Qshapes> qb;
+
+  int max_size = 20;
+  set_quantum_blocks(sites, qt, qb, max_size);
 
   //
   // create random wavefunction
@@ -331,26 +311,31 @@ void prototype::Hubbard::initialize(MpStorages& sites, const Quantum& qt, int M)
   int M0 = 1;
   int Mx = M;
 
-  Qshapes ql(qz);
-  Dshapes dl(ql.size(), 1);
-  Qshapes qr(qp);
-  Dshapes dr(qr.size(), M0);
-  TinyVector<Qshapes, 3> qshape( ql, qp,-qr);
-  TinyVector<Dshapes, 3> dshape( dl, dp, dr);
-  sites[ 0 ].wfnc.resize(Quantum::zero(), qshape, dshape);
-  sites[ 0 ].wfnc = rgen;
+  TinyVector<Qshapes, 3> qshape;
+  TinyVector<Dshapes, 3> dshape;
 
-  for(int i = 1; i < L-1; ++i) {
+  qr = qz;
+  dr = Dshapes(qr.size(), 1);
+
+  for(int i = 0; i < L-1; ++i) {
+    // physical index is taken from mpo's ket index
+    qp =-sites[i].mpo.qshape(2);
+    dp = Dshapes(qp.size(), 1);
+    // left index equals to previous right index
     ql = qr;
     dl = dr;
-    qr = ql & qp; // get unique elements of { q(left) x q(phys) }
+    // non-zero quantum numbers for site i
+    qr = qb[i];
     dr = Dshapes(qr.size(), M0);
+
     qshape = TinyVector<Qshapes, 3>( ql, qp,-qr);
     dshape = TinyVector<Dshapes, 3>( dl, dp, dr);
     sites[i].wfnc.resize(Quantum::zero(), qshape, dshape);
     sites[i].wfnc = rgen;
   }
 
+  qp =-sites[L-1].mpo.qshape(2);
+  dp = Dshapes(qp.size(), 1);
   ql = qr;
   dl = dr;
   qr = qz;
@@ -364,7 +349,7 @@ void prototype::Hubbard::initialize(MpStorages& sites, const Quantum& qt, int M)
   // canonicalize & renormalize
   //
 
-  qshape = TinyVector<Qshapes, 3>( qz,-qz,-qz);
+  qshape = TinyVector<Qshapes, 3>( qz, qz, qz);
   dshape = TinyVector<Dshapes, 3>( dz, dz, dz);
 
   sites[L-1].ropr.resize(Quantum::zero(), qshape, dshape);
@@ -378,10 +363,10 @@ void prototype::Hubbard::initialize(MpStorages& sites, const Quantum& qt, int M)
     sites[i-1].ropr.clear();
     Renormalize (0, sites[i].mpo, sites[i].ropr, sites[i].rmps, sites[i].rmps, sites[i-1].ropr);
   }
-  util::Normalize(sites[0].wfnc);
 
-  sites[ 0 ].lopr.resize(Quantum::zero(), qshape, dshape);
-  sites[ 0 ].lopr = 1.0;
+  util::Normalize(sites[0].wfnc);
+  sites[0].lopr.resize(Quantum::zero(), qshape, dshape);
+  sites[0].lopr = 1.0;
 }
 
 double prototype::optimize_onesite(bool forward, MpSite& sysdot, MpSite& envdot, int M)

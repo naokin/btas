@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
   // define working space for 20 sites chain
   //
 
-  int L = 10;
+  int L = 20;
   int M = 100;
 
   MpStorages sites(L);
@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
     double Jz = 1.0;
     double Hz = 0.0;
     Heisenberg::construct_mpo(sites, Nz, J, Jz, Hz);
-    Heisenberg::initialize(sites, FermiQuantum(0, Sz), Nz, M);
+    initialize(sites, FermiQuantum(0, Sz), M);
   }
   else {
     //
@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
     double t  = 1.0;
     double U  = 1.0;
     Hubbard::construct_mpo(sites, t, U);
-    Hubbard::initialize(sites, FermiQuantum(Ne, Sz), M);
+    initialize(sites, FermiQuantum(Ne, Sz), M);
   }
 
   double energy = 0.0;

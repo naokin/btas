@@ -1,8 +1,8 @@
-CXX=g++44
+CXX=g++
 CXXFLAGS=-g -O3
 #CXXFLAGS=-O3 -DSERIAL -DMKL_CBLAS
 
-BLITZDIR=/home/naokin/blitz/0.9
+BLITZDIR=/user/blitz/0.9
 BLITZINC=-I$(BLITZDIR)/include
 BLITZLIB=-L$(BLITZDIR)/lib -lblitz
 
@@ -10,7 +10,7 @@ BLASDIR=
 BLASINC=
 BLASLIB=-lmkl_intel_lp64 -lmkl_sequential -lmkl_core
 
-BOOSTDIR=/home/naokin/boost/1.52.0
+BOOSTDIR=/user/boost/1.52.0
 BOOSTINC=-I$(BOOSTDIR)/include
 BOOSTLIB=-L$(BOOSTDIR)/lib -lboost_serialization
 
