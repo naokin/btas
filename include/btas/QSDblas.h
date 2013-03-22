@@ -133,9 +133,9 @@ template<int N>
 double QSDdotu(const QSDArray<N>& x, const QSDArray<N>& y)
 {
   if(x.q() != -y.q())
-    BTAS_THROW(false, "btas::QSDaxpy: quantum # of y mismatched");
+    BTAS_THROW(false, "btas::QSDdotu: quantum # of y mismatched");
   if(x.qshape() != -y.qshape())
-    BTAS_THROW(false, "btas::QSDaxpy: quantum # shape of y mismatched");
+    BTAS_THROW(false, "btas::QSDdotu: quantum # shape of y mismatched");
   return SerialSDdot(x, y);
 }
 
@@ -144,9 +144,9 @@ template<int N>
 double QSDdotc(const QSDArray<N>& x, const QSDArray<N>& y)
 {
   if(x.q() != y.q())
-    BTAS_THROW(false, "btas::QSDaxpy: quantum # of y mismatched");
+    BTAS_THROW(false, "btas::QSDdotc: quantum # of y mismatched");
   if(x.qshape() != y.qshape())
-    BTAS_THROW(false, "btas::QSDaxpy: quantum # shape of y mismatched");
+    BTAS_THROW(false, "btas::QSDdotc: quantum # shape of y mismatched");
   return SerialSDdot(x, y);
 }
 

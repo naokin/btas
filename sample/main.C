@@ -28,8 +28,8 @@ int main(int argc, char* argv[])
     //
     // Nz = 2 * Sz / J = Jz = 1.0 / Hz = 0.0
     //
-    int    Nz = 1;
-    int    Sz = 0;
+//  int    Nz = 1;
+    int    Sz = 0; // Sz = 2 * 'actual' Sz
     double J  = 1.0;
     double Jz = 1.0;
     double Hz = 0.0;
