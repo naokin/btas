@@ -44,7 +44,7 @@ void Dgesv(const DArray<2*N>& a, DArray<N>& x)
 // full diagonalization for real symmetric tensor
 //
 template<int N>
-void Dsyev(const DArray<2*N>& a, DArray<N>& d, DArray<2*N>& z)
+void Dsyev(const DArray<2*N>& a, DArray<N>& d, DArray<2*N>& z, CLAPACK_CALCVECTOR jobt = ClapackCalcVector)
 {
   if(!a.data()) BTAS_THROW(false, "btas::Dsyev(tensor) array data not found");
   Dcopy(a, z);
@@ -53,7 +53,7 @@ void Dsyev(const DArray<2*N>& a, DArray<N>& d, DArray<2*N>& z)
   for(int i = 0; i < N; ++i) d_shape[i] = a_shape[i];
   d.resize(d_shape);
   int ncols = std::accumulate(d_shape.begin(), d_shape.end(), 1, std::multiplies<int>());
-  if(clapack_dsyev(ClapackCalcVector, ClapackUseUpper, ncols, z.data(), ncols, d.data()) < 0)
+  if(clapack_dsyev(jobt, ClapackUseUpper, ncols, z.data(), ncols, d.data()) < 0)
     BTAS_THROW(false, "btas::Dsyev(tensor) terminated abnormally");
 }
 
@@ -61,7 +61,7 @@ void Dsyev(const DArray<2*N>& a, DArray<N>& d, DArray<2*N>& z)
 // solve generalized eigenvalue problem for real-symmetric tensor
 //
 template<int N>
-void Dsygv(const DArray<2*N>& a, const DArray<2*N>& b, DArray<N>& d, DArray<2*N>& z)
+void Dsygv(const DArray<2*N>& a, const DArray<2*N>& b, DArray<N>& d, DArray<2*N>& z, CLAPACK_CALCVECTOR jobt = ClapackCalcVector)
 {
   if(!a.data()) BTAS_THROW(false, "btas::Dsygv(tensor) array data of 'a' not found");
   if(!b.data()) BTAS_THROW(false, "btas::Dsygv(tensor) array data of 'b' not found");
@@ -75,7 +75,7 @@ void Dsygv(const DArray<2*N>& a, const DArray<2*N>& b, DArray<N>& d, DArray<2*N>
   for(int i = 0; i < N; ++i) d_shape[i] = a_shape[i];
   d.resize(d_shape);
   int ncols = std::accumulate(d_shape.begin(), d_shape.end(), 1, std::multiplies<int>());
-  if(clapack_dsygv(1, ClapackCalcVector, ClapackUseUpper, ncols, z.data(), ncols, x.data(), ncols, d.data()) < 0)
+  if(clapack_dsygv(1, jobt, ClapackUseUpper, ncols, z.data(), ncols, x.data(), ncols, d.data()) < 0)
     BTAS_THROW(false, "btas::Dsygv(tensor) terminated abnormally");
 }
 
@@ -97,7 +97,7 @@ void Dsygv(const DArray<2*N>& a, const DArray<2*N>& b, DArray<N>& d, DArray<2*N>
 // thin singular value decomposition
 //
 template<int NA, int NU>
-void Dgesvd(const DArray<NA>& a, DArray<1>& s, DArray<NU>& u, DArray<NA-NU+2>& vt)
+void Dgesvd(const DArray<NA>& a, DArray<1>& s, DArray<NU>& u, DArray<NA-NU+2>& vt, CLAPACK_CALCVECTOR jobt = ClapackCalcThinVector)
 {
   const int K  = NA - NU + 1;
   const int NV = K + 1;
@@ -117,8 +117,7 @@ void Dgesvd(const DArray<NA>& a, DArray<1>& s, DArray<NU>& u, DArray<NA-NU+2>& v
   vt.resize(vt_shape);
   DArray<NA> acpy;
   Dcopy(a, acpy);
-  int info = clapack_dgesvd(ClapackCalcThinVector, ClapackCalcThinVector,
-                            nrows, ncols, acpy.data(), ncols, s.data(), u.data(), nsval, vt.data(), ncols);
+  int info = clapack_dgesvd(jobt, jobt, nrows, ncols, acpy.data(), ncols, s.data(), u.data(), nsval, vt.data(), ncols);
   if(info < 0) BTAS_THROW(false, "btas::Dgesvd(tensor) terminated abnormally");
 }
 
