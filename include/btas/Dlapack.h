@@ -108,16 +108,18 @@ void Dgesvd(const DArray<NA>& a, DArray<1>& s, DArray<NU>& u, DArray<NA-NU+2>& v
   int nsval = std::min(nrows, ncols);
   TinyVector<int, NU> u_shape;
   for(int i = 0; i < NA-K; ++i) u_shape[i] = a_shape[i];
-  u_shape[NA-K] = nsval;
+  int ucols = (jobt == ClapackCalcThinVector) ? nsval : nrows;
+  u_shape[NA-K] = ucols;
   TinyVector<int, NV> vt_shape;
-  vt_shape[0] = nsval;
+  int vrows = (jobt == ClapackCalcThinVector) ? nsval : ncols;
+  vt_shape[0] = vrows;
   for(int i = 0; i < K; ++i) vt_shape[i+1] = a_shape[i+NA-K];
   s.resize(nsval);
   u.resize(u_shape);
   vt.resize(vt_shape);
   DArray<NA> acpy;
   Dcopy(a, acpy);
-  int info = clapack_dgesvd(jobt, jobt, nrows, ncols, acpy.data(), ncols, s.data(), u.data(), nsval, vt.data(), ncols);
+  int info = clapack_dgesvd(jobt, jobt, nrows, ncols, acpy.data(), ncols, s.data(), u.data(), ucols, vt.data(), ncols);
   if(info < 0) BTAS_THROW(false, "btas::Dgesvd(tensor) terminated abnormally");
 }
 
