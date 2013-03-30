@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
   //
 
   int L = 20;
-  int M = 100;
+  int M = 20;
 
   MpStorages sites(L);
 
@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
   // matrix product oeprator (spin-1/2 Heisenberg model)
   //
 
-  if(0) {
+  if(1) {
     //
     // Nz = 2 * Sz / J = Jz = 1.0 / Hz = 0.0
     //

@@ -80,6 +80,33 @@ void Dsygv(const DArray<2*N>& a, const DArray<2*N>& b, DArray<N>& d, DArray<2*N>
 }
 
 //
+// solve generalized eigenvalue problem for non-hermitian matrix pair
+//
+template<int N>
+void Dggev(const DArray<2*N>& a, const DArray<2*N>& b, DArray<N>& alphar, DArray<N>& alphai, DArray<N>& beta,
+           DArray<2*N>& vl, DArray<2*N>& vr, CLAPACK_CALCVECTOR jobt = ClapackCalcVector)
+{
+  if(!a.data()) BTAS_THROW(false, "btas::Dggev(tensor) array data of 'a' not found");
+  if(!b.data()) BTAS_THROW(false, "btas::Dggev(tensor) array data of 'b' not found");
+  DArray<2*N> ascr; Dcopy(a, ascr);
+  DArray<2*N> bscr; Dcopy(b, bscr);
+  const TinyVector<int, 2*N>& a_shape = a.shape();
+  if(!std::equal(a_shape.begin(), a_shape.end(), b.shape().begin()))
+    BTAS_THROW(false, "btas::Dggev(tensor) shapes of 'a' and 'b' are inconsistent");
+  vl.resize(a_shape); vl = 0.0;
+  vr.resize(a_shape); vr = 0.0;
+  TinyVector<int, N> n_shape;
+  for(int i = 0; i < N; ++i) n_shape[i] = a_shape[i];
+  alphar.resize(n_shape); alphar = 0.0;
+  alphai.resize(n_shape); alphai = 0.0;
+  beta.resize(n_shape); beta = 0.0;
+  int ncols = std::accumulate(n_shape.begin(), n_shape.end(), 1, std::multiplies<int>());
+  if(clapack_dggev(jobt, jobt, ncols, ascr.data(), ncols, bscr.data(), ncols,
+                   alphar.data(), alphai.data(), beta.data(), vl.data(), ncols, vr.data(), ncols) < 0)
+    BTAS_THROW(false, "btas::Dggev(tensor) terminated abnormally");
+}
+
+//
 // specialized for matrix
 //
 //template<>

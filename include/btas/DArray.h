@@ -16,7 +16,8 @@ namespace btas
 template<int N> class DArray;
 
 template<int N>
-extern void Dcopy(const Array<double, N>&, Array<double, N>&);
+//extern void Dcopy(const Array<double, N>&, Array<double, N>&);
+extern void Dcopy(const DArray<N>&, DArray<N>&);
 
 template<int N>
 extern void Dpermute(const DArray<N>&, const TinyVector<int, N>&, DArray<N>&);

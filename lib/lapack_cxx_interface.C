@@ -143,6 +143,20 @@ int clapack_dsygv (int itype, CLAPACK_CALCVECTOR jobz, CLAPACK_UPLO uplo, int n,
   return info;
 }
 
+// non-hermitian eigenvalue decomposition
+int clapack_dggev (CLAPACK_CALCVECTOR jobl, CLAPACK_CALCVECTOR jobr, int n, double* a, int lda,
+                   double* b, int ldb, double* alphar, double* alphai, double* beta, double* vl, int ldvl, double* vr, int ldvr)
+{
+  char fc_jobl = (jobl == ClapackNoCalcVector) ? 'N' : 'V';
+  char fc_jobr = (jobr == ClapackNoCalcVector) ? 'N' : 'V';
+  int    lwork = 8 * n;
+  double *work = new double[lwork];
+  int info;
+  dggev_(&fc_jobl, &fc_jobr, &n, a, &lda, b, &ldb, alphar, alphai, beta, vl, &ldvl, vr, &ldvr, work, &lwork, &info);
+  delete [] work;
+  return info;
+}
+
 // singularvalue decomposition for real general matrix
 int clapack_dgesvd(CLAPACK_CALCVECTOR jobu, CLAPACK_CALCVECTOR jobvt, int m, int n, double* a, int lda,
                    double* s, double* u, int ldu, double* vt, int ldvt)
