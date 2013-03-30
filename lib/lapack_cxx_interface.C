@@ -123,6 +123,20 @@ int clapack_dsyev (CLAPACK_CALCVECTOR jobz, CLAPACK_UPLO uplo, int n, double* a,
   return info;
 }
 
+// eigenvalue decomposition for non-hermitian matrix
+int clapack_dgeev (CLAPACK_CALCVECTOR jobl, CLAPACK_CALCVECTOR jobr, int n, double* a, int lda,
+                   double* wr, double* wi, double* vl, int ldvl, double* vr, int ldvr)
+{
+  char fc_jobl = (jobl == ClapackNoCalcVector) ? 'N' : 'V';
+  char fc_jobr = (jobr == ClapackNoCalcVector) ? 'N' : 'V';
+  int    lwork = 3 * n;
+  double *work = new double[lwork];
+  int info;
+  dgeev_(&fc_jobl, &fc_jobr, &n, a, &lda, wr, wi, vl, &ldvl, vr, &ldvr, work, &lwork, &info);
+  delete [] work;
+  return info;
+}
+
 // generalized eigenvalue decomposition for real-symmetric matrix
 // itype = 1: A x = w B x
 //         2: A B x = w x

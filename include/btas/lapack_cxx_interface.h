@@ -76,6 +76,9 @@ int clapack_dsysv (CLAPACK_UPLO uplo, int n, int nrhs, double* a, int lda, pivot
 
 // eigenvalue decomposition for real-symmetric matrix
 int clapack_dsyev (CLAPACK_CALCVECTOR jobz, CLAPACK_UPLO uplo, int n, double* a, int lda, double* w);
+// eigenvalue decomposition for non-hermitian matrix
+int clapack_dgeev (CLAPACK_CALCVECTOR jobl, CLAPACK_CALCVECTOR jobr, int n, double* a, int lda,
+                   double* wr, double* wi, double* vl, int ldvl, double* vr, int ldvr);
 // generalized eigenvalue decomposition for real-symmetric matrix
 int clapack_dsygv (int itype, CLAPACK_CALCVECTOR jobz, CLAPACK_UPLO uplo, int n, double* a, int lda, double* b, int ldb, double* w);
 // generalized eigenvalue decomposition for non-hermitian matrix pair

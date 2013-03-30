@@ -58,6 +58,26 @@ void Dsyev(const DArray<2*N>& a, DArray<N>& d, DArray<2*N>& z, CLAPACK_CALCVECTO
 }
 
 //
+// solve eigenvalue problem for non-hermitian matrix
+//
+template<int N>
+void Dgeev(const DArray<2*N>& a, DArray<N>& wr, DArray<N>& wi, DArray<2*N>& vl, DArray<2*N>& vr, CLAPACK_CALCVECTOR jobt = ClapackCalcVector)
+{
+  if(!a.data()) BTAS_THROW(false, "btas::Dgeev(tensor) array data of 'a' not found");
+  DArray<2*N> ascr; Dcopy(a, ascr);
+  const TinyVector<int, 2*N>& a_shape = a.shape();
+  vl.resize(a_shape); vl = 0.0;
+  vr.resize(a_shape); vr = 0.0;
+  TinyVector<int, N> n_shape;
+  for(int i = 0; i < N; ++i) n_shape[i] = a_shape[i];
+  wr.resize(n_shape); wr = 0.0;
+  wi.resize(n_shape); wi = 0.0;
+  int ncols = std::accumulate(n_shape.begin(), n_shape.end(), 1, std::multiplies<int>());
+  if(clapack_dgeev(jobt, jobt, ncols, ascr.data(), ncols, wr.data(), wi.data(), vl.data(), ncols, vr.data(), ncols) < 0)
+    BTAS_THROW(false, "btas::Dgeev(tensor) terminated abnormally");
+}
+
+//
 // solve generalized eigenvalue problem for real-symmetric tensor
 //
 template<int N>
