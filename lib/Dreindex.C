@@ -1,8 +1,8 @@
 #include <btas/Dreindex.h>
-using namespace btas;
+//using namespace btas;
 
 template<>
-void Dreindex<1>(const double* x, double* y, const TinyVector<int, 1>& xstr, const TinyVector<int, 1>& yshape)
+void btas::Dreindex<1>(const double* x, double* y, const TinyVector<int, 1>& xstr, const TinyVector<int, 1>& yshape)
 {
   int i = 0;
   for(int i0 = 0; i0 < yshape[0]; ++i0) {
@@ -11,7 +11,7 @@ void Dreindex<1>(const double* x, double* y, const TinyVector<int, 1>& xstr, con
 }
 
 template<>
-void Dreindex<2>(const double* x, double* y, const TinyVector<int, 2>& xstr, const TinyVector<int, 2>& yshape)
+void btas::Dreindex<2>(const double* x, double* y, const TinyVector<int, 2>& xstr, const TinyVector<int, 2>& yshape)
 {
   int i = 0;
   for(int i0 = 0; i0 < yshape[0]; ++i0) {
@@ -23,7 +23,7 @@ void Dreindex<2>(const double* x, double* y, const TinyVector<int, 2>& xstr, con
 }
 
 template<>
-void Dreindex<3>(const double* x, double* y, const TinyVector<int, 3>& xstr, const TinyVector<int, 3>& yshape)
+void btas::Dreindex<3>(const double* x, double* y, const TinyVector<int, 3>& xstr, const TinyVector<int, 3>& yshape)
 {
   int i = 0;
   for(int i0 = 0; i0 < yshape[0]; ++i0) {
@@ -38,7 +38,7 @@ void Dreindex<3>(const double* x, double* y, const TinyVector<int, 3>& xstr, con
 }
 
 template<>
-void Dreindex<4>(const double* x, double* y, const TinyVector<int, 4>& xstr, const TinyVector<int, 4>& yshape)
+void btas::Dreindex<4>(const double* x, double* y, const TinyVector<int, 4>& xstr, const TinyVector<int, 4>& yshape)
 {
   int i = 0;
   for(int i0 = 0; i0 < yshape[0]; ++i0) {
@@ -56,7 +56,7 @@ void Dreindex<4>(const double* x, double* y, const TinyVector<int, 4>& xstr, con
 }
 
 template<>
-void Dreindex<5>(const double* x, double* y, const TinyVector<int, 5>& xstr, const TinyVector<int, 5>& yshape)
+void btas::Dreindex<5>(const double* x, double* y, const TinyVector<int, 5>& xstr, const TinyVector<int, 5>& yshape)
 {
   int i = 0;
   for(int i0 = 0; i0 < yshape[0]; ++i0) {
@@ -77,7 +77,7 @@ void Dreindex<5>(const double* x, double* y, const TinyVector<int, 5>& xstr, con
 }
 
 template<>
-void Dreindex<6>(const double* x, double* y, const TinyVector<int, 6>& xstr, const TinyVector<int, 6>& yshape)
+void btas::Dreindex<6>(const double* x, double* y, const TinyVector<int, 6>& xstr, const TinyVector<int, 6>& yshape)
 {
   int i = 0;
   for(int i0 = 0; i0 < yshape[0]; ++i0) {
@@ -101,7 +101,7 @@ void Dreindex<6>(const double* x, double* y, const TinyVector<int, 6>& xstr, con
 }
 
 template<>
-void Dreindex<7>(const double* x, double* y, const TinyVector<int, 7>& xstr, const TinyVector<int, 7>& yshape)
+void btas::Dreindex<7>(const double* x, double* y, const TinyVector<int, 7>& xstr, const TinyVector<int, 7>& yshape)
 {
   int i = 0;
   for(int i0 = 0; i0 < yshape[0]; ++i0) {
@@ -128,7 +128,7 @@ void Dreindex<7>(const double* x, double* y, const TinyVector<int, 7>& xstr, con
 }
 
 template<>
-void Dreindex<8>(const double* x, double* y, const TinyVector<int, 8>& xstr, const TinyVector<int, 8>& yshape)
+void btas::Dreindex<8>(const double* x, double* y, const TinyVector<int, 8>& xstr, const TinyVector<int, 8>& yshape)
 {
   int i = 0;
   for(int i0 = 0; i0 < yshape[0]; ++i0) {
@@ -158,7 +158,7 @@ void Dreindex<8>(const double* x, double* y, const TinyVector<int, 8>& xstr, con
 }
 
 template<>
-void Dreindex<9>(const double* x, double* y, const TinyVector<int, 9>& xstr, const TinyVector<int, 9>& yshape)
+void btas::Dreindex<9>(const double* x, double* y, const TinyVector<int, 9>& xstr, const TinyVector<int, 9>& yshape)
 {
   int i = 0;
   for(int i0 = 0; i0 < yshape[0]; ++i0) {
@@ -191,7 +191,7 @@ void Dreindex<9>(const double* x, double* y, const TinyVector<int, 9>& xstr, con
 }
 
 template<>
-void Dreindex<10>(const double* x, double* y, const TinyVector<int, 10>& xstr, const TinyVector<int, 10>& yshape)
+void btas::Dreindex<10>(const double* x, double* y, const TinyVector<int, 10>& xstr, const TinyVector<int, 10>& yshape)
 {
   int i = 0;
   for(int i0 = 0; i0 < yshape[0]; ++i0) {
@@ -227,7 +227,7 @@ void Dreindex<10>(const double* x, double* y, const TinyVector<int, 10>& xstr, c
 }
 
 template<>
-void Dreindex<11>(const double* x, double* y, const TinyVector<int, 11>& xstr, const TinyVector<int, 11>& yshape)
+void btas::Dreindex<11>(const double* x, double* y, const TinyVector<int, 11>& xstr, const TinyVector<int, 11>& yshape)
 {
   int i = 0;
   for(int i0 = 0; i0 < yshape[0]; ++i0) {
@@ -266,7 +266,7 @@ void Dreindex<11>(const double* x, double* y, const TinyVector<int, 11>& xstr, c
 }
 
 template<>
-void Dreindex<12>(const double* x, double* y, const TinyVector<int, 12>& xstr, const TinyVector<int,  12 >& yshape)
+void btas::Dreindex<12>(const double* x, double* y, const TinyVector<int, 12>& xstr, const TinyVector<int,  12 >& yshape)
 {
   int i = 0;
   for(int i0 = 0; i0 < yshape[0]; ++i0) {

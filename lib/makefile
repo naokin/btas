@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS=-g -O3
+CXXFLAGS=-g -O3 -fopenmp
 #CXXFLAGS=-O3 -DSERIAL -DMKL_CBLAS
 
 BLITZDIR=/user/blitz/0.9

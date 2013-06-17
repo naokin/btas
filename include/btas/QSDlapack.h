@@ -55,7 +55,9 @@ public:
 // suppose 'a' is block-diagonal (quantum number indices of matrix 'a' are merged)
 // thus, it cannot be implemented in term of SDArray<2>, it will be little bit complicated
 //
-void ThreadQSDgesvd(BTAS_CANONICALITY q_cano, const QSDArray<2>& a, SDArray<1>& s, QSDArray<2>& u, QSDArray<2>& vt)
+// FIXME: inline definition is not good, should be involved in libtas.a?
+//void ThreadQSDgesvd(BTAS_CANONICALITY q_cano, const QSDArray<2>& a, SDArray<1>& s, QSDArray<2>& u, QSDArray<2>& vt)
+inline void ThreadQSDgesvd(BTAS_CANONICALITY q_cano, const QSDArray<2>& a, SDArray<1>& s, QSDArray<2>& u, QSDArray<2>& vt)
 {
   int nrows = a.shape(0);
   int ncols = a.shape(1);

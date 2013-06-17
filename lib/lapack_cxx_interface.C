@@ -17,7 +17,7 @@ int clapack_dgetrf(int m, int n, double* a, int lda, pivot_info& ipiv)
 int clapack_dpotrf(CLAPACK_UPLO uplo, int n, double* a, int lda)
 {
   char fc_uplo = 'L'; // 'U' with row-major matrix
-  if(uplo = ClapackUseLower)
+  if(uplo == ClapackUseLower)
        fc_uplo = 'U';
   int info;
   dpotrf_(&fc_uplo, &n, a, &lda, &info);
@@ -27,7 +27,7 @@ int clapack_dpotrf(CLAPACK_UPLO uplo, int n, double* a, int lda)
 int clapack_dsytrf(CLAPACK_UPLO uplo, int n, double* a, int lda, pivot_info& ipiv)
 {
   char fc_uplo = 'L'; // 'U' with row-major matrix
-  if(uplo = ClapackUseLower)
+  if(uplo == ClapackUseLower)
        fc_uplo = 'U';
   int *ipiv_data = new int[n];
   int    lwork   = n;
@@ -58,7 +58,7 @@ int clapack_dgetrs(CLAPACK_TRANSPOSE transa, int n, int nrhs, double* a, int lda
 int clapack_dpotrs(CLAPACK_UPLO uplo, int n, int nrhs, double* a, int lda, double* b, int ldb)
 {
   char fc_uplo = 'L'; // 'U' with row-major matrix
-  if(uplo = ClapackUseLower)
+  if(uplo == ClapackUseLower)
        fc_uplo = 'U';
   int info;
   dpotrs_(&fc_uplo, &n, &nrhs, a, &lda, b, &ldb, &info);
@@ -68,7 +68,7 @@ int clapack_dpotrs(CLAPACK_UPLO uplo, int n, int nrhs, double* a, int lda, doubl
 int clapack_dsytrs(CLAPACK_UPLO uplo, int n, int nrhs, double* a, int lda, pivot_info& ipiv, double* b, int ldb)
 {
   char fc_uplo = 'L'; // 'U' with row-major matrix
-  if(uplo = ClapackUseLower)
+  if(uplo == ClapackUseLower)
        fc_uplo = 'U';
   int *ipiv_data = new int[n];
   std::copy(ipiv.begin(), ipiv.end(), ipiv_data);
@@ -129,7 +129,7 @@ int clapack_dgeev (CLAPACK_CALCVECTOR jobl, CLAPACK_CALCVECTOR jobr, int n, doub
 {
   char fc_jobl = (jobl == ClapackNoCalcVector) ? 'N' : 'V';
   char fc_jobr = (jobr == ClapackNoCalcVector) ? 'N' : 'V';
-  int    lwork = 3 * n;
+  int    lwork = 8 * n;
   double *work = new double[lwork];
   int info;
   dgeev_(&fc_jobl, &fc_jobr, &n, a, &lda, wr, wi, vl, &ldvl, vr, &ldvr, work, &lwork, &info);
