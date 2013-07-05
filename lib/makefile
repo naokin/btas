@@ -2,9 +2,8 @@ CXX=g++
 CXXFLAGS=-g -O3 -fopenmp
 #CXXFLAGS=-O3 -DSERIAL -DMKL_CBLAS
 
-BLITZDIR=/user/blitz/0.9
-BLITZINC=-I$(BLITZDIR)/include
-BLITZLIB=-L$(BLITZDIR)/lib -lblitz
+BLITZINC=`pkg-config --cflags blitz`
+BLITZLIB=`pkg-config --libs blitz`
 
 BLASDIR=
 BLASINC=
