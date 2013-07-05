@@ -30,7 +30,7 @@ libbtas.a : $(OBJ_LIBBTAS)
 	ar cr libbtas.a $(OBJ_LIBBTAS)
 
 tests.x : tests.o
-	$(CXX) $(CXXFLAGS) $(LIBRARYFLAGS) -o tests.x tests.o libbtas.a
+	$(CXX) $(CXXFLAGS) -o tests.x tests.o libbtas.a $(LIBRARYFLAGS)
 
 clean:
 	rm *.o; rm *.x; rm *.a;
