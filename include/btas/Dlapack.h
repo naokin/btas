@@ -35,7 +35,7 @@ void Dgesv(const DArray<2*N>& a, DArray<N>& x)
   DArray<2*N> acopy;
   Dcopy(a, acopy);
   int ndim = std::accumulate(x_shape.begin(), x_shape.end(), 1, std::multiplies<int>());
-  pivot_info ipiv;
+  std::vector<int> ipiv;
   if(clapack_dgesv(ndim, 1, acopy.data(), ndim, ipiv, x.data(), ndim) < 0)
     BTAS_THROW(false, "btas::Dgesv terminated abnormally");
 }

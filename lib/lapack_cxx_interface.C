@@ -1,8 +1,9 @@
+#include <vector>
 #include <algorithm>
 #include <btas/lapack_cxx_interface.h>
 
 // LU decomposition
-int clapack_dgetrf(int m, int n, double* a, int lda, pivot_info& ipiv)
+int clapack_dgetrf(int m, int n, double* a, int lda, std::vector<int>& ipiv)
 {
   int  ipiv_size = std::min(m, n);
   int *ipiv_data = new int[ipiv_size];
@@ -24,15 +25,17 @@ int clapack_dpotrf(CLAPACK_UPLO uplo, int n, double* a, int lda)
   return info;
 }
 // Bunch-Kaufman decomposition
-int clapack_dsytrf(CLAPACK_UPLO uplo, int n, double* a, int lda, pivot_info& ipiv)
+int clapack_dsytrf(CLAPACK_UPLO uplo, int n, double* a, int lda, std::vector<int>& ipiv)
 {
   char fc_uplo = 'L'; // 'U' with row-major matrix
   if(uplo == ClapackUseLower)
        fc_uplo = 'U';
   int *ipiv_data = new int[n];
-  int    lwork   = n;
+  int info, lwork = -1;
+  double lwork_opt[1];
+  dsytrf_(&fc_uplo, &n, a, &lda, ipiv_data, lwork_opt, &lwork, &info);
+  lwork = static_cast<int>(lwork_opt[0]);
   double *work   = new double[lwork];
-  int info;
   dsytrf_(&fc_uplo, &n, a, &lda, ipiv_data, work, &lwork, &info);
   ipiv.clear();
   ipiv.insert(ipiv.end(), ipiv_data, ipiv_data + n);
@@ -42,7 +45,7 @@ int clapack_dsytrf(CLAPACK_UPLO uplo, int n, double* a, int lda, pivot_info& ipi
 }
 
 // solving linear equation from triangular fragmented matrix
-int clapack_dgetrs(CLAPACK_TRANSPOSE transa, int n, int nrhs, double* a, int lda, pivot_info& ipiv, double* b, int ldb)
+int clapack_dgetrs(CLAPACK_TRANSPOSE transa, int n, int nrhs, double* a, int lda, std::vector<int>& ipiv, double* b, int ldb)
 {
   char fc_transa = 'N';
   if(transa == ClapackTrans)
@@ -65,7 +68,7 @@ int clapack_dpotrs(CLAPACK_UPLO uplo, int n, int nrhs, double* a, int lda, doubl
   return info;
 }
 // (symmetric)
-int clapack_dsytrs(CLAPACK_UPLO uplo, int n, int nrhs, double* a, int lda, pivot_info& ipiv, double* b, int ldb)
+int clapack_dsytrs(CLAPACK_UPLO uplo, int n, int nrhs, double* a, int lda, std::vector<int>& ipiv, double* b, int ldb)
 {
   char fc_uplo = 'L'; // 'U' with row-major matrix
   if(uplo == ClapackUseLower)
@@ -79,7 +82,7 @@ int clapack_dsytrs(CLAPACK_UPLO uplo, int n, int nrhs, double* a, int lda, pivot
 }
 
 // solving linear equation (involving dgetrf)
-int clapack_dgesv (int n, int nrhs, double* a, int lda, pivot_info& ipiv, double* b, int ldb)
+int clapack_dgesv (int n, int nrhs, double* a, int lda, std::vector<int>& ipiv, double* b, int ldb)
 {
   int info = clapack_dgetrf(n, n, a, lda, ipiv);
   if(info == 0) {
@@ -97,7 +100,7 @@ int clapack_dposv (CLAPACK_UPLO uplo, int n, int nrhs, double* a, int lda, doubl
   return info;
 }
 // (symmetric)
-int clapack_dsysv (CLAPACK_UPLO uplo, int n, int nrhs, double* a, int lda, pivot_info& ipiv, double* b, int ldb)
+int clapack_dsysv (CLAPACK_UPLO uplo, int n, int nrhs, double* a, int lda, std::vector<int>& ipiv, double* b, int ldb)
 {
   int info = clapack_dsytrf(uplo, n, a, lda, ipiv);
   if(info == 0) {
@@ -115,9 +118,11 @@ int clapack_dsyev (CLAPACK_CALCVECTOR jobz, CLAPACK_UPLO uplo, int n, double* a,
   char fc_uplo = 'L';
   if(uplo == ClapackUseLower)
        fc_uplo = 'U';
-  int    lwork   = 3 * n;
-  double *work   = new double[lwork];
-  int info;
+  int info, lwork = -1;
+  double lwork_opt[1];
+  dsyev_(&fc_jobz, &fc_uplo, &n, a, &lda, w, lwork_opt, &lwork, &info);
+  lwork = static_cast<int>(lwork_opt[0]);
+  double *work = new double[lwork];
   dsyev_(&fc_jobz, &fc_uplo, &n, a, &lda, w, work, &lwork, &info);
   delete [] work;
   return info;
@@ -129,9 +134,11 @@ int clapack_dgeev (CLAPACK_CALCVECTOR jobl, CLAPACK_CALCVECTOR jobr, int n, doub
 {
   char fc_jobl = (jobl == ClapackNoCalcVector) ? 'N' : 'V';
   char fc_jobr = (jobr == ClapackNoCalcVector) ? 'N' : 'V';
-  int    lwork = 8 * n;
+  int info, lwork = -1;
+  double lwork_opt[1];
+  dgeev_(&fc_jobl, &fc_jobr, &n, a, &lda, wr, wi, vl, &ldvl, vr, &ldvr, lwork_opt, &lwork, &info);
+  lwork = static_cast<int>(lwork_opt[0]);
   double *work = new double[lwork];
-  int info;
   dgeev_(&fc_jobl, &fc_jobr, &n, a, &lda, wr, wi, vl, &ldvl, vr, &ldvr, work, &lwork, &info);
   delete [] work;
   return info;
@@ -149,9 +156,11 @@ int clapack_dsygv (int itype, CLAPACK_CALCVECTOR jobz, CLAPACK_UPLO uplo, int n,
   char fc_uplo = 'L';
   if(uplo == ClapackUseLower)
        fc_uplo = 'U';
-  int    lwork   = 3 * n;
+  int info, lwork = -1;
+  double lwork_opt[1];
+  dsygv_(&itype, &fc_jobz, &fc_uplo, &n, a, &lda, b, &ldb, w, lwork_opt, &lwork, &info);
+  lwork = static_cast<int>(lwork_opt[0]);
   double *work   = new double[lwork];
-  int info;
   dsygv_(&itype, &fc_jobz, &fc_uplo, &n, a, &lda, b, &ldb, w, work, &lwork, &info);
   delete [] work;
   return info;
@@ -163,9 +172,11 @@ int clapack_dggev (CLAPACK_CALCVECTOR jobl, CLAPACK_CALCVECTOR jobr, int n, doub
 {
   char fc_jobl = (jobl == ClapackNoCalcVector) ? 'N' : 'V';
   char fc_jobr = (jobr == ClapackNoCalcVector) ? 'N' : 'V';
-  int    lwork = 8 * n;
+  int info, lwork = -1;
+  double lwork_opt[1];
+  dggev_(&fc_jobl, &fc_jobr, &n, a, &lda, b, &ldb, alphar, alphai, beta, vl, &ldvl, vr, &ldvr, lwork_opt, &lwork, &info);
+  lwork = static_cast<int>(lwork_opt[0]);
   double *work = new double[lwork];
-  int info;
   dggev_(&fc_jobl, &fc_jobr, &n, a, &lda, b, &ldb, alphar, alphai, beta, vl, &ldvl, vr, &ldvr, work, &lwork, &info);
   delete [] work;
   return info;
@@ -185,9 +196,11 @@ int clapack_dgesvd(CLAPACK_CALCVECTOR jobu, CLAPACK_CALCVECTOR jobvt, int m, int
        fc_jobvt = 'S';
   if(jobvt == ClapackNoCalcVector)
        fc_jobvt = 'N';
-  int    lwork   = std::max(3 * std::min(m, n) + std::max(m, n), 5 * std::min(m, n));
+  int info, lwork = -1;
+  double lwork_opt[1];
+  dgesvd_(&fc_jobvt, &fc_jobu, &n, &m, a, &lda, s, vt, &ldvt, u, &ldu, lwork_opt, &lwork, &info);
+  lwork = static_cast<int>(lwork_opt[0]);
   double *work   = new double[lwork];
-  int info;
   dgesvd_(&fc_jobvt, &fc_jobu, &n, &m, a, &lda, s, vt, &ldvt, u, &ldu, work, &lwork, &info);
   delete [] work;
   return info;

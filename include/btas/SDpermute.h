@@ -7,7 +7,7 @@
 #include <btas/DArray.h>
 #include <btas/SDArray.h>
 #include <btas/permute_shape.h>
-#include <btas/auglist.h>
+#include <btas/arglist.h>
 
 namespace btas
 {
@@ -31,9 +31,9 @@ void SerialSDpermute(const SDArray<N>& x, const TinyVector<int, N>& ipmute, SDAr
 // threaded
 //
 template<int N>
-class Dpermute_auglist : public T_replication_auglist<N>
+class Dpermute_arglist : public T_replication_arglist<N>
 {
-  using T_replication_auglist<N>::m_auglist;
+  using T_replication_arglist<N>::m_arglist;
 private:
   TinyVector<int, N>
     m_ipmute;
@@ -41,13 +41,13 @@ public:
   // calling Dpermute
   void call() const
   {
-    Dpermute(*(m_auglist.first), m_ipmute, *(m_auglist.second));
+    Dpermute(*(m_arglist.first), m_ipmute, *(m_arglist.second));
   }
-  Dpermute_auglist()
+  Dpermute_arglist()
   {
   }
-  Dpermute_auglist(const shared_ptr<DArray<N> >& x_ptr, const TinyVector<int, N>& ipmute, const shared_ptr<DArray<N> >& y_ptr)
-  : T_replication_auglist<N>(x_ptr, y_ptr), m_ipmute(ipmute)
+  Dpermute_arglist(const shared_ptr<DArray<N> >& x_ptr, const TinyVector<int, N>& ipmute, const shared_ptr<DArray<N> >& y_ptr)
+  : T_replication_arglist<N>(x_ptr, y_ptr), m_ipmute(ipmute)
   {
   }
 };
@@ -55,14 +55,14 @@ public:
 template<int N>
 void ThreadSDpermute(const SDArray<N>& x, const TinyVector<int, N>& ipmute, SDArray<N>& y)
 {
-  std::vector<Dpermute_auglist<N> > task_list;
+  std::vector<Dpermute_arglist<N> > task_list;
   task_list.reserve(x.size());
   for(typename SDArray<N>::const_iterator ix = x.begin(); ix != x.end(); ++ix) {
     TinyVector<int, N> x_index(x.index(ix->first));
     TinyVector<int, N> y_index;
     for(int i = 0; i < N; ++i) y_index[i] = x_index[ipmute[i]];
     typename SDArray<N>::iterator iy = y.reserve(y_index);
-    task_list.push_back(Dpermute_auglist<N>(ix->second, ipmute, iy->second));
+    task_list.push_back(Dpermute_arglist<N>(ix->second, ipmute, iy->second));
   }
   parallel_call(task_list);
 }

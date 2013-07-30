@@ -84,7 +84,7 @@ void Ddiagonal(const DArray<NA>& a, const TinyVector<int, K>& dindx, DArray<NA-K
     if(iset.find(i) == iset.end()) uindx[nb++] = i;
   }
   uindx[nb++] = dindx[0];
-  for(int i = nb; i < NA; ++i) {
+  for(int i = dindx[0]+1; i < NA; ++i) {
     if(iset.find(i) == iset.end()) uindx[nb++] = i;
   }
 

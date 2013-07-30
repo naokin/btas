@@ -26,7 +26,6 @@
 //
 
 #include <vector>
-typedef std::vector<int> pivot_info;
 
 enum CLAPACK_UPLO {
   ClapackUseLower = 0,
@@ -54,25 +53,25 @@ extern "C"
 typedef MKL_Complex16 FC_Complex16;
 
 // LU decomposition
-int clapack_dgetrf(int m, int n, double* a, int lda, pivot_info& ipiv);
+int clapack_dgetrf(int m, int n, double* a, int lda, std::vector<int>& ipiv);
 // Cholesky decomposition
-int clapack_dpotrf(CLAPACK_UPLO uplo, int n, double* a, int lda, pivot_info& ipiv);
+int clapack_dpotrf(CLAPACK_UPLO uplo, int n, double* a, int lda, std::vector<int>& ipiv);
 // Bunch-Kaufman decomposition
-int clapack_dsytrf(CLAPACK_UPLO uplo, int n, double* a, int lda, pivot_info& ipiv);
+int clapack_dsytrf(CLAPACK_UPLO uplo, int n, double* a, int lda, std::vector<int>& ipiv);
 
 // solving linear equation from triangular fragmented matrix
-int clapack_dgetrs(CLAPACK_TRANSPOSE transa, int n, int nrhs, double* a, int lda, pivot_info& ipiv, double* b, int ldb);
+int clapack_dgetrs(CLAPACK_TRANSPOSE transa, int n, int nrhs, double* a, int lda, std::vector<int>& ipiv, double* b, int ldb);
 // (symmetric positive definite)
 int clapack_dpotrs(CLAPACK_UPLO uplo, int n, int nrhs, double* a, int lda, double* b, int ldb);
 // (symmetric)
-int clapack_dsytrs(CLAPACK_UPLO uplo, int n, int nrhs, double* a, int lda, pivot_info& ipiv, double* b, int ldb);
+int clapack_dsytrs(CLAPACK_UPLO uplo, int n, int nrhs, double* a, int lda, std::vector<int>& ipiv, double* b, int ldb);
 
 // solving linear equation (involving dgetrf)
-int clapack_dgesv (int n, int nrhs, double* a, int lda, pivot_info& ipiv, double* b, int ldb);
+int clapack_dgesv (int n, int nrhs, double* a, int lda, std::vector<int>& ipiv, double* b, int ldb);
 // (symmetric positive definite)
 int clapack_dposv (CLAPACK_UPLO uplo, int n, int nrhs, double* a, int lda, double* b, int ldb);
 // (symmetric)
-int clapack_dsysv (CLAPACK_UPLO uplo, int n, int nrhs, double* a, int lda, pivot_info& ipiv, double* b, int ldb);
+int clapack_dsysv (CLAPACK_UPLO uplo, int n, int nrhs, double* a, int lda, std::vector<int>& ipiv, double* b, int ldb);
 
 // eigenvalue decomposition for real-symmetric matrix
 int clapack_dsyev (CLAPACK_CALCVECTOR jobz, CLAPACK_UPLO uplo, int n, double* a, int lda, double* w);

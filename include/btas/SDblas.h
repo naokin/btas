@@ -6,7 +6,7 @@
 #include <btas/SDArray.h>
 #include <btas/Dblas.h>
 #include <btas/contract_shape.h>
-#include <btas/auglist.h>
+#include <btas/arglist.h>
 
 #ifndef SERIAL_REPLICATION_LIMIT
 #define SERIAL_REPLICATION_LIMIT 1
@@ -66,31 +66,31 @@ void SerialSDaxpy(const double& alpha, const SDArray<N>& x, SDArray<N>& y)
 }
 
 //####################################################################################################
-// BLAS auglist for threaded call derived from T_replication_auglist
+// BLAS arglist for threaded call derived from T_replication_arglist
 //####################################################################################################
 template<int N>
-class Dcopy_auglist : public T_replication_auglist<N>
+class Dcopy_arglist : public T_replication_arglist<N>
 {
-  using T_replication_auglist<N>::m_auglist;
+  using T_replication_arglist<N>::m_arglist;
 public:
   // calling Dcopy
   void call() const
   {
-    Dcopy(*(m_auglist.first), *(m_auglist.second));
+    Dcopy(*(m_arglist.first), *(m_arglist.second));
   }
-  Dcopy_auglist()
+  Dcopy_arglist()
   {
   }
-  Dcopy_auglist(const shared_ptr<DArray<N> >& x_ptr, const shared_ptr<DArray<N> >& y_ptr)
-  : T_replication_auglist<N>(x_ptr, y_ptr)
+  Dcopy_arglist(const shared_ptr<DArray<N> >& x_ptr, const shared_ptr<DArray<N> >& y_ptr)
+  : T_replication_arglist<N>(x_ptr, y_ptr)
   {
   }
 };
 
 template<int N>
-class Dscal_auglist : public T_replication_auglist<N>
+class Dscal_arglist : public T_replication_arglist<N>
 {
-  using T_replication_auglist<N>::m_auglist;
+  using T_replication_arglist<N>::m_arglist;
 private:
   double
     m_alpha;
@@ -98,26 +98,26 @@ public:
   // calling Dscal
   void call() const
   {
-    Dscal(m_alpha, *(m_auglist.second));
+    Dscal(m_alpha, *(m_arglist.second));
   }
-  Dscal_auglist()
+  Dscal_arglist()
   {
   }
-  Dscal_auglist(const double& alpha, const shared_ptr<DArray<N> >& x_ptr, const shared_ptr<DArray<N> >& y_ptr)
-  : m_alpha(alpha), T_replication_auglist<N>(x_ptr, y_ptr)
+  Dscal_arglist(const double& alpha, const shared_ptr<DArray<N> >& x_ptr, const shared_ptr<DArray<N> >& y_ptr)
+  : m_alpha(alpha), T_replication_arglist<N>(x_ptr, y_ptr)
   {
   }
   void reset(const double& alpha, const shared_ptr<DArray<N> >& x_ptr, const shared_ptr<DArray<N> >& y_ptr)
   {
     m_alpha = alpha;
-    T_replication_auglist<N>::reset(x_ptr, y_ptr);
+    T_replication_arglist<N>::reset(x_ptr, y_ptr);
   }
 };
 
 template<int N>
-class Daxpy_auglist : public T_replication_auglist<N>
+class Daxpy_arglist : public T_replication_arglist<N>
 {
-  using T_replication_auglist<N>::m_auglist;
+  using T_replication_arglist<N>::m_arglist;
 private:
   double
     m_alpha;
@@ -125,30 +125,30 @@ public:
   // calling Daxpy
   void call() const
   {
-    Daxpy(m_alpha, *(m_auglist.first), *(m_auglist.second));
+    Daxpy(m_alpha, *(m_arglist.first), *(m_arglist.second));
   }
-  Daxpy_auglist()
+  Daxpy_arglist()
   {
   }
-  Daxpy_auglist(const double& alpha, const shared_ptr<DArray<N> >& x_ptr, const shared_ptr<DArray<N> >& y_ptr)
-  : m_alpha(alpha), T_replication_auglist<N>(x_ptr, y_ptr)
+  Daxpy_arglist(const double& alpha, const shared_ptr<DArray<N> >& x_ptr, const shared_ptr<DArray<N> >& y_ptr)
+  : m_alpha(alpha), T_replication_arglist<N>(x_ptr, y_ptr)
   {
   }
   void reset(const double& alpha, const shared_ptr<DArray<N> >& x_ptr, const shared_ptr<DArray<N> >& y_ptr)
   {
     m_alpha = alpha;
-    T_replication_auglist<N>::reset(x_ptr, y_ptr);
+    T_replication_arglist<N>::reset(x_ptr, y_ptr);
   }
 };
 
 //####################################################################################################
-// BLAS auglist for threaded call derived from T_contraction_auglist
+// BLAS arglist for threaded call derived from T_contraction_arglist
 //####################################################################################################
 template<int NA, int NB, int NC>
-class Dgemv_auglist : public T_contraction_auglist<NA, NB, NC>
+class Dgemv_arglist : public T_contraction_arglist<NA, NB, NC>
 {
-  using T_contraction_auglist<NA, NB, NC>::m_auglist;
-  using T_contraction_auglist<NA, NB, NC>::m_c_ptr;
+  using T_contraction_arglist<NA, NB, NC>::m_arglist;
+  using T_contraction_arglist<NA, NB, NC>::m_c_ptr;
 private:
   std::vector<double>
     m_scale;
@@ -159,66 +159,66 @@ private:
   double
     m_beta;
 public:
-  // calling blas subroutine from derived auglist
+  // calling blas subroutine from derived arglist
   void call() const
   {
-    for(int i = 0; i < m_auglist.size(); ++i) {
-      Dgemv(m_transa, m_scale[i] * m_alpha, *(m_auglist[i].first), *(m_auglist[i].second), m_beta, *(m_c_ptr));
+    for(int i = 0; i < m_arglist.size(); ++i) {
+      Dgemv(m_transa, m_scale[i] * m_alpha, *(m_arglist[i].first), *(m_arglist[i].second), m_beta, *(m_c_ptr));
     }
   }
-  Dgemv_auglist()
+  Dgemv_arglist()
   : m_transa(NoTrans), m_alpha(1.0), m_beta(1.0)
   {
   }
-  Dgemv_auglist(const BTAS_TRANSPOSE& transa, const double& alpha, const double& beta)
+  Dgemv_arglist(const BTAS_TRANSPOSE& transa, const double& alpha, const double& beta)
   : m_transa(transa), m_alpha(alpha), m_beta(beta)
   {
   }
   void add(const shared_ptr<DArray<NA> >& a_ptr, const shared_ptr<DArray<NB> >& b_ptr, double scale = 1.0)
   {
     m_scale.push_back(scale);
-    T_contraction_auglist<NA, NB, NC>::add(a_ptr, b_ptr, a_ptr->size());
+    T_contraction_arglist<NA, NB, NC>::add(a_ptr, b_ptr, a_ptr->size());
   }
 };
 
 template<int NA, int NB, int NC>
-class Dger_auglist : public T_contraction_auglist<NA, NB, NC>
+class Dger_arglist : public T_contraction_arglist<NA, NB, NC>
 {
-  using T_contraction_auglist<NA, NB, NC>::m_auglist;
-  using T_contraction_auglist<NA, NB, NC>::m_c_ptr;
+  using T_contraction_arglist<NA, NB, NC>::m_arglist;
+  using T_contraction_arglist<NA, NB, NC>::m_c_ptr;
 private:
   std::vector<double>
     m_scale;
   double
     m_alpha;
 public:
-  // calling blas subroutine from derived auglist
+  // calling blas subroutine from derived arglist
   void call() const
   {
-    for(int i = 0; i < m_auglist.size(); ++i) {
-      Dger(m_scale[i] * m_alpha, *(m_auglist[i].first), *(m_auglist[i].second), *(m_c_ptr));
+    for(int i = 0; i < m_arglist.size(); ++i) {
+      Dger(m_scale[i] * m_alpha, *(m_arglist[i].first), *(m_arglist[i].second), *(m_c_ptr));
     }
   }
-  Dger_auglist()
+  Dger_arglist()
   : m_alpha(1.0)
   {
   }
-  Dger_auglist(const double& alpha)
+  Dger_arglist(const double& alpha)
   : m_alpha(alpha)
   {
   }
   void add(const shared_ptr<DArray<NA> >& a_ptr, const shared_ptr<DArray<NB> >& b_ptr, double scale = 1.0)
   {
     m_scale.push_back(scale);
-    T_contraction_auglist<NA, NB, NC>::add(a_ptr, b_ptr, a_ptr->size());
+    T_contraction_arglist<NA, NB, NC>::add(a_ptr, b_ptr, a_ptr->size());
   }
 };
 
 template<int NA, int NB, int NC>
-class Dgemm_auglist : public T_contraction_auglist<NA, NB, NC>
+class Dgemm_arglist : public T_contraction_arglist<NA, NB, NC>
 {
-  using T_contraction_auglist<NA, NB, NC>::m_auglist;
-  using T_contraction_auglist<NA, NB, NC>::m_c_ptr;
+  using T_contraction_arglist<NA, NB, NC>::m_arglist;
+  using T_contraction_arglist<NA, NB, NC>::m_c_ptr;
 private:
   std::vector<double>
     m_scale;
@@ -245,25 +245,25 @@ private:
     return flops;
   }
 public:
-  // calling blas subroutine from derived auglist
+  // calling blas subroutine from derived arglist
   void call() const
   {
-    for(int i = 0; i < m_auglist.size(); ++i) {
-      Dgemm(m_transa, m_transb, m_scale[i] * m_alpha, *(m_auglist[i].first), *(m_auglist[i].second), m_beta, *(m_c_ptr));
+    for(int i = 0; i < m_arglist.size(); ++i) {
+      Dgemm(m_transa, m_transb, m_scale[i] * m_alpha, *(m_arglist[i].first), *(m_arglist[i].second), m_beta, *(m_c_ptr));
     }
   }
-  Dgemm_auglist()
+  Dgemm_arglist()
   : m_transa(NoTrans), m_transb(NoTrans), m_alpha(1.0), m_beta(1.0)
   {
   }
-  Dgemm_auglist(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb, const double& alpha, const double& beta)
+  Dgemm_arglist(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb, const double& alpha, const double& beta)
   : m_transa(transa), m_transb(transb), m_alpha(alpha), m_beta(beta)
   {
   }
   void add(const shared_ptr<DArray<NA> >& a_ptr, const shared_ptr<DArray<NB> >& b_ptr, double scale = 1.0)
   {
     m_scale.push_back(scale);
-    T_contraction_auglist<NA, NB, NC>::add(a_ptr, b_ptr, mf_compute_flops(*a_ptr, *b_ptr));
+    T_contraction_arglist<NA, NB, NC>::add(a_ptr, b_ptr, mf_compute_flops(*a_ptr, *b_ptr));
   }
 };
 
@@ -273,12 +273,12 @@ public:
 template<int N>
 void ThreadSDcopy(const SDArray<N>& x, SDArray<N>& y, bool Do_up_cast)
 {
-  std::vector<Dcopy_auglist<N> > task_list;
+  std::vector<Dcopy_arglist<N> > task_list;
   task_list.reserve(x.size());
   for(typename SDArray<N>::const_iterator ix = x.begin(); ix != x.end(); ++ix) {
     typename SDArray<N>::iterator iy = y.reserve(ix->first);
     if(iy != y.end())
-      task_list.push_back(Dcopy_auglist<N>(ix->second, iy->second));
+      task_list.push_back(Dcopy_arglist<N>(ix->second, iy->second));
     else
       BTAS_THROW(Do_up_cast, "btas::ThreadSDcopy; requested block must be zero, could not be reserved");
   }
@@ -288,10 +288,10 @@ void ThreadSDcopy(const SDArray<N>& x, SDArray<N>& y, bool Do_up_cast)
 template<int N>
 void ThreadSDscal(const double& alpha, SDArray<N>& x)
 {
-  std::vector<Dscal_auglist<N> > task_list;
+  std::vector<Dscal_arglist<N> > task_list;
   task_list.reserve(x.size());
   for(typename SDArray<N>::iterator ix = x.begin(); ix != x.end(); ++ix) {
-    task_list.push_back(Dscal_auglist<N>(alpha, ix->second, ix->second));
+    task_list.push_back(Dscal_arglist<N>(alpha, ix->second, ix->second));
   }
   parallel_call(task_list);
 }
@@ -299,13 +299,13 @@ void ThreadSDscal(const double& alpha, SDArray<N>& x)
 template<int N>
 void ThreadSDaxpy(const double& alpha, const SDArray<N>& x, SDArray<N>& y)
 {
-  std::vector<Daxpy_auglist<N> > task_list;
+  std::vector<Daxpy_arglist<N> > task_list;
   task_list.reserve(x.size());
   for(typename SDArray<N>::const_iterator ix = x.begin(); ix != x.end(); ++ix) {
     typename SDArray<N>::iterator iy = y.reserve(ix->first);
     if(iy == y.end())
       BTAS_THROW(false, "btas::ThreadSDaxpy; requested block must be zero, could not be reserved");
-    task_list.push_back(Daxpy_auglist<N>(alpha, ix->second, iy->second));
+    task_list.push_back(Daxpy_arglist<N>(alpha, ix->second, iy->second));
   }
   parallel_call(task_list);
 }
@@ -317,7 +317,7 @@ void ThreadSDgemv(const BTAS_TRANSPOSE& transa,
   int nrows  = std::accumulate(a.shape().begin(), a.shape().begin()+NC, 1, std::multiplies<int>());
   int stride = std::accumulate(b.shape().begin(), b.shape().end(),      1, std::multiplies<int>());
   // contraction list for thread parallelism
-  std::vector<Dgemv_auglist<NA, NB, NC> > task_list;
+  std::vector<Dgemv_arglist<NA, NB, NC> > task_list;
   task_list.reserve(a.size());
   // block contraction
   for(int i = 0; i < nrows; ++i) {
@@ -328,7 +328,7 @@ void ThreadSDgemv(const BTAS_TRANSPOSE& transa,
     if(ialo == iaup) continue;
     if(!c.allowed(i)) continue;
 
-    Dgemv_auglist<NA, NB, NC> gemv_list(transa, alpha, 1.0);
+    Dgemv_arglist<NA, NB, NC> gemv_list(transa, alpha, 1.0);
     for(typename SDArray<NA>::const_iterator ia = ialo; ia != iaup; ++ia) {
       typename SDArray<NB>::const_iterator ib = b.find(ia->first % stride);
       if(ib != b.end()) {
@@ -353,7 +353,7 @@ void ThreadSDger(const double& alpha, const SDArray<NA>& a, const SDArray<NB>& b
 {
   int stride = std::accumulate(b.shape().begin(), b.shape().end(), 1, std::multiplies<int>());
   // contraction list for thread parallelism
-  std::vector<Dger_auglist<NA, NB, NC> > task_list;
+  std::vector<Dger_arglist<NA, NB, NC> > task_list;
   task_list.reserve(a.size() * b.size());
   // block contraction
   for(typename SDArray<NA>::const_iterator ia = a.begin(); ia != a.end(); ++ia) {
@@ -362,7 +362,7 @@ void ThreadSDger(const double& alpha, const SDArray<NA>& a, const SDArray<NB>& b
       int c_tag = c_irow + ib->first;
       if(!c.allowed(c_tag)) continue;
 
-      Dger_auglist<NA, NB, NC> ger_list(alpha);
+      Dger_arglist<NA, NB, NC> ger_list(alpha);
       ger_list.add(ia->second, ib->second);
 
       // allocate block element @ c_tag
@@ -386,7 +386,7 @@ void ThreadSDgemm(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb,
   int stride = std::accumulate(a.shape().begin()+NA-K, a.shape().end(),   1, std::multiplies<int>());
   int ncols  = std::accumulate(b.shape().begin(), b.shape().begin()+NB-K, 1, std::multiplies<int>());
   // contraction list for thread parallelism
-  std::vector<Dgemm_auglist<NA, NB, NC> > task_list;
+  std::vector<Dgemm_arglist<NA, NB, NC> > task_list;
   task_list.reserve(std::max(a.size(), b.size()));
   // block contraction
   for(int i = 0; i < nrows; ++i) {
@@ -407,7 +407,7 @@ void ThreadSDgemm(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb,
       typename SDArray<NB>::const_iterator ibup = b.upper_bound(b_ubound);
       if(iblo == ibup) continue;
 
-      Dgemm_auglist<NA, NB, NC> gemm_list(transa, transb, alpha, 1.0);
+      Dgemm_arglist<NA, NB, NC> gemm_list(transa, transb, alpha, 1.0);
       for(typename SDArray<NA>::const_iterator ia = ialo; ia != iaup; ++ia) {
         for(typename SDArray<NB>::const_iterator ib = iblo; ib != ibup; ++ib) {
           if((ia->first % stride) == (ib->first % stride)) {
@@ -443,7 +443,7 @@ void ThreadSDgemv(const function<double(const TinyVector<int, NA>&,
   int nrows  = std::accumulate(a.shape().begin(), a.shape().begin()+NC, 1, std::multiplies<int>());
   int stride = std::accumulate(b.shape().begin(), b.shape().end(),      1, std::multiplies<int>());
   // contraction list for thread parallelism
-  std::vector<Dgemv_auglist<NA, NB, NC> > task_list;
+  std::vector<Dgemv_arglist<NA, NB, NC> > task_list;
   task_list.reserve(a.size());
   // block contraction
   for(int i = 0; i < nrows; ++i) {
@@ -455,7 +455,7 @@ void ThreadSDgemv(const function<double(const TinyVector<int, NA>&,
     if(!c.allowed(i)) continue;
 
     TinyVector<int, NC> c_index(c.index(i));
-    Dgemv_auglist<NA, NB, NC> gemv_list(transa, alpha, 1.0);
+    Dgemv_arglist<NA, NB, NC> gemv_list(transa, alpha, 1.0);
     for(typename SDArray<NA>::const_iterator ia = ialo; ia != iaup; ++ia) {
       typename SDArray<NB>::const_iterator ib = b.find(ia->first % stride);
       if(ib != b.end()) {
@@ -483,7 +483,7 @@ void ThreadSDger(const function<double(const TinyVector<int, NA>&,
 {
   int stride = std::accumulate(b.shape().begin(), b.shape().end(), 1, std::multiplies<int>());
   // contraction list for thread parallelism
-  std::vector<Dger_auglist<NA, NB, NC> > task_list;
+  std::vector<Dger_arglist<NA, NB, NC> > task_list;
   task_list.reserve(a.size() * b.size());
   // block contraction
   for(typename SDArray<NA>::const_iterator ia = a.begin(); ia != a.end(); ++ia) {
@@ -494,7 +494,7 @@ void ThreadSDger(const function<double(const TinyVector<int, NA>&,
       int c_tag = c_irow + ib->first;
       if(!c.allowed(c_tag)) continue;
 
-      Dger_auglist<NA, NB, NC> ger_list(alpha);
+      Dger_arglist<NA, NB, NC> ger_list(alpha);
       ger_list.add(ia->second, ib->second, f_scale(a_index, b.index(ib->first), c.index(c_tag)));
 
       // allocate block element @ c_tag
@@ -521,7 +521,7 @@ void ThreadSDgemm(const function<double(const TinyVector<int, NA>&,
   int stride = std::accumulate(a.shape().begin()+NA-K, a.shape().end(),   1, std::multiplies<int>());
   int ncols  = std::accumulate(b.shape().begin(), b.shape().begin()+NB-K, 1, std::multiplies<int>());
   // contraction list for thread parallelism
-  std::vector<Dgemm_auglist<NA, NB, NC> > task_list;
+  std::vector<Dgemm_arglist<NA, NB, NC> > task_list;
   task_list.reserve(std::max(a.size(), b.size()));
   // block contraction
   for(int i = 0; i < nrows; ++i) {
@@ -542,7 +542,7 @@ void ThreadSDgemm(const function<double(const TinyVector<int, NA>&,
       typename SDArray<NB>::const_iterator ibup = b.upper_bound(b_ubound);
       if(iblo == ibup) continue;
 
-      Dgemm_auglist<NA, NB, NC> gemm_list(transa, transb, alpha, 1.0);
+      Dgemm_arglist<NA, NB, NC> gemm_list(transa, transb, alpha, 1.0);
       for(typename SDArray<NA>::const_iterator ia = ialo; ia != iaup; ++ia) {
         TinyVector<int, NA> a_index(a.index(ia->first));
         for(typename SDArray<NB>::const_iterator ib = iblo; ib != ibup; ++ib) {

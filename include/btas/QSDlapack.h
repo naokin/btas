@@ -7,7 +7,7 @@
 #include <btas/QSDArray.h>
 #include <btas/QSDmerge.h>
 #include <btas/DiagonalQSDArray.h>
-#include <btas/auglist.h>
+#include <btas/arglist.h>
 
 namespace btas
 {
@@ -22,24 +22,24 @@ namespace btas
 enum BTAS_CANONICALITY { LeftCanonical, RightCanonical };
 
 //####################################################################################################
-// LAPACK auglist for threaded call derived from T_general_auglist
+// LAPACK arglist for threaded call derived from T_general_arglist
 //####################################################################################################
-class Dgesvd_auglist : public T_general_auglist<2, 1, 2, 2>
+class Dgesvd_arglist : public T_general_arglist<2, 1, 2, 2>
 {
 public:
   // calling Dgesvd
   void call() const
   {
-    Dgesvd(*m_augment_1, *m_augment_2, *m_augment_3, *m_augment_4);
+    Dgesvd(*m_argment_1, *m_argment_2, *m_argment_3, *m_argment_4);
   }
-  Dgesvd_auglist()
+  Dgesvd_arglist()
   {
   }
-  Dgesvd_auglist(const shared_ptr<DArray<2> >& a_ptr,
+  Dgesvd_arglist(const shared_ptr<DArray<2> >& a_ptr,
                  const shared_ptr<DArray<1> >& s_ptr,
                  const shared_ptr<DArray<2> >& u_ptr,
                  const shared_ptr<DArray<2> >& vt_ptr)
-  : T_general_auglist<2, 1, 2, 2>(a_ptr, s_ptr, u_ptr, vt_ptr)
+  : T_general_arglist<2, 1, 2, 2>(a_ptr, s_ptr, u_ptr, vt_ptr)
   {
   }
   void reset    (const shared_ptr<DArray<2> >& a_ptr,
@@ -47,7 +47,7 @@ public:
                  const shared_ptr<DArray<2> >& u_ptr,
                  const shared_ptr<DArray<2> >& vt_ptr)
   {
-    T_general_auglist<2, 1, 2, 2>::reset(a_ptr, s_ptr, u_ptr, vt_ptr);
+    T_general_arglist<2, 1, 2, 2>::reset(a_ptr, s_ptr, u_ptr, vt_ptr);
   }
 };
 
@@ -62,7 +62,7 @@ inline void ThreadQSDgesvd(BTAS_CANONICALITY q_cano, const QSDArray<2>& a, SDArr
   int nrows = a.shape(0);
   int ncols = a.shape(1);
   // contraction list for thread parallelism
-  std::vector<Dgesvd_auglist> task_list;
+  std::vector<Dgesvd_arglist> task_list;
   task_list.reserve(a.size());
   // set task list
   for(QSDArray<2>::const_iterator ia = a.begin(); ia != a.end(); ++ia) {
@@ -85,7 +85,7 @@ inline void ThreadQSDgesvd(BTAS_CANONICALITY q_cano, const QSDArray<2>& a, SDArr
     SDArray<1>::iterator is = s.reserve(stag);
     SDArray<2>::iterator iu = u.reserve(utag);
     SDArray<2>::iterator iv = vt.reserve(vtag);
-    Dgesvd_auglist svd_list(ia->second, is->second, iu->second, iv->second);
+    Dgesvd_arglist svd_list(ia->second, is->second, iu->second, iv->second);
     task_list.push_back(svd_list);
   }
   parallel_call(task_list);

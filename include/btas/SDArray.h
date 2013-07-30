@@ -72,6 +72,10 @@ public:
   SDArray() : m_shape(0), m_stride(0)
   {
   }
+  // destructor
+  virtual ~SDArray()
+  {
+  }
   // construct by sparse-block shape
   SDArray(const TinyVector<int, N>& s_shape)
   {
