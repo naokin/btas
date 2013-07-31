@@ -207,11 +207,58 @@ int QSPARSE_TEST(int iprint = 0)
   return 0;
 }
 
+int SERIALIZE_TEST(int iprint = 0)
+{
+  using namespace btas;
+
+  SpinQuantum qt(0);
+
+  Qshapes<> qi;
+  qi.reserve(3);
+  qi.push_back(SpinQuantum(-1));
+  qi.push_back(SpinQuantum( 0));
+  qi.push_back(SpinQuantum(+1));
+
+  Dshapes di(qi.size(), 2);
+
+  TVector<Qshapes<>, 4> a_qshape = { qi,-qi, qi,-qi };
+  TVector<Dshapes,   4> a_dshape = { di, di, di, di };
+  QSDArray<4> a(qt, a_qshape, a_dshape); a.generate(rgen);
+
+  if(iprint > 0) {
+    cout << "====================================================================================================" << endl;
+    cout << "[SERIALIZE_TEST] print tensor [a]: " << a << endl;
+  }
+
+  {
+    ofstream fout("tests.tmp");
+    boost::archive::text_oarchive oa(fout);
+    oa << a;
+  }
+
+  a.clear();
+
+  {
+    ifstream finp("tests.tmp");
+    boost::archive::text_iarchive ia(finp);
+    ia >> a;
+  }
+
+  if(iprint > 0) {
+    cout << "====================================================================================================" << endl;
+    cout << "[SERIALIZE_TEST] print tensor [a] (loaded): " << a << endl;
+  }
+
+  return 0;
+}
+
 int main()
 {
   DENSE_TEST(1);
 
-//QSPARSE_TEST(1);
+  QSPARSE_TEST(1);
+
+  SERIALIZE_TEST(1);
 
   return 0;
 }

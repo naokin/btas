@@ -4,6 +4,10 @@
 #include <vector>
 #include <set>
 
+#include <boost/serialization/serialization.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/base_object.hpp>
+
 // If user doesn't have default quantum class, BTAS provide the default class
 #ifdef _DEFAULT_QUANTUM
 #include <btas/Quantum.h>
@@ -27,6 +31,13 @@ namespace btas {
  */
 template<class Q = Quantum>
 class Qshapes : public std::vector<Q> {
+private:
+  friend class boost::serialization::access;
+  //! Boost serialization
+  template <class Archive>
+  void serialize(Archive& ar, const unsigned int version) {
+    ar & boost::serialization::base_object<std::vector<Q>>(*this);
+  }
 public:
   typedef typename std::vector<Q>::value_type value_type;
   typedef typename std::vector<Q>::size_type size_type;

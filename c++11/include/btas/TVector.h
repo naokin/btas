@@ -18,9 +18,12 @@
 #include <complex>
 #include <algorithm>
 
+#include <boost/serialization/serialization.hpp>
+
 #include <btas/btas.h>
 
-namespace btas {
+namespace boost {
+namespace serialization {
 
 //####################################################################################################
 // Boost serialization for std::array
@@ -28,7 +31,14 @@ namespace btas {
 
 //! Enables to use boost serialization
 template<class Archive, typename T, size_t N>
-void serialize(Archive& ar, std::array<T, N>& vec, const unsigned int version) { for(T& x : vec) ar & x; }
+void serialize(Archive& ar, std::array<T, N>& vec, const unsigned int version) {
+  for(size_t i = 0; i < N; ++i) ar & vec[i];
+}
+
+}; // namespace serialization
+}; // namespace boost
+
+namespace btas {
 
 //####################################################################################################
 // Template aliases to fixed-rank array
