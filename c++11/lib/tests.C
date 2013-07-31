@@ -16,6 +16,8 @@ namespace btas { typedef SpinQuantum Quantum; }; // Defined as default quantum n
 #include <btas/DENSE/DArray.h>
 #include <btas/QSPARSE/QSDArray.h>
 
+#include <time_stamp.h>
+
 using namespace std;
 
 int DENSE_TEST(int iprint = 0)
@@ -254,9 +256,21 @@ int SERIALIZE_TEST(int iprint = 0)
 
 int main()
 {
+  time_stamp ts;
+
+  ts.start();
+
   DENSE_TEST(1);
 
+  cout << "Finished DENSE_TEST: total elapsed time = "
+       << setw(8) << setprecision(6) << fixed << ts.elapsed() << " sec. " << endl;
+
+  ts.start();
+
   QSPARSE_TEST(1);
+
+  cout << "Finished QSPARSE_TEST: total elapsed time = "
+       << setw(8) << setprecision(6) << fixed << ts.elapsed() << " sec. " << endl;
 
   SERIALIZE_TEST(1);
 

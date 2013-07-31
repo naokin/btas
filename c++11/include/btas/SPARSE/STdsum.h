@@ -69,7 +69,7 @@ void STdsum(const STArray<T, N>& x, const STArray<T, N>& y, const IVector<K>& tr
   IVector<N-K> dsum_index; // Complement of trace_index
   int nsum = 0;
   for(int i = 0; i < N; ++i) {
-    if(std::find(trace_index.begin(), trace_index.end(), i) == trace_index.end()) dsum_index[n++] = i;
+    if(std::find(trace_index.begin(), trace_index.end(), i) == trace_index.end()) dsum_index[nsum++] = i;
   }
   IVector<N> z_shape(x_shape);
   for(int i = 0; i < N-K; ++i) z_shape[dsum_index[i]] += y_shape[dsum_index[i]];

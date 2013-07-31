@@ -17,7 +17,7 @@ template<size_t N, class Q = Quantum>
 inline void QSDdsum
 (const QSDArray<N, Q>& x, const QSDArray<N, Q>& y, QSDArray<N, Q>& z) { QSTdsum(x, y, z); }
 
-template<size_t N, size_t K>
+template<size_t N, size_t K, class Q = Quantum>
 inline void QSDdsum
 (const QSDArray<N, Q>& x, const QSDArray<N, Q>& y, const IVector<K>& trace_index, QSDArray<N, Q>& z) { QSTdsum(x, y, trace_index, z); }
 

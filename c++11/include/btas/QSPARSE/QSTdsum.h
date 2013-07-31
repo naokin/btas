@@ -60,7 +60,7 @@ void QSTdsum(const QSTArray<T, N, Q>& x, const QSTArray<T, N, Q>& y, const IVect
   IVector<N-K> dsum_index; // Complement of trace_index
   int nsum = 0;
   for(int i = 0; i < N; ++i) {
-    if(std::find(trace_index.begin(), trace_index.end(), i) == trace_index.end()) dsum_index[n++] = i;
+    if(std::find(trace_index.begin(), trace_index.end(), i) == trace_index.end()) dsum_index[nsum++] = i;
   }
   TVector<Qshapes<Q>, N> z_qshape(x_qshape);
   for(int i = 0; i < N-K; ++i) z_qshape[dsum_index[i]] += y_qshape[dsum_index[i]];
