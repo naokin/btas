@@ -213,7 +213,7 @@ public:
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   //! convert tag to index
-  inline IVector<N> index(int block_tag) const {
+  IVector<N> index(int block_tag) const {
     IVector<N> block_index;
     for(int i = 0; i < N; ++i) {
       block_index[i] = block_tag / m_stride[i];
@@ -223,7 +223,7 @@ public:
   }
 
   //! convert index to tag
-  inline int tag(const IVector<N>& block_index) const { return dot(block_index, m_stride); }
+  int tag(const IVector<N>& block_index) const { return dot(block_index, m_stride); }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Access member variables
