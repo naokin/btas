@@ -10,7 +10,7 @@
 
 // If user doesn't have default quantum class, BTAS provide the default class
 #ifdef _DEFAULT_QUANTUM
-#include <btas/Quantum.h>
+#include <btas/QSPARSE/Quantum.h>
 #endif
 
 #include <btas/TVector.h>
@@ -43,7 +43,7 @@ public:
   typedef typename std::vector<Q>::size_type size_type;
   typedef typename std::vector<Q>::iterator iterator;
   typedef typename std::vector<Q>::const_iterator const_iterator;
-  // Constructors in std::vector
+  //  Constructors in std::vector
   Qshapes() { }
   explicit Qshapes(size_type n)                    : std::vector<Q>(n)           { }
   Qshapes(size_type n, const value_type& val)      : std::vector<Q>(n, val)      { }
@@ -53,11 +53,12 @@ public:
   Qshapes(Qshapes&& x)                             : std::vector<Q>(x)           { }
   Qshapes(std::initializer_list<value_type> il)    : std::vector<Q>(il)          { }
  ~Qshapes() { }
-  // Overloaded operators
-  // Assignment operator
+  //  Overloaded operators
+  //! Copy assignment operator
   Qshapes& operator= (const Qshapes&  other) { std::vector<Q>::operator= (other); return *this; }
+  //! Move assignment operator
   Qshapes& operator= (      Qshapes&& other) { std::vector<Q>::operator= (other); return *this; }
-  // Contract two quantum numbers: { q(ij) : q(i) * q(j) }
+  //! Contract two quantum numbers: { q(ij) : q(i) * q(j) }
   Qshapes  operator* (const Qshapes& other) const {
     Qshapes qij;
     qij.reserve(this->size()*other.size());
@@ -65,8 +66,8 @@ public:
       for(const Q& qj : other) qij.push_back(qi * qj);
     return std::move(qij);
   }
-  // Contract two quantum numbers and chose unique quantum numbers: { q(ij) : q(i) * q(j) } => { q(st) }
-  // e.g. { q(ij) = q1, q2, q1, q3 } => { q(st) = q1, q2, q3 } 
+  //! Contract two quantum numbers and chose unique quantum numbers: { q(ij) : q(i) * q(j) } => { q(st) }
+  /*! e.g. { q(ij) = q1, q2, q1, q3 } => { q(st) = q1, q2, q3 } */
   Qshapes  operator& (const Qshapes& other) const {
     std::set<Q> qij;
     for(const Q& qi : *this)
@@ -74,12 +75,25 @@ public:
     Qshapes qst(qij.begin(), qij.end());
     return std::move(qst);
   }
-  // Return copy of this
+  //! Adding other Qshapes
+  /*! This is related to direct sum of QSTArray
+   *  e.g. { q1, q2 } + { q3, q4 } = { q1, q2, q3, q4 } */
+  Qshapes operator+ (const Qshapes& other) const {
+    Qshapes qa(*this);
+    qa.insert(qa.end(), other.begin(), other.end());
+    return std::move(qa);
+  }
+  //! Adding other Qshapes to this
+  Qshapes& operator+= (const Qshapes& other) {
+    this->insert(this->end(), other.begin(), other.end());
+    return *this;
+  }
+  //! Return copy of this
   Qshapes operator+ () const {
     Qshapes qp(*this);
     return std::move(qp);
   }
-  // Return conjugated quantum numbers
+  //! Return conjugated quantum numbers
   Qshapes operator- () const {
     Qshapes qm;
     qm.reserve(this->size());
