@@ -1,25 +1,20 @@
-CXX=g++
-#CXXFLAGS=-g -O2 -fopenmp -D_PRINT_WARNINGS
-CXXFLAGS=-g -O2 -fopenmp
+CXX=g++ -std=c++0x
+CXXFLAGS=-g -O2 -fopenmp -D_HAS_CBLAS -D_HAS_INTEL_MKL
 
-BLITZDIR=/user/blitz/0.9
-BLITZINC=-I$(BLITZDIR)/include
-BLITZLIB=-L$(BLITZDIR)/lib -lblitz
-
-BLASDIR=/opt/intel/mkl/10.2.4.032
-BLASINC=-I$(BLASDIR)/include
+BLASDIR=
+BLASINC=
 BLASLIB=-lmkl_intel_lp64 -lmkl_sequential -lmkl_core
 
-BOOSTDIR=/user/boost/1.52.0
+BOOSTDIR=/usr
 BOOSTINC=-I$(BOOSTDIR)/include
 BOOSTLIB=-L$(BOOSTDIR)/lib -lboost_serialization
 
-BTASDIR=/user/btas-0.2.4
+BTASDIR=..
 BTASINC=-I$(BTASDIR)/include
 BTASLIB=  $(BTASDIR)/lib
 
-INCLUDEFLAGS=-I. $(BLITZINC) $(BLASINC) $(BOOSTINC) $(BTASINC)
-LIBRARYFLAGS=    $(BLITZLIB) $(BLASLIB) $(BOOSTLIB)
+INCLUDEFLAGS=-I. $(BLASINC) $(BOOSTINC) $(BTASINC)
+LIBRARYFLAGS=    $(BLASLIB) $(BOOSTLIB)
 
 SRC_SAMPLE = main.C dmrg.C driver.C btas_template_specialize.C
 

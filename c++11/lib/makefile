@@ -1,23 +1,18 @@
-CXX=g++
+CXX=g++ -std=c++0x
 CXXFLAGS=-g -O3 -fopenmp -D_HAS_CBLAS -D_HAS_INTEL_MKL
-#CXXFLAGS=-O3 -D_SERIAL -D_HAS_CBLAS
-
-BLITZDIR=/user/blitz/0.9
-BLITZINC=-I$(BLITZDIR)/include
-BLITZLIB=-L$(BLITZDIR)/lib -lblitz
 
 BLASDIR=
 BLASINC=
 BLASLIB=-lmkl_intel_lp64 -lmkl_sequential -lmkl_core
 
-BOOSTDIR=/user/boost/1.52.0
+BOOSTDIR=/usr
 BOOSTINC=-I$(BOOSTDIR)/include
 BOOSTLIB=-L$(BOOSTDIR)/lib -lboost_serialization
 
-INCLUDEFLAGS=-I. -I../include $(BLITZINC) $(BLASINC) $(BOOSTINC)
-LIBRARYFLAGS=                 $(BLITZLIB) $(BLASLIB) $(BOOSTLIB)
+INCLUDEFLAGS=-I. -I../include $(BLASINC) $(BOOSTINC)
+LIBRARYFLAGS=                 $(BLASLIB) $(BOOSTLIB)
 
-SRC_LIBBTAS = Dreindex.C lapack_cxx_interface.C libbtas.C
+SRC_LIBBTAS = Dreindex.C clapack.C libbtas.C
 
 OBJ_LIBBTAS = $(SRC_LIBBTAS:.C=.o)
 
