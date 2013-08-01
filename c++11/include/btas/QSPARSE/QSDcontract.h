@@ -183,7 +183,7 @@ void QSDindexed_contract
   IVector<NC> axb_symbols;
   indexed_contract_shape(a_symbols, a_contract, b_symbols, b_contract, axb_symbols);
 
-  if(c_symbols == axb_symbols.begin()) {
+  if(c_symbols == axb_symbols) {
     QSDcontract(alpha, a, a_contract, b, b_contract, beta, c);
   }
   else {
