@@ -166,6 +166,24 @@ public:
 //void operator= (Generator gen) { STArray<T, N>::operator= (gen); }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// Clear and Erase sparse blocks
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+  //! Deallocation
+  void clear() {
+    m_q_total = Q::zero();
+    for(int i = 0; i < N; ++i) m_q_shape[i].clear();
+    STArray<T, N>::clear();
+  }
+
+  //! Erase blocks within certain index
+  /*! Both rank and its index have to be specified */
+  void erase(int _rank, int _index) {
+    STArray<T, N>::erase(_rank, _index);
+    m_q_shape[_rank].erase(m_q_shape[_rank].begin()+_index);
+  }
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Access member variables
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

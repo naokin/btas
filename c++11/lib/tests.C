@@ -206,6 +206,17 @@ int QSPARSE_TEST(int iprint = 0)
     }
   }
 
+  if(1)
+  {
+    // Erasing quantum number
+    QSDArray<4> x = a;
+    x.erase(2, 1); // erasing m_q_shape[2][1]
+    if(iprint > 0) {
+      cout << "====================================================================================================" << endl;
+      cout << "[QSPARSE_TEST] [x = a; x.erase(2, 1)] print matrix [x]: " << x << endl;
+    }
+  }
+
   return 0;
 }
 

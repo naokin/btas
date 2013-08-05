@@ -128,6 +128,28 @@ public:
     m_store  = other.m_store;
   }
 
+  //! Make subarray reference
+  /*! \param indices contains subarray indices
+   *  e.g.
+   *  sparse shape = { 4, 4 }
+   *  indices = { { 1, 3 }, { 0, 2, 3} }
+   *
+   *     0  1  2  3           0  2  3
+   *    +--+--+--+--+        +--+--+--+
+   *  0 |  |  |  |  |  ->  1 |**|**|**|
+   *    +--+--+--+--+        +--+--+--+
+   *  1 |**|  |**|**|      3 |**|**|**|
+   *    +--+--+--+--+        +--+--+--+
+   *  2 |  |  |  |  |
+   *    +--+--+--+--+
+   *  3 |**|  |**|**|
+   *    +--+--+--+--+
+   *
+   *  ** blocks are only kept to make subarray
+   */
+  virtual void subarray(const Dshapes& indices) const {
+  }
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Resizing functions
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -201,11 +223,37 @@ public:
 //template<class Generator>
 //void operator= (Generator gen) { generate(gen); }
 
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// Clear and Erase sparse blocks
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+  //! Erase certain block by index
+  iterator erase (const IVector<N>& block_index) { return m_store.erase(tag(block_index)); }
+
+  //! Erase certain block by tag
+  iterator erase (const int& block_tag) { return m_store.erase(block_tag); }
+
   //! Deallocation
-  void clear() {
+  virtual void clear() {
     m_shape.fill(0);
     m_stride.fill(0);
     m_store.clear();
+  }
+
+  //! Erase blocks within certain index
+  /*! Both rank and its index have to be specified */
+  virtual void erase(int _rank, int _index) {
+    assert(_index >= 0 && _index < m_shape[_rank]);
+    IVector<N> _shape = m_shape; --_shape[_rank];
+    STArray _ref(_shape);
+    iterator ipos = _ref.m_store.begin();
+    for(iterator it = m_store.begin(); it != m_store.end(); ++it) {
+      IVector<N> block_index = index(it->first);
+      if(block_index[_rank] == _index) continue;
+      if(block_index[_rank] >  _index) --block_index[_rank];
+      ipos = _ref.m_store.insert(ipos, std::make_pair(_ref.tag(block_index), it->second));
+    }
+    *this = std::move(_ref);
   }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
