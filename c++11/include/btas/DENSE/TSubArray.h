@@ -50,6 +50,8 @@ public:
     for(int i = 0; i < N; ++i) t_shape[i] = m_upper_bound[i]-m_lower_bound[i]+1;
     int t_size = std::accumulate(t_shape.begin(), t_shape.end(), 1, std::multiplies<int>());
     assert(a.size() == t_size);
+    // If 0-dim. array
+    if(t_size == 0) return;
     // Striding
     const IVector<N>& t_stride = this->m_stride;
     int lda = t_shape[N-1];

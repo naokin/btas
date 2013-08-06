@@ -112,6 +112,8 @@ public:
     for(int i = 0; i < M; ++i) a_shape[i] = a.m_upper_bound[i]-a.m_lower_bound[i]+1;
     int a_size = std::accumulate(a_shape.begin(), a_shape.end(), 1, std::multiplies<int>());
     assert(m_store->size() == a_size);
+    // If 0-dim. array
+    if(a_size == 0) return;
     // Striding
     const IVector<M>& a_stride = a.stride();
     int ldt = a_shape[M-1];
