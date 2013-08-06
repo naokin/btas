@@ -23,45 +23,31 @@ void Dcontract
   IVector<NB> b_pindex;
   unsigned int jobs = get_contract_jobs(a.shape(), a_contract, a_pindex, b.shape(), b_contract, b_pindex);
 
-  shared_ptr<DArray<NA>> a_ptr;
-  if(jobs & JOBMASK_A_PMUTE) {
-    a_ptr.reset(new DArray<NA>());
-    Dpermute(a, a_pindex, *a_ptr);
-  }
-  else {
-    a_ptr = shared_ptr<DArray<NA>>(&a, null_deleter());
-  }
+  DArray<NA> a_ref;
+  if(jobs & JOBMASK_A_PMUTE) Dpermute(a, a_pindex, a_ref);
+  else                       a_ref.reference(a);
 
   BTAS_TRANSPOSE transa;
-  if(jobs & JOBMASK_A_TRANS)
-    transa = Trans;
-  else
-    transa = NoTrans;
+  if(jobs & JOBMASK_A_TRANS) transa = Trans;
+  else                       transa = NoTrans;
 
-  shared_ptr<DArray<NB>> b_ptr;
-  if(jobs & JOBMASK_B_PMUTE) {
-    b_ptr.reset(new DArray<NB>());
-    Dpermute(b, b_pindex, *b_ptr);
-  }
-  else {
-    b_ptr = shared_ptr<DArray<NB>>(&b, null_deleter());
-  }
+  DArray<NB> b_ref;
+  if(jobs & JOBMASK_B_PMUTE) Dpermute(b, b_pindex, b_ref);
+  else                       b_ref.reference(b);
 
   BTAS_TRANSPOSE transb;
-  if(jobs & JOBMASK_B_TRANS)
-    transb = Trans;
-  else
-    transb = NoTrans;
+  if(jobs & JOBMASK_B_TRANS) transb = Trans;
+  else                       transb = NoTrans;
 
   switch(jobs & JOBMASK_BLAS_TYPE) {
     case(0):
-      Dgemv(transa, alpha, *a_ptr, *b_ptr, beta, c);
+      Dgemv(transa, alpha, a_ref, b_ref, beta, c);
       break;
     case(1):
-      Dgemv(transb, alpha, *b_ptr, *a_ptr, beta, c);
+      Dgemv(transb, alpha, b_ref, a_ref, beta, c);
       break;
     case(2):
-      Dgemm(transa, transb, alpha, *a_ptr, *b_ptr, beta, c);
+      Dgemm(transa, transb, alpha, a_ref, b_ref, beta, c);
       break;
     default:
       BTAS_THROW(false, "btas::Dcontract: unknown BLAS job type returned");

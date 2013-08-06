@@ -90,6 +90,25 @@ int DENSE_TEST(int iprint = 0)
 
   if(1)
   {
+    // Dcontract
+    DArray<4> c;
+    Dcontract(1.0, a, shape(3), b, shape(0), 1.0, c);
+    if(iprint > 0) {
+      cout << "====================================================================================================" << endl;
+      cout << "[DENSE_TEST] [Dcontract(1.0, a, shape(3), b, shape(0), 1.0, c)] print tensor [c]: " << c << endl;
+    }
+    // Dindexed_contract
+    DArray<4> d;
+    enum { i, j, k, l, p };
+    Dindexed_contract(1.0, a, shape(i,p,k,j), b, shape(l,p), 1.0, d, shape(i,l,j,k));
+    if(iprint > 0) {
+      cout << "====================================================================================================" << endl;
+      cout << "[DENSE_TEST] [Dindexed_contract(1.0, a, shape(i,p,k,j), b, shape(l,p), 1.0, d, shape(i,l,j,k))] print tensor [d]: " << d << endl;
+    }
+  }
+
+  if(1)
+  {
     // LAPACK
   }
 
@@ -226,6 +245,30 @@ int QSPARSE_TEST(int iprint = 0)
 
   }
 
+  if(1)
+  {
+    // Merge quantum number
+    TVector<Qshapes<>, 4> a_qshape = a.qshape();
+    TVector<Dshapes,   4> a_dshape = a.dshape();
+
+    TVector<Qshapes<>, 2> qrows = { a_qshape[0], a_qshape[1] };
+    TVector<Dshapes,   2> drows = { a_dshape[0], a_dshape[1] };
+
+    TVector<Qshapes<>, 2> qcols = { a_qshape[2], a_qshape[3] };
+    TVector<Dshapes,   2> dcols = { a_dshape[2], a_dshape[3] };
+
+    QSTmergeInfo<2> row_qinfo(qrows, drows);
+    QSTmergeInfo<2> col_qinfo(qcols, dcols);
+
+    QSDArray<2> c;
+    QSDmerge(row_qinfo, a, col_qinfo, c);
+    if(iprint > 0) {
+      cout << "====================================================================================================" << endl;
+      cout << "[QSPARSE_TEST] [QSDmerge(row_qinfo, a, col_qinfo, c] print matrix [c]: " << c << endl;
+    }
+
+  }
+
   return 0;
 }
 
@@ -292,7 +335,12 @@ int main()
   cout << "Finished QSPARSE_TEST: total elapsed time = "
        << setw(8) << setprecision(6) << fixed << ts.elapsed() << " sec. " << endl;
 
+  ts.start();
+
   SERIALIZE_TEST(1);
+
+  cout << "Finished SERIALIZE_TEST: total elapsed time = "
+       << setw(8) << setprecision(6) << fixed << ts.elapsed() << " sec. " << endl;
 
   return 0;
 }
