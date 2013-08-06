@@ -68,13 +68,13 @@ public:
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   //! default constructor
-  TArray() { }
+  TArray() : m_store(new std::vector<T>()) { }
 
   //! destructor
  ~TArray() { }
 
   //! copy constructor
-  explicit TArray(const TArray& other) {
+  explicit TArray(const TArray& other) : m_store(new std::vector<T>()) {
     copy(other);
   }
 
@@ -94,7 +94,14 @@ public:
   void copy(const TArray& other) {
     m_shape  = other.m_shape;
     m_stride = other.m_stride;
-    fast_copy(other.m_store, m_store);
+    fast_copy(*other.m_store, *m_store);
+  }
+
+  //! return copy of this
+  TArray copy() const {
+    TArray _cpy;
+    _cpy.copy(*this);
+    return std::move(_cpy);
   }
 
   //! Copy from sub-array to array
@@ -104,13 +111,13 @@ public:
     IVector<M> a_shape;
     for(int i = 0; i < M; ++i) a_shape[i] = a.m_upper_bound[i]-a.m_lower_bound[i]+1;
     int a_size = std::accumulate(a_shape.begin(), a_shape.end(), 1, std::multiplies<int>());
-    assert(m_store.size() == a_size);
+    assert(m_store->size() == a_size);
     // Striding
-    const IVector<M>& a_stride = a.m_array_ptr->stride();
+    const IVector<M>& a_stride = a.stride();
     int ldt = a_shape[M-1];
     // Get bare pointers
-          T* t_ptr = m_store.data();
-    const T* a_ptr = a.m_array_ptr->data();
+          T* t_ptr = m_store->data();
+    const T* a_ptr = a.data();
     // Copying elements
     IVector<M> index(a.m_lower_bound);
     int nrows = a_size / ldt;
@@ -126,14 +133,14 @@ public:
 
   //! scale by const value
   void scale(const T& alpha) {
-    fast_scal(alpha, m_store);
+    fast_scal(alpha, *m_store);
   }
 
   //! adding  from other to this
   void add (const TArray& other) {
     assert(m_shape  == other.m_shape);
     assert(m_stride == other.m_stride);
-    fast_add (other.m_store, m_store);
+    fast_add (*other.m_store, *m_store);
   }
 
   //! copy constructor from sub-array
@@ -161,68 +168,82 @@ public:
     return *this;
   }
 
+  //! take data reference from other
+  void reference(const TArray& other) {
+    m_shape  = other.m_shape;
+    m_stride = other.m_stride;
+    m_store  = other.m_store;
+  }
+
+  //! return data reference of this
+  TArray reference() const {
+    TArray _ref;
+    _ref.reference(*this);
+    return std::move(_ref);
+  }
+
   //! convenient constructor with array shape, for N = 1
-  explicit TArray(int n01) {
+  explicit TArray(int n01) : m_store(new std::vector<T>()) {
     resize(n01);
   }
 
   //! convenient constructor with array shape, for N = 2
-  TArray(int n01, int n02) {
+  TArray(int n01, int n02) : m_store(new std::vector<T>()) {
     resize(n01, n02);
   }
 
   //! convenient constructor with array shape, for N = 3
-  TArray(int n01, int n02, int n03) {
+  TArray(int n01, int n02, int n03) : m_store(new std::vector<T>()) {
     resize(n01, n02, n03);
   }
 
   //! convenient constructor with array shape, for N = 4
-  TArray(int n01, int n02, int n03, int n04) {
+  TArray(int n01, int n02, int n03, int n04) : m_store(new std::vector<T>()) {
     resize(n01, n02, n03, n04);
   }
 
   //! convenient constructor with array shape, for N = 5
-  TArray(int n01, int n02, int n03, int n04, int n05) {
+  TArray(int n01, int n02, int n03, int n04, int n05) : m_store(new std::vector<T>()) {
     resize(n01, n02, n03, n04, n05);
   }
 
   //! convenient constructor with array shape, for N = 6
-  TArray(int n01, int n02, int n03, int n04, int n05, int n06) {
+  TArray(int n01, int n02, int n03, int n04, int n05, int n06) : m_store(new std::vector<T>()) {
     resize(n01, n02, n03, n04, n05, n06);
   }
 
   //! convenient constructor with array shape, for N = 7
-  TArray(int n01, int n02, int n03, int n04, int n05, int n06, int n07) {
+  TArray(int n01, int n02, int n03, int n04, int n05, int n06, int n07) : m_store(new std::vector<T>()) {
     resize(n01, n02, n03, n04, n05, n06, n07);
   }
 
   //! convenient constructor with array shape, for N = 8
-  TArray(int n01, int n02, int n03, int n04, int n05, int n06, int n07, int n08) {
+  TArray(int n01, int n02, int n03, int n04, int n05, int n06, int n07, int n08) : m_store(new std::vector<T>()) {
     resize(n01, n02, n03, n04, n05, n06, n07, n08);
   }
 
   //! convenient constructor with array shape, for N = 9
-  TArray(int n01, int n02, int n03, int n04, int n05, int n06, int n07, int n08, int n09) {
+  TArray(int n01, int n02, int n03, int n04, int n05, int n06, int n07, int n08, int n09) : m_store(new std::vector<T>()) {
     resize(n01, n02, n03, n04, n05, n06, n07, n08, n09);
   }
 
   //! convenient constructor with array shape, for N = 10
-  TArray(int n01, int n02, int n03, int n04, int n05, int n06, int n07, int n08, int n09, int n10) {
+  TArray(int n01, int n02, int n03, int n04, int n05, int n06, int n07, int n08, int n09, int n10) : m_store(new std::vector<T>()) {
     resize(n01, n02, n03, n04, n05, n06, n07, n08, n09, n10);
   }
 
   //! convenient constructor with array shape, for N = 11
-  TArray(int n01, int n02, int n03, int n04, int n05, int n06, int n07, int n08, int n09, int n10, int n11) {
+  TArray(int n01, int n02, int n03, int n04, int n05, int n06, int n07, int n08, int n09, int n10, int n11) : m_store(new std::vector<T>()) {
     resize(n01, n02, n03, n04, n05, n06, n07, n08, n09, n10, n11);
   }
 
   //! convenient constructor with array shape, for N = 12
-  TArray(int n01, int n02, int n03, int n04, int n05, int n06, int n07, int n08, int n09, int n10, int n11, int n12) {
+  TArray(int n01, int n02, int n03, int n04, int n05, int n06, int n07, int n08, int n09, int n10, int n11, int n12) : m_store(new std::vector<T>()) {
     resize(n01, n02, n03, n04, n05, n06, n07, n08, n09, n10, n11, n12);
   }
 
   //! convenient constructor with array shape, for arbitrary N
-  TArray(const IVector<N>& _shape) {
+  TArray(const IVector<N>& _shape) : m_store(new std::vector<T>()) {
     resize(_shape);
   }
 
@@ -313,7 +334,7 @@ public:
       stride *= m_shape[i];
     }
     // allocate memory
-    m_store.resize(stride);
+    m_store->resize(stride);
     return;
   }
 
@@ -322,16 +343,16 @@ public:
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   //! returns first iterator position (const)
-  const_iterator begin() const { return m_store.begin(); }
+  const_iterator begin() const { return m_store->begin(); }
 
   //! returns first iterator position
-        iterator begin()       { return m_store.begin(); }
+        iterator begin()       { return m_store->begin(); }
 
   //! returns last iterator position (const)
-  const_iterator end() const { return m_store.end(); }
+  const_iterator end() const { return m_store->end(); }
 
   //! returns last iterator position
-        iterator end()       { return m_store.end(); }
+        iterator end()       { return m_store->end(); }
 
   //! returns array shape
   const IVector<N>& shape() const { return m_shape; }
@@ -346,7 +367,7 @@ public:
   int stride(int i) const { return m_stride[i]; }
 
   //! returns allocated size
-  size_t size() const { return m_store.size(); }
+  size_t size() const { return m_store->size(); }
 
   //! returns array element (N = 1) without range check
   const T& operator() (int i01) const {
@@ -422,7 +443,7 @@ public:
 
   //! returns array element (arbitrary N) without range check
   const T& operator() (const IVector<N>& _index) const {
-    return m_store[dot(_index, m_stride)];
+    return (*m_store)[dot(_index, m_stride)];
   }
 
   //! returns array element (N = 1) without range check
@@ -499,7 +520,7 @@ public:
 
   //! returns array element (arbitrary N) without range check
   T& operator() (const IVector<N>& _index) {
-    return m_store[dot(_index, m_stride)];
+    return (*m_store)[dot(_index, m_stride)];
   }
 
   //! returns array element (N = 1) with range check
@@ -576,7 +597,7 @@ public:
 
   //! returns array element (arbitrary N) with range check
   const T& at(const IVector<N>& _index) const {
-    return m_store.at(dot(_index, m_stride));
+    return m_store->at(dot(_index, m_stride));
   }
 
   //! returns array element (N = 1) with range check
@@ -653,7 +674,7 @@ public:
 
   //! returns array element (arbitrary N) with range check
   T& at(const IVector<N>& _index) {
-    return m_store.at(dot(_index, m_stride));
+    return m_store->at(dot(_index, m_stride));
   }
 
   //! slice array to return sub-array object
@@ -663,14 +684,14 @@ public:
   }
 
   //! returns the first pointer of array elements
-  const T* data() const { return m_store.data(); }
+  const T* data() const { return m_store->data(); }
 
   //! returns the first pointer of array elements
-        T* data()       { return m_store.data(); }
+        T* data()       { return m_store->data(); }
 
   //! fills elements by constant value
   void fill(const T& val) {
-    std::fill(m_store.begin(), m_store.end(), val);
+    std::fill(m_store->begin(), m_store->end(), val);
   }
 
   //! fills elements by constant value
@@ -680,7 +701,7 @@ public:
   /*! Generator is either default constructible class or function pointer, which can be called by gen() */
   template<class Generator>
   void generate(Generator gen) {
-    std::generate(m_store.begin(), m_store.end(), gen);
+    std::generate(m_store->begin(), m_store->end(), gen);
   }
 
 ////! generates array elements by function gen
@@ -691,7 +712,7 @@ public:
   void clear() {
     m_shape.fill(0);
     m_stride.fill(0);
-    m_store.clear();
+    m_store->clear();
   }
 
 private:
@@ -709,7 +730,7 @@ private:
     m_stride;
 
   //! array storage
-  std::vector<T>
+  shared_ptr<std::vector<T>>
     m_store;
 
 }; // class TArray

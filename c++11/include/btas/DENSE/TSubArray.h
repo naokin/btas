@@ -24,7 +24,7 @@ namespace btas {
  *  \param T value type
  *  \param N array rank */
 template<typename T, size_t N>
-class TSubArray {
+class TSubArray : protected TArray<T, N> {
 private:
   //! Any TArray classes being friend of TSubArray<T, N>
   template<typename U, size_t M>
@@ -37,7 +37,7 @@ public:
   //! Constructor, from dense array object and lower/upper boundary indices
   TSubArray
   (const TArray<T, N>& a, const IVector<N>& lbound, const IVector<N>& ubound) {
-    m_array_ptr   = const_cast<TArray<T, N>*>(&a);
+    this->reference(a);
     m_lower_bound = lbound;
     m_upper_bound = ubound;
   }
@@ -51,11 +51,11 @@ public:
     int t_size = std::accumulate(t_shape.begin(), t_shape.end(), 1, std::multiplies<int>());
     assert(a.size() == t_size);
     // Striding
-    const IVector<N>& t_stride = m_array_ptr->m_stride;
+    const IVector<N>& t_stride = this->m_stride;
     int lda = t_shape[N-1];
     // Get bare pointers
-    const T* a_ptr = a.m_store.data();
-          T* t_ptr = m_array_ptr->data();
+    const T* a_ptr = a.data();
+          T* t_ptr = this->data();
     // Copying elements
     IVector<N> index(m_lower_bound);
     int nrows = t_size / lda;
@@ -74,9 +74,6 @@ public:
   void operator= (const TArray<T, M>& other) { copy(other); }
 
 private:
-  //! pointer to original array
-  TArray<T, N>*
-    m_array_ptr;
   //! lower boundary indices
   IVector<N>
     m_lower_bound;
