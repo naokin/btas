@@ -147,7 +147,28 @@ public:
    *
    *  ** blocks are only kept to make subarray
    */
-  virtual void subarray(const Dshapes& indices) const {
+  STArray subarray(const TVector<Dshapes, N>& indices) const {
+    TVector<Dshapes, N> _indx_map;
+    IVector<N> _shape;
+    for(int i = 0; i < N; ++i) {
+      _indx_map[i].resize(m_shape[i]);
+      std::fill(_indx_map[i].begin(), _indx_map[i].end(), -1);
+      _shape[i] = indices[i].size();
+      int n = 0;
+      for(int j = 0; j < _shape[i]; ++j)
+        _indx_map[i].at(indices[i][j]) = n++;
+    }
+    STArray _ref(_shape);
+    iterator ipos = _ref.m_store.begin();
+    for(const_iterator it = m_store.begin(); it != m_store.end(); ++it) {
+      IVector<N> block_index = _indx_map & index(it->first);
+      bool kept = true;
+      for(int i = 0; kept && i < N; ++i)
+        kept &= (block_index[i] >= 0);
+      if(kept)
+        ipos = _ref.m_store.insert(ipos, std::make_pair(_ref.tag(block_index), it->second));
+    }
+    return std::move(_ref);
   }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

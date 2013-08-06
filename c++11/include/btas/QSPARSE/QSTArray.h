@@ -114,6 +114,38 @@ public:
     STArray<T, N>::reference(other);
   }
 
+  //! Make subarray reference
+  /*! \param indices contains subarray indices
+   *  e.g.
+   *  sparse shape = { 4, 4 }
+   *  indices = { { 1, 3 }, { 0, 2, 3} }
+   *
+   *     0  1  2  3           0  2  3
+   *    +--+--+--+--+        +--+--+--+
+   *  0 |  |  |  |  |  ->  1 |**|**|**|
+   *    +--+--+--+--+        +--+--+--+
+   *  1 |**|  |**|**|      3 |**|**|**|
+   *    +--+--+--+--+        +--+--+--+
+   *  2 |  |  |  |  |
+   *    +--+--+--+--+
+   *  3 |**|  |**|**|
+   *    +--+--+--+--+
+   *
+   *  ** blocks are only kept to make subarray
+   */
+  QSTArray subarray(const TVector<Dshapes, N>& indices) const {
+    QSTArray _ref;
+    _ref.STArray<T, N>::operator= (STArray<T, N>::subarray(indices));
+    _ref.m_q_total = m_q_total;
+    for(int i = 0; i < N; ++i) {
+      int nz = indices[i].size();
+      _ref.m_q_shape[i].resize(nz);
+      for(int j = 0; j < nz; ++j)
+        _ref.m_q_shape[i][j] = m_q_shape[i].at(indices[i][j]);
+    }
+    return std::move(_ref);
+  }
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Resizing functions
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

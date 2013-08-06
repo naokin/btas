@@ -215,6 +215,15 @@ int QSPARSE_TEST(int iprint = 0)
       cout << "====================================================================================================" << endl;
       cout << "[QSPARSE_TEST] [x = a; x.erase(2, 1)] print matrix [x]: " << x << endl;
     }
+
+    // Making sub-array
+    TVector<Dshapes, 4> sub_index = { Dshapes{ 1, 2 }, Dshapes{ 0, 2 }, Dshapes{ 0, 1, 2 }, Dshapes{ 0, 1 } };
+    QSDArray<4> y(a.subarray(sub_index));
+    if(iprint > 0) {
+      cout << "====================================================================================================" << endl;
+      cout << "[QSPARSE_TEST] [y(a.subarray({{1,2},{0,2},{0,1,2},{0,1}})] print matrix [y]: " << y << endl;
+    }
+
   }
 
   return 0;
