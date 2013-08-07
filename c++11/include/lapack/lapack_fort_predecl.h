@@ -1,6 +1,8 @@
 #ifndef _LAPACK_FORT_PREDECL_H
 #define _LAPACK_FORT_PREDECL_H 1
 
+#ifndef _HAS_INTEL_MKL
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -23,5 +25,7 @@ void zgesvd_(char* jobu, char* jobvt, int* m, int* n, FC_COMPLEX_16* a, int* lda
 #ifdef __cplusplus
 }
 #endif
+
+#endif // _HAS_INTEL_MKL
 
 #endif // _LAPACK_FORT_PREDECL_H
