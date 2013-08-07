@@ -10,6 +10,7 @@
 
 #include <stdlib.h>
 #include <lapack/clapack.h>
+#include <lapack/lapack_fort_predecl.h>
 
 // Triangular fragmentation
 

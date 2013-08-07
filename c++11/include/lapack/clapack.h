@@ -52,6 +52,18 @@ enum CLAPACK_CALCVECTOR { ClapackNoCalcVector = 201, ClapackCalcVector = 202, Cl
 typedef MKL_Complex8  FC_COMPLEX_08;
 typedef MKL_Complex16 FC_COMPLEX_16;
 
+#else // _HAS_INTEL_MKL
+
+struct FC_COMPLEX_08 {
+  float real;
+  float imag;
+};
+
+struct FC_COMPLEX_16 {
+  double real;
+  double imag;
+};
+
 #endif // _HAS_INTEL_MKL
 
 #ifdef __cplusplus
