@@ -1,12 +1,13 @@
 #include "FermiQuantum.h"
 namespace btas { typedef FermiQuantum Quantum; }
 
-#include "btas_template_specialize.h"
-
+#include <btas/DENSE/Dblas.h>
+#include <btas/SPARSE/SDblas.h>
+#include <btas/QSPARSE/QSDblas.h>
 namespace btas
 {
 
-// specialize for Dblas
+// specialize & instantiate Dblas
 template<> void Dgemv<1,1,1>(const BTAS_TRANSPOSE& transa, const double& alpha, const DArray<1>& a, const DArray<1>& b, const double& beta, DArray<1>& c) { }
 template<> void Dgemv<1,1,2>(const BTAS_TRANSPOSE& transa, const double& alpha, const DArray<1>& a, const DArray<1>& b, const double& beta, DArray<2>& c) { }
 template<> void Dgemv<1,1,3>(const BTAS_TRANSPOSE& transa, const double& alpha, const DArray<1>& a, const DArray<1>& b, const double& beta, DArray<3>& c) { }
@@ -314,7 +315,7 @@ template<> void Dgemm<5,5,1>(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE&
 template<> void Dgemm<5,5,3>(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb, const double& alpha, const DArray<5>& a, const DArray<5>& b, const double& beta, DArray<3>& c) { }
 template<> void Dgemm<5,5,5>(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb, const double& alpha, const DArray<5>& a, const DArray<5>& b, const double& beta, DArray<5>& c) { }
 
-// specialize for SDblas
+// specialize and instantiate SDblas
 template<> void SDgemv<1,1,1>(const BTAS_TRANSPOSE& transa, const double& alpha, const SDArray<1>& a, const SDArray<1>& b, const double& beta, SDArray<1>& c) { }
 template<> void SDgemv<1,1,2>(const BTAS_TRANSPOSE& transa, const double& alpha, const SDArray<1>& a, const SDArray<1>& b, const double& beta, SDArray<2>& c) { }
 template<> void SDgemv<1,1,3>(const BTAS_TRANSPOSE& transa, const double& alpha, const SDArray<1>& a, const SDArray<1>& b, const double& beta, SDArray<3>& c) { }
@@ -622,7 +623,7 @@ template<> void SDgemm<5,5,1>(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE
 template<> void SDgemm<5,5,3>(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb, const double& alpha, const SDArray<5>& a, const SDArray<5>& b, const double& beta, SDArray<3>& c) { }
 template<> void SDgemm<5,5,5>(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb, const double& alpha, const SDArray<5>& a, const SDArray<5>& b, const double& beta, SDArray<5>& c) { }
 
-// specialize for QSDblas
+// specialize and instantiate QSDblas
 template<> void QSDgemv<1,1,1>(const BTAS_TRANSPOSE& transa, const double& alpha, const QSDArray<1>& a, const QSDArray<1>& b, const double& beta, QSDArray<1>& c) { }
 template<> void QSDgemv<1,1,2>(const BTAS_TRANSPOSE& transa, const double& alpha, const QSDArray<1>& a, const QSDArray<1>& b, const double& beta, QSDArray<2>& c) { }
 template<> void QSDgemv<1,1,3>(const BTAS_TRANSPOSE& transa, const double& alpha, const QSDArray<1>& a, const QSDArray<1>& b, const double& beta, QSDArray<3>& c) { }
@@ -929,6 +930,7 @@ template<> void QSDgemm<5,4,4>(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOS
 template<> void QSDgemm<5,5,1>(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb, const double& alpha, const QSDArray<5>& a, const QSDArray<5>& b, const double& beta, QSDArray<1>& c) { }
 template<> void QSDgemm<5,5,3>(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb, const double& alpha, const QSDArray<5>& a, const QSDArray<5>& b, const double& beta, QSDArray<3>& c) { }
 template<> void QSDgemm<5,5,5>(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb, const double& alpha, const QSDArray<5>& a, const QSDArray<5>& b, const double& beta, QSDArray<5>& c) { }
+
 
 } // namespace btas
 

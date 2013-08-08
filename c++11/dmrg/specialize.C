@@ -1,12 +1,19 @@
+//
+// This program generates specializations of BLAS calls with inconsistent combinations of array ranks
+// to avoid instantiations of such meaningless template functions, thus, the object file size is reduced.
+//
+// Header file btas_template_specialize.h involves extern template declarations (C++11) and
+// source file btas_template_specialize.C involves specializations of these functions as a null function.
+//
+
 #include <iostream>
 #include <fstream>
 using namespace std;
 
 int main()
 {
-  const int NA_max = 6;
-  const int NB_max = 6;
-  const int NC_max = 6;
+  // This can be modified to minimize the size of total objects
+  const int N_max = 6;
 
   //
   // header file to be included somewhere
@@ -15,146 +22,134 @@ int main()
 
   ofstream fout("btas_template_specialize.h");
 
-  fout << "#ifndef _BTAS_DBLAS_TEMPLATE_SPECIALIZE"   << endl;
-  fout << "#define _BTAS_DBLAS_TEMPLATE_SPECIALIZE 1" << endl;
-  fout << "#include <btas/Dblas.h>"                  << endl;
+  fout << "#ifndef _BTAS_DENSE_TEMPLATE_SPECIALIZE"   << endl;
+  fout << "#define _BTAS_DENSE_TEMPLATE_SPECIALIZE 1" << endl;
+//fout << "#include <btas/DENSE/DArray.h>"            << endl;
+  fout << "#include <btas/DENSE/Dblas.h>"             << endl;
   fout << "namespace btas" << endl;
   fout << "{" << endl << endl;
-  fout << "// specialize for Dblas" << endl;
-  for(int na = 1; na < NA_max; ++na) {
-    for(int nb = 1; nb < NB_max; ++nb) {
-      for(int nc = 1; nc < NC_max; ++nc) {
-        // Dgemv
-        if(nc != na - nb) {
-          fout << "template<> void Dgemv<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, "
-               << "const double& alpha, const DArray<" << na << ">& a, const DArray<" << nb << ">& b, "
-               << "const double& beta, DArray<" << nc << ">& c);" << endl;
-        }
-      }
-    }
-  }
-  for(int na = 1; na < NA_max; ++na) {
-    for(int nb = 1; nb < NB_max; ++nb) {
-      for(int nc = 1; nc < NC_max; ++nc) {
-        // Dger
-        if(nc != na + nb) {
-          fout << "template<> void Dger<" << na << "," << nb << "," << nc << ">(const double& alpha, "
-               << "const DArray<" << na << ">& a, const DArray<" << nb << ">& b, DArray<" << nc << ">& c);" << endl;
-        }
-      }
-    }
-  }
-  for(int na = 1; na < NA_max; ++na) {
-    for(int nb = 1; nb < NB_max; ++nb) {
-      for(int nc = 1; nc < NC_max; ++nc) {
-        // Dgemm
-        int k2 = na + nb - nc;
-        if(k2 % 2 != 0 || k2 / 2 <= 0) {
-          fout << "template<> void Dgemm<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb, "
-               << "const double& alpha, const DArray<" << na << ">& a, const DArray<" << nb << ">& b, "
-               << "const double& beta, DArray<" << nc << ">& c);" << endl;
-        }
-      }
-    }
-  }
-  fout << endl << "} // namespace btas" << endl << endl;
-  fout << "#endif // _BTAS_DBLAS_TEMPLATE_SPECIALIZE"   << endl;
 
-  fout << "#ifndef _BTAS_SDBLAS_TEMPLATE_SPECIALIZE"   << endl;
-  fout << "#define _BTAS_SDBLAS_TEMPLATE_SPECIALIZE 1" << endl;
-  fout << "#include <btas/SDblas.h>"                  << endl;
+//fout << "// declaration for DArray" << endl;
+//// DArray
+//for(int n = 1; n < N_max; ++n)
+//  fout << "extern template class TArray<double, " << n << ">;" << endl;
+
+  fout << "// declaration for Dblas" << endl;
+  // Dgemv
+  for(int na = 1; na < N_max; ++na)
+    for(int nb = 1; nb < N_max; ++nb)
+      for(int nc = 1; nc < N_max; ++nc)
+        if(nc != na - nb)
+          fout << "extern template void Dgemv<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, "
+               << "const double& alpha, const DArray<" << na << ">& a, const DArray<" << nb << ">& b, "
+               << "const double& beta, DArray<" << nc << ">& c);" << endl;
+  // Dger
+  for(int na = 1; na < N_max; ++na)
+    for(int nb = 1; nb < N_max; ++nb)
+      for(int nc = 1; nc < N_max; ++nc)
+        if(nc != na + nb)
+          fout << "extern template void Dger<" << na << "," << nb << "," << nc << ">(const double& alpha, "
+               << "const DArray<" << na << ">& a, const DArray<" << nb << ">& b, DArray<" << nc << ">& c);" << endl;
+  // Dgemm
+  for(int na = 1; na < N_max; ++na)
+    for(int nb = 1; nb < N_max; ++nb)
+      for(int nc = 1; nc < N_max; ++nc) {
+        int k2 = na + nb - nc;
+        // specialize
+        if(k2 % 2 != 0 || k2 / 2 <= 0)
+          fout << "extern template void Dgemm<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb, "
+               << "const double& alpha, const DArray<" << na << ">& a, const DArray<" << nb << ">& b, "
+               << "const double& beta, DArray<" << nc << ">& c);" << endl;
+      }
+
+  fout << endl << "} // namespace btas" << endl << endl;
+  fout << "#endif // _BTAS_DENSE_TEMPLATE_SPECIALIZE"   << endl;
+
+  fout << "#ifndef _BTAS_SPARSE_TEMPLATE_SPECIALIZE"   << endl;
+  fout << "#define _BTAS_SPARSE_TEMPLATE_SPECIALIZE 1" << endl;
+//fout << "#include <btas/SPARSE/SDArray.h>"           << endl;
+  fout << "#include <btas/SPARSE/SDblas.h>"            << endl;
   fout << "namespace btas" << endl;
   fout << "{" << endl << endl;
-  fout << "// specialize for SDblas" << endl;
-  for(int na = 1; na < NA_max; ++na) {
-    for(int nb = 1; nb < NB_max; ++nb) {
-      for(int nc = 1; nc < NC_max; ++nc) {
-        // SDgemv
-        if(nc != na - nb) {
-          fout << "template<> void SDgemv<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, "
+
+//fout << "// declaration for SDArray" << endl;
+//// SDArray
+//for(int n = 1; n < N_max; ++n)
+//  fout << "extern template class STArray<double, " << n << ">;" << endl;
+
+  fout << "// declaration for SDblas" << endl;
+  // SDgemv
+  for(int na = 1; na < N_max; ++na)
+    for(int nb = 1; nb < N_max; ++nb)
+      for(int nc = 1; nc < N_max; ++nc)
+        if(nc != na - nb)
+          fout << "extern template void SDgemv<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, "
                << "const double& alpha, const SDArray<" << na << ">& a, const SDArray<" << nb << ">& b, "
                << "const double& beta, SDArray<" << nc << ">& c);" << endl;
-//        fout << "template<> void ThreadSDgemv<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, "
-//             << "const double& alpha, const SDArray<" << na << ">& a, const SDArray<" << nb << ">& b, SDArray<" << nc << ">& c);" << endl;
-        }
-      }
-    }
-  }
-  for(int na = 1; na < NA_max; ++na) {
-    for(int nb = 1; nb < NB_max; ++nb) {
-      for(int nc = 1; nc < NC_max; ++nc) {
-        // SDger
-        if(nc != na + nb) {
-          fout << "template<> void SDger<" << na << "," << nb << "," << nc << ">(const double& alpha, "
+  // SDger
+  for(int na = 1; na < N_max; ++na)
+    for(int nb = 1; nb < N_max; ++nb)
+      for(int nc = 1; nc < N_max; ++nc)
+        if(nc != na + nb)
+          fout << "extern template void SDger<" << na << "," << nb << "," << nc << ">(const double& alpha, "
                << "const SDArray<" << na << ">& a, const SDArray<" << nb << ">& b, SDArray<" << nc << ">& c);" << endl;
-//        fout << "template<> void ThreadSDger<" << na << "," << nb << "," << nc << ">(const double& alpha, "
-//             << "const SDArray<" << na << ">& a, const SDArray<" << nb << ">& b, SDArray<" << nc << ">& c);" << endl;
-        }
-      }
-    }
-  }
-  for(int na = 1; na < NA_max; ++na) {
-    for(int nb = 1; nb < NB_max; ++nb) {
-      for(int nc = 1; nc < NC_max; ++nc) {
-        // SDgemm
+  // SDgemm
+  for(int na = 1; na < N_max; ++na)
+    for(int nb = 1; nb < N_max; ++nb)
+      for(int nc = 1; nc < N_max; ++nc) {
         int k2 = na + nb - nc;
-        if(k2 % 2 != 0 || k2 / 2 <= 0) {
+        // specialize
+        if(k2 % 2 != 0 || k2 / 2 <= 0)
           fout << "template<> void SDgemm<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb, "
                << "const double& alpha, const SDArray<" << na << ">& a, const SDArray<" << nb << ">& b, "
                << "const double& beta, SDArray<" << nc << ">& c);" << endl;
-//        fout << "template<> void ThreadSDgemm<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb, "
-//             << "const double& alpha, const SDArray<" << na << ">& a, const SDArray<" << nb << ">& b, SDArray<" << nc << ">& c);" << endl;
-        }
       }
-    }
-  }
-  fout << endl << "} // namespace btas" << endl << endl;
-  fout << "#endif // _BTAS_SDBLAS_TEMPLATE_SPECIALIZE"   << endl;
 
-  fout << "#ifndef _BTAS_QSDBLAS_TEMPLATE_SPECIALIZE"   << endl;
-  fout << "#define _BTAS_QSDBLAS_TEMPLATE_SPECIALIZE 1" << endl;
-  fout << "#include <btas/QSDblas.h>"                  << endl;
+  fout << endl << "} // namespace btas" << endl << endl;
+  fout << "#endif // _BTAS_SPARSE_TEMPLATE_SPECIALIZE"   << endl;
+
+  fout << "#ifndef _BTAS_QSPARSE_TEMPLATE_SPECIALIZE"   << endl;
+  fout << "#define _BTAS_QSPARSE_TEMPLATE_SPECIALIZE 1" << endl;
+//fout << "#include <btas/QSPARSE/QSDArray.h>"          << endl;
+  fout << "#include <btas/QSPARSE/QSDblas.h>"           << endl;
   fout << "namespace btas" << endl;
   fout << "{" << endl << endl;
-  fout << "// specialize for QSDblas" << endl;
-  for(int na = 1; na < NA_max; ++na) {
-    for(int nb = 1; nb < NB_max; ++nb) {
-      for(int nc = 1; nc < NC_max; ++nc) {
-        // QSDgemv
-        if(nc != na - nb) {
+
+//fout << "// declaration for QSDArray" << endl;
+//// QSDArray
+//for(int n = 1; n < N_max; ++n)
+//  fout << "extern template class QSTArray<double, " << n << ">;" << endl;
+
+  fout << "// declaration for QSDblas" << endl;
+  // QSDgemv
+  for(int na = 1; na < N_max; ++na)
+    for(int nb = 1; nb < N_max; ++nb)
+      for(int nc = 1; nc < N_max; ++nc)
+        if(nc != na - nb)
           fout << "template<> void QSDgemv<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, "
                << "const double& alpha, const QSDArray<" << na << ">& a, const QSDArray<" << nb << ">& b, "
                << "const double& beta, QSDArray<" << nc << ">& c);" << endl;
-        }
-      }
-    }
-  }
-  for(int na = 1; na < NA_max; ++na) {
-    for(int nb = 1; nb < NB_max; ++nb) {
-      for(int nc = 1; nc < NC_max; ++nc) {
-        // QSDger
-        if(nc != na + nb) {
+  // QSDger
+  for(int na = 1; na < N_max; ++na)
+    for(int nb = 1; nb < N_max; ++nb)
+      for(int nc = 1; nc < N_max; ++nc)
+        if(nc != na + nb)
           fout << "template<> void QSDger<" << na << "," << nb << "," << nc << ">(const double& alpha, "
                << "const QSDArray<" << na << ">& a, const QSDArray<" << nb << ">& b, QSDArray<" << nc << ">& c);" << endl;
-        }
-      }
-    }
-  }
-  for(int na = 1; na < NA_max; ++na) {
-    for(int nb = 1; nb < NB_max; ++nb) {
-      for(int nc = 1; nc < NC_max; ++nc) {
-        // QSDgemm
+  // QSDgemm
+  for(int na = 1; na < N_max; ++na)
+    for(int nb = 1; nb < N_max; ++nb)
+      for(int nc = 1; nc < N_max; ++nc) {
         int k2 = na + nb - nc;
-        if(k2 % 2 != 0 || k2 / 2 <= 0) {
+        // specialize
+        if(k2 % 2 != 0 || k2 / 2 <= 0)
           fout << "template<> void QSDgemm<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb, "
                << "const double& alpha, const QSDArray<" << na << ">& a, const QSDArray<" << nb << ">& b, "
                << "const double& beta, QSDArray<" << nc << ">& c);" << endl;
-        }
       }
-    }
-  }
+
   fout << endl << "} // namespace btas" << endl << endl;
-  fout << "#endif // _BTAS_QSDBLAS_TEMPLATE_SPECIALIZE"   << endl;
+  fout << "#endif // _BTAS_QSPARSE_TEMPLATE_SPECIALIZE"   << endl;
 
   }
 
@@ -168,133 +163,165 @@ int main()
   fout << "#include \"FermiQuantum.h\"" << endl;
   fout << "namespace btas { typedef FermiQuantum Quantum; }" << endl;
   fout << endl;
-  fout << "#include <btas/Dblas.h>" << endl;
-  fout << "#include <btas/SDblas.h>" << endl;
-  fout << "#include <btas/QSDblas.h>" << endl;
+//fout << "#include <btas/DENSE/DArray.h>" << endl;
+  fout << "#include <btas/DENSE/Dblas.h>" << endl;
+//fout << "#include <btas/SPARSE/SDArray.h>" << endl;
+  fout << "#include <btas/SPARSE/SDblas.h>" << endl;
+//fout << "#include <btas/QSPARSE/QSDArray.h>" << endl;
+  fout << "#include <btas/QSPARSE/QSDblas.h>" << endl;
   fout << "namespace btas" << endl;
   fout << "{" << endl << endl;
 
-  fout << "// specialize for Dblas" << endl;
-  for(int na = 1; na < NA_max; ++na) {
-    for(int nb = 1; nb < NB_max; ++nb) {
-      for(int nc = 1; nc < NC_max; ++nc) {
-        // Dgemv
-        if(nc != na - nb) {
+//fout << "// explicit instantiate DArray" << endl;
+//// DArray
+//for(int n = 1; n < N_max; ++n)
+//  fout << "template class TArray<double, " << n << ">;" << endl;
+
+  fout << "// specialize & instantiate Dblas" << endl;
+  // Dgemv
+  for(int na = 1; na < N_max; ++na)
+    for(int nb = 1; nb < N_max; ++nb)
+      for(int nc = 1; nc < N_max; ++nc)
+        // specialize
+        if(nc != na - nb)
           fout << "template<> void Dgemv<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, "
                << "const double& alpha, const DArray<" << na << ">& a, const DArray<" << nb << ">& b, "
                << "const double& beta, DArray<" << nc << ">& c) { }" << endl;
-        }
-      }
-    }
-  }
-  for(int na = 1; na < NA_max; ++na) {
-    for(int nb = 1; nb < NB_max; ++nb) {
-      for(int nc = 1; nc < NC_max; ++nc) {
-        // Dger
-        if(nc != na + nb) {
+        // instantiate
+//      else
+//        fout << "template   void Dgemv<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, "
+//             << "const double& alpha, const DArray<" << na << ">& a, const DArray<" << nb << ">& b, "
+//             << "const double& beta, DArray<" << nc << ">& c);" << endl;
+  // Dger
+  for(int na = 1; na < N_max; ++na)
+    for(int nb = 1; nb < N_max; ++nb)
+      for(int nc = 1; nc < N_max; ++nc)
+        // specialize
+        if(nc != na + nb)
           fout << "template<> void Dger<" << na << "," << nb << "," << nc << ">(const double& alpha, "
                << "const DArray<" << na << ">& a, const DArray<" << nb << ">& b, DArray<" << nc << ">& c) { }" << endl;
-        }
-      }
-    }
-  }
-  for(int na = 1; na < NA_max; ++na) {
-    for(int nb = 1; nb < NB_max; ++nb) {
-      for(int nc = 1; nc < NC_max; ++nc) {
-        // Dgemm
+        // instantiate
+//      else
+//        fout << "template   void Dger<" << na << "," << nb << "," << nc << ">(const double& alpha, "
+//             << "const DArray<" << na << ">& a, const DArray<" << nb << ">& b, DArray<" << nc << ">& c);" << endl;
+  // Dgemm
+  for(int na = 1; na < N_max; ++na)
+    for(int nb = 1; nb < N_max; ++nb)
+      for(int nc = 1; nc < N_max; ++nc) {
         int k2 = na + nb - nc;
-        if(k2 % 2 != 0 || k2 / 2 <= 0) {
+        // specialize
+        if(k2 % 2 != 0 || k2 / 2 <= 0)
           fout << "template<> void Dgemm<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb, "
                << "const double& alpha, const DArray<" << na << ">& a, const DArray<" << nb << ">& b, "
                << "const double& beta, DArray<" << nc << ">& c) { }" << endl;
-        }
+//      else
+//        fout << "template   void Dgemm<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb, "
+//             << "const double& alpha, const DArray<" << na << ">& a, const DArray<" << nb << ">& b, "
+//             << "const double& beta, DArray<" << nc << ">& c);" << endl;
       }
-    }
-  }
+
   fout << endl;
 
-  fout << "// specialize for SDblas" << endl;
-  for(int na = 1; na < NA_max; ++na) {
-    for(int nb = 1; nb < NB_max; ++nb) {
-      for(int nc = 1; nc < NC_max; ++nc) {
-        // SDgemv
-        if(nc != na - nb) {
+//fout << "// explicit instantiate SDArray" << endl;
+//// SDArray
+//for(int n = 1; n < N_max; ++n)
+//  fout << "template class STArray<double, " << n << ">;" << endl;
+
+  fout << "// specialize and instantiate SDblas" << endl;
+  // SDgemv
+  for(int na = 1; na < N_max; ++na)
+    for(int nb = 1; nb < N_max; ++nb)
+      for(int nc = 1; nc < N_max; ++nc)
+        // specialize
+        if(nc != na - nb)
           fout << "template<> void SDgemv<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, "
                << "const double& alpha, const SDArray<" << na << ">& a, const SDArray<" << nb << ">& b, "
                << "const double& beta, SDArray<" << nc << ">& c) { }" << endl;
-//        fout << "template<> void ThreadSDgemv<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, "
-//             << "const double& alpha, const SDArray<" << na << ">& a, const SDArray<" << nb << ">& b, SDArray<" << nc << ">& c) { }" << endl;
-        }
-      }
-    }
-  }
-  for(int na = 1; na < NA_max; ++na) {
-    for(int nb = 1; nb < NB_max; ++nb) {
-      for(int nc = 1; nc < NC_max; ++nc) {
-        // SDger
-        if(nc != na + nb) {
+        // instantiate
+//      else
+//        fout << "template   void SDgemv<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, "
+//             << "const double& alpha, const SDArray<" << na << ">& a, const SDArray<" << nb << ">& b, "
+//             << "const double& beta, SDArray<" << nc << ">& c);" << endl;
+  // SDger
+  for(int na = 1; na < N_max; ++na)
+    for(int nb = 1; nb < N_max; ++nb)
+      for(int nc = 1; nc < N_max; ++nc)
+        // specialize
+        if(nc != na + nb)
           fout << "template<> void SDger<" << na << "," << nb << "," << nc << ">(const double& alpha, "
                << "const SDArray<" << na << ">& a, const SDArray<" << nb << ">& b, SDArray<" << nc << ">& c) { }" << endl;
-//        fout << "template<> void ThreadSDger<" << na << "," << nb << "," << nc << ">(const double& alpha, "
-//             << "const SDArray<" << na << ">& a, const SDArray<" << nb << ">& b, SDArray<" << nc << ">& c) { }" << endl;
-        }
-      }
-    }
-  }
-  for(int na = 1; na < NA_max; ++na) {
-    for(int nb = 1; nb < NB_max; ++nb) {
-      for(int nc = 1; nc < NC_max; ++nc) {
-        // SDgemm
+        // instantiate
+//      else
+//        fout << "template   void SDger<" << na << "," << nb << "," << nc << ">(const double& alpha, "
+//             << "const SDArray<" << na << ">& a, const SDArray<" << nb << ">& b, SDArray<" << nc << ">& c);" << endl;
+  // SDgemm
+  for(int na = 1; na < N_max; ++na)
+    for(int nb = 1; nb < N_max; ++nb)
+      for(int nc = 1; nc < N_max; ++nc) {
         int k2 = na + nb - nc;
-        if(k2 % 2 != 0 || k2 / 2 <= 0) {
+        // specialize
+        if(k2 % 2 != 0 || k2 / 2 <= 0)
           fout << "template<> void SDgemm<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb, "
                << "const double& alpha, const SDArray<" << na << ">& a, const SDArray<" << nb << ">& b, "
                << "const double& beta, SDArray<" << nc << ">& c) { }" << endl;
-//        fout << "template<> void ThreadSDgemm<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb, "
-//             << "const double& alpha, const SDArray<" << na << ">& a, const SDArray<" << nb << ">& b, SDArray<" << nc << ">& c) { }" << endl;
-        }
+//      else
+//        fout << "template   void SDgemm<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb, "
+//             << "const double& alpha, const SDArray<" << na << ">& a, const SDArray<" << nb << ">& b, "
+//             << "const double& beta, SDArray<" << nc << ">& c);" << endl;
       }
-    }
-  }
+
   fout << endl;
 
-  fout << "// specialize for QSDblas" << endl;
-  for(int na = 1; na < NA_max; ++na) {
-    for(int nb = 1; nb < NB_max; ++nb) {
-      for(int nc = 1; nc < NC_max; ++nc) {
-        // QSDgemv
-        if(nc != na - nb) {
+//fout << "// explicit instantiate QSDArray" << endl;
+//// QSDArray
+//for(int n = 1; n < N_max; ++n)
+//  fout << "template class QSTArray<double, " << n << ">;" << endl;
+
+  fout << "// specialize and instantiate QSDblas" << endl;
+  // QSDgemv
+  for(int na = 1; na < N_max; ++na)
+    for(int nb = 1; nb < N_max; ++nb)
+      for(int nc = 1; nc < N_max; ++nc)
+        // specialize
+        if(nc != na - nb)
           fout << "template<> void QSDgemv<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, "
                << "const double& alpha, const QSDArray<" << na << ">& a, const QSDArray<" << nb << ">& b, "
                << "const double& beta, QSDArray<" << nc << ">& c) { }" << endl;
-        }
-      }
-    }
-  }
-  for(int na = 1; na < NA_max; ++na) {
-    for(int nb = 1; nb < NB_max; ++nb) {
-      for(int nc = 1; nc < NC_max; ++nc) {
-        // QSDger
-        if(nc != na + nb) {
+        // instantiate
+//      else
+//        fout << "template   void QSDgemv<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, "
+//             << "const double& alpha, const QSDArray<" << na << ">& a, const QSDArray<" << nb << ">& b, "
+//             << "const double& beta, QSDArray<" << nc << ">& c);" << endl;
+  // QSDger
+  for(int na = 1; na < N_max; ++na)
+    for(int nb = 1; nb < N_max; ++nb)
+      for(int nc = 1; nc < N_max; ++nc)
+        // specialize
+        if(nc != na + nb)
           fout << "template<> void QSDger<" << na << "," << nb << "," << nc << ">(const double& alpha, "
                << "const QSDArray<" << na << ">& a, const QSDArray<" << nb << ">& b, QSDArray<" << nc << ">& c) { }" << endl;
-        }
-      }
-    }
-  }
-  for(int na = 1; na < NA_max; ++na) {
-    for(int nb = 1; nb < NB_max; ++nb) {
-      for(int nc = 1; nc < NC_max; ++nc) {
-        // QSDgemm
+        // instantiate
+//      else
+//        fout << "template   void QSDger<" << na << "," << nb << "," << nc << ">(const double& alpha, "
+//             << "const QSDArray<" << na << ">& a, const QSDArray<" << nb << ">& b, QSDArray<" << nc << ">& c);" << endl;
+  // QSDgemm
+  for(int na = 1; na < N_max; ++na)
+    for(int nb = 1; nb < N_max; ++nb)
+      for(int nc = 1; nc < N_max; ++nc) {
         int k2 = na + nb - nc;
-        if(k2 % 2 != 0 || k2 / 2 <= 0) {
+        // specialize
+        if(k2 % 2 != 0 || k2 / 2 <= 0)
           fout << "template<> void QSDgemm<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb, "
                << "const double& alpha, const QSDArray<" << na << ">& a, const QSDArray<" << nb << ">& b, "
                << "const double& beta, QSDArray<" << nc << ">& c) { }" << endl;
-        }
+//      else
+//        fout << "template   void QSDgemm<" << na << "," << nb << "," << nc << ">(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE& transb, "
+//             << "const double& alpha, const QSDArray<" << na << ">& a, const QSDArray<" << nb << ">& b, "
+//             << "const double& beta, QSDArray<" << nc << ">& c);" << endl;
       }
-    }
-  }
+
+  fout << endl;
+
   fout << endl << "} // namespace btas" << endl << endl;
 
   }
