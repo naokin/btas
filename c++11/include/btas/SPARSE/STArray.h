@@ -198,8 +198,8 @@ public:
     for(int ib = 0; ib < size(); ++ib) {
       // assume derived mf_non_zero being called
       if(this->mf_non_zero(block_index)) {
-        IVector<N> block_shape(dn_shape & block_index);
-        it = m_store.insert(it, std::make_pair(ib, shared_ptr<TArray<T, N>>(new TArray<T, N>(block_shape))));
+        if(dn_shape * block_index > 0) // check non-zero size
+          it = m_store.insert(it, std::make_pair(ib, shared_ptr<TArray<T, N>>(new TArray<T, N>(dn_shape & block_index))));
       }
       // index increment
       for(int id = N-1; id >= 0; --id) {
