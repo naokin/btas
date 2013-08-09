@@ -196,14 +196,34 @@ int QSPARSE_TEST(int iprint = 0)
      SDArray<1> s;
     QSDArray<3> u;
     QSDArray<3> v;
-    QSDgesvd(LeftArrow, a, s, u, v, 4);
+    QSDgesvd(LeftArrow, a, s, u, v, 12);
     if(iprint > 0) {
       cout << "====================================================================================================" << endl;
-      cout << "[QSPARSE_TEST] [QSDgesvd(LeftArrow, a, s, u, v)] print tensor [s]: " << s << endl;
+      cout << "[QSPARSE_TEST] [QSDgesvd(LeftArrow, a, s, u, v, 4)] print tensor [s]: " << s << endl;
       cout << "====================================================================================================" << endl;
-      cout << "[QSPARSE_TEST] [QSDgesvd(LeftArrow, a, s, u, v)] print tensor [u]: " << u << endl;
+      cout << "[QSPARSE_TEST] [QSDgesvd(LeftArrow, a, s, u, v, 4)] print tensor [u]: " << u << endl;
       cout << "====================================================================================================" << endl;
-      cout << "[QSPARSE_TEST] [QSDgesvd(LeftArrow, a, s, u, v)] print tensor [v]: " << v << endl;
+      cout << "[QSPARSE_TEST] [QSDgesvd(LeftArrow, a, s, u, v, 4)] print tensor [v]: " << v << endl;
+    }
+
+    // QSDgesvd with null space vector
+     SDArray<1> s_rm;
+    QSDArray<3> u_rm;
+    QSDArray<3> v_rm;
+    QSDgesvd(LeftArrow, a, s, s_rm, 1, u, u_rm, 1, v, v_rm, 12);
+    if(iprint > 0) {
+      cout << "====================================================================================================" << endl;
+      cout << "[QSPARSE_TEST] [QSDgesvd(LeftArrow, a, s, s_rm, 1, u, u_rm, 1, v, v_rm, 4)] print tensor [s]: " << s << endl;
+      cout << "====================================================================================================" << endl;
+      cout << "[QSPARSE_TEST] [QSDgesvd(LeftArrow, a, s, s_rm, 1, u, u_rm, 1, v, v_rm, 4)] print tensor [u]: " << u << endl;
+      cout << "====================================================================================================" << endl;
+      cout << "[QSPARSE_TEST] [QSDgesvd(LeftArrow, a, s, s_rm, 1, u, u_rm, 1, v, v_rm, 4)] print tensor [v]: " << v << endl;
+      cout << "====================================================================================================" << endl;
+      cout << "[QSPARSE_TEST] [QSDgesvd(LeftArrow, a, s, s_rm, 1, u, u_rm, 1, v, v_rm, 4)] print tensor [s_rm]: " << s_rm << endl;
+      cout << "====================================================================================================" << endl;
+      cout << "[QSPARSE_TEST] [QSDgesvd(LeftArrow, a, s, s_rm, 1, u, u_rm, 1, v, v_rm, 4)] print tensor [u_rm]: " << u_rm << endl;
+      cout << "====================================================================================================" << endl;
+      cout << "[QSPARSE_TEST] [QSDgesvd(LeftArrow, a, s, s_rm, 1, u, u_rm, 1, v, v_rm, 4)] print tensor [v_rm]: " << v_rm << endl;
     }
   }
 

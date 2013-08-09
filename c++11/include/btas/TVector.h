@@ -468,9 +468,14 @@ ostream& operator<< (ostream& ost, const array<T, N>& vec) {
 template<typename T>
 ostream& operator<< (ostream& ost, const vector<T>& vec) {
   int n = vec.size();
-  ost << "[ ";
-  for(int i = 0; i < n-1; ++i) ost << vec[i] << ", ";
-  ost << vec[n-1] << " ]";
+  if(n == 0) {
+    ost << "[ ]";
+  }
+  else {
+    ost << "[ ";
+    for(int i = 0; i < n-1; ++i) ost << vec[i] << ", ";
+    ost << vec[n-1] << " ]";
+  }
   return ost;
 }
 

@@ -301,9 +301,9 @@ void Dggev(const DArray<2*N-2>& a, const DArray<2*N-2>& b, DArray<1>& alphar, DA
   Dpermute(vr_tr, transpose(sequence<N>(), 1), vr);
 }
 
-//! Solve thin singular value decomposition
+//! Solve singular value decomposition
 template<size_t NA, size_t NU>
-void Dgesvd(const DArray<NA>& a, DArray<1>& s, DArray<NU>& u, DArray<NA-NU+2>& vt) {
+void Dgesvd(const DArray<NA>& a, DArray<1>& s, DArray<NU>& u, DArray<NA-NU+2>& vt, bool calc_full_u = false, bool calc_full_vt = false) {
   const size_t K  = NA - NU + 1;
   const size_t NV = K + 1;
   // check array 'a'
@@ -315,15 +315,15 @@ void Dgesvd(const DArray<NA>& a, DArray<1>& s, DArray<NU>& u, DArray<NA-NU+2>& v
   int ncols = std::accumulate(a_shape.begin()+NA-K, a_shape.end(),       1, std::multiplies<int>());
   int nsval = std::min(nrows, ncols);
   // calc. shape of 'u'
+  int ucols = calc_full_u ? nrows : nsval;
+//int ucols = nsval;
   IVector<NU> u_shape;
   for(int i = 0; i < NA-K; ++i) u_shape[i] = a_shape[i];
-//int ucols = (Jobu  == CalcThinVector) ? nsval : nrows;
-  int ucols = nsval;
   u_shape[NA-K] = ucols;
   // calc. shape of 'vt'
+  int vrows = calc_full_vt ? ncols : nsval;
+//int vrows = nsval;
   IVector<NV> vt_shape;
-//int vrows = (Jobvt == CalcThinVector) ? nsval : ncols;
-  int vrows = nsval;
   vt_shape[0] = vrows;
   for(int i = 0; i < K; ++i) vt_shape[i+1] = a_shape[i+NA-K];
   // resize arrays

@@ -312,6 +312,9 @@ public:
 
 template<size_t NA, size_t NU>
 class DgesvdArglist : public R_arglist_quadra<double, NA, 1, NU, NA-NU+2> {
+private:
+  bool m_calc_u;
+  bool m_calc_vt;
 public:
   //! Default constructor
   DgesvdArglist() { }
@@ -320,13 +323,13 @@ public:
   (const shared_ptr<DArray<NA>     >& a_ptr,
    const shared_ptr<DArray<1>      >& s_ptr,
    const shared_ptr<DArray<NU>     >& u_ptr,
-   const shared_ptr<DArray<NA-NU+2>>& v_ptr)
-  : R_arglist_quadra<double, NA, 1, NU, NA-NU+2>(a_ptr, s_ptr, u_ptr, v_ptr) { }
+   const shared_ptr<DArray<NA-NU+2>>& v_ptr, bool calc_u = false, bool calc_vt = false)
+  : R_arglist_quadra<double, NA, 1, NU, NA-NU+2>(a_ptr, s_ptr, u_ptr, v_ptr), m_calc_u(calc_u), m_calc_vt(calc_vt) { }
   //! Call Dgesvd
   void call() const { Dgesvd(*R_arglist_quadra<double, NA, 1, NU, NA-NU+2>::m_argment_1,
                              *R_arglist_quadra<double, NA, 1, NU, NA-NU+2>::m_argment_2,
                              *R_arglist_quadra<double, NA, 1, NU, NA-NU+2>::m_argment_3,
-                             *R_arglist_quadra<double, NA, 1, NU, NA-NU+2>::m_argment_4); }
+                             *R_arglist_quadra<double, NA, 1, NU, NA-NU+2>::m_argment_4, m_calc_u, m_calc_vt); }
 };
 
 }; // namespace btas

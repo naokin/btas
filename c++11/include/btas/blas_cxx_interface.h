@@ -49,7 +49,7 @@ enum BTAS_UPLO      { Upper    =121, Lower    =122 };
 enum BTAS_DIAG      { NonUnit  =131, Unit     =132 };
 enum BTAS_SIDE      { Left     =141, Right    =142 };
 
-// BLAS wrappers
+// Write BLAS wrappers below
 
 };
 
