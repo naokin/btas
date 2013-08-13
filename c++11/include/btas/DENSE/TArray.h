@@ -68,7 +68,10 @@ public:
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   //! default constructor
-  TArray() : m_store(new std::vector<T>()) { }
+  TArray() : m_store(new std::vector<T>()) {
+    m_shape.fill(0);
+    m_stride.fill(0);
+  }
 
   //! destructor
  ~TArray() { }
