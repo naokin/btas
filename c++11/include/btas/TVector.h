@@ -453,11 +453,9 @@ void fast_add(const std::vector<T>& v1, std::vector<T>& v2) {
 
 #include <iostream>
 
-namespace std {
-
 //! Printing elements in array as " [ v[0], v[1], v[2], ... ] "
 template<typename T, size_t N>
-ostream& operator<< (ostream& ost, const array<T, N>& vec) {
+std::ostream& operator<< (std::ostream& ost, const std::array<T, N>& vec) {
   ost << "[ ";
   for(int i = 0; i < N-1; ++i) ost << vec[i] << ", ";
   ost << vec[N-1] << " ]";
@@ -466,7 +464,7 @@ ostream& operator<< (ostream& ost, const array<T, N>& vec) {
 
 //! Printing elements in vector as " [ v[0], v[1], v[2], ... ] "
 template<typename T>
-ostream& operator<< (ostream& ost, const vector<T>& vec) {
+std::ostream& operator<< (std::ostream& ost, const std::vector<T>& vec) {
   int n = vec.size();
   if(n == 0) {
     ost << "[ ]";
@@ -478,7 +476,5 @@ ostream& operator<< (ostream& ost, const vector<T>& vec) {
   }
   return ost;
 }
-
-}; // namespace std
 
 #endif // _BTAS_CXX11_TVECTOR_H
