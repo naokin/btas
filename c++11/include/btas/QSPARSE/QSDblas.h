@@ -100,7 +100,7 @@ void QSDgemv
  const double& beta,        QSDArray<NC, Q>& c)
 {
   // Checking contraction quantum numbers
-  Quantum q_total; TVector<Qshapes<Q>, NC> q_shape;
+  Q q_total; TVector<Qshapes<Q>, NC> q_shape;
   gemv_contract_qshape(TransA, a.q(), a.qshape(), b.q(), b.qshape(), q_total, q_shape);
   // Checking shapes of c
   if(c.size() > 0) {
@@ -126,7 +126,7 @@ void QSDger
 (const double& alpha, const QSDArray<NA, Q>& a, const QSDArray<NB, Q>& b, QSDArray<NC, Q>& c)
 {
   // Checking contraction quantum numbers
-  Quantum q_total; TVector<Qshapes<Q>, NC> q_shape;
+  Q q_total; TVector<Qshapes<Q>, NC> q_shape;
   ger_contract_qshape(a.q(), a.qshape(), b.q(), b.qshape(), q_total, q_shape);
   // Checking shapes of c
   if(c.size() > 0) {
@@ -154,7 +154,7 @@ void QSDgemm
 {
   // Checking contraction quantum numbers
   const size_t K = (NA + NB - NC)/2;
-  Quantum q_total; TVector<Qshapes<Q>, NC> q_shape;
+  Q q_total; TVector<Qshapes<Q>, NC> q_shape;
   gemm_contract_qshape(TransA, TransB, a.q(), a.qshape(), b.q(), b.qshape(), q_total, q_shape);
   // Checking shapes of c
   if(c.size() > 0) {
@@ -199,7 +199,7 @@ void QSDgemv
  const double& beta,        QSDArray<NC>& c)
 {
   // Checking contraction quantum numbers
-  Quantum q_total; TVector<Qshapes<Q>, NC> q_shape;
+  Q q_total; TVector<Qshapes<Q>, NC> q_shape;
   gemv_contract_qshape(TransA, a.q(), a.qshape(), b.q(), b.qshape(), q_total, q_shape);
   // Checking shapes of c
   if(c.size() > 0) {
@@ -228,13 +228,13 @@ void QSDgemv
 
 template<size_t NA, size_t NB, size_t NC, class Q = Quantum>
 void QSDger
-(const function<double(const TVector<Quantum, NA>&,
-                       const TVector<Quantum, NB>&,
-                       const TVector<Quantum, NC>&)>& f_scale,
+(const function<double(const TVector<Q, NA>&,
+                       const TVector<Q, NB>&,
+                       const TVector<Q, NC>&)>& f_scale,
  const double& alpha, const QSDArray<NA>& a, const QSDArray<NB>& b, QSDArray<NC>& c)
 {
   // Checking contraction quantum numbers
-  Quantum q_total; TVector<Qshapes<Q>, NC> q_shape;
+  Q q_total; TVector<Qshapes<Q>, NC> q_shape;
   ger_contract_qshape(a.q(), a.qshape(), b.q(), b.qshape(), q_total, q_shape);
   // Checking shapes of c
   if(c.size() > 0) {
@@ -258,16 +258,16 @@ void QSDger
 
 template<size_t NA, size_t NB, size_t NC, class Q = Quantum>
 void QSDgemm
-(const function<double(const TVector<Quantum, NA>&,
-                       const TVector<Quantum, NB>&,
-                       const TVector<Quantum, NC>&)>& f_scale,
+(const function<double(const TVector<Q, NA>&,
+                       const TVector<Q, NB>&,
+                       const TVector<Q, NC>&)>& f_scale,
  const BTAS_TRANSPOSE& TransA, const BTAS_TRANSPOSE& TransB,
  const double& alpha, const QSDArray<NA>& a, const QSDArray<NB>& b,
  const double& beta,        QSDArray<NC>& c)
 {
   // Checking contraction quantum numbers
   const size_t K = (NA + NB - NC)/2;
-  Quantum q_total; TVector<Qshapes<Q>, NC> q_shape;
+  Q q_total; TVector<Qshapes<Q>, NC> q_shape;
   gemm_contract_qshape(TransA, TransB, a.q(), a.qshape(), b.q(), b.qshape(), q_total, q_shape);
   // Checking shapes of c
   if(c.size() > 0) {
@@ -313,15 +313,15 @@ void QSDgemm
 //====================================================================================================
 
 //! Normalization
-template<size_t N>
-void QSDnormalize(QSDArray<N>& x) {
+template<size_t N, class Q = Quantum>
+void QSDnormalize(QSDArray<N, Q>& x) {
   double norm = QSDdotc(x, x);
   QSDscal(1.0/sqrt(norm), x);
 }
 
 //! Orthogonalization
-template<size_t N>
-void QSDorthogonalize(const QSDArray<N>& x, QSDArray<N>& y) {
+template<size_t N, class Q = Quantum>
+void QSDorthogonalize(const QSDArray<N, Q>& x, QSDArray<N, Q>& y) {
   double ovlp = QSDdotc(x, y);
   QSDaxpy(-ovlp, x, y);
 }
