@@ -208,12 +208,33 @@ public:
     STArray<T, N>::clear();
   }
 
-  //! Erase blocks within certain index
-  /*! Both rank and its index have to be specified */
+  //! Erase blocks of which have certain index
+  /*! Not good design, since it can't check quantum numbers
+   *  \param _rank  rank in which index is associated
+   *  \param _index index to be removed
+   */
   void erase(int _rank, int _index) {
     STArray<T, N>::erase(_rank, _index);
     m_q_shape[_rank].erase(m_q_shape[_rank].begin()+_index);
   }
+
+////! Erase blocks of which have certain set of indices
+///*!
+// *  \param _rank  rank in which index is associated
+// *  \param _indxs indices to be removed
+// */
+//virtual void erase(int _rank, const std::vector<int>& _indxs) {
+//  std::set<int> _indx_set(_indxs.begin(), _indxs.end());
+//  assert(_indx_set.size() <= m_shape[_rank]);
+//  assert(*_indx_set.begin() >= 0 && *_indx_set.rbegin() < m_shape[_rank]);
+//  std::map<int, int> _indx_map;
+//  Qshapes<Q> _q_shape;
+//  for(size_t i = 0; i < m_shape[_rank]; ++i) {
+//    if(_indx_set.find(i) == _indx_set.end())
+//      _q_shape.push_back(m_q_shape[_rank][i]);
+//  }
+//  STArray<T, N>::erase(_rank, _indxs);
+//}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Access member variables
