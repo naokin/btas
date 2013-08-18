@@ -426,8 +426,12 @@ public:
     // check if the requested block can be non-zero
     iterator it = find(_tag);
     if(this->mf_check_allowed(_index)) {
-      if(it == end())
+      if(it == end()) {
         it = m_store.insert(it, std::make_pair(_tag, shared_ptr<TArray<T, N>>(new TArray<T, N>(m_dn_shape & _index))));
+      }
+      else {
+        BTAS_THROW((m_dn_shape & _index) == it->second->shape(), "btas::STArray::reserve: existed block has inconsistent shape");
+      }
     }
     else {
       if(it != end()) {
@@ -448,8 +452,12 @@ public:
     // check if the requested block can be non-zero
     iterator it = find(_tag);
     if(this->mf_check_allowed(_index)) {
-      if(it == end())
+      if(it == end()) {
         it = m_store.insert(it, std::make_pair(_tag, shared_ptr<TArray<T, N>>(new TArray<T, N>(m_dn_shape & _index))));
+      }
+      else {
+        BTAS_THROW((m_dn_shape & _index) == it->second->shape(), "btas::STArray::reserve: existed block has inconsistent shape");
+      }
     }
     else {
       if(it != end()) {

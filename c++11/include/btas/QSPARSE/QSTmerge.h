@@ -45,32 +45,43 @@ void QSTmerge
   b_dshape[0] = rows_info.dshape_merged();
   for(int i = 0; i < MC; ++i) b_dshape[1+i] = a_dshape[MR+i];
   // resizing
-  b.resize(a.q(), b_qshape, b_dshape, 0.0);
+  b.resize(a.q(), b_qshape, b_dshape, true);
   // strides
   int a_stride = a.stride(MR-1);
   int b_stride = b.stride(0);
+  int b_n_rows = b.shape (0);
   // loop over merged blocks
-  for(typename QSTArray<T, 1+MC, Q>::iterator itb = b.begin(); itb != b.end(); ++itb) {
-    int i = itb->first / b_stride;
-    int j = itb->first % b_stride;
+  for(int i = 0; i < b_n_rows; ++i) {
     typename QSTmergeInfo<MR, Q>::const_range irow_range = rows_info.equal_range(i);
-    // construct merged dense-tensor
-    TArray<T, 1+MC>& block = *(itb->second);
-    // loop over dense-array of a
-    IVector<1+MC> subbeg = uniform<int, 1+MC>(0);
-    IVector<1+MC> subend;
-    for(int i = 0; i < 1+MC; ++i) subend[i] = block.shape(i) - 1;
-    for(typename QSTmergeInfo<MR, Q>::const_iterator itr = irow_range.first; itr != irow_range.second; ++itr) {
-      int irow = itr->second;
-      int drow = rows_info.dshape_packed(irow);
-      subend[0] = subbeg[0] + drow - 1;
-      // merge
-      int tag = irow * a_stride + j;
-      typename QSTArray<T, N, Q>::const_iterator ita = a.find(tag);
-      if(ita != a.end())
-        block.subarray(subbeg, subend) = *ita->second;
-//      copy((*ita->second), TSubArray<T, 1+MC>(block, subbeg, subend));
-      subbeg[0] = subend[0] + 1;
+    if(irow_range.first == irow_range.second) continue;
+
+    for(int j = 0; j < b_stride; ++j) {
+      // construct merged dense-tensor
+      IVector<1+MC> b_index = b.index(i*b_stride+j);
+      if(!b.allowed(b_index)) continue;
+      TArray<T, 1+MC> block(b.dshape() & b_index); block.fill(0.0);
+
+      // loop over dense-array of a
+      IVector<1+MC> subbeg = uniform<int, 1+MC>(0);
+      IVector<1+MC> subend;
+      for(int i = 0; i < 1+MC; ++i) subend[i] = block.shape(i) - 1;
+
+      bool non_zero = false;
+      for(typename QSTmergeInfo<MR, Q>::const_iterator itr = irow_range.first; itr != irow_range.second; ++itr) {
+        int irow = itr->second;
+        int drow = rows_info.dshape_packed(irow);
+        subend[0] = subbeg[0] + drow - 1;
+        // merge
+        int tag = irow * a_stride + j;
+        typename QSTArray<T, N, Q>::const_iterator ita = a.find(tag);
+        if(ita != a.end()) {
+          non_zero = true;
+          block.subarray(subbeg, subend) = *ita->second;
+        }
+        subbeg[0] = subend[0] + 1;
+      }
+      if(non_zero)
+        b.insert(b_index, block);
     }
   }
 }
@@ -94,32 +105,42 @@ void QSTmerge
   for(int i = 0; i < MR; ++i) b_dshape[i] = a_dshape[i];
   b_dshape[MR] = cols_info.dshape_merged();
   // resizing
-  b.resize(a.q(), b_qshape, b_dshape, 0.0);
+  b.resize(a.q(), b_qshape, b_dshape, true);
   // strides
   int a_stride = a.stride(MR-1);
   int b_stride = b.stride(MR-1);
+  int b_n_rows = b.size() / b_stride;
   // loop over merged blocks
-  for(typename QSTArray<T, MR+1, Q>::iterator itb = b.begin(); itb != b.end(); ++itb) {
-    int i = itb->first / b_stride;
-    int j = itb->first % b_stride;
-    typename QSTmergeInfo<MC, Q>::const_range jcol_range = cols_info.equal_range(j);
-    // construct merged dense-tensor
-    TArray<T, MR+1>& block = *(itb->second);
-    // loop over dense-array of a
-    IVector<MR+1> subbeg = uniform<int, MR+1>(0);
-    IVector<MR+1> subend;
-    for(int i = 0; i < MR+1; ++i) subend[i] = block.shape(i) - 1;
-    for(typename QSTmergeInfo<MC, Q>::const_iterator itc = jcol_range.first; itc != jcol_range.second; ++itc) {
-      int jcol = itc->second;
-      int dcol = cols_info.dshape_packed(jcol);
-      subend[MR] = subbeg[MR] + dcol - 1;
-      // merge
-      int tag = i * a_stride + jcol;
-      typename QSTArray<T, N, Q>::const_iterator ita = a.find(tag);
-      if(ita != a.end())
-        block.subarray(subbeg, subend) = *ita->second;
-//      copy((*ita->second), TSubArray<T, MR+1>(block, subbeg, subend));
-      subbeg[MR] = subend[MR] + 1;
+  for(int i = 0; i < b_n_rows; ++i) {
+    for(int j = 0; j < b_stride; ++j) {
+      typename QSTmergeInfo<MC, Q>::const_range jcol_range = cols_info.equal_range(j);
+      if(jcol_range.first == jcol_range.second) continue;
+      // construct merged dense-tensor
+      IVector<MR+1> b_index = b.index(i*b_stride+j);
+      if(!b.allowed(b_index)) continue;
+      TArray<T, MR+1> block(b.dshape() & b_index); block.fill(0.0);
+
+      // loop over dense-array of a
+      IVector<MR+1> subbeg = uniform<int, MR+1>(0);
+      IVector<MR+1> subend;
+      for(int i = 0; i < MR+1; ++i) subend[i] = block.shape(i) - 1;
+
+      bool non_zero = false;
+      for(typename QSTmergeInfo<MC, Q>::const_iterator itc = jcol_range.first; itc != jcol_range.second; ++itc) {
+        int jcol = itc->second;
+        int dcol = cols_info.dshape_packed(jcol);
+        subend[MR] = subbeg[MR] + dcol - 1;
+        // merge
+        int tag = i * a_stride + jcol;
+        typename QSTArray<T, N, Q>::const_iterator ita = a.find(tag);
+        if(ita != a.end()) {
+          non_zero = true;
+          block.subarray(subbeg, subend) = *ita->second;
+        }
+        subbeg[MR] = subend[MR] + 1;
+      }
+      if(non_zero)
+        b.insert(b_index, block);
     }
   }
 }
@@ -140,39 +161,50 @@ void QSTmerge
   b_dshape[0] = rows_info.dshape_merged();
   b_dshape[1] = cols_info.dshape_merged();
   // resizing
-  b.resize(a.q(), b_qshape, b_dshape, 0.0);
+  b.resize(a.q(), b_qshape, b_dshape, true);
   // strides
   int a_stride = a.stride(MR-1);
   int b_stride = b.stride(0);
+  int b_n_rows = b.shape (0);
   // loop over merged blocks
-  for(typename QSTArray<T, 2, Q>::iterator itb = b.begin(); itb != b.end(); ++itb) {
-    int i = itb->first / b_stride;
-    int j = itb->first % b_stride;
+  for(int i = 0; i < b_n_rows; ++i) {
     typename QSTmergeInfo<MR, Q>::const_range irow_range = rows_info.equal_range(i);
-    typename QSTmergeInfo<MC, Q>::const_range jcol_range = cols_info.equal_range(j);
-    // construct merged dense-tensor
-    TArray<T, 2>& block = *(itb->second);
-    // loop over dense-array of a
-    IVector<2> subbeg = uniform<int, 2>(0);
-    IVector<2> subend = uniform<int, 2>(0);
-    for(typename QSTmergeInfo<MR, Q>::const_iterator itr = irow_range.first; itr != irow_range.second; ++itr) {
-      int irow = itr->second;
-      int drow = rows_info.dshape_packed(irow);
-      subend[0] = subbeg[0] + drow - 1;
-      subbeg[1] = 0;
-      for(typename QSTmergeInfo<MC, Q>::const_iterator itc = jcol_range.first; itc != jcol_range.second; ++itc) {
-        int jcol = itc->second;
-        int dcol = cols_info.dshape_packed(jcol);
-        subend[1] = subbeg[1] + dcol - 1;
-        // merge
-        int tag = irow * a_stride + jcol;
-        typename QSTArray<T, N, Q>::const_iterator ita = a.find(tag);
-        if(ita != a.end())
-          block.subarray(subbeg, subend) = *ita->second;
-//        copy((*ita->second), TSubArray<T, 2>(block, subbeg, subend));
-        subbeg[1] = subend[1] + 1;
+    if(irow_range.first == irow_range.second) continue;
+    for(int j = 0; j < b_stride; ++j) {
+      typename QSTmergeInfo<MC, Q>::const_range jcol_range = cols_info.equal_range(j);
+      if(jcol_range.first == jcol_range.second) continue;
+      // construct merged dense-tensor
+      IVector<2> b_index = shape(i, j);
+      if(!b.allowed(b_index)) continue;
+      TArray<T, 2> block(b.dshape() & b_index); block.fill(0.0);
+
+      // loop over dense-array of a
+      IVector<2> subbeg = uniform<int, 2>(0);
+      IVector<2> subend = uniform<int, 2>(0);
+
+      bool non_zero = false;
+      for(typename QSTmergeInfo<MR, Q>::const_iterator itr = irow_range.first; itr != irow_range.second; ++itr) {
+        int irow = itr->second;
+        int drow = rows_info.dshape_packed(irow);
+        subend[0] = subbeg[0] + drow - 1;
+        subbeg[1] = 0;
+        for(typename QSTmergeInfo<MC, Q>::const_iterator itc = jcol_range.first; itc != jcol_range.second; ++itc) {
+          int jcol = itc->second;
+          int dcol = cols_info.dshape_packed(jcol);
+          subend[1] = subbeg[1] + dcol - 1;
+          // merge
+          int tag = irow * a_stride + jcol;
+          typename QSTArray<T, N, Q>::const_iterator ita = a.find(tag);
+          if(ita != a.end()) {
+            non_zero = true;
+            block.subarray(subbeg, subend) = *ita->second;
+          }
+          subbeg[1] = subend[1] + 1;
+        }
+        subbeg[0] = subend[0] + 1;
       }
-      subbeg[0] = subend[0] + 1;
+      if(non_zero)
+        b.insert(b_index, block);
     }
   }
 }
@@ -196,7 +228,7 @@ void QSTexpand
   for(int i = 0; i < MR; ++i) b_dshape[i]    = rows_info.dshape(i);
   for(int i = 0; i < MC; ++i) b_dshape[MR+i] = a_dshape[1+i];
   // resizing
-  b.resize(a.q(), b_qshape, b_dshape, 0.0);
+  b.resize(a.q(), b_qshape, b_dshape, true);
   // strides
   int a_stride = a.stride(0);
   int b_stride = b.stride(MR-1);
@@ -217,10 +249,9 @@ void QSTexpand
       subend[0] = subbeg[0] + drow - 1;
       // expand
       int tag = irow * b_stride + j;
-      typename QSTArray<T, N, Q>::iterator itb = b.find(tag);
+      typename QSTArray<T, N, Q>::iterator itb = b.reserve(tag);
       if(itb != b.end())
         *itb->second = block.subarray(subbeg, subend);
-//      copy(TSubArray<T, 1+MC>(block, subbeg, subend), (*itb->second));
       subbeg[0] = subend[0] + 1;
     }
   }
@@ -245,7 +276,7 @@ void QSTexpand
   for(int i = 0; i < MR; ++i) b_dshape[i]    = a_dshape[i];
   for(int i = 0; i < MC; ++i) b_dshape[MR+i] = cols_info.dshape(i);
   // resizing
-  b.resize(a.q(), b_qshape, b_dshape, 0.0);
+  b.resize(a.q(), b_qshape, b_dshape, true);
   // strides
   int a_stride = a.stride(MR-1);
   int b_stride = b.stride(MR-1);
@@ -266,10 +297,9 @@ void QSTexpand
       subend[MR] = subbeg[MR] + dcol - 1;
       // merge
       int tag = i * b_stride + jcol;
-      typename QSTArray<T, N, Q>::iterator itb = b.find(tag);
+      typename QSTArray<T, N, Q>::iterator itb = b.reserve(tag);
       if(itb != b.end())
         *itb->second = block.subarray(subbeg, subend);
-//      copy(TSubArray<T, MR+1>(block, subbeg, subend), (*itb->second));
       subbeg[MR] = subend[MR] + 1;
     }
   }
@@ -291,7 +321,7 @@ void QSTexpand
   for(int i = 0; i < MR; ++i) b_dshape[i]    = rows_info.dshape(i);
   for(int i = 0; i < MC; ++i) b_dshape[MR+i] = cols_info.dshape(i);
   // resizing
-  b.resize(a.q(), b_qshape, b_dshape, 0.0);
+  b.resize(a.q(), b_qshape, b_dshape, true);
   // strides
   int a_stride = a.stride(0);
   int b_stride = b.stride(MR-1);
@@ -317,10 +347,9 @@ void QSTexpand
         subend[1] = subbeg[1] + dcol - 1;
         // expand
         int tag = irow * b_stride + jcol;
-        typename QSTArray<T, N, Q>::const_iterator itb = b.find(tag);
+        typename QSTArray<T, N, Q>::iterator itb = b.reserve(tag);
         if(itb != b.end())
           *itb->second = block.subarray(subbeg, subend);
-//        copy(TSubArray<T, 2>(block, subbeg, subend), (*itb->second));
         subbeg[1] = subend[1] + 1;
       }
       subbeg[0] = subend[0] + 1;
