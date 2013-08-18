@@ -85,8 +85,8 @@ double QSDgesvd
 {
   const size_t NL = NU-1;
   const size_t NR = NA-NL;
-  TVector<Qshapes<Q>, NA> a_qshape(a.qshape());
-  TVector<Dshapes,    NA> a_dshape(a.dshape());
+  const TVector<Qshapes<Q>, NA>& a_qshape = a.qshape();
+  const TVector<Dshapes,    NA>& a_dshape = a.dshape();
   // Calc. row (left) shapes
   TVector<Qshapes<Q>, NL> a_qshape_left;
   TVector<Dshapes,    NL> a_dshape_left;
@@ -124,11 +124,7 @@ double QSDgesvd
        q_sval  =-q_cols;
   }
   // Carry out SVD on merged matrix A
-//TVector<Qshapes<Q>, 2>  u_q_mshape = { q_rows,-q_sval };
-//TVector<Qshapes<Q>, 2> vt_q_mshape = { q_sval, q_cols };
    SDArray<1>    s_value (shape(q_sval.size()));
-//QSDArray<2, Q> u_merge ( u_q_total,  u_q_mshape);
-//QSDArray<2, Q> vt_merge(vt_q_total, vt_q_mshape);
   QSDArray<2, Q> u_merge ( u_q_total, make_array( q_rows,-q_sval));
   QSDArray<2, Q> vt_merge(vt_q_total, make_array( q_sval, q_cols));
   thread_QSDgesvd(ArrowDir, a_merge, s_value, u_merge, vt_merge);
@@ -181,14 +177,12 @@ double QSDgesvd
       typename SDArray<1>::iterator jt = s_value_nz.reserve(imap->second);
       int Ds = d_sval_nz[imap->second];
       jt->second->resize(Ds);
-//    copy(DSubArray<1>(*it->second, shape(0), shape(Ds-1)), *jt->second);
       *jt->second = it->second->subarray(shape(0), shape(Ds-1));
     }
   }
+  s_value_nz.check_dshape();
   s_value.clear();
   // Copy selected left-singular vectors
-//TVector<Qshapes<Q>, 2> u_q_mshape_nz = { q_rows,-q_sval_nz };
-//QSDArray<2, Q> u_merge_nz(u_merge.q(), u_q_mshape_nz);
   QSDArray<2, Q> u_merge_nz(u_merge.q(), make_array( q_rows,-q_sval_nz));
   for(typename QSDArray<2, Q>::iterator it = u_merge.begin(); it != u_merge.end(); ++it) {
     int irow = it->first / n_sval;
@@ -200,14 +194,12 @@ double QSDgesvd
       int Ds = d_sval_nz[imap->second];
       int Dr = it->second->shape(0);
       jt->second->resize(Dr, Ds);
-//    copy(DSubArray<2>(*it->second, shape(0, 0), shape(Dr-1, Ds-1)), *jt->second);
       *jt->second = it->second->subarray(shape(0, 0), shape(Dr-1, Ds-1));
     }
   }
+  u_merge_nz.check_dshape();
   u_merge.clear();
   // Copy selected right-singular vectors
-//TVector<Qshapes<Q>, 2> vt_q_mshape_nz = { q_sval_nz, q_cols };
-//QSDArray<2, Q> vt_merge_nz(vt_merge.q(), vt_q_mshape_nz);
   QSDArray<2, Q> vt_merge_nz(vt_merge.q(), make_array( q_sval_nz, q_cols));
   for(typename QSDArray<2, Q>::iterator it = vt_merge.begin(); it != vt_merge.end(); ++it) {
     int irow = it->first / n_cols;
@@ -219,10 +211,10 @@ double QSDgesvd
       int Ds = d_sval_nz[imap->second];
       int Dc = it->second->shape(1);
       jt->second->resize(Ds, Dc);
-//    copy(DSubArray<2>(*it->second, shape(0, 0), shape(Ds-1, Dc-1)), *jt->second);
       *jt->second = it->second->subarray(shape(0, 0), shape(Ds-1, Dc-1));
     }
   }
+  vt_merge_nz.check_dshape();
   vt_merge.clear();
   // Reshape matrix to array form
    SDcopy  (s_value_nz, s);
@@ -247,8 +239,8 @@ double QSDgesvd
 {
   const size_t NL = NU-1;
   const size_t NR = NA-NL;
-  TVector<Qshapes<Q>, NA> a_qshape(a.qshape());
-  TVector<Dshapes,    NA> a_dshape(a.dshape());
+  const TVector<Qshapes<Q>, NA>& a_qshape = a.qshape();
+  const TVector<Dshapes,    NA>& a_dshape = a.dshape();
   // Calc. row (left) shapes
   TVector<Qshapes<Q>, NL> a_qshape_left;
   TVector<Dshapes,    NL> a_dshape_left;
@@ -360,6 +352,8 @@ double QSDgesvd
       *jt->second = it->second->subarray(shape(Ds), shape(Ds+Dx-1));
     }
   }
+  s_value_nz.check_dshape();
+  s_value_rm.check_dshape();
   s_value.clear();
   // Copying left-singular vectors
   QSDArray<2, Q> u_merge_nz(u_merge.q(), make_array( q_rows,-q_sval_nz));
@@ -386,6 +380,8 @@ double QSDgesvd
       *jt->second = it->second->subarray(shape(0, Ds), shape(Dr-1, Ds+Dx-1));
     }
   }
+  u_merge_nz.check_dshape();
+  u_merge_rm.check_dshape();
   u_merge.clear();
   // Copy selected right-singular vectors
   QSDArray<2, Q> vt_merge_nz(vt_merge.q(), make_array( q_sval_nz, q_cols));
@@ -412,6 +408,8 @@ double QSDgesvd
       *jt->second = it->second->subarray(shape(Ds, 0), shape(Ds+Dx-1, Dc-1));
     }
   }
+  vt_merge_nz.check_dshape();
+  vt_merge_rm.check_dshape();
   vt_merge.clear();
   // Reshape matrix to array form
   if(nnz > 0) {

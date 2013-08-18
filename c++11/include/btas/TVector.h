@@ -358,6 +358,7 @@ inline IVector<12> shape(int n01, int n02, int n03, int n04, int n05, int n06, i
 template<size_t N>
 IVector<N> sequence(int first = 0, int incl = 1) {
   IVector<N> seq;
+  // Explicit fixed-size loop might be faster than using std::iota?
   for(int i = 0; i < N; ++i) {
     seq[i] = first;
     first += incl;

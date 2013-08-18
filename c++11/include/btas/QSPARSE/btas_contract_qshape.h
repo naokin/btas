@@ -65,44 +65,44 @@ void gemm_contract_qshape
 {
   const size_t K = (NA + NB - NC)/2;
 
-  TVector<Qshapes<Q>, K> q_cntrct;
+  TVector<Qshapes<Q>, K> k_qshape;
   c_qnum = Q::zero();
 
   if(TransA == NoTrans) {
     c_qnum =  a_qnum;
     for(int i = 0; i < NA - K; ++i) c_qshape[i] =  a_qshape[i];
-    for(int i = 0; i < K;      ++i) q_cntrct[i] =  a_qshape[i+NA-K];
+    for(int i = 0; i < K;      ++i) k_qshape[i] =  a_qshape[i+NA-K];
   }
   else if(TransA == ConjTrans) {
     c_qnum = -a_qnum;
     for(int i = 0; i < NA - K; ++i) c_qshape[i] = -a_qshape[i+K];
-    for(int i = 0; i < K;      ++i) q_cntrct[i] = -a_qshape[i];
+    for(int i = 0; i < K;      ++i) k_qshape[i] = -a_qshape[i];
   }
   else {
     c_qnum =  a_qnum;
     for(int i = 0; i < NA - K; ++i) c_qshape[i] =  a_qshape[i+K];
-    for(int i = 0; i < K;      ++i) q_cntrct[i] =  a_qshape[i];
+    for(int i = 0; i < K;      ++i) k_qshape[i] =  a_qshape[i];
   }
 
   if(TransB == NoTrans) {
     c_qnum =  b_qnum * c_qnum;
     for(int i = 0; i < NB - K; ++i) c_qshape[i+NA-K] =  b_qshape[i+K];
     for(int i = 0; i < K; ++i)
-      if(q_cntrct[i] != -b_qshape[i])
+      if(k_qshape[i] != -b_qshape[i])
         BTAS_THROW(false, "btas::gemm_contract_qshape contraction of quantum numbers failed");
   }
   else if(TransB == ConjTrans) {
     c_qnum = -b_qnum * c_qnum;
     for(int i = 0; i < NB - K; ++i) c_qshape[i+NA-K] = -b_qshape[i];
     for(int i = 0; i < K; ++i)
-      if(q_cntrct[i] !=  b_qshape[i+NB-K])
+      if(k_qshape[i] !=  b_qshape[i+NB-K])
         BTAS_THROW(false, "btas::gemm_contract_qshape contraction of quantum numbers failed");
   }
   else {
     c_qnum =  b_qnum * c_qnum;
     for(int i = 0; i < NB - K; ++i) c_qshape[i+NA-K] =  b_qshape[i];
     for(int i = 0; i < K; ++i)
-      if(q_cntrct[i] != -b_qshape[i+NB-K])
+      if(k_qshape[i] != -b_qshape[i+NB-K])
         BTAS_THROW(false, "btas::gemm_contract_qshape contraction of quantum numbers failed");
   }
 }

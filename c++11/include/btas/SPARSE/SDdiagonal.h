@@ -23,9 +23,8 @@ void SDdiagonal
   const size_t NB = NA - K + 1;
   if(a.size() == 0)
     BTAS_THROW(false, "btas::SDdiagonal: array data not found");
-  const IVector<NA>& a_shape = a.shape();
   // check consistency b/w 'a' shape and diag. index 'd_index'
-  TVector<Dshapes, NA> a_dn_shape = a.dshape();
+  const TVector<Dshapes, NA>& a_dn_shape = a.dshape();
   for(int i = 1; i < K; ++i) {
     if(a_dn_shape[d_index[0]] != a_dn_shape[d_index[i]])
       BTAS_THROW(false, "btas::SDdiagonal: diagonal indices must have the same size");
@@ -44,9 +43,9 @@ void SDdiagonal
   for(int i = id+1; i < NA; ++i)
     if(iset.find(i) == iset.end()) u_index[nb++] = i;
   // calc. 'b' shape and resize
-  IVector<NB>  b_shape;
-  for(int i = 0; i < NB; ++i) b_shape[i] = a_shape[u_index[i]];
-  b.resize(b_shape);
+  TVector<Dshapes, NB> b_dn_shape;
+  for(int i = 0; i < NB; ++i) b_dn_shape[i] = a_dn_shape[u_index[i]];
+  b.resize(b_dn_shape, true);
   // pick diagonal elements
   for(typename SDArray<NA>::const_iterator ia = a.begin(); ia != a.end(); ++ia) {
     IVector<NA> a_index = a.index(ia->first);

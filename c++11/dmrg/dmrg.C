@@ -270,10 +270,33 @@ void prototype::set_quantum_blocks(const MpStorages& sites, const Quantum& qt, s
       else
         ql.erase(lt);
     }
+    assert(ql.size() > 0);
+  }
+  for(int i = 0; i < L-1; ++i) {
+    qp =-sites[i].mpo.qshape(2);
+    Qshapes<Quantum>& ql = qb[i];
+    Qshapes<Quantum>& qr = qb[i+1];
+
     // further reduction
     if(QMAX_SIZE > 0 && ql.size() > QMAX_SIZE) {
       int offs = (ql.size() - QMAX_SIZE) / 2;
       ql = Qshapes<Quantum>(ql.begin()+offs, ql.begin()+offs+QMAX_SIZE);
+
+      // check non-zero for each qr index
+      Qshapes<Quantum>::iterator rt = qr.begin();
+      while(rt != qr.end()) {
+        bool non_zero = false;
+        for(int l = 0; l < ql.size(); ++l) {
+          for(int p = 0; p < qp.size(); ++p) {
+            non_zero |= (*rt == (ql[l] * qp[p]));
+          }
+        }
+        if(non_zero)
+          ++rt;
+        else
+          qr.erase(rt);
+      }
+      assert(qr.size() > 0);
     }
   }
 }
@@ -298,8 +321,7 @@ void prototype::initialize(MpStorages& sites, const Quantum& qt, int M)
   // non-zero quantum numbers for each site
   std::vector<Qshapes<Quantum>> qb;
 
-  int max_size = 20;
-  set_quantum_blocks(sites, qt, qb, max_size);
+  set_quantum_blocks(sites, qt, qb, M);
 
   //
   // create random wavefunction
