@@ -1,57 +1,61 @@
-#ifndef _BTAS_CXX11_DRIVER_PERMUTE_H
-#define _BTAS_CXX11_DRIVER_PERMUTE_H 1
+#ifndef _BTAS_DRIVER_PERMUTE_H
+#define _BTAS_DRIVER_PERMUTE_H 1
 
-#include <btas/DENSE/Dpermute.h>
-#include <btas/SPARSE/SDpermute.h>
-#include <btas/QSPARSE/QSDpermute.h>
+#include <btas/Dpermute.h>
+#include <btas/SDpermute.h>
+#include <btas/QSDpermute.h>
 
-namespace btas {
+namespace btas
+{
 
-template<size_t N>
+template<int N>
 inline void permute
-(const DArray<N>& x, const IVector<N>& index, DArray<N>& y)
+(const DArray<N>& x, const TinyVector<int, N>& index,
+       DArray<N>& y)
 {
   Dpermute(x, index, y);
 }
 
-template<size_t N>
+template<int N>
 inline void indexed_permute
-(const DArray<N>& x, const IVector<N>& x_symbols,
-       DArray<N>& y, const IVector<N>& y_symbols)
+(const DArray<N>& x, const TinyVector<int, N>& x_symbols,
+       DArray<N>& y, const TinyVector<int, N>& y_symbols)
 {
   Dindexed_permute(x, x_symbols, y, y_symbols);
 }
 
-template<size_t N>
+template<int N>
 inline void permute
-(const SDArray<N>& x, const IVector<N>& index, SDArray<N>& y)
+(const SDArray<N>& x, const TinyVector<int, N>& index,
+       SDArray<N>& y)
 {
   SDpermute(x, index, y);
 }
 
-template<size_t N>
+template<int N>
 inline void indexed_permute
-(const SDArray<N>& x, const IVector<N>& x_symbols,
-       SDArray<N>& y, const IVector<N>& y_symbols)
+(const SDArray<N>& x, const TinyVector<int, N>& x_symbols,
+       SDArray<N>& y, const TinyVector<int, N>& y_symbols)
 {
   SDindexed_permute(x, x_symbols, y, y_symbols);
 }
 
-template<size_t N, class Q = Quantum>
+template<int N>
 inline void permute
-(const QSDArray<N, Q>& x, const IVector<N>& index, QSDArray<N, Q>& y)
+(const QSDArray<N>& x, const TinyVector<int, N>& index,
+       QSDArray<N>& y)
 {
   QSDpermute(x, index, y);
 }
 
-template<size_t N, class Q = Quantum>
+template<int N>
 inline void indexed_permute
-(const QSDArray<N, Q>& x, const IVector<N>& x_symbols,
-       QSDArray<N, Q>& y, const IVector<N>& y_symbols)
+(const QSDArray<N>& x, const TinyVector<int, N>& x_symbols,
+       QSDArray<N>& y, const TinyVector<int, N>& y_symbols)
 {
   QSDindexed_permute(x, x_symbols, y, y_symbols);
 }
 
 };
 
-#endif // _BTAS_CXX11_DRIVER_PERMUTE_H
+#endif // _BTAS_DRIVER_PERMUTE_H
