@@ -19,10 +19,13 @@ OBJ_LIBBTAS = $(SRC_LIBBTAS:.C=.o)
 .C.o:
 	$(CXX) $(CXXFLAGS) $(INCLUDEFLAGS) -c $< -o $@
 
-all	: libbtas.a 
+all	: libbtas.a
 
 libbtas.a : $(OBJ_LIBBTAS)
 	ar cr libbtas.a $(OBJ_LIBBTAS)
+
+tests.x : tests.o
+	$(CXX) $(CXXFLAGS) $(LIBRARYFLAGS) -o tests.x tests.o libbtas.a
 
 clean:
 	rm *.o; rm *.x; rm *.a;

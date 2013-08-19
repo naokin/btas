@@ -9,9 +9,9 @@ double rgen() { return (static_cast<double>(rand())/RAND_MAX-0.5)*2; }
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 
-#include "SpinQuantum.h"
+#define _DEFAULT_QUANTUM 1
+
 #include <btas/TVector.h>
-namespace btas { typedef SpinQuantum Quantum; }; // Defined as default quantum number class
 
 #include <btas/DENSE/DArray.h>
 #include <btas/QSPARSE/QSDArray.h>
@@ -137,13 +137,13 @@ int QSPARSE_TEST(int iprint = 0)
 {
   using namespace btas;
 
-  SpinQuantum qt(0);
+  Quantum qt(0);
 
   Qshapes<> qi;
   qi.reserve(3);
-  qi.push_back(SpinQuantum(-1));
-  qi.push_back(SpinQuantum( 0));
-  qi.push_back(SpinQuantum(+1));
+  qi.push_back(Quantum(-1));
+  qi.push_back(Quantum( 0));
+  qi.push_back(Quantum(+1));
 
   Dshapes di(qi.size(), 2);
 
@@ -328,13 +328,13 @@ int SERIALIZE_TEST(int iprint = 0)
 {
   using namespace btas;
 
-  SpinQuantum qt(0);
+  Quantum qt(0);
 
   Qshapes<> qi;
   qi.reserve(3);
-  qi.push_back(SpinQuantum(-1));
-  qi.push_back(SpinQuantum( 0));
-  qi.push_back(SpinQuantum(+1));
+  qi.push_back(Quantum(-1));
+  qi.push_back(Quantum( 0));
+  qi.push_back(Quantum(+1));
 
   Dshapes di(qi.size(), 2);
 
