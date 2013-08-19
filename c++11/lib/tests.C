@@ -247,6 +247,25 @@ int QSPARSE_TEST(int iprint = 0)
 
   if(1)
   {
+    // Direct sum of arrays
+    QSDArray<4> x;
+    QSTdsum(a, a, x);
+    if(iprint > 0) {
+      cout << "====================================================================================================" << endl;
+      cout << "[QSPARSE_TEST] [QSTdsum(a, a, x)] print matrix [x]: " << x << endl;
+    }
+
+    // Partial direct sum of arrays
+    QSDArray<4> y;
+    QSTdsum(a, a, shape(1, 2), y);
+    if(iprint > 0) {
+      cout << "====================================================================================================" << endl;
+      cout << "[QSPARSE_TEST] [QSTdsum(a, a, shape(1, 2), y)] print matrix [y]: " << y << endl;
+    }
+  }
+
+  if(1)
+  {
     // Erasing quantum number
     QSDArray<4> x = a;
     x.erase(2, 1); // erasing m_q_shape[2][1]
