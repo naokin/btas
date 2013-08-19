@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
   // define working space for 20 sites chain
   //
 
-  int L = 20;
+  int L =  4;
   int M = 20;
 
   MpStorages sites(L);
@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
 
   cout << "\tConstructing MPOs" << endl;
 
-  if(1) {
+  if(0) {
     //
     // Nz = 2 * Sz / J = Jz = 1.0 / Hz = 0.0
     //
@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
     //
     int    Ne = L;
     int    Sz = 0;
-    double t  = 1.0;
+    double t  = 0.5;
     double U  = 1.0;
     Hubbard::construct_mpo(sites, t, U);
     initialize(sites, FermiQuantum(Ne, Sz), M);

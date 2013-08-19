@@ -371,9 +371,28 @@ public:
   const Dshapes& dshape(int i) const { return m_dn_shape[i]; }
 
   //! Check and update dense-block shapes
-  void check_dshape() {
+  const TVector<Dshapes, N>& check_dshape() {
     for(const_iterator it = m_store.begin(); it != m_store.end(); ++it)
       mf_check_dshape(index(it->first), it->second->shape());
+    return m_dn_shape;
+  }
+
+  //! Calc. and return net dense-block shapes
+  TVector<Dshapes, N> check_net_dshape() const {
+    TVector<Dshapes, N> _net_dshape;
+    for(size_t i = 0; i < N; ++i) _net_dshape[i].resize(m_shape[i], 0);
+    for(const_iterator it = m_store.begin(); it != m_store.end(); ++it) {
+      IVector<N> _index = index(it->first);
+      for(int i = 0; i < N; ++i) {
+        if(_net_dshape[i][_index[i]] > 0) {
+          BTAS_THROW(_net_dshape[i][_index[i]] == it->second->shape(i), "btas::STArray::check_net_dshape: found mismatched dense-block shape");
+        }
+        else {
+          _net_dshape[i][_index[i]] = it->second->shape(i);
+        }
+      }
+    }
+    return std::move(_net_dshape);
   }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -29,7 +29,7 @@ void QSDpermute
   }
   else {
     y.resize(x.q(), permute(x.qshape(), pindex), permute(x.dshape(), pindex), true);
-#ifdef SERIAL
+#ifdef _SERIAL
     serial_SDpermute(x, pindex, y);
 #else
     thread_SDpermute(x, pindex, y);

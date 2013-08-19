@@ -1,5 +1,5 @@
 CXX=g++ -std=c++0x
-CXXFLAGS=-g -O2 -fopenmp -D_HAS_CBLAS -D_HAS_INTEL_MKL
+CXXFLAGS=-g -O3 -fopenmp -D_HAS_CBLAS -D_HAS_INTEL_MKL
 
 BLASDIR=
 BLASINC=
