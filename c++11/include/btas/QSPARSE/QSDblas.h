@@ -26,7 +26,7 @@ template<size_t N, class Q = Quantum>
 void QSDcopy
 (const QSDArray<N, Q>& x, QSDArray<N, Q>& y)
 {
-  y.resize(x.q(), x.qshape());
+  y.resize(x.q(), x.qshape(), x.dshape(), true);
 #ifdef _SERIAL
   serial_SDcopy(x, y, false);
 #else
@@ -77,9 +77,11 @@ void QSDaxpy
       BTAS_THROW(false, "btas::QSDaxpy: total quantum number mismatched");
     if(x.qshape() != y.qshape())
       BTAS_THROW(false, "btas::QSDaxpy: quantum number indices mismatched");
+    if(x.dshape() != y.dshape())
+      BTAS_THROW(false, "btas::SDaxpy: shape of y mismatched");
   }
   else {
-    y.resize(x.q(), x.qshape());
+    y.resize(x.q(), x.qshape(), x.dshape(), true);
   }
 #ifdef _SERIAL
   serial_SDaxpy(alpha, x, y);
@@ -100,18 +102,23 @@ void QSDgemv
  const double& beta,        QSDArray<NC, Q>& c)
 {
   // Checking contraction quantum numbers
-  Q q_total; TVector<Qshapes<Q>, NC> q_shape;
+  Q q_total;
+  TVector<Qshapes<Q>, NC> q_shape;
   gemv_contract_qshape(TransA, a.q(), a.qshape(), b.q(), b.qshape(), q_total, q_shape);
+  TVector<Dshapes,    NC> d_shape;
+  gemv_contract_dshape(TransA,        a.dshape(),        b.dshape(),          d_shape);
   // Checking shapes of c
   if(c.size() > 0) {
     if(q_total != c.q())
       BTAS_THROW(false, "btas::QSDgemv: total quantum number of c mismatched");
     if(q_shape != c.qshape())
       BTAS_THROW(false, "btas::QSDgemv: quantum number indices of c mismatched");
+    if(d_shape != c.dshape())
+      BTAS_THROW(false, "btas::QSDgemv: block shape of c mismatched");
     SDscal(beta, c);
   }
   else {
-    c.resize(q_total, q_shape);
+    c.resize(q_total, q_shape, d_shape, true);
   }
   // Calling SDgemv
   if(TransA == NoTrans)
@@ -126,17 +133,22 @@ void QSDger
 (const double& alpha, const QSDArray<NA, Q>& a, const QSDArray<NB, Q>& b, QSDArray<NC, Q>& c)
 {
   // Checking contraction quantum numbers
-  Q q_total; TVector<Qshapes<Q>, NC> q_shape;
+  Q q_total;
+  TVector<Qshapes<Q>, NC> q_shape;
   ger_contract_qshape(a.q(), a.qshape(), b.q(), b.qshape(), q_total, q_shape);
+  TVector<Dshapes,    NC> d_shape;
+  ger_contract_dshape(       a.dshape(),        b.dshape(),          d_shape);
   // Checking shapes of c
   if(c.size() > 0) {
     if(q_total != c.q())
       BTAS_THROW(false, "btas::QSDger: total quantum number of c mismatched");
     if(q_shape != c.qshape())
       BTAS_THROW(false, "btas::QSDger: quantum number indices of c mismatched");
+    if(d_shape != c.dshape())
+      BTAS_THROW(false, "btas::QSDger: block shape of c mismatched");
   }
   else {
-    c.resize(q_total, q_shape);
+    c.resize(q_total, q_shape, d_shape, true);
   }
   // Calling SDger
   thread_SDger(alpha, a, b, c);
@@ -154,18 +166,23 @@ void QSDgemm
 {
   // Checking contraction quantum numbers
   const size_t K = (NA + NB - NC)/2;
-  Q q_total; TVector<Qshapes<Q>, NC> q_shape;
+  Q q_total;
+  TVector<Qshapes<Q>, NC> q_shape;
   gemm_contract_qshape(TransA, TransB, a.q(), a.qshape(), b.q(), b.qshape(), q_total, q_shape);
+  TVector<Dshapes,    NC> d_shape;
+  gemm_contract_dshape(TransA, TransB,        a.dshape(),        b.dshape(),          d_shape);
   // Checking shapes of c
   if(c.size() > 0) {
     if(q_total != c.q())
       BTAS_THROW(false, "btas::QSDgemm: total quantum number of c mismatched");
     if(q_shape != c.qshape())
       BTAS_THROW(false, "btas::QSDgemm: quantum number indices of c mismatched");
+    if(d_shape != c.dshape())
+      BTAS_THROW(false, "btas::QSDgemm: block shape of c mismatched");
     SDscal(beta, c);
   }
   else {
-    c.resize(q_total, q_shape);
+    c.resize(q_total, q_shape, d_shape, true);
   }
   // Calling SDgemm
   if     (TransA == NoTrans && TransB == NoTrans)
@@ -199,18 +216,23 @@ void QSDgemv
  const double& beta,        QSDArray<NC>& c)
 {
   // Checking contraction quantum numbers
-  Q q_total; TVector<Qshapes<Q>, NC> q_shape;
+  Q q_total;
+  TVector<Qshapes<Q>, NC> q_shape;
   gemv_contract_qshape(TransA, a.q(), a.qshape(), b.q(), b.qshape(), q_total, q_shape);
+  TVector<Dshapes,    NC> d_shape;
+  gemv_contract_dshape(TransA,        a.dshape(),        b.dshape(),          d_shape);
   // Checking shapes of c
   if(c.size() > 0) {
     if(q_total != c.q())
       BTAS_THROW(false, "btas::QSDgemv: total quantum number of c mismatched");
     if(q_shape != c.qshape())
       BTAS_THROW(false, "btas::QSDgemv: quantum number indices of c mismatched");
+    if(d_shape != c.dshape())
+      BTAS_THROW(false, "btas::QSDgemv: block shape of c mismatched");
     SDscal(beta, c);
   }
   else {
-    c.resize(q_total, q_shape);
+    c.resize(q_total, q_shape, d_shape, true);
   }
   // Calling SDgemv with index-based scaling
   if(TransA == NoTrans) {
@@ -234,17 +256,22 @@ void QSDger
  const double& alpha, const QSDArray<NA>& a, const QSDArray<NB>& b, QSDArray<NC>& c)
 {
   // Checking contraction quantum numbers
-  Q q_total; TVector<Qshapes<Q>, NC> q_shape;
+  Q q_total;
+  TVector<Qshapes<Q>, NC> q_shape;
   ger_contract_qshape(a.q(), a.qshape(), b.q(), b.qshape(), q_total, q_shape);
+  TVector<Dshapes,    NC> d_shape;
+  ger_contract_dshape(       a.dshape(),        b.dshape(),          d_shape);
   // Checking shapes of c
   if(c.size() > 0) {
     if(q_total != c.q())
       BTAS_THROW(false, "btas::QSDger: total quantum number of c mismatched");
     if(q_shape != c.qshape())
       BTAS_THROW(false, "btas::QSDger: quantum number indices of c mismatched");
+    if(d_shape != c.dshape())
+      BTAS_THROW(false, "btas::QSDger: block shape of c mismatched");
   }
   else {
-    c.resize(q_total, q_shape);
+    c.resize(q_total, q_shape, d_shape, true);
   }
   // Calling SDger with index-based scaling
   function<double(const IVector<NA>&, const IVector<NB>&, const IVector<NC>&)>
@@ -267,18 +294,23 @@ void QSDgemm
 {
   // Checking contraction quantum numbers
   const size_t K = (NA + NB - NC)/2;
-  Q q_total; TVector<Qshapes<Q>, NC> q_shape;
+  Q q_total;
+  TVector<Qshapes<Q>, NC> q_shape;
   gemm_contract_qshape(TransA, TransB, a.q(), a.qshape(), b.q(), b.qshape(), q_total, q_shape);
+  TVector<Dshapes,    NC> d_shape;
+  gemm_contract_dshape(TransA, TransB,        a.dshape(),        b.dshape(),          d_shape);
   // Checking shapes of c
   if(c.size() > 0) {
     if(q_total != c.q())
       BTAS_THROW(false, "btas::QSDgemm: total quantum number of c mismatched");
     if(q_shape != c.qshape())
       BTAS_THROW(false, "btas::QSDgemm: quantum number indices of c mismatched");
+    if(d_shape != c.dshape())
+      BTAS_THROW(false, "btas::QSDgemm: block shape of c mismatched");
     SDscal(beta, c);
   }
   else {
-    c.resize(q_total, q_shape);
+    c.resize(q_total, q_shape, d_shape, true);
   }
   // Calling SDgemm with index-based scaling
     // FIXME: Are those correct? Transposition may introduce change something more?

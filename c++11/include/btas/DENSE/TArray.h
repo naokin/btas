@@ -6,6 +6,7 @@
 #include <array>
 #include <algorithm>
 #include <functional>
+#include <numeric>
 
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/vector.hpp>

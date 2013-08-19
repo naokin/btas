@@ -58,8 +58,8 @@ void SDpermute
     SDcopy(x, y);
   }
   else {
-    y.resize(permute(x.shape(), pindex));
-#ifdef SERIAL
+    y.resize(permute(x.dshape(), pindex), true);
+#ifdef _SERIAL
     serial_SDpermute(x, pindex, y);
 #else
     thread_SDpermute(x, pindex, y);

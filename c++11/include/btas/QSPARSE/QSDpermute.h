@@ -28,10 +28,12 @@ void QSDpermute
     QSDcopy(x, y);
   }
   else {
-    const TVector<Qshapes<Q>, N>& x_qshape = x.qshape();
-          TVector<Qshapes<Q>, N>  y_qshape = permute(x_qshape, pindex);
-    y.resize(x.q(), y_qshape);
-    SDpermute(x, pindex, y);
+    y.resize(x.q(), permute(x.qshape(), pindex), permute(x.dshape(), pindex), true);
+#ifdef _SERIAL
+    serial_SDpermute(x, pindex, y);
+#else
+    thread_SDpermute(x, pindex, y);
+#endif
   }
 }
 

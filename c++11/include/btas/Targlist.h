@@ -55,7 +55,7 @@ class R_arglist_single : public T_arglist_base {
 protected:
   shared_ptr<TArray<T, N1>> m_argment_1;
   //! Function to compute FLOPS count
-  virtual size_t mf_flops_count() { m_argment_1->size(); }
+  virtual size_t mf_flops_count() { return m_argment_1->size(); }
 public:
   //! Default constructor
   R_arglist_single() { }
@@ -83,7 +83,7 @@ protected:
   shared_ptr<TArray<T, N1>> m_argment_1;
   shared_ptr<TArray<T, N2>> m_argment_2;
   //! Function to compute FLOPS count
-  virtual size_t mf_flops_count() { m_argment_1->size(); }
+  virtual size_t mf_flops_count() { return m_argment_1->size(); }
 public:
   //! Default constructor
   R_arglist_double() { }
@@ -154,7 +154,7 @@ protected:
   shared_ptr<TArray<T, N3>> m_argment_3;
   shared_ptr<TArray<T, N4>> m_argment_4;
   //! Function to compute FLOPS count
-  virtual size_t mf_flops_count() { m_argment_1->size(); }
+  virtual size_t mf_flops_count() { return m_argment_1->size(); }
 public:
   //! Default constructor
   R_arglist_quadra() { }

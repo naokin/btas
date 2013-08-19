@@ -5,19 +5,19 @@
 #include <functional>
 #include <cmath>
 
-#include <btas/btas_contract_shape.h>
 
 #include <btas/DENSE/Dblas.h>
 #include <btas/DENSE/Darglist.h>
 
 #include <btas/SPARSE/SDArray.h>
+#include <btas/SPARSE/btas_contract_dshape.h>
 
-#ifndef SERIAL_REPLICATION_LIMIT
-#define SERIAL_REPLICATION_LIMIT 1
+#ifndef _SERIAL_REPLICATION_LIMIT
+#define _SERIAL_REPLICATION_LIMIT 1
 #endif
 
-#ifndef SERIAL_CONTRACTION_LIMIT
-#define SERIAL_CONTRACTION_LIMIT 1
+#ifndef _SERIAL_CONTRACTION_LIMIT
+#define _SERIAL_CONTRACTION_LIMIT 1
 #endif
 
 namespace btas {
@@ -433,9 +433,9 @@ void SDcopy
     if(x.shape() != y.shape())
       BTAS_THROW(false, "btas::SDcopy; array shape mismatched despite up-casting was specified");
   }
-  else {
-    y.resize(x.shape());
-  }
+
+  y.resize(x.dshape(), true);
+
 #ifdef _SERIAL
   serial_SDcopy(x, y, _up_cast);
 #else
@@ -447,7 +447,7 @@ template<size_t N>
 void SDscal
 (const double& alpha, SDArray<N>& x)
 {
-#ifdef SERIAL
+#ifdef _SERIAL
   serial_SDscal(alpha, x);
 #else
   thread_SDscal(alpha, x);
@@ -467,15 +467,14 @@ template<size_t N>
 void SDaxpy
 (const double& alpha, const SDArray<N>& x, SDArray<N>& y)
 {
-  const IVector<N>& x_shape = x.shape();
   if(y.size() > 0) {
-    if(x_shape != y.shape())
+    if(x.dshape() != y.dshape())
       BTAS_THROW(false, "btas::SDaxpy: shape of y mismatched");
   }
   else {
-    y.resize(x_shape);
+    y.resize(x.dshape(), true);
   }
-#ifdef SERIAL
+#ifdef _SERIAL
   serial_SDaxpy(alpha, x, y);
 #else
   thread_SDaxpy(alpha, x, y);
@@ -492,15 +491,15 @@ void SDgemv
  const double& alpha, const SDArray<NA>& a, const SDArray<NB>& b, const double& beta, SDArray<NC>& c)
 {
   // calc. contraction shape
-  IVector<NC> c_shape;
-  gemv_contract_shape(TransA, a.shape(), b.shape(), c_shape);
+  TVector<Dshapes, NC> c_dn_shape;
+  gemv_contract_dshape(TransA, a.dshape(), b.dshape(), c_dn_shape);
   if(c.size() > 0) {
-    if(c_shape != c.shape())
+    if(c_dn_shape != c.dshape())
       BTAS_THROW(false, "btas::SDgemv: block shape of c mismatched");
     SDscal(beta, c);
   }
   else {
-    c.resize(c_shape);
+    c.resize(c_dn_shape, true);
   }
   // call threaded sparse-dgemv
   if(TransA == NoTrans)
@@ -514,14 +513,14 @@ void SDger
 (const double& alpha, const SDArray<NA>& a, const SDArray<NB>& b, SDArray<NC>& c)
 {
   // calc. contraction shape
-  IVector<NC> c_shape;
-  ger_contract_shape(a.shape(), b.shape(), c_shape);
+  TVector<Dshapes, NC> c_dn_shape;
+  ger_contract_dshape(a.dshape(), b.dshape(), c_dn_shape);
   if(c.size() > 0) {
-    if(c_shape != c.shape())
+    if(c_dn_shape != c.dshape())
       BTAS_THROW(false, "btas::SDger: block shape of c mismatched");
   }
   else {
-    c.resize(c_shape);
+    c.resize(c_dn_shape, true);
   }
   // call threaded sparse-dger
   thread_SDger(alpha, a, b, c);
@@ -538,16 +537,15 @@ void SDgemm
 {
   const size_t K = (NA + NB - NC)/2;
   // calc. contraction shape
-  IVector<K> contracts;
-  IVector<NC> c_shape;
-  gemm_contract_shape(TransA, TransB, a.shape(), b.shape(), contracts, c_shape);
+  TVector<Dshapes, NC> c_dn_shape;
+  gemm_contract_dshape(TransA, TransB, a.dshape(), b.dshape(), c_dn_shape);
   if(c.size() > 0) {
-    if(c_shape != c.shape())
+    if(c_dn_shape != c.dshape())
       BTAS_THROW(false, "btas::SDgemm: shape of c mismatched");
     SDscal(beta, c);
   }
   else {
-    c.resize(c_shape);
+    c.resize(c_dn_shape, true);
   }
   //! call threaded sparse-dgemm
   /*! since c(i, j) = sum_{k} a(i, k) * b(k, j), it's advantageous to store 'b' as b(j, k) order

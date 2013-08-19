@@ -29,8 +29,8 @@ private:
     ar & m_q_shape;
   }
   //! Checking non-zero block
-  /*! STArray<T, N>::mf_non_zero is overridden here */
-  bool mf_non_zero(const IVector<N>& block_index) const {
+  /*! STArray<T, N>::mf_check_allowed is overridden here */
+  bool mf_check_allowed(const IVector<N>& block_index) const {
     return (m_q_total == (m_q_shape * block_index));
   }
 
@@ -53,8 +53,8 @@ public:
   }
 
   //! Construct from quantum number indices and their dense shapes
-  QSTArray(const Q& q_total, const TVector<Qshapes<Q>, N>& q_shape, const TVector<Dshapes, N>& d_shape) {
-    resize(q_total, q_shape, d_shape);
+  QSTArray(const Q& q_total, const TVector<Qshapes<Q>, N>& q_shape, const TVector<Dshapes, N>& d_shape, bool _never_allocate = false) {
+    resize(q_total, q_shape, d_shape, _never_allocate);
   }
 
   //! Construct from quantum number indices and their dense shapes and initialized by constant value
@@ -62,11 +62,11 @@ public:
     resize(q_total, q_shape, d_shape, value);
   }
 
-////! Construct from quantum number indices and their dense shapes and initialized by gen()
-//template<class Generator>
-//QSTArray(const Q& q_total, const TVector<Qshapes<Q>, N>& q_shape, const TVector<Dshapes, N>& d_shape, Generator gen) {
-//  resize(q_total, q_shape, d_shape, gen);
-//}
+  //! Construct from quantum number indices and their dense shapes and initialized by gen()
+  template<class Generator>
+  QSTArray(const Q& q_total, const TVector<Qshapes<Q>, N>& q_shape, const TVector<Dshapes, N>& d_shape, Generator gen) {
+    resize(q_total, q_shape, d_shape, gen);
+  }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Copy semantics
@@ -115,10 +115,10 @@ public:
   }
 
   //! Make subarray reference
-  /*! \param indices contains subarray indices
+  /*! \param _indxs contains subarray indices
    *  e.g.
    *  sparse shape = { 4, 4 }
-   *  indices = { { 1, 3 }, { 0, 2, 3} }
+   *  _indxs = { { 1, 3 }, { 0, 2, 3} }
    *
    *     0  1  2  3           0  2  3
    *    +--+--+--+--+        +--+--+--+
@@ -133,15 +133,15 @@ public:
    *
    *  ** blocks are only kept to make subarray
    */
-  QSTArray subarray(const TVector<Dshapes, N>& indices) const {
+  QSTArray subarray(const TVector<Dshapes, N>& _indxs) const {
     QSTArray _ref;
-    _ref.STArray<T, N>::operator= (STArray<T, N>::subarray(indices));
+    static_cast<STArray<T, N>&>(_ref) = STArray<T, N>::subarray(_indxs);
     _ref.m_q_total = m_q_total;
     for(int i = 0; i < N; ++i) {
-      int nz = indices[i].size();
+      int nz = _indxs[i].size();
       _ref.m_q_shape[i].resize(nz);
       for(int j = 0; j < nz; ++j)
-        _ref.m_q_shape[i][j] = m_q_shape[i].at(indices[i][j]);
+        _ref.m_q_shape[i][j] = m_q_shape[i].at(_indxs[i][j]);
     }
     return std::move(_ref);
   }
@@ -162,11 +162,11 @@ public:
 
   //! Resize from quantum number indices and their dense shapes
   void resize
-  (const Q& q_total, const TVector<Qshapes<Q>, N>& q_shape, const TVector<Dshapes, N>& d_shape) {
+  (const Q& q_total, const TVector<Qshapes<Q>, N>& q_shape, const TVector<Dshapes, N>& d_shape, bool _never_allocate = false) {
     for(int i = 0; i < N; ++i) assert(q_shape[i].size() == d_shape[i].size());
     m_q_total = q_total;
     m_q_shape = q_shape;
-    STArray<T, N>::resize(d_shape);
+    STArray<T, N>::resize(d_shape, _never_allocate);
   }
 
   //! Resize from quantum number indices and their dense shapes and initialized by constant value
@@ -178,15 +178,15 @@ public:
     STArray<T, N>::resize(d_shape, value);
   }
 
-////! Resize from quantum number indices and their dense shapes and initialized by gen()
-//template<class Generator>
-//void resize
-//(const Q& q_total, const TVector<Qshapes<Q>, N>& q_shape, const TVector<Dshapes, N>& d_shape, Generator gen) {
-//  for(int i = 0; i < N; ++i) assert(q_shape[i].size() == d_shape[i].size());
-//  m_q_total = q_total;
-//  m_q_shape = q_shape;
-//  STArray<T, N>::resize(d_shape, gen);
-//}
+  //! Resize from quantum number indices and their dense shapes and initialized by gen()
+  template<class Generator>
+  void resize
+  (const Q& q_total, const TVector<Qshapes<Q>, N>& q_shape, const TVector<Dshapes, N>& d_shape, Generator gen) {
+    for(int i = 0; i < N; ++i) assert(q_shape[i].size() == d_shape[i].size());
+    m_q_total = q_total;
+    m_q_shape = q_shape;
+    STArray<T, N>::resize(d_shape, gen);
+  }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Initializer

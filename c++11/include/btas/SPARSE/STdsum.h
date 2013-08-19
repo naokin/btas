@@ -17,16 +17,15 @@ template<typename T, size_t N>
 void STdsum(const STArray<T, N>& x, const STArray<T, N>& y, STArray<T, N>& z)
 {
   const IVector<N>& x_shape = x.shape();
-  const IVector<N>& y_shape = y.shape();
-        IVector<N>  z_shape;
-  for(int i = 0; i < N; ++i) z_shape[i] = x_shape[i] + y_shape[i];
+  TVector<Dshapes, N> z_dn_shape = x.dshape();
+  for(int i = 0; i < N; ++i) z_dn_shape[i].insert(z_dn_shape[i].end(), y.dshape(i).begin(), y.dshape(i).end());
   // Check sparse shape of z
   if(z.size() > 0) {
-    if(z.shape() != z_shape)
+    if(z.dshape() != z_dn_shape)
       BTAS_THROW(false, "btas::STdsum: array shape of z mismatched");
   }
   else {
-    z.resize(z_shape);
+    z.resize(z_dn_shape, true);
   }
   // Inserting blocks
   for(typename STArray<T, N>::const_iterator ix = x.begin(); ix != x.end(); ++ix) {
@@ -52,34 +51,27 @@ template<typename T, size_t N, size_t K>
 void STdsum(const STArray<T, N>& x, const STArray<T, N>& y, const IVector<K>& trace_index, STArray<T, N>& z)
 {
   const IVector<N>& x_shape = x.shape();
-  const IVector<N>& y_shape = y.shape();
-  TVector<Dshapes, N> x_dn_shape(x.dshape());
-  TVector<Dshapes, N> y_dn_shape(y.dshape());
+  const TVector<Dshapes, N>& x_dn_shape = x.dshape();
+  const TVector<Dshapes, N>& y_dn_shape = y.dshape();
   for(int k = 0; k < K; ++k) {
     int tk = trace_index[k];
-    if(x_shape[tk] != y_shape[tk])
-      BTAS_THROW(false, "btas::STdsum: found mismatched sparse shape to be traced");
-    for(int i = 0; i < x_shape[tk]; ++i) {
-      if(x_dn_shape[tk][i] != y_dn_shape[tk][i]) {
-        if(x_dn_shape[tk][i] != 0 && y_dn_shape[tk][i] != 0)
-          BTAS_THROW(false, "btas::STdsum: found mismatched dense shape to be traced");
-      }
-    }
+    if(x_dn_shape[tk] != y_dn_shape[tk])
+      BTAS_THROW(false, "btas::STdsum: found mismatched shape to be traced");
   }
   IVector<N-K> dsum_index; // Complement of trace_index
   int nsum = 0;
   for(int i = 0; i < N; ++i) {
     if(std::find(trace_index.begin(), trace_index.end(), i) == trace_index.end()) dsum_index[nsum++] = i;
   }
-  IVector<N> z_shape(x_shape);
-  for(int i = 0; i < N-K; ++i) z_shape[dsum_index[i]] += y_shape[dsum_index[i]];
+  TVector<Dshapes, N> z_dn_shape = x_dn_shape;
+  for(int i = 0; i < N-K; ++i) z_dn_shape[dsum_index[i]].insert(z_dn_shape[dsum_index[i]].end(), y_dn_shape[dsum_index[i]].begin(), y_dn_shape[dsum_index[i]].end());
   // Check sparse shape of z
   if(z.size() > 0) {
-    if(z.shape() != z_shape)
+    if(z.dshape() != z_dn_shape)
       BTAS_THROW(false, "btas::STdsum: array shape of z mismatched");
   }
   else {
-    z.resize(z_shape);
+    z.resize(z_dn_shape, true);
   }
   // Inserting blocks
   for(typename STArray<T, N>::const_iterator ix = x.begin(); ix != x.end(); ++ix) {

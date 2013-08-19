@@ -1,0 +1,93 @@
+(1) Generic type BLAS functions
+
+ +  Define BTAS_TYPE class to provide wrapper functions s.t. BTAS_TYPE<T>::BLAS_COPY(const size_t& n, const T* x, T* y);
+     -  const static T BTAS_TYPE<T>::ZERO();
+     -  const static T BTAS_TYPE<T>::ONE ();
+     -  const static T BTAS_TYPE<T>::INVERSE(const T& x);
+
+     -  static void BTAS_TYPE<T>::BLAS_GEMM(...);
+     -  static void BTAS_TYPE<T>::LAPACK_HEP(...); // hermitian eigenvalue problem (HEP) -> dsyev, zheev, etc.
+     -  static void BTAS_TYPE<T>::LAPACK_SVD(...); // singular value decomposition (SVD) -> dgesvd, zgesvd, etc.
+
+(2) Provide accessing function s.t. TArray& STArray::operator() (size_t n1, size_t n2, ...)
+
+    [1] Define block array class as a constant size array -> define as a base of TArray class
+
+     +  shared_vector (aka. boost::shared_ptr<std::vector<T>>)
+
+     +  TArrayBase class is only default-constructible from TArray and STArray class
+
+        template<typename T, size_t N>
+        class TArrayBase {
+          protected:
+            // STArray is defined as a friend
+            friend class STArray<T, N>;
+
+            // not default-constructible from user, but constructible from derived and friend classes
+            TArrayBase() { }
+
+            // array info
+            IVector<N>
+              m_shape;
+            IVector<N>
+              m_stride;
+            shared_vector<T>
+              m_store;
+
+          public:
+            virtual ~TArrayBase() { }
+
+            // copy and move constructible
+            TArrayBase(const TArrayBase&  x);
+            TArrayBase(      TArrayBase&& x);
+
+            bool empty() const { return (m_store.get() == nullptr); }
+        };
+
+        template<typename T, size_t N>
+        class TArray : public TArrayBase<T, N> {
+          public:
+            TArray() { }
+           ~TArray() { }
+
+            TArray(size_t n1, size_t n2, ...);
+
+            void resize(size_t n1, size_t n2, ...);
+        };
+
+     +  size() (i.e. shape[0]*stride[0]) > 0 && empty() : describe null array
+
+    [2] TArrayBase<T, N> STArray::operator() (size_t n1, size_t n2, ...)
+
+     +  without const-qualifier
+
+        size_t _tag = tag(_index);
+
+        shared_vector<T> _data(nullptr);
+
+        if(this->mf_check_allowed(_index)) {
+          auto it = m_store.find(_index);
+          if(it == m_store.end()) {
+            it = m_store.emplace_hint(it, _tag, shared_vector(new std::vector<T>(m_dn_shape * _index)));
+            std::fill(it->second->begin(), it->second->end(), BTAS_TYPE<T>::ZERO());
+          }
+          _data = it->second;
+        }
+        return std::move(TArrayBase(m_dn_shape & _index, _data));
+
+    [3] Assignment operators b/w TArrayBase, TArray, and TSubArray
+
+     +  TArrayBase::operator= (const TArrayBase&  x)
+     +  TArray    ::operator= (const TArrayBase&  x)
+     +  TSubArray ::operator= (const TArrayBase&  x)
+
+     +  TArrayBase::operator= (      TArrayBase&& x)
+     +  TArray    ::operator= (      TArray    && x)  
+     +  TSubArray ::operator= (      TSubArray && x)  
+
+
+
+
+
+
+
