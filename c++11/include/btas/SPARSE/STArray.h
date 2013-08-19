@@ -371,9 +371,28 @@ public:
   const Dshapes& dshape(int i) const { return m_dn_shape[i]; }
 
   //! Check and update dense-block shapes
-  void check_dshape() {
+  const TVector<Dshapes, N>& check_dshape() {
     for(const_iterator it = m_store.begin(); it != m_store.end(); ++it)
       mf_check_dshape(index(it->first), it->second->shape());
+    return m_dn_shape;
+  }
+
+  //! Calc. and return net dense-block shapes
+  TVector<Dshapes, N> check_net_dshape() const {
+    TVector<Dshapes, N> _net_dshape;
+    for(size_t i = 0; i < N; ++i) _net_dshape[i].resize(m_shape[i], 0);
+    for(const_iterator it = m_store.begin(); it != m_store.end(); ++it) {
+      IVector<N> _index = index(it->first);
+      for(int i = 0; i < N; ++i) {
+        if(_net_dshape[i][_index[i]] > 0) {
+          BTAS_THROW(_net_dshape[i][_index[i]] == it->second->shape(i), "btas::STArray::check_net_dshape: found mismatched dense-block shape");
+        }
+        else {
+          _net_dshape[i][_index[i]] = it->second->shape(i);
+        }
+      }
+    }
+    return std::move(_net_dshape);
   }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -426,8 +445,12 @@ public:
     // check if the requested block can be non-zero
     iterator it = find(_tag);
     if(this->mf_check_allowed(_index)) {
-      if(it == end())
+      if(it == end()) {
         it = m_store.insert(it, std::make_pair(_tag, shared_ptr<TArray<T, N>>(new TArray<T, N>(m_dn_shape & _index))));
+      }
+      else {
+        BTAS_THROW((m_dn_shape & _index) == it->second->shape(), "btas::STArray::reserve: existed block has inconsistent shape");
+      }
     }
     else {
       if(it != end()) {
@@ -448,8 +471,12 @@ public:
     // check if the requested block can be non-zero
     iterator it = find(_tag);
     if(this->mf_check_allowed(_index)) {
-      if(it == end())
+      if(it == end()) {
         it = m_store.insert(it, std::make_pair(_tag, shared_ptr<TArray<T, N>>(new TArray<T, N>(m_dn_shape & _index))));
+      }
+      else {
+        BTAS_THROW((m_dn_shape & _index) == it->second->shape(), "btas::STArray::reserve: existed block has inconsistent shape");
+      }
     }
     else {
       if(it != end()) {

@@ -12,6 +12,14 @@
 
 namespace btas {
 
+//! Compare Dshapes ignoring 0-sized index
+inline bool _btas_contract_allowed(const Dshapes& x, const Dshapes& y) {
+  bool _equal = (x.size() == y.size());
+  for(size_t i = 0; _equal && i < x.size(); ++i)
+    if(x[i] > 0 && y[i] > 0) _equal &= (x[i] == y[i]);
+  return _equal;
+}
+
 template<size_t NA, size_t NB, size_t NC>
 void gemv_contract_dshape
 (const BTAS_TRANSPOSE& TransA,
@@ -22,14 +30,12 @@ void gemv_contract_dshape
   if(TransA == NoTrans) {
     for(int i = 0; i < NC; ++i) c_dshape[i] = a_dshape[i];
     for(int i = 0; i < NB; ++i)
-      if(a_dshape[i+NC] != b_dshape[i])
-        BTAS_THROW(false, "btas::gemv_contract_dshape contraction of dense-array shape failed");
+      BTAS_THROW(_btas_contract_allowed(a_dshape[i+NC], b_dshape[i]), "btas::gemv_contract_dshape contraction of dense-array shape failed");
   }
   else {
     for(int i = 0; i < NC; ++i) c_dshape[i] = a_dshape[i+NB];
     for(int i = 0; i < NB; ++i)
-      if(a_dshape[i]    != b_dshape[i])
-        BTAS_THROW(false, "btas::gemv_contract_dshape contraction of dense-array shape failed");
+      BTAS_THROW(_btas_contract_allowed(a_dshape[i],    b_dshape[i]), "btas::gemv_contract_dshape contraction of dense-array shape failed");
   }
 }
 
@@ -66,14 +72,12 @@ void gemm_contract_dshape
   if(TransB == NoTrans) {
     for(int i = 0; i < NB-K; ++i) c_dshape[i+NA-K] = b_dshape[i+K];
     for(int i = 0; i < K; ++i)
-      if(k_dshape[i] != b_dshape[i])
-        BTAS_THROW(false, "btas::gemm_contract_dshape contraction of dense-array shape failed");
+      BTAS_THROW(_btas_contract_allowed(k_dshape[i], b_dshape[i]),      "btas::gemm_contract_dshape contraction of dense-array shape failed");
   }
   else {
     for(int i = 0; i < NB-K; ++i) c_dshape[i+NA-K] = b_dshape[i];
     for(int i = 0; i < K; ++i)
-      if(k_dshape[i] != b_dshape[i+NB-K])
-        BTAS_THROW(false, "btas::gemm_contract_dshape contraction of dense-array shape failed");
+      BTAS_THROW(_btas_contract_allowed(k_dshape[i], b_dshape[i+NB-K]), "btas::gemm_contract_dshape contraction of dense-array shape failed");
   }
 }
 

@@ -12,12 +12,12 @@
 #include <btas/SPARSE/SDArray.h>
 #include <btas/SPARSE/btas_contract_dshape.h>
 
-#ifndef SERIAL_REPLICATION_LIMIT
-#define SERIAL_REPLICATION_LIMIT 1
+#ifndef _SERIAL_REPLICATION_LIMIT
+#define _SERIAL_REPLICATION_LIMIT 1
 #endif
 
-#ifndef SERIAL_CONTRACTION_LIMIT
-#define SERIAL_CONTRACTION_LIMIT 1
+#ifndef _SERIAL_CONTRACTION_LIMIT
+#define _SERIAL_CONTRACTION_LIMIT 1
 #endif
 
 namespace btas {
@@ -447,7 +447,7 @@ template<size_t N>
 void SDscal
 (const double& alpha, SDArray<N>& x)
 {
-#ifdef SERIAL
+#ifdef _SERIAL
   serial_SDscal(alpha, x);
 #else
   thread_SDscal(alpha, x);
@@ -474,7 +474,7 @@ void SDaxpy
   else {
     y.resize(x.dshape(), true);
   }
-#ifdef SERIAL
+#ifdef _SERIAL
   serial_SDaxpy(alpha, x, y);
 #else
   thread_SDaxpy(alpha, x, y);

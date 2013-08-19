@@ -15,8 +15,8 @@ int main(int argc, char* argv[])
   // define working space for 20 sites chain
   //
 
-  int L = 20;
-  int M = 20;
+  int L =  10;
+  int M = 100;
 
   MpStorages sites(L);
 
@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
 
   cout << "\tConstructing MPOs" << endl;
 
-  if(1) {
+  if(0) {
     //
     // Nz = 2 * Sz / J = Jz = 1.0 / Hz = 0.0
     //
