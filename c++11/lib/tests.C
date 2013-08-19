@@ -256,7 +256,20 @@ int QSPARSE_TEST(int iprint = 0)
     }
 
     // Making sub-array
-    TVector<Dshapes, 4> sub_index = { Dshapes{ 1, 2 }, Dshapes{ 0, 2 }, Dshapes{ 0, 1, 2 }, Dshapes{ 0, 1 } };
+    Dshapes d_1;
+    d_1.push_back(1);
+    d_1.push_back(2);
+    Dshapes d_2;
+    d_2.push_back(0);
+    d_2.push_back(2);
+    Dshapes d_3;
+    d_3.push_back(0);
+    d_3.push_back(1);
+    d_3.push_back(2);
+    Dshapes d_4;
+    d_4.push_back(0);
+    d_4.push_back(1);
+    TVector<Dshapes, 4> sub_index = make_array(d_1, d_2, d_3, d_4);
     QSDArray<4> y(a.subarray(sub_index));
     if(iprint > 0) {
       cout << "====================================================================================================" << endl;

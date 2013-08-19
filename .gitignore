@@ -4,5 +4,6 @@
 *.a
 *~
 *.della
+*.tiger
 *.tmp
-*.log
+*log

@@ -15,8 +15,8 @@ int main(int argc, char* argv[])
   // define working space for 20 sites chain
   //
 
-  int L =  4;
-  int M = 20;
+  int L =  10;
+  int M = 100;
 
   MpStorages sites(L);
 
@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
     //
     int    Ne = L;
     int    Sz = 0;
-    double t  = 0.5;
+    double t  = 1.0;
     double U  = 1.0;
     Hubbard::construct_mpo(sites, t, U);
     initialize(sites, FermiQuantum(Ne, Sz), M);
