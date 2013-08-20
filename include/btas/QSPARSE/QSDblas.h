@@ -26,7 +26,7 @@ template<size_t N, class Q = Quantum>
 void QSDcopy
 (const QSDArray<N, Q>& x, QSDArray<N, Q>& y)
 {
-  y.resize(x.q(), x.qshape(), x.dshape(), true);
+  y.resize(x.q(), x.qshape(), x.dshape(), false);
 #ifdef _SERIAL
   serial_SDcopy(x, y, false);
 #else
@@ -81,7 +81,7 @@ void QSDaxpy
       BTAS_THROW(false, "btas::SDaxpy: shape of y mismatched");
   }
   else {
-    y.resize(x.q(), x.qshape(), x.dshape(), true);
+    y.resize(x.q(), x.qshape(), x.dshape(), false);
   }
 #ifdef _SERIAL
   serial_SDaxpy(alpha, x, y);
@@ -118,7 +118,7 @@ void QSDgemv
     SDscal(beta, c);
   }
   else {
-    c.resize(q_total, q_shape, d_shape, true);
+    c.resize(q_total, q_shape, d_shape, false);
   }
   // Calling SDgemv
   if(TransA == NoTrans)
@@ -148,7 +148,7 @@ void QSDger
       BTAS_THROW(false, "btas::QSDger: block shape of c mismatched");
   }
   else {
-    c.resize(q_total, q_shape, d_shape, true);
+    c.resize(q_total, q_shape, d_shape, false);
   }
   // Calling SDger
   thread_SDger(alpha, a, b, c);
@@ -182,7 +182,7 @@ void QSDgemm
     SDscal(beta, c);
   }
   else {
-    c.resize(q_total, q_shape, d_shape, true);
+    c.resize(q_total, q_shape, d_shape, false);
   }
   // Calling SDgemm
   if     (TransA == NoTrans && TransB == NoTrans)
@@ -232,7 +232,7 @@ void QSDgemv
     SDscal(beta, c);
   }
   else {
-    c.resize(q_total, q_shape, d_shape, true);
+    c.resize(q_total, q_shape, d_shape, false);
   }
   // Calling SDgemv with index-based scaling
   if(TransA == NoTrans) {
@@ -271,7 +271,7 @@ void QSDger
       BTAS_THROW(false, "btas::QSDger: block shape of c mismatched");
   }
   else {
-    c.resize(q_total, q_shape, d_shape, true);
+    c.resize(q_total, q_shape, d_shape, false);
   }
   // Calling SDger with index-based scaling
   function<double(const IVector<NA>&, const IVector<NB>&, const IVector<NC>&)>
@@ -310,7 +310,7 @@ void QSDgemm
     SDscal(beta, c);
   }
   else {
-    c.resize(q_total, q_shape, d_shape, true);
+    c.resize(q_total, q_shape, d_shape, false);
   }
   // Calling SDgemm with index-based scaling
     // FIXME: Are those correct? Transposition may introduce change something more?

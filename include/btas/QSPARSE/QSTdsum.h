@@ -33,7 +33,7 @@ void QSTdsum(const QSTArray<T, N, Q>& x, const QSTArray<T, N, Q>& y, QSTArray<T,
   else {
     TVector<Dshapes, N> z_dshape = x.dshape();
     for(int i = 0; i < N; ++i) z_dshape[i].insert(z_dshape[i].end(), y.dshape(i).begin(), y.dshape(i).end());
-    z.resize(x.q(), z_qshape, z_dshape, true);
+    z.resize(x.q(), z_qshape, z_dshape, false);
   }
   // Call sparse-array function
   STdsum<T, N>(x, y, z);
@@ -79,7 +79,7 @@ void QSTdsum(const QSTArray<T, N, Q>& x, const QSTArray<T, N, Q>& y, const IVect
           TVector<Dshapes, N>  z_dshape = x_dshape;
     for(int i = 0; i < N-K; ++i)
       z_dshape[dsum_index[i]].insert(z_dshape[dsum_index[i]].end(), y_dshape[dsum_index[i]].begin(), y_dshape[dsum_index[i]].end());
-    z.resize(x.q(), z_qshape, z_dshape, true);
+    z.resize(x.q(), z_qshape, z_dshape, false);
   }
   // Call sparse-array function
   STdsum<T, N, K>(x, y, trace_index, z);

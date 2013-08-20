@@ -45,7 +45,7 @@ void QSTmerge
   b_dshape[0] = rows_info.dshape_merged();
   for(int i = 0; i < MC; ++i) b_dshape[1+i] = a_dshape[MR+i];
   // resizing
-  b.resize(a.q(), b_qshape, b_dshape, true);
+  b.resize(a.q(), b_qshape, b_dshape, false);
   // strides
   int a_stride = a.stride(MR-1);
   int b_stride = b.stride(0);
@@ -105,7 +105,7 @@ void QSTmerge
   for(int i = 0; i < MR; ++i) b_dshape[i] = a_dshape[i];
   b_dshape[MR] = cols_info.dshape_merged();
   // resizing
-  b.resize(a.q(), b_qshape, b_dshape, true);
+  b.resize(a.q(), b_qshape, b_dshape, false);
   // strides
   int a_stride = a.stride(MR-1);
   int b_stride = b.stride(MR-1);
@@ -161,7 +161,7 @@ void QSTmerge
   b_dshape[0] = rows_info.dshape_merged();
   b_dshape[1] = cols_info.dshape_merged();
   // resizing
-  b.resize(a.q(), b_qshape, b_dshape, true);
+  b.resize(a.q(), b_qshape, b_dshape, false);
   // strides
   int a_stride = a.stride(MR-1);
   int b_stride = b.stride(0);
@@ -228,7 +228,7 @@ void QSTexpand
   for(int i = 0; i < MR; ++i) b_dshape[i]    = rows_info.dshape(i);
   for(int i = 0; i < MC; ++i) b_dshape[MR+i] = a_dshape[1+i];
   // resizing
-  b.resize(a.q(), b_qshape, b_dshape, true);
+  b.resize(a.q(), b_qshape, b_dshape, false);
   // strides
   int a_stride = a.stride(0);
   int b_stride = b.stride(MR-1);
@@ -276,7 +276,7 @@ void QSTexpand
   for(int i = 0; i < MR; ++i) b_dshape[i]    = a_dshape[i];
   for(int i = 0; i < MC; ++i) b_dshape[MR+i] = cols_info.dshape(i);
   // resizing
-  b.resize(a.q(), b_qshape, b_dshape, true);
+  b.resize(a.q(), b_qshape, b_dshape, false);
   // strides
   int a_stride = a.stride(MR-1);
   int b_stride = b.stride(MR-1);
@@ -321,7 +321,7 @@ void QSTexpand
   for(int i = 0; i < MR; ++i) b_dshape[i]    = rows_info.dshape(i);
   for(int i = 0; i < MC; ++i) b_dshape[MR+i] = cols_info.dshape(i);
   // resizing
-  b.resize(a.q(), b_qshape, b_dshape, true);
+  b.resize(a.q(), b_qshape, b_dshape, false);
   // strides
   int a_stride = a.stride(0);
   int b_stride = b.stride(MR-1);

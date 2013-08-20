@@ -53,8 +53,8 @@ public:
   }
 
   //! Construct from quantum number indices and their dense shapes
-  QSTArray(const Q& q_total, const TVector<Qshapes<Q>, N>& q_shape, const TVector<Dshapes, N>& d_shape, bool _never_allocate = false) {
-    resize(q_total, q_shape, d_shape, _never_allocate);
+  QSTArray(const Q& q_total, const TVector<Qshapes<Q>, N>& q_shape, const TVector<Dshapes, N>& d_shape, bool _allocate = true) {
+    resize(q_total, q_shape, d_shape, _allocate);
   }
 
   //! Construct from quantum number indices and their dense shapes and initialized by constant value
@@ -162,11 +162,11 @@ public:
 
   //! Resize from quantum number indices and their dense shapes
   void resize
-  (const Q& q_total, const TVector<Qshapes<Q>, N>& q_shape, const TVector<Dshapes, N>& d_shape, bool _never_allocate = false) {
+  (const Q& q_total, const TVector<Qshapes<Q>, N>& q_shape, const TVector<Dshapes, N>& d_shape, bool _allocate = true) {
     for(int i = 0; i < N; ++i) assert(q_shape[i].size() == d_shape[i].size());
     m_q_total = q_total;
     m_q_shape = q_shape;
-    STArray<T, N>::resize(d_shape, _never_allocate);
+    STArray<T, N>::resize(d_shape, _allocate);
   }
 
   //! Resize from quantum number indices and their dense shapes and initialized by constant value

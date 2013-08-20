@@ -25,7 +25,7 @@ void STdsum(const STArray<T, N>& x, const STArray<T, N>& y, STArray<T, N>& z)
       BTAS_THROW(false, "btas::STdsum: array shape of z mismatched");
   }
   else {
-    z.resize(z_dn_shape, true);
+    z.resize(z_dn_shape, false);
   }
   // Inserting blocks
   for(typename STArray<T, N>::const_iterator ix = x.begin(); ix != x.end(); ++ix) {
@@ -71,7 +71,7 @@ void STdsum(const STArray<T, N>& x, const STArray<T, N>& y, const IVector<K>& tr
       BTAS_THROW(false, "btas::STdsum: array shape of z mismatched");
   }
   else {
-    z.resize(z_dn_shape, true);
+    z.resize(z_dn_shape, false);
   }
   // Inserting blocks
   for(typename STArray<T, N>::const_iterator ix = x.begin(); ix != x.end(); ++ix) {

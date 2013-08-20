@@ -434,7 +434,7 @@ void SDcopy
       BTAS_THROW(false, "btas::SDcopy; array shape mismatched despite up-casting was specified");
   }
 
-  y.resize(x.dshape(), true);
+  y.resize(x.dshape(), false);
 
 #ifdef _SERIAL
   serial_SDcopy(x, y, _up_cast);
@@ -472,7 +472,7 @@ void SDaxpy
       BTAS_THROW(false, "btas::SDaxpy: shape of y mismatched");
   }
   else {
-    y.resize(x.dshape(), true);
+    y.resize(x.dshape(), false);
   }
 #ifdef _SERIAL
   serial_SDaxpy(alpha, x, y);
@@ -499,7 +499,7 @@ void SDgemv
     SDscal(beta, c);
   }
   else {
-    c.resize(c_dn_shape, true);
+    c.resize(c_dn_shape, false);
   }
   // call threaded sparse-dgemv
   if(TransA == NoTrans)
@@ -520,7 +520,7 @@ void SDger
       BTAS_THROW(false, "btas::SDger: block shape of c mismatched");
   }
   else {
-    c.resize(c_dn_shape, true);
+    c.resize(c_dn_shape, false);
   }
   // call threaded sparse-dger
   thread_SDger(alpha, a, b, c);
@@ -545,7 +545,7 @@ void SDgemm
     SDscal(beta, c);
   }
   else {
-    c.resize(c_dn_shape, true);
+    c.resize(c_dn_shape, false);
   }
   //! call threaded sparse-dgemm
   /*! since c(i, j) = sum_{k} a(i, k) * b(k, j), it's advantageous to store 'b' as b(j, k) order

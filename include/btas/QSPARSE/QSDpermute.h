@@ -28,7 +28,7 @@ void QSDpermute
     QSDcopy(x, y);
   }
   else {
-    y.resize(x.q(), permute(x.qshape(), pindex), permute(x.dshape(), pindex), true);
+    y.resize(x.q(), permute(x.qshape(), pindex), permute(x.dshape(), pindex), false);
 #ifdef _SERIAL
     serial_SDpermute(x, pindex, y);
 #else

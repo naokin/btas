@@ -71,7 +71,7 @@ public:
   STArray(const IVector<N>& _shape) { resize(_shape); }
 
   //! Construct by dense-block shapes
-  STArray(const TVector<Dshapes, N>& _dn_shape, bool _never_allocate = false) { resize(_dn_shape, _never_allocate); }
+  STArray(const TVector<Dshapes, N>& _dn_shape, bool _allocate = true) { resize(_dn_shape, _allocate); }
 
   //! Construct by dense-block shapes and fill elements by value
   STArray(const TVector<Dshapes, N>& _dn_shape, const T& value) { resize(_dn_shape, value); }
@@ -167,7 +167,7 @@ public:
       }
     }
 
-    STArray _ref(_dn_shape, true);
+    STArray _ref(_dn_shape, false);
 
     iterator ip = _ref.m_store.begin();
     for(const_iterator it = m_store.begin(); it != m_store.end(); ++it) {
@@ -200,14 +200,17 @@ public:
   }
 
   //! Resize by dense-block shapes using this->mf_check_allowed(index)
-  void resize(const TVector<Dshapes, N>& _dn_shape, bool _never_allocate = false) {
+  void resize(const TVector<Dshapes, N>& _dn_shape, bool _allocate = true) {
     // calc. sparse-block shape
     IVector<N> _shape;
     for(int i = 0; i < N; ++i) _shape[i] = _dn_shape[i].size();
     resize(_shape);
     m_dn_shape = _dn_shape;
 
-    if(!_never_allocate) allocate();
+    if(_allocate)
+      allocate();
+    else
+      m_store.clear();
   }
 
   //! Allocate all allowed blocks (existed blocks are collapsed)
@@ -216,6 +219,7 @@ public:
     IVector<N> _index = uniform<int, N>(0);
 
     m_store.clear();
+
     for(size_t ib = 0; ib < size(); ++ib) {
       // assume derived mf_check_allowed being called
       if(this->mf_check_allowed(_index)) {
@@ -557,7 +561,7 @@ public:
     }
     else {
       TVector<Dshapes, N> t_dn_shape = transpose(m_dn_shape, K);
-      trans.resize(t_dn_shape, true);
+      trans.resize(t_dn_shape, false);
 
       int oldstr = m_stride[K-1];
       int newstr = size() / oldstr;
@@ -580,7 +584,7 @@ public:
     }
     else {
       TVector<Dshapes, N> p_dn_shape = permute(m_dn_shape, pindex);
-      pmute.resize(p_dn_shape, true);
+      pmute.resize(p_dn_shape, false);
 
       IVector<N> p_stride;
       for(int i = 0; i < N; ++i) p_stride[pindex[i]] = pmute.m_stride[i];

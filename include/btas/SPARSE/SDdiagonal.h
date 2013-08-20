@@ -45,7 +45,7 @@ void SDdiagonal
   // calc. 'b' shape and resize
   TVector<Dshapes, NB> b_dn_shape;
   for(int i = 0; i < NB; ++i) b_dn_shape[i] = a_dn_shape[u_index[i]];
-  b.resize(b_dn_shape, true);
+  b.resize(b_dn_shape, false);
   // pick diagonal elements
   for(typename SDArray<NA>::const_iterator ia = a.begin(); ia != a.end(); ++ia) {
     IVector<NA> a_index = a.index(ia->first);
