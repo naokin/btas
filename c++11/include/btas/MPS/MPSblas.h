@@ -418,8 +418,8 @@ namespace mps {
 
          alpha = pow(alpha,1.0/(double)L);
 
-         for(auto x : mpx)
-            QSDscal(alpha,x);
+         for(int i = 0;i < mpx.size();++i)
+            QSDscal(alpha,mpx[i]);
 
       }
 
