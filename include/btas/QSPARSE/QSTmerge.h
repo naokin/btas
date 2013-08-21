@@ -55,9 +55,10 @@ void QSTmerge
     typename QSTmergeInfo<MR, Q>::const_range irow_range = rows_info.equal_range(i);
     if(irow_range.first == irow_range.second) continue;
 
+    int ib_rows = i * b_stride;
     for(int j = 0; j < b_stride; ++j) {
       // construct merged dense-tensor
-      IVector<1+MC> b_index = b.index(i*b_stride+j);
+      IVector<1+MC> b_index = b.index(ib_rows + j);
       if(!b.allowed(b_index)) continue;
       TArray<T, 1+MC> block(b.dshape() & b_index); block.fill(0.0);
 
@@ -112,11 +113,13 @@ void QSTmerge
   int b_n_rows = b.size() / b_stride;
   // loop over merged blocks
   for(int i = 0; i < b_n_rows; ++i) {
+    int ia_rows = i * a_stride;
+    int ib_rows = i * b_stride;
     for(int j = 0; j < b_stride; ++j) {
       typename QSTmergeInfo<MC, Q>::const_range jcol_range = cols_info.equal_range(j);
       if(jcol_range.first == jcol_range.second) continue;
       // construct merged dense-tensor
-      IVector<MR+1> b_index = b.index(i*b_stride+j);
+      IVector<MR+1> b_index = b.index(ib_rows + j);
       if(!b.allowed(b_index)) continue;
       TArray<T, MR+1> block(b.dshape() & b_index); block.fill(0.0);
 
@@ -131,7 +134,7 @@ void QSTmerge
         int dcol = cols_info.dshape_packed(jcol);
         subend[MR] = subbeg[MR] + dcol - 1;
         // merge
-        int tag = i * a_stride + jcol;
+        int tag = ia_rows + jcol;
         typename QSTArray<T, N, Q>::const_iterator ita = a.find(tag);
         if(ita != a.end()) {
           non_zero = true;

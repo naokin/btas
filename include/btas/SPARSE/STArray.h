@@ -207,10 +207,7 @@ public:
     resize(_shape);
     m_dn_shape = _dn_shape;
 
-    if(_allocate)
-      allocate();
-    else
-      m_store.clear();
+    if(_allocate) allocate();
   }
 
   //! Allocate all allowed blocks (existed blocks are collapsed)

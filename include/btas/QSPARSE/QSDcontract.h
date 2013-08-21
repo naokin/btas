@@ -73,7 +73,7 @@ void QSDindexed_contract
     QSDcontract(alpha, a, a_contract, b, b_contract, beta, c);
   }
   else {
-    QSDArray<NC> axb;
+    QSDArray<NC, Q> axb;
     if(c.size() > 0)
       QSDindexed_permute(c, c_symbols, axb, axb_symbols);
 
