@@ -418,8 +418,8 @@ namespace mps {
 
          alpha = pow(alpha,1.0/(double)L);
 
-         for(auto x : mpx)
-            QSDscal(alpha,x);
+         for(int i = 0;i < mpx.size();++i)
+            QSDscal(alpha,mpx[i]);
 
       }
 
@@ -757,17 +757,11 @@ namespace mps {
 
                QSDindexed_contract(1.0,I2,shape(l,j,n,o),B[i].conjugate(),shape(l,j,k),0.0,EO,shape(n,o,k));
 
+               //bad style: if no blocks remain, return zero
+               if(EO.begin() == EO.end())
+                  return 0.0;
+
             }
-
-            //if no blocks remain, return zero
-            if(EO.dshape(0)[0] == 0)
-               return 0.0;
-
-            if(EO.dshape(1)[0] == 0)
-               return 0.0;
-
-            if(EO.dshape(2)[0] == 0)
-               return 0.0;
 
             return (*(EO.find(shape(0,0,0))->second))(0,0,0);
 
@@ -818,17 +812,11 @@ namespace mps {
 
                QSDindexed_contract(1.0,B[i].conjugate(),shape(k,o,n),I2,shape(j,l,o,n),0.0,EO,shape(j,l,k));
 
+               //bad style: if no blocks remain, return zero
+               if(EO.begin() == EO.end())
+                  return 0.0;
+
             }
-
-            //if no blocks remain, return zero
-            if(EO.dshape(0)[0] == 0)
-               return 0.0;
-
-            if(EO.dshape(1)[0] == 0)
-               return 0.0;
-
-            if(EO.dshape(2)[0] == 0)
-               return 0.0;
 
             return (*(EO.find(shape(0,0,0))->second))(0,0,0);
 
@@ -1007,6 +995,10 @@ namespace mps {
 
                I.clear();
 
+               //bad style: if no blocks remain, return zero
+               if(E.begin() == E.end())
+                  return 0.0;
+
             }
 
          }
@@ -1032,16 +1024,13 @@ namespace mps {
 
                I.clear();
 
+               //bad style: if no blocks remain, return zero
+               if(E.begin() == E.end())
+                  return 0.0;
+
             }
 
          }
-
-         //if no blocks remain, return zero
-         if(E.dshape(0)[0] == 0)
-            return 0.0;
-
-         if(E.dshape(1)[0] == 0)
-            return 0.0;
 
          return (*(E.find(shape(0,0))->second))(0,0);
 
