@@ -18,7 +18,7 @@ namespace btas {
 
 template<size_t N, class Q = Quantum>
 void QSDpermute
-(const QSDArray<N>& x, const IVector<N>& pindex, QSDArray<N>& y)
+(const QSDArray<N, Q>& x, const IVector<N>& pindex, QSDArray<N, Q>& y)
 {
   std::set<int> iset(pindex.begin(), pindex.end());
   if(  iset.size()    != N ) BTAS_THROW(false, "btas::QSDpermute: found duplicate index");
@@ -37,8 +37,8 @@ void QSDpermute
 
 template<size_t N, class Q = Quantum>
 void QSDindexed_permute
-(const QSDArray<N>& x, const IVector<N>& x_symbols,
-       QSDArray<N>& y, const IVector<N>& y_symbols)
+(const QSDArray<N, Q>& x, const IVector<N>& x_symbols,
+       QSDArray<N, Q>& y, const IVector<N>& y_symbols)
 {
   if(x_symbols == y_symbols) {
     QSDcopy(x, y);

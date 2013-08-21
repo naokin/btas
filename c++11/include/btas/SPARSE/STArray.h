@@ -261,8 +261,11 @@ public:
     m_store.clear();
   }
 
-  //! Erase blocks within certain index
-  /*! Both rank and its index have to be specified */
+  //! Erase blocks of which have certain index
+  /*!
+   *  \param _rank  rank in which index is associated
+   *  \param _index index to be removed
+   */
   virtual void erase(int _rank, int _index) {
     assert(_index >= 0 && _index < m_shape[_rank]);
     IVector<N> _shape = m_shape; --_shape[_rank];
@@ -276,6 +279,34 @@ public:
     }
     *this = std::move(_ref);
   }
+
+////! Erase blocks of which have certain set of indices
+///*!
+// *  \param _rank  rank in which index is associated
+// *  \param _indxs indices to be removed
+// */
+//virtual void erase(int _rank, const std::vector<int>& _indxs) {
+//  std::set<int> _indx_set(_indxs.begin(), _indxs.end());
+//  assert(_indx_set.size() <= m_shape[_rank]);
+//  assert(*_indx_set.begin() >= 0 && *_indx_set.rbegin() < m_shape[_rank]);
+//  std::map<int, int> _indx_map;
+//  int nnz = 0;
+//  for(size_t i = 0; i < m_shape[_rank]; ++i) {
+//    if(_indx_set.find(i) == _indx_set.end())
+//      _indx_map.insert(std::make_pair(i, nnz++));
+//  }
+//  IVector<N> _shape = m_shape; _shape[_rank] = nnz;
+//  STArray _ref(_shape);
+//  iterator ipos = _ref.m_store.begin();
+//  for(iterator it = m_store.begin(); it != m_store.end(); ++it) {
+//    IVector<N> block_index = indxs(it->first);
+//    auto imap = _indx_map.find(block_index[_rank]);
+//    if(imap == _indx_map.end()) continue;
+//    block_index[_rank] = imap->second;
+//    ipos = _ref.m_store.insert(ipos, std::make_pair(_ref.tag(block_index), it->second));
+//  }
+//  *this = std::move(_ref);
+//}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Index <--> Tag conversion
@@ -407,11 +438,13 @@ public:
         it = m_store.insert(it, std::make_pair(block_tag, shared_ptr<TArray<T, N>>(new TArray<T, N>())));
     }
     else {
-      if(it != end())
+      if(it != end()) {
         BTAS_THROW(false, "btas::STArray::reserve: non-zero block already exists despite it must be zero");
+      }
 #ifdef _PRINT_WARNINGS
-      else
+      else {
         BTAS_DEBUG("WARNING: btas::STArray::reserve: requested block must be zero, returns end()");
+      }
 #endif
     }
     return it;
@@ -427,11 +460,13 @@ public:
         it = m_store.insert(it, std::make_pair(block_tag, shared_ptr<TArray<T, N>>(new TArray<T, N>())));
     }
     else {
-      if(it != end())
+      if(it != end()) {
         BTAS_THROW(false, "btas::STArray::reserve; non-zero block already exists despite it must be zero");
+      }
 #ifdef _PRINT_WARNINGS
-      else
+      else {
         BTAS_DEBUG("WARNING: btas::STArray::reserve: requested block must be zero, returns end()");
+      }
 #endif
     }
     return it;

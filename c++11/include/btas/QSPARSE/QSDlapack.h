@@ -104,7 +104,7 @@ double QSDgesvd
   // Merge array A into matrix form
   QSTmergeInfo<NL, Q> a_qinfo_left (a_qshape_left,  a_dshape_left );
   QSTmergeInfo<NR, Q> a_qinfo_right(a_qshape_right, a_dshape_right);
-  QSDArray<2>  a_merge;
+  QSDArray<2, Q>  a_merge;
   QSDmerge(a_qinfo_left, a, a_qinfo_right, a_merge);
   // Determine arrow direction
   Qshapes<Q> q_rows(a_qinfo_left.qshape_merged());
@@ -188,14 +188,14 @@ double QSDgesvd
   s_value.clear();
   // Copy selected left-singular vectors
 //TVector<Qshapes<Q>, 2> u_q_mshape_nz = { q_rows,-q_sval_nz };
-//QSDArray<2> u_merge_nz(u_merge.q(), u_q_mshape_nz);
-  QSDArray<2> u_merge_nz(u_merge.q(), make_array( q_rows,-q_sval_nz));
-  for(typename QSDArray<2>::iterator it = u_merge.begin(); it != u_merge.end(); ++it) {
+//QSDArray<2, Q> u_merge_nz(u_merge.q(), u_q_mshape_nz);
+  QSDArray<2, Q> u_merge_nz(u_merge.q(), make_array( q_rows,-q_sval_nz));
+  for(typename QSDArray<2, Q>::iterator it = u_merge.begin(); it != u_merge.end(); ++it) {
     int irow = it->first / n_sval;
     int icol = it->first % n_sval;
     typename std::map<int, int>::iterator imap = map_sval_nz.find(icol);
     if(imap != map_sval_nz.end()) {
-      typename QSDArray<2>::iterator jt = u_merge_nz.reserve(irow * nnz + imap->second);
+      typename QSDArray<2, Q>::iterator jt = u_merge_nz.reserve(irow * nnz + imap->second);
       assert(jt != u_merge_nz.end()); // if aborted here, there's a bug in btas::QSDgesvd
       int Ds = d_sval_nz[imap->second];
       int Dr = it->second->shape(0);
@@ -207,14 +207,14 @@ double QSDgesvd
   u_merge.clear();
   // Copy selected right-singular vectors
 //TVector<Qshapes<Q>, 2> vt_q_mshape_nz = { q_sval_nz, q_cols };
-//QSDArray<2> vt_merge_nz(vt_merge.q(), vt_q_mshape_nz);
-  QSDArray<2> vt_merge_nz(vt_merge.q(), make_array( q_sval_nz, q_cols));
-  for(typename QSDArray<2>::iterator it = vt_merge.begin(); it != vt_merge.end(); ++it) {
+//QSDArray<2, Q> vt_merge_nz(vt_merge.q(), vt_q_mshape_nz);
+  QSDArray<2, Q> vt_merge_nz(vt_merge.q(), make_array( q_sval_nz, q_cols));
+  for(typename QSDArray<2, Q>::iterator it = vt_merge.begin(); it != vt_merge.end(); ++it) {
     int irow = it->first / n_cols;
     int icol = it->first % n_cols;
     typename std::map<int, int>::iterator imap = map_sval_nz.find(irow);
     if(imap != map_sval_nz.end()) {
-      typename QSDArray<2>::iterator jt = vt_merge_nz.reserve(imap->second * n_cols + icol);
+      typename QSDArray<2, Q>::iterator jt = vt_merge_nz.reserve(imap->second * n_cols + icol);
       assert(jt != vt_merge_nz.end()); // if aborted here, there's a bug in btas::QSDgesvd
       int Ds = d_sval_nz[imap->second];
       int Dc = it->second->shape(1);
@@ -266,7 +266,7 @@ double QSDgesvd
   // Merge array A into matrix form
   QSTmergeInfo<NL, Q> a_qinfo_left (a_qshape_left,  a_dshape_left );
   QSTmergeInfo<NR, Q> a_qinfo_right(a_qshape_right, a_dshape_right);
-  QSDArray<2>  a_merge;
+  QSDArray<2, Q>  a_merge;
   QSDmerge(a_qinfo_left, a, a_qinfo_right, a_merge);
   // Determine arrow direction
   Qshapes<Q> q_rows(a_qinfo_left.qshape_merged());
@@ -362,16 +362,16 @@ double QSDgesvd
   }
   s_value.clear();
   // Copying left-singular vectors
-  QSDArray<2> u_merge_nz(u_merge.q(), make_array( q_rows,-q_sval_nz));
-  QSDArray<2> u_merge_rm(u_merge.q(), make_array( q_rows,-q_sval_rm));
-  for(typename QSDArray<2>::iterator it = u_merge.begin(); it != u_merge.end(); ++it) {
+  QSDArray<2, Q> u_merge_nz(u_merge.q(), make_array( q_rows,-q_sval_nz));
+  QSDArray<2, Q> u_merge_rm(u_merge.q(), make_array( q_rows,-q_sval_rm));
+  for(typename QSDArray<2, Q>::iterator it = u_merge.begin(); it != u_merge.end(); ++it) {
     int irow = it->first / n_sval;
     int icol = it->first % n_sval;
     int Ds = 0;
     int Dr = it->second->shape(0);
     typename std::map<int, int>::iterator imap = map_sval_nz.find(icol);
     if(imap != map_sval_nz.end()) {
-      typename QSDArray<2>::iterator jt = u_merge_nz.reserve(irow * nnz + imap->second);
+      typename QSDArray<2, Q>::iterator jt = u_merge_nz.reserve(irow * nnz + imap->second);
       assert(jt != u_merge_nz.end()); // if aborted here, there's a bug in btas::QSDgesvd
       Ds = d_sval_nz[imap->second];
       jt->second->resize(Dr, Ds);
@@ -379,7 +379,7 @@ double QSDgesvd
     }
     typename std::map<int, int>::iterator jmap = map_sval_rm.find(icol);
     if(jmap != map_sval_rm.end()) {
-      typename QSDArray<2>::iterator jt = u_merge_rm.reserve(irow * nrm + jmap->second);
+      typename QSDArray<2, Q>::iterator jt = u_merge_rm.reserve(irow * nrm + jmap->second);
       assert(jt != u_merge_rm.end()); // if aborted here, there's a bug in btas::QSDgesvd
       int Dx = d_sval_rm[jmap->second];
       jt->second->resize(Dr, Dx);
@@ -388,16 +388,16 @@ double QSDgesvd
   }
   u_merge.clear();
   // Copy selected right-singular vectors
-  QSDArray<2> vt_merge_nz(vt_merge.q(), make_array( q_sval_nz, q_cols));
-  QSDArray<2> vt_merge_rm(vt_merge.q(), make_array( q_sval_rm, q_cols));
-  for(typename QSDArray<2>::iterator it = vt_merge.begin(); it != vt_merge.end(); ++it) {
+  QSDArray<2, Q> vt_merge_nz(vt_merge.q(), make_array( q_sval_nz, q_cols));
+  QSDArray<2, Q> vt_merge_rm(vt_merge.q(), make_array( q_sval_rm, q_cols));
+  for(typename QSDArray<2, Q>::iterator it = vt_merge.begin(); it != vt_merge.end(); ++it) {
     int irow = it->first / n_cols;
     int icol = it->first % n_cols;
     int Ds = 0;
     int Dc = it->second->shape(1);
     typename std::map<int, int>::iterator imap = map_sval_nz.find(irow);
     if(imap != map_sval_nz.end()) {
-      typename QSDArray<2>::iterator jt = vt_merge_nz.reserve(imap->second * n_cols + icol);
+      typename QSDArray<2, Q>::iterator jt = vt_merge_nz.reserve(imap->second * n_cols + icol);
       assert(jt != vt_merge_nz.end()); // if aborted here, there's a bug in btas::QSDgesvd
       Ds = d_sval_nz[imap->second];
       jt->second->resize(Ds, Dc);
@@ -405,7 +405,7 @@ double QSDgesvd
     }
     typename std::map<int, int>::iterator jmap = map_sval_rm.find(irow);
     if(jmap != map_sval_rm.end()) {
-      typename QSDArray<2>::iterator jt = vt_merge_rm.reserve(jmap->second * n_cols + icol);
+      typename QSDArray<2, Q>::iterator jt = vt_merge_rm.reserve(jmap->second * n_cols + icol);
       assert(jt != vt_merge_rm.end()); // if aborted here, there's a bug in btas::QSDgesvd
       int Dx = d_sval_rm[jmap->second];
       jt->second->resize(Dx, Dc);
