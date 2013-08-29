@@ -536,6 +536,14 @@ namespace mps {
 
             for(int i = 0;i < L - 1;++i){
 
+               //redistribute the norm over the chain: for stability reasons
+               double nrm = sqrt(QSDdotc(mpx[i],mpx[i]));
+
+               QSDscal(1.0/nrm,mpx[i]);
+
+               scal(nrm,mpx);
+
+               //then svd
                QSDgesvd(RightArrow,mpx[i],S,U,V,D);
 
                //copy unitary to mpx
@@ -570,6 +578,14 @@ namespace mps {
 
             for(int i = L - 1;i > 0;--i){
 
+               //redistribute the norm over the chain: for stability reasons
+               double nrm = sqrt(QSDdotc(mpx[i],mpx[i]));
+
+               QSDscal(1.0/nrm,mpx[i]);
+
+               scal(nrm,mpx);
+
+               //then SVD: 
                QSDgesvd(RightArrow,mpx[i],S,U,V,D);
 
                //copy unitary to mpx
@@ -588,12 +604,12 @@ namespace mps {
 
             }
 
-            //redistribute the norm over the chain
             double nrm = sqrt(QSDdotc(mpx[0],mpx[0]));
 
             QSDscal(1.0/nrm,mpx[0]);
 
             scal(nrm,mpx);
+
 
          }
 
