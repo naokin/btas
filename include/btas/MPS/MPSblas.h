@@ -1084,6 +1084,47 @@ namespace mps {
 
       }
 
+   /**
+    * @return the MPS that is the result of the expontential of the operator MPO O acting on input MPS A. 
+    * @param cutoff number of terms in the expansion that will be kept.
+    */
+   template<class Q>
+      MPS<Q> exp(const MPO<Q> &O,const MPS<Q> &A,int cutoff){
+
+         std::vector< MPS<Q> > term(cutoff);
+
+         //form the list of contributing terms in the expansion
+         term[0] = gemv(O,A);
+         compress(term[0],mps::Left,0);
+         compress(term[0],mps::Right,0);
+
+         for(int i = 1;i < cutoff;++i){
+
+            term[i] = gemv(O,term[i - 1]);
+            compress(term[i],mps::Left,0);
+            compress(term[i],mps::Right,0);
+            scal(1.0/(i + 1.0),term[i]);
+
+         }
+
+         //now sum all the terms:
+         MPS<Q> tmp = add(A,term[0]);
+         compress(tmp,mps::Left,0);
+         compress(tmp,mps::Right,0);
+
+         for(int i = 1;i < cutoff;++i){
+
+            term[0] = add(tmp,term[i]);
+            compress(term[0],mps::Left,0);
+            compress(term[0],mps::Right,0);
+            tmp = term[0];
+
+         }
+
+         return tmp;
+
+      }
+
 }
 
 #endif 
