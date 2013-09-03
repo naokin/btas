@@ -7,6 +7,16 @@
 
 namespace btas {
 
+//! To check dense block shapes
+inline bool _dsum_check_dshape(const Dshapes& x, const Dshapes& y)
+{
+  size_t n = x.size();
+  bool pass = (n == y.size());
+  for(size_t i = 0; i < n && pass; ++i)
+    if(x[i] > 0 && y[i] > 0) pass &= (x[i] == y[i]);
+  return pass;
+}
+
 //! Direct sum of arrays X and Y, adding to Z
 /*! E.g.) Z = X (+) Y : N = 2
  *  | x x |                 | x x 0 0 0 |
@@ -18,11 +28,13 @@ void STdsum(const STArray<T, N>& x, const STArray<T, N>& y, STArray<T, N>& z)
 {
   const IVector<N>& x_shape = x.shape();
   TVector<Dshapes, N> z_dn_shape = x.dshape();
-  for(int i = 0; i < N; ++i) z_dn_shape[i].insert(z_dn_shape[i].end(), y.dshape(i).begin(), y.dshape(i).end());
+  for(size_t i = 0; i < N; ++i) z_dn_shape[i].insert(z_dn_shape[i].end(), y.dshape(i).begin(), y.dshape(i).end());
   // Check sparse shape of z
   if(z.size() > 0) {
-    if(z.dshape() != z_dn_shape)
-      BTAS_THROW(false, "btas::STdsum: array shape of z mismatched");
+//  if(z.dshape() != z_dn_shape)
+    for(size_t k = 0; k < N; ++k)
+      if(!_dsum_check_dshape(z.dshape(k), z_dn_shape[k]))
+        BTAS_THROW(false, "btas::STdsum: array shape of z mismatched");
   }
   else {
     z.resize(z_dn_shape, false);
@@ -55,7 +67,8 @@ void STdsum(const STArray<T, N>& x, const STArray<T, N>& y, const IVector<K>& tr
   const TVector<Dshapes, N>& y_dn_shape = y.dshape();
   for(int k = 0; k < K; ++k) {
     int tk = trace_index[k];
-    if(x_dn_shape[tk] != y_dn_shape[tk])
+//  if(x_dn_shape[tk] != y_dn_shape[tk])
+    if(!_dsum_check_dshape(x_dn_shape[tk], y_dn_shape[tk]))
       BTAS_THROW(false, "btas::STdsum: found mismatched shape to be traced");
   }
   IVector<N-K> dsum_index; // Complement of trace_index
@@ -67,8 +80,10 @@ void STdsum(const STArray<T, N>& x, const STArray<T, N>& y, const IVector<K>& tr
   for(int i = 0; i < N-K; ++i) z_dn_shape[dsum_index[i]].insert(z_dn_shape[dsum_index[i]].end(), y_dn_shape[dsum_index[i]].begin(), y_dn_shape[dsum_index[i]].end());
   // Check sparse shape of z
   if(z.size() > 0) {
-    if(z.dshape() != z_dn_shape)
-      BTAS_THROW(false, "btas::STdsum: array shape of z mismatched");
+//  if(z.dshape() != z_dn_shape)
+    for(size_t k = 0; k < N; ++k)
+      if(!_dsum_check_dshape(z.dshape(k), z_dn_shape[k]))
+        BTAS_THROW(false, "btas::STdsum: array shape of z mismatched");
   }
   else {
     z.resize(z_dn_shape, false);
