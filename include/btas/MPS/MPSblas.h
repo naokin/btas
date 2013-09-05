@@ -1125,6 +1125,48 @@ namespace mps {
 
       }
 
+   /**
+    * save the MPX object to a file in binary format.
+    */
+   template<size_t N,class Q>
+      void save(const MPX<N,Q> &mpx,const char *filename){
+
+         for(int i = 0;i < mpx.size();++i){
+
+            char name[50];
+
+            sprintf(name,"%s/%d.mpx",filename,i);
+
+            std::ofstream fout(name);
+            boost::archive::binary_oarchive oar(fout);
+
+            oar << mpx[i];
+
+         }
+
+      }
+
+   /**
+    * load the MPX object from a file in binary format.
+    */
+   template<size_t N,class Q>
+      void load(MPX<N,Q> &mpx,const char *filename){
+
+         for(int i = 0;i < mpx.size();++i){
+
+            char name[50];
+
+            sprintf(name,"%s/%d.mpx",filename,i);
+
+            std::ifstream fin(name);
+            boost::archive::binary_iarchive iar(fin);
+            iar >> mpx[i];
+
+         }
+
+      }
+
+
 }
 
 #endif 
