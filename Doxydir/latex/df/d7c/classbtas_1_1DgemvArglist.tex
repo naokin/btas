@@ -1,0 +1,257 @@
+\section{btas\-:\-:Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$ Class Template Reference}
+\label{df/d7c/classbtas_1_1DgemvArglist}\index{btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$@{btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$}}
+
+
+{\ttfamily \#include $<$Darglist.\-h$>$}
+
+Inheritance diagram for btas\-:\-:Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{df/d7c/classbtas_1_1DgemvArglist}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\bf Dgemv\-Arglist} ()
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+{\bf Dgemv\-Arglist} (const shared\-\_\-ptr$<$ {\bf D\-Array}$<$ N\-C $>$$>$ \&c\-\_\-ptr, const {\bf B\-T\-A\-S\-\_\-\-T\-R\-A\-N\-S\-P\-O\-S\-E} \&transa={\bf No\-Trans}, const double \&alpha=1.\-0, const double \&beta=1.\-0)
+\begin{DoxyCompactList}\small\item\em Initializer. \end{DoxyCompactList}\item 
+void {\bf reset} (const shared\-\_\-ptr$<$ {\bf D\-Array}$<$ N\-C $>$$>$ \&c\-\_\-ptr, const {\bf B\-T\-A\-S\-\_\-\-T\-R\-A\-N\-S\-P\-O\-S\-E} \&transa={\bf No\-Trans}, const double \&alpha=1.\-0, const double \&beta=1.\-0)
+\begin{DoxyCompactList}\small\item\em Reset arglist. \end{DoxyCompactList}\item 
+void {\bf clear} ()
+\begin{DoxyCompactList}\small\item\em Clear argments. \end{DoxyCompactList}\item 
+void {\bf add} (const shared\-\_\-ptr$<$ {\bf D\-Array}$<$ N\-A $>$$>$ \&a\-\_\-ptr, const shared\-\_\-ptr$<$ {\bf D\-Array}$<$ N\-B $>$$>$ \&b\-\_\-ptr, double scale=1.\-0)
+\begin{DoxyCompactList}\small\item\em Add arglist. \end{DoxyCompactList}\item 
+void {\bf call} () const 
+\begin{DoxyCompactList}\small\item\em Call Dgemv. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+size\-\_\-t {\bf mf\-\_\-flops\-\_\-count} (const shared\-\_\-ptr$<$ {\bf D\-Array}$<$ N\-A $>$$>$ \&a\-\_\-ptr, const shared\-\_\-ptr$<$ {\bf D\-Array}$<$ N\-B $>$$>$ \&b\-\_\-ptr)
+\begin{DoxyCompactList}\small\item\em return F\-L\-O\-P\-S count \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\-::vector$<$ double $>$ {\bf m\-\_\-scale}
+\begin{DoxyCompactList}\small\item\em this contains index-\/dependent scaling s.\-t. parity, Clebsch-\/\-Gordan coeff., etc. \end{DoxyCompactList}\item 
+{\bf B\-T\-A\-S\-\_\-\-T\-R\-A\-N\-S\-P\-O\-S\-E} {\bf m\-\_\-transa}
+\item 
+double {\bf m\-\_\-alpha}
+\item 
+double {\bf m\-\_\-beta}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$class btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$}
+
+
+
+Definition at line 118 of file Darglist.\-h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{btas\-::\-Dgemv\-Arglist@{btas\-::\-Dgemv\-Arglist}!Dgemv\-Arglist@{Dgemv\-Arglist}}
+\index{Dgemv\-Arglist@{Dgemv\-Arglist}!btas::DgemvArglist@{btas\-::\-Dgemv\-Arglist}}
+\subsubsection[{Dgemv\-Arglist}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ {\bf btas\-::\-Dgemv\-Arglist}$<$ N\-A, N\-B, N\-C $>$\-::{\bf Dgemv\-Arglist} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{df/d7c/classbtas_1_1DgemvArglist_a746e07e932c54c32cdcd6d8aa78b8e3a}
+
+
+Default constructor. 
+
+
+
+Definition at line 135 of file Darglist.\-h.
+
+\index{btas\-::\-Dgemv\-Arglist@{btas\-::\-Dgemv\-Arglist}!Dgemv\-Arglist@{Dgemv\-Arglist}}
+\index{Dgemv\-Arglist@{Dgemv\-Arglist}!btas::DgemvArglist@{btas\-::\-Dgemv\-Arglist}}
+\subsubsection[{Dgemv\-Arglist}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ {\bf btas\-::\-Dgemv\-Arglist}$<$ N\-A, N\-B, N\-C $>$\-::{\bf Dgemv\-Arglist} (
+\begin{DoxyParamCaption}
+\item[{const shared\-\_\-ptr$<$ {\bf D\-Array}$<$ N\-C $>$$>$ \&}]{c\-\_\-ptr, }
+\item[{const {\bf B\-T\-A\-S\-\_\-\-T\-R\-A\-N\-S\-P\-O\-S\-E} \&}]{transa = {\ttfamily {\bf No\-Trans}}, }
+\item[{const double \&}]{alpha = {\ttfamily 1.0}, }
+\item[{const double \&}]{beta = {\ttfamily 1.0}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{df/d7c/classbtas_1_1DgemvArglist_a098247ab2c2d55618cb09b7b01ed98db}
+
+
+Initializer. 
+
+
+
+Definition at line 138 of file Darglist.\-h.
+
+
+
+\subsection{Member Function Documentation}
+\index{btas\-::\-Dgemv\-Arglist@{btas\-::\-Dgemv\-Arglist}!add@{add}}
+\index{add@{add}!btas::DgemvArglist@{btas\-::\-Dgemv\-Arglist}}
+\subsubsection[{add}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ void {\bf btas\-::\-Dgemv\-Arglist}$<$ N\-A, N\-B, N\-C $>$\-::add (
+\begin{DoxyParamCaption}
+\item[{const shared\-\_\-ptr$<$ {\bf D\-Array}$<$ N\-A $>$$>$ \&}]{a\-\_\-ptr, }
+\item[{const shared\-\_\-ptr$<$ {\bf D\-Array}$<$ N\-B $>$$>$ \&}]{b\-\_\-ptr, }
+\item[{double}]{scale = {\ttfamily 1.0}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{df/d7c/classbtas_1_1DgemvArglist_a87fed56f5fba8c029e69a9e8c209ffb7}
+
+
+Add arglist. 
+
+
+
+Definition at line 165 of file Darglist.\-h.
+
+
+
+References btas\-::\-C\-\_\-arglist\-\_\-triple$<$ T, N1, N2, N3 $>$\-::add(), and btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::m\-\_\-scale.
+
+
+
+Referenced by btas\-::thread\-\_\-\-S\-Dgemv().
+
+\index{btas\-::\-Dgemv\-Arglist@{btas\-::\-Dgemv\-Arglist}!call@{call}}
+\index{call@{call}!btas::DgemvArglist@{btas\-::\-Dgemv\-Arglist}}
+\subsubsection[{call}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ void {\bf btas\-::\-Dgemv\-Arglist}$<$ N\-A, N\-B, N\-C $>$\-::call (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{df/d7c/classbtas_1_1DgemvArglist_aec28f781b0e5f289b99c5832d627c817}
+
+
+Call Dgemv. 
+
+
+
+Definition at line 171 of file Darglist.\-h.
+
+
+
+References btas\-::\-Dgemv(), btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::m\-\_\-alpha, btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::m\-\_\-beta, btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::m\-\_\-scale, btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::m\-\_\-transa, and btas\-::\-C\-\_\-arglist\-\_\-triple$<$ double, N\-A, N\-B, N\-C $>$\-::size().
+
+\index{btas\-::\-Dgemv\-Arglist@{btas\-::\-Dgemv\-Arglist}!clear@{clear}}
+\index{clear@{clear}!btas::DgemvArglist@{btas\-::\-Dgemv\-Arglist}}
+\subsubsection[{clear}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ void {\bf btas\-::\-Dgemv\-Arglist}$<$ N\-A, N\-B, N\-C $>$\-::clear (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{df/d7c/classbtas_1_1DgemvArglist_a48b444eefcb720024388a39ce05a7b3a}
+
+
+Clear argments. 
+
+
+
+Reimplemented from {\bf btas\-::\-C\-\_\-arglist\-\_\-triple$<$ double, N\-A, N\-B, N\-C $>$} \doxyref{}{p.}{d5/d67/classbtas_1_1C__arglist__triple_a2df507deb003fe1a16a692dd76a408c5}.
+
+
+
+Definition at line 156 of file Darglist.\-h.
+
+
+
+References btas\-::\-C\-\_\-arglist\-\_\-triple$<$ T, N1, N2, N3 $>$\-::clear(), btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::m\-\_\-alpha, btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::m\-\_\-beta, btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::m\-\_\-scale, btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::m\-\_\-transa, and btas\-::\-No\-Trans.
+
+\index{btas\-::\-Dgemv\-Arglist@{btas\-::\-Dgemv\-Arglist}!mf\-\_\-flops\-\_\-count@{mf\-\_\-flops\-\_\-count}}
+\index{mf\-\_\-flops\-\_\-count@{mf\-\_\-flops\-\_\-count}!btas::DgemvArglist@{btas\-::\-Dgemv\-Arglist}}
+\subsubsection[{mf\-\_\-flops\-\_\-count}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ size\-\_\-t {\bf btas\-::\-Dgemv\-Arglist}$<$ N\-A, N\-B, N\-C $>$\-::mf\-\_\-flops\-\_\-count (
+\begin{DoxyParamCaption}
+\item[{const shared\-\_\-ptr$<$ {\bf D\-Array}$<$ N\-A $>$$>$ \&}]{a\-\_\-ptr, }
+\item[{const shared\-\_\-ptr$<$ {\bf D\-Array}$<$ N\-B $>$$>$ \&}]{b\-\_\-ptr}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}\label{df/d7c/classbtas_1_1DgemvArglist_af1de71ea2e50335062b108b2d3d2bcea}
+
+
+return F\-L\-O\-P\-S count 
+
+
+
+Definition at line 131 of file Darglist.\-h.
+
+\index{btas\-::\-Dgemv\-Arglist@{btas\-::\-Dgemv\-Arglist}!reset@{reset}}
+\index{reset@{reset}!btas::DgemvArglist@{btas\-::\-Dgemv\-Arglist}}
+\subsubsection[{reset}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ void {\bf btas\-::\-Dgemv\-Arglist}$<$ N\-A, N\-B, N\-C $>$\-::reset (
+\begin{DoxyParamCaption}
+\item[{const shared\-\_\-ptr$<$ {\bf D\-Array}$<$ N\-C $>$$>$ \&}]{c\-\_\-ptr, }
+\item[{const {\bf B\-T\-A\-S\-\_\-\-T\-R\-A\-N\-S\-P\-O\-S\-E} \&}]{transa = {\ttfamily {\bf No\-Trans}}, }
+\item[{const double \&}]{alpha = {\ttfamily 1.0}, }
+\item[{const double \&}]{beta = {\ttfamily 1.0}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{df/d7c/classbtas_1_1DgemvArglist_a465ee75bd9018a8e22faab003b7396bd}
+
+
+Reset arglist. 
+
+
+
+Definition at line 146 of file Darglist.\-h.
+
+
+
+References btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::m\-\_\-alpha, btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::m\-\_\-beta, btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::m\-\_\-transa, and btas\-::\-C\-\_\-arglist\-\_\-triple$<$ T, N1, N2, N3 $>$\-::reset().
+
+
+
+Referenced by btas\-::thread\-\_\-\-S\-Dgemv().
+
+
+
+\subsection{Field Documentation}
+\index{btas\-::\-Dgemv\-Arglist@{btas\-::\-Dgemv\-Arglist}!m\-\_\-alpha@{m\-\_\-alpha}}
+\index{m\-\_\-alpha@{m\-\_\-alpha}!btas::DgemvArglist@{btas\-::\-Dgemv\-Arglist}}
+\subsubsection[{m\-\_\-alpha}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ double {\bf btas\-::\-Dgemv\-Arglist}$<$ N\-A, N\-B, N\-C $>$\-::m\-\_\-alpha\hspace{0.3cm}{\ttfamily [private]}}\label{df/d7c/classbtas_1_1DgemvArglist_a22f23d1edcc10908e13a8880779a467b}
+
+
+Definition at line 126 of file Darglist.\-h.
+
+
+
+Referenced by btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::call(), btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::clear(), and btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::reset().
+
+\index{btas\-::\-Dgemv\-Arglist@{btas\-::\-Dgemv\-Arglist}!m\-\_\-beta@{m\-\_\-beta}}
+\index{m\-\_\-beta@{m\-\_\-beta}!btas::DgemvArglist@{btas\-::\-Dgemv\-Arglist}}
+\subsubsection[{m\-\_\-beta}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ double {\bf btas\-::\-Dgemv\-Arglist}$<$ N\-A, N\-B, N\-C $>$\-::m\-\_\-beta\hspace{0.3cm}{\ttfamily [private]}}\label{df/d7c/classbtas_1_1DgemvArglist_a557620a84dc653458444f3d21275c5da}
+
+
+Definition at line 128 of file Darglist.\-h.
+
+
+
+Referenced by btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::call(), btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::clear(), and btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::reset().
+
+\index{btas\-::\-Dgemv\-Arglist@{btas\-::\-Dgemv\-Arglist}!m\-\_\-scale@{m\-\_\-scale}}
+\index{m\-\_\-scale@{m\-\_\-scale}!btas::DgemvArglist@{btas\-::\-Dgemv\-Arglist}}
+\subsubsection[{m\-\_\-scale}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ std\-::vector$<$double$>$ {\bf btas\-::\-Dgemv\-Arglist}$<$ N\-A, N\-B, N\-C $>$\-::m\-\_\-scale\hspace{0.3cm}{\ttfamily [private]}}\label{df/d7c/classbtas_1_1DgemvArglist_a45742fa341757c722f4bb0db557ff201}
+
+
+this contains index-\/dependent scaling s.\-t. parity, Clebsch-\/\-Gordan coeff., etc. 
+
+
+
+Definition at line 122 of file Darglist.\-h.
+
+
+
+Referenced by btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::add(), btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::call(), and btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::clear().
+
+\index{btas\-::\-Dgemv\-Arglist@{btas\-::\-Dgemv\-Arglist}!m\-\_\-transa@{m\-\_\-transa}}
+\index{m\-\_\-transa@{m\-\_\-transa}!btas::DgemvArglist@{btas\-::\-Dgemv\-Arglist}}
+\subsubsection[{m\-\_\-transa}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ {\bf B\-T\-A\-S\-\_\-\-T\-R\-A\-N\-S\-P\-O\-S\-E} {\bf btas\-::\-Dgemv\-Arglist}$<$ N\-A, N\-B, N\-C $>$\-::m\-\_\-transa\hspace{0.3cm}{\ttfamily [private]}}\label{df/d7c/classbtas_1_1DgemvArglist_a31778123e489903a2482fc0a939c3e4d}
+
+
+Definition at line 124 of file Darglist.\-h.
+
+
+
+Referenced by btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::call(), btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::clear(), and btas\-::\-Dgemv\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::reset().
+
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+include/btas/\-D\-E\-N\-S\-E/{\bf Darglist.\-h}\end{DoxyCompactItemize}

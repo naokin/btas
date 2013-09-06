@@ -1,0 +1,36 @@
+\section{include/btas/\-Q\-S\-P\-A\-R\-S\-E/\-Q\-S\-Dmerge.h File Reference}
+\label{d3/dcb/QSDmerge_8h}\index{include/btas/\-Q\-S\-P\-A\-R\-S\-E/\-Q\-S\-Dmerge.\-h@{include/btas/\-Q\-S\-P\-A\-R\-S\-E/\-Q\-S\-Dmerge.\-h}}
+
+
+Aliases of Q\-S\-Tmerge and Q\-S\-Texpand for double precision real array.  
+
+
+{\ttfamily \#include $<$btas/\-Q\-S\-P\-A\-R\-S\-E/\-Q\-S\-D\-Array.\-h$>$}\\*
+{\ttfamily \#include $<$btas/\-Q\-S\-P\-A\-R\-S\-E/\-Q\-S\-Tmerge.\-h$>$}\\*
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace {\bf btas}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$size\-\_\-t M\-R, size\-\_\-t N, class Q  = Quantum$>$ }\\void {\bf btas\-::\-Q\-S\-Dmerge} (const Q\-S\-Tmerge\-Info$<$ M\-R, Q $>$ \&rows\-\_\-info, const Q\-S\-D\-Array$<$ N, Q $>$ \&a, Q\-S\-D\-Array$<$ 1+N-\/M\-R, Q $>$ \&b)
+\item 
+{\footnotesize template$<$size\-\_\-t N, size\-\_\-t M\-C, class Q  = Quantum$>$ }\\void {\bf btas\-::\-Q\-S\-Dmerge} (const Q\-S\-D\-Array$<$ N, Q $>$ \&a, const Q\-S\-Tmerge\-Info$<$ M\-C, Q $>$ \&cols\-\_\-info, Q\-S\-D\-Array$<$ N-\/M\-C+1, Q $>$ \&b)
+\item 
+{\footnotesize template$<$size\-\_\-t M\-R, size\-\_\-t M\-C, class Q  = Quantum$>$ }\\void {\bf btas\-::\-Q\-S\-Dmerge} (const Q\-S\-Tmerge\-Info$<$ M\-R, Q $>$ \&rows\-\_\-info, const Q\-S\-D\-Array$<$ M\-R+M\-C, Q $>$ \&a, const Q\-S\-Tmerge\-Info$<$ M\-C, Q $>$ \&cols\-\_\-info, Q\-S\-D\-Array$<$ 2, Q $>$ \&b)
+\item 
+{\footnotesize template$<$size\-\_\-t M\-R, size\-\_\-t N, class Q  = Quantum$>$ }\\void {\bf btas\-::\-Q\-S\-Dexpand} (const Q\-S\-Tmerge\-Info$<$ M\-R, Q $>$ \&rows\-\_\-info, const Q\-S\-D\-Array$<$ 1+N-\/M\-R, Q $>$ \&a, Q\-S\-D\-Array$<$ N, Q $>$ \&b)
+\item 
+{\footnotesize template$<$size\-\_\-t N, size\-\_\-t M\-C, class Q  = Quantum$>$ }\\void {\bf btas\-::\-Q\-S\-Dexpand} (const Q\-S\-D\-Array$<$ N-\/M\-C+1, Q $>$ \&a, const Q\-S\-Tmerge\-Info$<$ M\-C, Q $>$ \&cols\-\_\-info, Q\-S\-D\-Array$<$ N, Q $>$ \&b)
+\item 
+{\footnotesize template$<$size\-\_\-t M\-R, size\-\_\-t M\-C, class Q  = Quantum$>$ }\\void {\bf btas\-::\-Q\-S\-Dexpand} (const Q\-S\-Tmerge\-Info$<$ M\-R, Q $>$ \&rows\-\_\-info, const Q\-S\-D\-Array$<$ 2, Q $>$ \&a, const Q\-S\-Tmerge\-Info$<$ M\-C, Q $>$ \&cols\-\_\-info, Q\-S\-D\-Array$<$ M\-R+M\-C, Q $>$ \&b)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Aliases of Q\-S\-Tmerge and Q\-S\-Texpand for double precision real array. 
+
+Definition in file {\bf Q\-S\-Dmerge.\-h}.
+

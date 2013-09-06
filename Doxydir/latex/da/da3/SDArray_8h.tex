@@ -1,0 +1,27 @@
+\section{include/btas/\-S\-P\-A\-R\-S\-E/\-S\-D\-Array.h File Reference}
+\label{da/da3/SDArray_8h}\index{include/btas/\-S\-P\-A\-R\-S\-E/\-S\-D\-Array.\-h@{include/btas/\-S\-P\-A\-R\-S\-E/\-S\-D\-Array.\-h}}
+{\ttfamily \#include $<$btas/btas.\-h$>$}\\*
+{\ttfamily \#include $<$btas/\-T\-Vector.\-h$>$}\\*
+{\ttfamily \#include $<$btas/\-S\-P\-A\-R\-S\-E/\-S\-T\-Array.\-h$>$}\\*
+{\ttfamily \#include $<$btas/\-S\-P\-A\-R\-S\-E/\-S\-Tdsum.\-h$>$}\\*
+{\ttfamily \#include $<$btas/\-S\-P\-A\-R\-S\-E/\-S\-Dblas.\-h$>$}\\*
+{\ttfamily \#include $<$btas/\-S\-P\-A\-R\-S\-E/\-S\-Dpermute.\-h$>$}\\*
+{\ttfamily \#include $<$btas/\-S\-P\-A\-R\-S\-E/\-S\-Dcontract.\-h$>$}\\*
+{\ttfamily \#include $<$btas/\-S\-P\-A\-R\-S\-E/\-S\-Ddiagonal.\-h$>$}\\*
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace {\bf btas}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\using {\bf btas\-::\-S\-D\-Array} = S\-T\-Array$<$ double, N $>$
+\begin{DoxyCompactList}\small\item\em alias to double precision real sparse-\/array \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\void {\bf btas\-::\-S\-Ddsum} (const S\-D\-Array$<$ N $>$ \&x, const S\-D\-Array$<$ N $>$ \&y, S\-D\-Array$<$ N $>$ \&z)
+\item 
+{\footnotesize template$<$size\-\_\-t N, size\-\_\-t K$>$ }\\void {\bf btas\-::\-S\-Ddsum} (const S\-D\-Array$<$ N $>$ \&x, const S\-D\-Array$<$ N $>$ \&y, const I\-Vector$<$ K $>$ \&trace\-\_\-index, S\-D\-Array$<$ N $>$ \&z)
+\end{DoxyCompactItemize}

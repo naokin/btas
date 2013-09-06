@@ -1,0 +1,44 @@
+\section{include/btas/\-D\-E\-N\-S\-E/\-Dlapack.h File Reference}
+\label{d3/da7/Dlapack_8h}\index{include/btas/\-D\-E\-N\-S\-E/\-Dlapack.\-h@{include/btas/\-D\-E\-N\-S\-E/\-Dlapack.\-h}}
+
+
+L\-A\-P\-A\-C\-K wrappers for double precision real array.  
+
+
+{\ttfamily \#include $<$algorithm$>$}\\*
+{\ttfamily \#include $<$numeric$>$}\\*
+{\ttfamily \#include $<$lapack/clapack.\-h$>$}\\*
+{\ttfamily \#include $<$btas/btas.\-h$>$}\\*
+{\ttfamily \#include $<$btas/\-T\-Vector.\-h$>$}\\*
+{\ttfamily \#include $<$btas/\-D\-E\-N\-S\-E/\-D\-Array.\-h$>$}\\*
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace {\bf btas}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$size\-\_\-t M, size\-\_\-t N$>$ }\\void {\bf btas\-::\-Dgetrf} (const D\-Array$<$ M+N-\/2 $>$ \&a, D\-Array$<$ M $>$ \&l, D\-Array$<$ N $>$ \&u, std\-::vector$<$ int $>$ \&ipiv)
+\begin{DoxyCompactList}\small\item\em L\-U decomposition for general array. \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t M, size\-\_\-t N$>$ }\\void {\bf btas\-::\-Dgesv} (const D\-Array$<$ M $>$ \&a, const D\-Array$<$ N $>$ \&b, D\-Array$<$ N $>$ \&x)
+\begin{DoxyCompactList}\small\item\em Solve linear equation A$\ast$x = b. \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\void {\bf btas\-::\-Dsyev} (const D\-Array$<$ 2 $\ast$N-\/2 $>$ \&a, D\-Array$<$ 1 $>$ \&d, D\-Array$<$ N $>$ \&z)
+\begin{DoxyCompactList}\small\item\em Solve eigenvalue problem for real symmetric matrix (S\-E\-P) \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\void {\bf btas\-::\-Dgeev} (const D\-Array$<$ 2 $\ast$N-\/2 $>$ \&a, D\-Array$<$ 1 $>$ \&wr, D\-Array$<$ 1 $>$ \&wi, D\-Array$<$ N $>$ \&vl, D\-Array$<$ N $>$ \&vr)
+\begin{DoxyCompactList}\small\item\em Solve eigenvalue problem for real non-\/symmetric square matrix (N\-S\-G\-E\-P) \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\void {\bf btas\-::\-Dsygv} (const D\-Array$<$ 2 $\ast$N-\/2 $>$ \&a, const D\-Array$<$ 2 $\ast$N-\/2 $>$ \&b, D\-Array$<$ 1 $>$ \&d, D\-Array$<$ N $>$ \&z)
+\begin{DoxyCompactList}\small\item\em Solve generalized eigenvalue problem for real symmetric matrix. \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\void {\bf btas\-::\-Dggev} (const D\-Array$<$ 2 $\ast$N-\/2 $>$ \&a, const D\-Array$<$ 2 $\ast$N-\/2 $>$ \&b, D\-Array$<$ 1 $>$ \&alphar, D\-Array$<$ 1 $>$ \&alphai, D\-Array$<$ 1 $>$ \&beta, D\-Array$<$ N $>$ \&vl, D\-Array$<$ N $>$ \&vr)
+\begin{DoxyCompactList}\small\item\em Solve generalized eigenvalue problem for non-\/symmetric real matrix pair. \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-U$>$ }\\void {\bf btas\-::\-Dgesvd} (const D\-Array$<$ N\-A $>$ \&a, D\-Array$<$ 1 $>$ \&s, D\-Array$<$ N\-U $>$ \&u, D\-Array$<$ N\-A-\/N\-U+2 $>$ \&vt, bool calc\-\_\-full\-\_\-u=false, bool calc\-\_\-full\-\_\-vt=false)
+\begin{DoxyCompactList}\small\item\em Solve singular value decomposition. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+L\-A\-P\-A\-C\-K wrappers for double precision real array. Implemented in terms of Row-\/\-Major array as C/\-C++ style Since they contain transposition of array before and after calling L\-A\-P\-A\-C\-K subroutines, performance is not good as F\-O\-R\-T\-R\-A\-N
+
+Or, if you work with Col-\/\-Major array, use clapack\-\_\-xxx subroutines directly (see \doxyref{lapack/clapack.\-h}{p.}{d6/d79/clapack_8h}) 
+
+Definition in file {\bf Dlapack.\-h}.
+

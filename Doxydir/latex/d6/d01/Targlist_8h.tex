@@ -1,0 +1,32 @@
+\section{include/btas/\-Targlist.h File Reference}
+\label{d6/d01/Targlist_8h}\index{include/btas/\-Targlist.\-h@{include/btas/\-Targlist.\-h}}
+{\ttfamily \#include $<$vector$>$}\\*
+{\ttfamily \#include $<$algorithm$>$}\\*
+{\ttfamily \#include $<$functional$>$}\\*
+{\ttfamily \#include $<$btas/btas.\-h$>$}\\*
+{\ttfamily \#include $<$btas/\-D\-E\-N\-S\-E/\-T\-Array.\-h$>$}\\*
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+class {\bf btas\-::\-T\-\_\-arglist\-\_\-base}
+\begin{DoxyCompactList}\small\item\em Base class of argment list. \end{DoxyCompactList}\item 
+class {\bf btas\-::\-R\-\_\-arglist\-\_\-single$<$ T, N1 $>$}
+\begin{DoxyCompactList}\small\item\em Replication argment list for single argment function. \end{DoxyCompactList}\item 
+class {\bf btas\-::\-R\-\_\-arglist\-\_\-double$<$ T, N1, N2 $>$}
+\begin{DoxyCompactList}\small\item\em Replication argment list for double argments function. \end{DoxyCompactList}\item 
+class {\bf btas\-::\-R\-\_\-arglist\-\_\-triple$<$ T, N1, N2, N3 $>$}
+\begin{DoxyCompactList}\small\item\em Replication argment list for triple argments function. \end{DoxyCompactList}\item 
+class {\bf btas\-::\-R\-\_\-arglist\-\_\-quadra$<$ T, N1, N2, N3, N4 $>$}
+\begin{DoxyCompactList}\small\item\em Replication argment list for quadruple argments function. \end{DoxyCompactList}\item 
+class {\bf btas\-::\-C\-\_\-arglist\-\_\-triple$<$ T, N1, N2, N3 $>$}
+\begin{DoxyCompactList}\small\item\em Argment list for contraction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace {\bf btas}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$class Arglist $>$ }\\void {\bf btas\-::parallel\-\_\-call} (std\-::vector$<$ Arglist $>$ \&task\-\_\-list)
+\end{DoxyCompactItemize}

@@ -1,0 +1,91 @@
+\section{include/btas/\-S\-P\-A\-R\-S\-E/\-S\-Dblas.h File Reference}
+\label{d6/de7/SDblas_8h}\index{include/btas/\-S\-P\-A\-R\-S\-E/\-S\-Dblas.\-h@{include/btas/\-S\-P\-A\-R\-S\-E/\-S\-Dblas.\-h}}
+{\ttfamily \#include $<$algorithm$>$}\\*
+{\ttfamily \#include $<$functional$>$}\\*
+{\ttfamily \#include $<$cmath$>$}\\*
+{\ttfamily \#include $<$btas/\-D\-E\-N\-S\-E/\-Dblas.\-h$>$}\\*
+{\ttfamily \#include $<$btas/\-D\-E\-N\-S\-E/\-Darglist.\-h$>$}\\*
+{\ttfamily \#include $<$btas/\-S\-P\-A\-R\-S\-E/\-S\-D\-Array.\-h$>$}\\*
+{\ttfamily \#include $<$btas/\-S\-P\-A\-R\-S\-E/btas\-\_\-contract\-\_\-dshape.\-h$>$}\\*
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace {\bf btas}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define {\bf \-\_\-\-S\-E\-R\-I\-A\-L\-\_\-\-R\-E\-P\-L\-I\-C\-A\-T\-I\-O\-N\-\_\-\-L\-I\-M\-I\-T}~1
+\item 
+\#define {\bf \-\_\-\-S\-E\-R\-I\-A\-L\-\_\-\-C\-O\-N\-T\-R\-A\-C\-T\-I\-O\-N\-\_\-\-L\-I\-M\-I\-T}~1
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\void {\bf btas\-::serial\-\_\-\-S\-Dcopy} (const S\-D\-Array$<$ N $>$ \&x, S\-D\-Array$<$ N $>$ \&y, bool \-\_\-up\-\_\-cast=false)
+\begin{DoxyCompactList}\small\item\em Call Dcopy per every non-\/zero block. \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\double {\bf btas\-::serial\-\_\-\-S\-Ddot} (const S\-D\-Array$<$ N $>$ \&x, const S\-D\-Array$<$ N $>$ \&y)
+\begin{DoxyCompactList}\small\item\em Call Ddot per every non-\/zero block. \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\void {\bf btas\-::serial\-\_\-\-S\-Dscal} (const double \&alpha, S\-D\-Array$<$ N $>$ \&x)
+\begin{DoxyCompactList}\small\item\em Call Dscal per every non-\/zero block. \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\void {\bf btas\-::serial\-\_\-\-S\-Daxpy} (const double \&alpha, const S\-D\-Array$<$ N $>$ \&x, S\-D\-Array$<$ N $>$ \&y)
+\begin{DoxyCompactList}\small\item\em Call Daxpy per every non-\/zero block. \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\void {\bf btas\-::thread\-\_\-\-S\-Dcopy} (const S\-D\-Array$<$ N $>$ \&x, S\-D\-Array$<$ N $>$ \&y, bool \-\_\-up\-\_\-cast)
+\begin{DoxyCompactList}\small\item\em Call Dcopy per every non-\/zero block. \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\void {\bf btas\-::thread\-\_\-\-S\-Dscal} (const double \&alpha, S\-D\-Array$<$ N $>$ \&x)
+\begin{DoxyCompactList}\small\item\em Call Dscal per every non-\/zero block. \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\void {\bf btas\-::thread\-\_\-\-S\-Daxpy} (const double \&alpha, const S\-D\-Array$<$ N $>$ \&x, S\-D\-Array$<$ N $>$ \&y)
+\begin{DoxyCompactList}\small\item\em Call Daxpy per every non-\/zero block. \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ }\\void {\bf btas\-::thread\-\_\-\-S\-Dgemv} (const B\-T\-A\-S\-\_\-\-T\-R\-A\-N\-S\-P\-O\-S\-E \&Trans\-A, const double \&alpha, const S\-D\-Array$<$ N\-A $>$ \&a, const S\-D\-Array$<$ N\-B $>$ \&b, S\-D\-Array$<$ N\-C $>$ \&c)
+\begin{DoxyCompactList}\small\item\em Call Dgemv per every non-\/zero block. \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ }\\void {\bf btas\-::thread\-\_\-\-S\-Dger} (const double \&alpha, const S\-D\-Array$<$ N\-A $>$ \&a, const S\-D\-Array$<$ N\-B $>$ \&b, S\-D\-Array$<$ N\-C $>$ \&c)
+\begin{DoxyCompactList}\small\item\em Call Dger per every non-\/zero block. \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ }\\void {\bf btas\-::thread\-\_\-\-S\-Dgemm} (const B\-T\-A\-S\-\_\-\-T\-R\-A\-N\-S\-P\-O\-S\-E \&Trans\-A, const B\-T\-A\-S\-\_\-\-T\-R\-A\-N\-S\-P\-O\-S\-E \&Trans\-B, const double \&alpha, const S\-D\-Array$<$ N\-A $>$ \&a, const S\-D\-Array$<$ N\-B $>$ \&b, S\-D\-Array$<$ N\-C $>$ \&c)
+\begin{DoxyCompactList}\small\item\em Call Dgemm per every non-\/zero block. \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ }\\void {\bf btas\-::thread\-\_\-\-S\-Dgemv} (function$<$ double(const I\-Vector$<$ N\-A $>$ \&, const I\-Vector$<$ N\-B $>$ \&, const I\-Vector$<$ N\-C $>$ \&)$>$ f\-\_\-scale, const B\-T\-A\-S\-\_\-\-T\-R\-A\-N\-S\-P\-O\-S\-E \&Trans\-A, const double \&alpha, const S\-D\-Array$<$ N\-A $>$ \&a, const S\-D\-Array$<$ N\-B $>$ \&b, S\-D\-Array$<$ N\-C $>$ \&c)
+\begin{DoxyCompactList}\small\item\em Call Dgemv per every non-\/zero block. \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ }\\void {\bf btas\-::thread\-\_\-\-S\-Dger} (function$<$ double(const I\-Vector$<$ N\-A $>$ \&, const I\-Vector$<$ N\-B $>$ \&, const I\-Vector$<$ N\-C $>$ \&)$>$ f\-\_\-scale, const double \&alpha, const S\-D\-Array$<$ N\-A $>$ \&a, const S\-D\-Array$<$ N\-B $>$ \&b, S\-D\-Array$<$ N\-C $>$ \&c)
+\begin{DoxyCompactList}\small\item\em Call Dger per every non-\/zero block. \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ }\\void {\bf btas\-::thread\-\_\-\-S\-Dgemm} (function$<$ double(const I\-Vector$<$ N\-A $>$ \&, const I\-Vector$<$ N\-B $>$ \&, const I\-Vector$<$ N\-C $>$ \&)$>$ f\-\_\-scale, const B\-T\-A\-S\-\_\-\-T\-R\-A\-N\-S\-P\-O\-S\-E \&Trans\-A, const B\-T\-A\-S\-\_\-\-T\-R\-A\-N\-S\-P\-O\-S\-E \&Trans\-B, const double \&alpha, const S\-D\-Array$<$ N\-A $>$ \&a, const S\-D\-Array$<$ N\-B $>$ \&b, S\-D\-Array$<$ N\-C $>$ \&c)
+\begin{DoxyCompactList}\small\item\em Call Dgemm per every non-\/zero block. \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\void {\bf btas\-::\-S\-Dcopy} (const S\-D\-Array$<$ N $>$ \&x, S\-D\-Array$<$ N $>$ \&y, bool \-\_\-up\-\_\-cast=false)
+\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\void {\bf btas\-::\-S\-Dscal} (const double \&alpha, S\-D\-Array$<$ N $>$ \&x)
+\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\double {\bf btas\-::\-S\-Ddot} (const S\-D\-Array$<$ N $>$ \&x, const S\-D\-Array$<$ N $>$ \&y)
+\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\void {\bf btas\-::\-S\-Daxpy} (const double \&alpha, const S\-D\-Array$<$ N $>$ \&x, S\-D\-Array$<$ N $>$ \&y)
+\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ }\\void {\bf btas\-::\-S\-Dgemv} (const B\-T\-A\-S\-\_\-\-T\-R\-A\-N\-S\-P\-O\-S\-E \&Trans\-A, const double \&alpha, const S\-D\-Array$<$ N\-A $>$ \&a, const S\-D\-Array$<$ N\-B $>$ \&b, const double \&beta, S\-D\-Array$<$ N\-C $>$ \&c)
+\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ }\\void {\bf btas\-::\-S\-Dger} (const double \&alpha, const S\-D\-Array$<$ N\-A $>$ \&a, const S\-D\-Array$<$ N\-B $>$ \&b, S\-D\-Array$<$ N\-C $>$ \&c)
+\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ }\\void {\bf btas\-::\-S\-Dgemm} (const B\-T\-A\-S\-\_\-\-T\-R\-A\-N\-S\-P\-O\-S\-E \&Trans\-A, const B\-T\-A\-S\-\_\-\-T\-R\-A\-N\-S\-P\-O\-S\-E \&Trans\-B, const double \&alpha, const S\-D\-Array$<$ N\-A $>$ \&a, const S\-D\-Array$<$ N\-B $>$ \&b, const double \&beta, S\-D\-Array$<$ N\-C $>$ \&c)
+\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B$>$ }\\void {\bf btas\-::\-S\-Ddimd} (S\-D\-Array$<$ N\-A $>$ \&a, const S\-D\-Array$<$ N\-B $>$ \&b)
+\begin{DoxyCompactList}\small\item\em Non-\/\-B\-L\-A\-S function\-: (general matrix) $\ast$ (diagonal matrix) \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B$>$ }\\void {\bf btas\-::\-S\-Ddidm} (const S\-D\-Array$<$ N\-A $>$ \&a, S\-D\-Array$<$ N\-B $>$ \&b)
+\begin{DoxyCompactList}\small\item\em Non-\/\-B\-L\-A\-S function\-: (diagonal matrix) $\ast$ (general matrix) \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ }\\void {\bf btas\-::\-S\-Dblas\-Wrapper} (const double \&alpha, const S\-D\-Array$<$ N\-A $>$ \&a, const S\-D\-Array$<$ N\-B $>$ \&b, const double \&beta, S\-D\-Array$<$ N\-C $>$ \&c)
+\begin{DoxyCompactList}\small\item\em Wrapper function for D\-B\-L\-A\-S. \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\void {\bf btas\-::\-S\-Dnormalize} (S\-D\-Array$<$ N $>$ \&x)
+\begin{DoxyCompactList}\small\item\em Normalization. \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\void {\bf btas\-::\-S\-Dorthogonalize} (const S\-D\-Array$<$ N $>$ \&x, S\-D\-Array$<$ N $>$ \&y)
+\begin{DoxyCompactList}\small\item\em Orthogonalization. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{S\-Dblas.\-h@{S\-Dblas.\-h}!\-\_\-\-S\-E\-R\-I\-A\-L\-\_\-\-C\-O\-N\-T\-R\-A\-C\-T\-I\-O\-N\-\_\-\-L\-I\-M\-I\-T@{\-\_\-\-S\-E\-R\-I\-A\-L\-\_\-\-C\-O\-N\-T\-R\-A\-C\-T\-I\-O\-N\-\_\-\-L\-I\-M\-I\-T}}
+\index{\-\_\-\-S\-E\-R\-I\-A\-L\-\_\-\-C\-O\-N\-T\-R\-A\-C\-T\-I\-O\-N\-\_\-\-L\-I\-M\-I\-T@{\-\_\-\-S\-E\-R\-I\-A\-L\-\_\-\-C\-O\-N\-T\-R\-A\-C\-T\-I\-O\-N\-\_\-\-L\-I\-M\-I\-T}!SDblas.h@{S\-Dblas.\-h}}
+\subsubsection[{\-\_\-\-S\-E\-R\-I\-A\-L\-\_\-\-C\-O\-N\-T\-R\-A\-C\-T\-I\-O\-N\-\_\-\-L\-I\-M\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define \-\_\-\-S\-E\-R\-I\-A\-L\-\_\-\-C\-O\-N\-T\-R\-A\-C\-T\-I\-O\-N\-\_\-\-L\-I\-M\-I\-T~1}\label{d6/de7/SDblas_8h_a857974474ee05fe3dc0f227810db7d9e}
+
+
+Definition at line 20 of file S\-Dblas.\-h.
+
+\index{S\-Dblas.\-h@{S\-Dblas.\-h}!\-\_\-\-S\-E\-R\-I\-A\-L\-\_\-\-R\-E\-P\-L\-I\-C\-A\-T\-I\-O\-N\-\_\-\-L\-I\-M\-I\-T@{\-\_\-\-S\-E\-R\-I\-A\-L\-\_\-\-R\-E\-P\-L\-I\-C\-A\-T\-I\-O\-N\-\_\-\-L\-I\-M\-I\-T}}
+\index{\-\_\-\-S\-E\-R\-I\-A\-L\-\_\-\-R\-E\-P\-L\-I\-C\-A\-T\-I\-O\-N\-\_\-\-L\-I\-M\-I\-T@{\-\_\-\-S\-E\-R\-I\-A\-L\-\_\-\-R\-E\-P\-L\-I\-C\-A\-T\-I\-O\-N\-\_\-\-L\-I\-M\-I\-T}!SDblas.h@{S\-Dblas.\-h}}
+\subsubsection[{\-\_\-\-S\-E\-R\-I\-A\-L\-\_\-\-R\-E\-P\-L\-I\-C\-A\-T\-I\-O\-N\-\_\-\-L\-I\-M\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define \-\_\-\-S\-E\-R\-I\-A\-L\-\_\-\-R\-E\-P\-L\-I\-C\-A\-T\-I\-O\-N\-\_\-\-L\-I\-M\-I\-T~1}\label{d6/de7/SDblas_8h_a0847c4a4435337a73adad94f0612aaa6}
+
+
+Definition at line 16 of file S\-Dblas.\-h.
+

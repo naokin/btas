@@ -1,0 +1,65 @@
+\section{include/btas/\-M\-P\-S/\-M\-P\-Sblas.h File Reference}
+\label{de/d28/MPSblas_8h}\index{include/btas/\-M\-P\-S/\-M\-P\-Sblas.\-h@{include/btas/\-M\-P\-S/\-M\-P\-Sblas.\-h}}
+{\ttfamily \#include $<$iostream$>$}\\*
+{\ttfamily \#include $<$iomanip$>$}\\*
+{\ttfamily \#include \char`\"{}btas/\-Q\-S\-P\-A\-R\-S\-E/\-Q\-S\-D\-Array.\-h\char`\"{}}\\*
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace {\bf mps}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$size\-\_\-t N, class Q $>$ }\\using {\bf mps\-::\-M\-P\-X} = std\-::vector$<$ {\bf Q\-S\-D\-Array}$<$ N, Q $>$ $>$
+\begin{DoxyCompactList}\small\item\em typedefine M\-P\-X as a std\-::vector$<$ Q\-S\-D\-Array$<$\-N$>$ $>$ for functions the same for both M\-P\-S and M\-P\-O \end{DoxyCompactList}\item 
+{\footnotesize template$<$class Q $>$ }\\using {\bf mps\-::\-M\-P\-S} = std\-::vector$<$ {\bf Q\-S\-D\-Array}$<$ 3, Q $>$ $>$
+\begin{DoxyCompactList}\small\item\em typedefine M\-P\-S as an std\-::vector$<$ Q\-S\-D\-Array$<$3$>$ $>$ \end{DoxyCompactList}\item 
+{\footnotesize template$<$class Q $>$ }\\using {\bf mps\-::\-M\-P\-O} = std\-::vector$<$ {\bf Q\-S\-D\-Array}$<$ 4, Q $>$ $>$
+\begin{DoxyCompactList}\small\item\em typedefine M\-P\-O as an std\-::vector$<$ Q\-S\-D\-Array$<$4$>$ $>$ \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum {\bf mps\-::\-M\-P\-S\-\_\-\-D\-I\-R\-E\-C\-T\-I\-O\-N} \{ {\bf mps\-::\-Left}, 
+{\bf mps\-::\-Right}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$class Q $>$ }\\void {\bf mps\-::calc\-\_\-qdim} (int L, const Q \&qt, const {\bf Qshapes}$<$ Q $>$ \&qp, std\-::vector$<$ {\bf Qshapes}$<$ Q $>$ $>$ \&qr, std\-::vector$<$ {\bf Dshapes} $>$ \&dr, int D)
+\item 
+{\footnotesize template$<$class Q $>$ }\\M\-P\-S$<$ Q $>$ {\bf mps\-::create} (int L, const Q \&qt, const {\bf Qshapes}$<$ Q $>$ \&qp, int D, const function$<$ double(void)$>$ \&f\-\_\-random\-\_\-generator)
+\item 
+{\footnotesize template$<$class Q $>$ }\\M\-P\-S$<$ Q $>$ {\bf mps\-::create} (int L, const Q \&qt, const {\bf Qshapes}$<$ Q $>$ \&qp, int D, double value=0.\-0)
+\item 
+{\footnotesize template$<$class Q $>$ }\\M\-P\-S$<$ Q $>$ {\bf mps\-::product\-\_\-state} (int L, const {\bf Qshapes}$<$ Q $>$ \&qp, const std\-::vector$<$ int $>$ \&occ)
+\item 
+{\footnotesize template$<$size\-\_\-t N, class Q $>$ }\\void {\bf mps\-::scal} (double alpha, M\-P\-X$<$ N, Q $>$ \&mpx)
+\item 
+{\footnotesize template$<$size\-\_\-t N, class Q $>$ }\\M\-P\-X$<$ N, Q $>$ {\bf mps\-::add} (const M\-P\-X$<$ N, Q $>$ \&A, const M\-P\-X$<$ N, Q $>$ \&B)
+\item 
+{\footnotesize template$<$size\-\_\-t N, class Q $>$ }\\void {\bf mps\-::compress} (M\-P\-X$<$ N, Q $>$ \&mpx, const M\-P\-S\-\_\-\-D\-I\-R\-E\-C\-T\-I\-O\-N \&dir, int D)
+\item 
+{\footnotesize template$<$size\-\_\-t N, class Q $>$ }\\void {\bf mps\-::clean} (M\-P\-X$<$ N, Q $>$ \&mpx)
+\item 
+{\footnotesize template$<$class Q $>$ }\\double {\bf mps\-::inprod} (const M\-P\-S\-\_\-\-D\-I\-R\-E\-C\-T\-I\-O\-N \&dir, const M\-P\-S$<$ Q $>$ \&A, const M\-P\-O$<$ Q $>$ \&O, const M\-P\-S$<$ Q $>$ \&B)
+\item 
+{\footnotesize template$<$class Q $>$ }\\M\-P\-S$<$ Q $>$ {\bf mps\-::gemv} (const M\-P\-O$<$ Q $>$ \&O, const M\-P\-S$<$ Q $>$ \&A)
+\item 
+{\footnotesize template$<$class Q $>$ }\\M\-P\-O$<$ Q $>$ {\bf mps\-::gemm} (const M\-P\-O$<$ Q $>$ \&O1, const M\-P\-O$<$ Q $>$ \&O2)
+\item 
+{\footnotesize template$<$class Q $>$ }\\double {\bf mps\-::dot} (const M\-P\-S\-\_\-\-D\-I\-R\-E\-C\-T\-I\-O\-N \&dir, const M\-P\-S$<$ Q $>$ \&X, const M\-P\-S$<$ Q $>$ \&Y)
+\item 
+{\footnotesize template$<$class Q $>$ }\\double {\bf mps\-::nrm2} (const M\-P\-S$<$ Q $>$ \&mps)
+\item 
+{\footnotesize template$<$class Q $>$ }\\double {\bf mps\-::dist} (const M\-P\-S$<$ Q $>$ \&X, const M\-P\-S$<$ Q $>$ \&Y)
+\item 
+{\footnotesize template$<$class Q $>$ }\\void {\bf mps\-::normalize} (M\-P\-S$<$ Q $>$ \&mps)
+\item 
+{\footnotesize template$<$class Q $>$ }\\M\-P\-S$<$ Q $>$ {\bf mps\-::exp} (const M\-P\-O$<$ Q $>$ \&O, const M\-P\-S$<$ Q $>$ \&A, int cutoff)
+\item 
+{\footnotesize template$<$size\-\_\-t N, class Q $>$ }\\void {\bf mps\-::save} (const M\-P\-X$<$ N, Q $>$ \&mpx, const char $\ast$filename)
+\item 
+{\footnotesize template$<$size\-\_\-t N, class Q $>$ }\\void {\bf mps\-::load} (M\-P\-X$<$ N, Q $>$ \&mpx, const char $\ast$filename)
+\end{DoxyCompactItemize}

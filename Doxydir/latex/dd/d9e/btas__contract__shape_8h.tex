@@ -1,0 +1,39 @@
+\section{include/btas/btas\-\_\-contract\-\_\-shape.h File Reference}
+\label{dd/d9e/btas__contract__shape_8h}\index{include/btas/btas\-\_\-contract\-\_\-shape.\-h@{include/btas/btas\-\_\-contract\-\_\-shape.\-h}}
+{\ttfamily \#include $<$vector$>$}\\*
+{\ttfamily \#include $<$set$>$}\\*
+{\ttfamily \#include $<$map$>$}\\*
+{\ttfamily \#include $<$algorithm$>$}\\*
+{\ttfamily \#include $<$btas/btas.\-h$>$}\\*
+{\ttfamily \#include $<$btas/\-T\-Vector.\-h$>$}\\*
+{\ttfamily \#include $<$btas/blas\-\_\-cxx\-\_\-interface.\-h$>$}\\*
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace {\bf btas}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum {\bf btas\-::\-B\-T\-A\-S\-\_\-\-C\-O\-N\-T\-R\-A\-C\-T\-\_\-\-T\-U\-N\-I\-N\-G} \{ \\*
+{\bf btas\-::\-J\-O\-B\-M\-A\-S\-K\-\_\-\-A\-\_\-\-P\-M\-U\-T\-E} = 0x20, 
+{\bf btas\-::\-J\-O\-B\-M\-A\-S\-K\-\_\-\-A\-\_\-\-T\-R\-A\-N\-S} = 0x10, 
+{\bf btas\-::\-J\-O\-B\-M\-A\-S\-K\-\_\-\-B\-\_\-\-P\-M\-U\-T\-E} = 0x08, 
+{\bf btas\-::\-J\-O\-B\-M\-A\-S\-K\-\_\-\-B\-\_\-\-T\-R\-A\-N\-S} = 0x04, 
+\\*
+{\bf btas\-::\-J\-O\-B\-M\-A\-S\-K\-\_\-\-B\-L\-A\-S\-\_\-\-T\-Y\-P\-E} = 0x03
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ }\\void {\bf btas\-::gemv\-\_\-contract\-\_\-shape} (const B\-T\-A\-S\-\_\-\-T\-R\-A\-N\-S\-P\-O\-S\-E \&Trans\-A, const I\-Vector$<$ N\-A $>$ \&a\-\_\-shape, const I\-Vector$<$ N\-B $>$ \&b\-\_\-shape, I\-Vector$<$ N\-C $>$ \&c\-\_\-shape)
+\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ }\\void {\bf btas\-::ger\-\_\-contract\-\_\-shape} (const I\-Vector$<$ N\-A $>$ \&a\-\_\-shape, const I\-Vector$<$ N\-B $>$ \&b\-\_\-shape, I\-Vector$<$ N\-C $>$ \&c\-\_\-shape)
+\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C, size\-\_\-t K$>$ }\\void {\bf btas\-::gemm\-\_\-contract\-\_\-shape} (const B\-T\-A\-S\-\_\-\-T\-R\-A\-N\-S\-P\-O\-S\-E \&Trans\-A, const B\-T\-A\-S\-\_\-\-T\-R\-A\-N\-S\-P\-O\-S\-E \&Trans\-B, const I\-Vector$<$ N\-A $>$ \&a\-\_\-shape, const I\-Vector$<$ N\-B $>$ \&b\-\_\-shape, I\-Vector$<$ K $>$ \&contracts, I\-Vector$<$ N\-C $>$ \&c\-\_\-shape)
+\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t K$>$ }\\unsigned int {\bf btas\-::get\-\_\-contract\-\_\-jobs} (const I\-Vector$<$ N\-A $>$ \&a\-\_\-shape, const I\-Vector$<$ K $>$ \&a\-\_\-contract, I\-Vector$<$ N\-A $>$ \&a\-\_\-permute, const I\-Vector$<$ N\-B $>$ \&b\-\_\-shape, const I\-Vector$<$ K $>$ \&b\-\_\-contract, I\-Vector$<$ N\-B $>$ \&b\-\_\-permute)
+\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t K$>$ }\\void {\bf btas\-::indexed\-\_\-contract\-\_\-shape} (const I\-Vector$<$ N\-A $>$ \&a\-\_\-symbols, I\-Vector$<$ K $>$ \&a\-\_\-contract, const I\-Vector$<$ N\-B $>$ \&b\-\_\-symbols, I\-Vector$<$ K $>$ \&b\-\_\-contract, I\-Vector$<$ N\-A+N\-B-\/K-\/K $>$ \&axb\-\_\-symbols)
+\end{DoxyCompactItemize}

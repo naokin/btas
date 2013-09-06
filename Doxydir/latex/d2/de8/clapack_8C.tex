@@ -1,0 +1,504 @@
+\section{lib/clapack.C File Reference}
+\label{d2/de8/clapack_8C}\index{lib/clapack.\-C@{lib/clapack.\-C}}
+{\ttfamily \#include $<$stdlib.\-h$>$}\\*
+{\ttfamily \#include $<$lapack/clapack.\-h$>$}\\*
+{\ttfamily \#include $<$lapack/lapack\-\_\-fort\-\_\-predecl.\-h$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int {\bf clapack\-\_\-dgetrf} (int m, int n, double $\ast$a, int lda, int $\ast$ipiv)
+\begin{DoxyCompactList}\small\item\em L\-U decomposition. \end{DoxyCompactList}\item 
+int {\bf clapack\-\_\-dpotrf} ({\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-U\-P\-L\-O} Uplo, int n, double $\ast$a, int lda)
+\begin{DoxyCompactList}\small\item\em Cholesky decomposition. \end{DoxyCompactList}\item 
+int {\bf clapack\-\_\-dsytrf} ({\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-U\-P\-L\-O} Uplo, int n, double $\ast$a, int lda, int $\ast$ipiv)
+\begin{DoxyCompactList}\small\item\em Bunch-\/\-Kaufman decomposition. \end{DoxyCompactList}\item 
+int {\bf clapack\-\_\-dgetrs} ({\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-T\-R\-A\-N\-S\-P\-O\-S\-E} Trans\-A, int n, int nrhs, double $\ast$a, int lda, int $\ast$ipiv, double $\ast$b, int ldb)
+\begin{DoxyCompactList}\small\item\em Solving linear equation from triangular fragmented matrix. \end{DoxyCompactList}\item 
+int {\bf clapack\-\_\-dpotrs} ({\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-U\-P\-L\-O} Uplo, int n, int nrhs, double $\ast$a, int lda, double $\ast$b, int ldb)
+\begin{DoxyCompactList}\small\item\em Solving linear equation from triangular fragmented matrix (symmetric positive definite) \end{DoxyCompactList}\item 
+int {\bf clapack\-\_\-dsytrs} ({\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-U\-P\-L\-O} Uplo, int n, int nrhs, double $\ast$a, int lda, int $\ast$ipiv, double $\ast$b, int ldb)
+\begin{DoxyCompactList}\small\item\em Solving linear equation from triangular fragmented matrix (symmetric) \end{DoxyCompactList}\item 
+int {\bf clapack\-\_\-dgesv} (int n, int nrhs, double $\ast$a, int lda, int $\ast$ipiv, double $\ast$b, int ldb)
+\begin{DoxyCompactList}\small\item\em Solving linear equation (involving dgetrf) \end{DoxyCompactList}\item 
+int {\bf clapack\-\_\-dposv} ({\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-U\-P\-L\-O} Uplo, int n, int nrhs, double $\ast$a, int lda, double $\ast$b, int ldb)
+\begin{DoxyCompactList}\small\item\em Solving linear equation (involving dpotrf) \end{DoxyCompactList}\item 
+int {\bf clapack\-\_\-dsysv} ({\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-U\-P\-L\-O} Uplo, int n, int nrhs, double $\ast$a, int lda, int $\ast$ipiv, double $\ast$b, int ldb)
+\begin{DoxyCompactList}\small\item\em Solving linear equation (involving dsytrf) \end{DoxyCompactList}\item 
+int {\bf clapack\-\_\-dsyev} ({\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-C\-A\-L\-C\-V\-E\-C\-T\-O\-R} Jobz, {\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-U\-P\-L\-O} Uplo, int n, double $\ast$a, int lda, double $\ast$w)
+\begin{DoxyCompactList}\small\item\em Solve symmetric eigenvalue problem for double precision real matrix. \end{DoxyCompactList}\item 
+int {\bf clapack\-\_\-dgeev} ({\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-C\-A\-L\-C\-V\-E\-C\-T\-O\-R} Jobl, {\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-C\-A\-L\-C\-V\-E\-C\-T\-O\-R} Jobr, int n, double $\ast$a, int lda, double $\ast$wr, double $\ast$wi, double $\ast$vl, int ldvl, double $\ast$vr, int ldvr)
+\begin{DoxyCompactList}\small\item\em Solve non-\/hermitian eigenvalue problem for double precision real matrix. \end{DoxyCompactList}\item 
+int {\bf clapack\-\_\-dsygv} (int itype, {\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-C\-A\-L\-C\-V\-E\-C\-T\-O\-R} Jobz, {\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-U\-P\-L\-O} Uplo, int n, double $\ast$a, int lda, double $\ast$b, int ldb, double $\ast$w)
+\begin{DoxyCompactList}\small\item\em Solve generalized eigenvalue problem for double precision real symmetric matrix pair. \end{DoxyCompactList}\item 
+int {\bf clapack\-\_\-dggev} ({\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-C\-A\-L\-C\-V\-E\-C\-T\-O\-R} Jobl, {\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-C\-A\-L\-C\-V\-E\-C\-T\-O\-R} Jobr, int n, double $\ast$a, int lda, double $\ast$b, int ldb, double $\ast$alphar, double $\ast$alphai, double $\ast$beta, double $\ast$vl, int ldvl, double $\ast$vr, int ldvr)
+\begin{DoxyCompactList}\small\item\em Solve generalized eigenvalue problem for double precision real non-\/symmetric matrix pair. \end{DoxyCompactList}\item 
+int {\bf clapack\-\_\-dgesvd} ({\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-C\-A\-L\-C\-V\-E\-C\-T\-O\-R} Jobu, {\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-C\-A\-L\-C\-V\-E\-C\-T\-O\-R} Jobvt, int m, int n, double $\ast$a, int lda, double $\ast$s, double $\ast$u, int ldu, double $\ast$vt, int ldvt)
+\begin{DoxyCompactList}\small\item\em Singularvalue decomposition for double precision real matrix. \end{DoxyCompactList}\item 
+int {\bf clapack\-\_\-zheev} ({\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-C\-A\-L\-C\-V\-E\-C\-T\-O\-R} Jobz, {\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-U\-P\-L\-O} Uplo, int n, void $\ast$a, int lda, double $\ast$w)
+\begin{DoxyCompactList}\small\item\em Solve hermitian eigenvalue problem (H\-E\-P) for double precision complex matrix. \end{DoxyCompactList}\item 
+int {\bf clapack\-\_\-zgesvd} ({\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-C\-A\-L\-C\-V\-E\-C\-T\-O\-R} Jobu, {\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-C\-A\-L\-C\-V\-E\-C\-T\-O\-R} Jobvt, int m, int n, void $\ast$a, int lda, double $\ast$s, void $\ast$u, int ldu, void $\ast$vt, int ldvt)
+\begin{DoxyCompactList}\small\item\em Singularvalue decomposition for double precision complex matrix. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\index{clapack.\-C@{clapack.\-C}!clapack\-\_\-dgeev@{clapack\-\_\-dgeev}}
+\index{clapack\-\_\-dgeev@{clapack\-\_\-dgeev}!clapack.C@{clapack.\-C}}
+\subsubsection[{clapack\-\_\-dgeev}]{\setlength{\rightskip}{0pt plus 5cm}int clapack\-\_\-dgeev (
+\begin{DoxyParamCaption}
+\item[{{\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-C\-A\-L\-C\-V\-E\-C\-T\-O\-R}}]{Jobl, }
+\item[{{\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-C\-A\-L\-C\-V\-E\-C\-T\-O\-R}}]{Jobr, }
+\item[{int}]{n, }
+\item[{double $\ast$}]{a, }
+\item[{int}]{lda, }
+\item[{double $\ast$}]{wr, }
+\item[{double $\ast$}]{wi, }
+\item[{double $\ast$}]{vl, }
+\item[{int}]{ldvl, }
+\item[{double $\ast$}]{vr, }
+\item[{int}]{ldvr}
+\end{DoxyParamCaption}
+)}\label{d2/de8/clapack_8C_acce4f669ab3c57ba56f92a26e9c00555}
+
+
+Solve non-\/hermitian eigenvalue problem for double precision real matrix. 
+
+eigenvalue decomposition for non-\/hermitian matrix 
+
+Definition at line 119 of file clapack.\-C.
+
+
+
+References Clapack\-No\-Calc\-Vector, and dgeev\-\_\-().
+
+
+
+Referenced by btas\-::\-Dgeev().
+
+\index{clapack.\-C@{clapack.\-C}!clapack\-\_\-dgesv@{clapack\-\_\-dgesv}}
+\index{clapack\-\_\-dgesv@{clapack\-\_\-dgesv}!clapack.C@{clapack.\-C}}
+\subsubsection[{clapack\-\_\-dgesv}]{\setlength{\rightskip}{0pt plus 5cm}int clapack\-\_\-dgesv (
+\begin{DoxyParamCaption}
+\item[{int}]{n, }
+\item[{int}]{nrhs, }
+\item[{double $\ast$}]{a, }
+\item[{int}]{lda, }
+\item[{int $\ast$}]{ipiv, }
+\item[{double $\ast$}]{b, }
+\item[{int}]{ldb}
+\end{DoxyParamCaption}
+)}\label{d2/de8/clapack_8C_a1937a9ea6d2cfd59bc014f1a3bcf9292}
+
+
+Solving linear equation (involving dgetrf) 
+
+
+
+Definition at line 75 of file clapack.\-C.
+
+
+
+References clapack\-\_\-dgetrf(), clapack\-\_\-dgetrs(), and Clapack\-No\-Trans.
+
+
+
+Referenced by btas\-::\-Dgesv().
+
+\index{clapack.\-C@{clapack.\-C}!clapack\-\_\-dgesvd@{clapack\-\_\-dgesvd}}
+\index{clapack\-\_\-dgesvd@{clapack\-\_\-dgesvd}!clapack.C@{clapack.\-C}}
+\subsubsection[{clapack\-\_\-dgesvd}]{\setlength{\rightskip}{0pt plus 5cm}int clapack\-\_\-dgesvd (
+\begin{DoxyParamCaption}
+\item[{{\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-C\-A\-L\-C\-V\-E\-C\-T\-O\-R}}]{Jobu, }
+\item[{{\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-C\-A\-L\-C\-V\-E\-C\-T\-O\-R}}]{Jobvt, }
+\item[{int}]{m, }
+\item[{int}]{n, }
+\item[{double $\ast$}]{a, }
+\item[{int}]{lda, }
+\item[{double $\ast$}]{s, }
+\item[{double $\ast$}]{u, }
+\item[{int}]{ldu, }
+\item[{double $\ast$}]{vt, }
+\item[{int}]{ldvt}
+\end{DoxyParamCaption}
+)}\label{d2/de8/clapack_8C_a3966c4189948b6b29cf538431941fb86}
+
+
+Singularvalue decomposition for double precision real matrix. 
+
+singularvalue decomposition for real general matrix 
+
+Definition at line 181 of file clapack.\-C.
+
+
+
+References Clapack\-Calc\-Thin\-Vector, Clapack\-Calc\-Vector, Clapack\-No\-Calc\-Vector, and dgesvd\-\_\-().
+
+
+
+Referenced by btas\-::\-Dgesvd().
+
+\index{clapack.\-C@{clapack.\-C}!clapack\-\_\-dgetrf@{clapack\-\_\-dgetrf}}
+\index{clapack\-\_\-dgetrf@{clapack\-\_\-dgetrf}!clapack.C@{clapack.\-C}}
+\subsubsection[{clapack\-\_\-dgetrf}]{\setlength{\rightskip}{0pt plus 5cm}int clapack\-\_\-dgetrf (
+\begin{DoxyParamCaption}
+\item[{int}]{m, }
+\item[{int}]{n, }
+\item[{double $\ast$}]{a, }
+\item[{int}]{lda, }
+\item[{int $\ast$}]{ipiv}
+\end{DoxyParamCaption}
+)}\label{d2/de8/clapack_8C_a9546bb9615d23e031c1f2cfab16a90b3}
+
+
+L\-U decomposition. 
+
+
+
+Definition at line 19 of file clapack.\-C.
+
+
+
+References dgetrf\-\_\-().
+
+
+
+Referenced by clapack\-\_\-dgesv(), and btas\-::\-Dgetrf().
+
+\index{clapack.\-C@{clapack.\-C}!clapack\-\_\-dgetrs@{clapack\-\_\-dgetrs}}
+\index{clapack\-\_\-dgetrs@{clapack\-\_\-dgetrs}!clapack.C@{clapack.\-C}}
+\subsubsection[{clapack\-\_\-dgetrs}]{\setlength{\rightskip}{0pt plus 5cm}int clapack\-\_\-dgetrs (
+\begin{DoxyParamCaption}
+\item[{{\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-T\-R\-A\-N\-S\-P\-O\-S\-E}}]{Trans\-A, }
+\item[{int}]{n, }
+\item[{int}]{nrhs, }
+\item[{double $\ast$}]{a, }
+\item[{int}]{lda, }
+\item[{int $\ast$}]{ipiv, }
+\item[{double $\ast$}]{b, }
+\item[{int}]{ldb}
+\end{DoxyParamCaption}
+)}\label{d2/de8/clapack_8C_a9d8a60933217d558edded1134caef5c3}
+
+
+Solving linear equation from triangular fragmented matrix. 
+
+
+
+Definition at line 50 of file clapack.\-C.
+
+
+
+References Clapack\-No\-Trans, and dgetrs\-\_\-().
+
+
+
+Referenced by clapack\-\_\-dgesv().
+
+\index{clapack.\-C@{clapack.\-C}!clapack\-\_\-dggev@{clapack\-\_\-dggev}}
+\index{clapack\-\_\-dggev@{clapack\-\_\-dggev}!clapack.C@{clapack.\-C}}
+\subsubsection[{clapack\-\_\-dggev}]{\setlength{\rightskip}{0pt plus 5cm}int clapack\-\_\-dggev (
+\begin{DoxyParamCaption}
+\item[{{\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-C\-A\-L\-C\-V\-E\-C\-T\-O\-R}}]{Jobl, }
+\item[{{\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-C\-A\-L\-C\-V\-E\-C\-T\-O\-R}}]{Jobr, }
+\item[{int}]{n, }
+\item[{double $\ast$}]{a, }
+\item[{int}]{lda, }
+\item[{double $\ast$}]{b, }
+\item[{int}]{ldb, }
+\item[{double $\ast$}]{alphar, }
+\item[{double $\ast$}]{alphai, }
+\item[{double $\ast$}]{beta, }
+\item[{double $\ast$}]{vl, }
+\item[{int}]{ldvl, }
+\item[{double $\ast$}]{vr, }
+\item[{int}]{ldvr}
+\end{DoxyParamCaption}
+)}\label{d2/de8/clapack_8C_a34c0cdedbf49a06f4d97ecbfbdc9434d}
+
+
+Solve generalized eigenvalue problem for double precision real non-\/symmetric matrix pair. 
+
+generalized eigenvalue decomposition for non-\/hermitian matrix pair 
+
+Definition at line 161 of file clapack.\-C.
+
+
+
+References Clapack\-No\-Calc\-Vector, and dggev\-\_\-().
+
+
+
+Referenced by btas\-::\-Dggev().
+
+\index{clapack.\-C@{clapack.\-C}!clapack\-\_\-dposv@{clapack\-\_\-dposv}}
+\index{clapack\-\_\-dposv@{clapack\-\_\-dposv}!clapack.C@{clapack.\-C}}
+\subsubsection[{clapack\-\_\-dposv}]{\setlength{\rightskip}{0pt plus 5cm}int clapack\-\_\-dposv (
+\begin{DoxyParamCaption}
+\item[{{\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-U\-P\-L\-O}}]{Uplo, }
+\item[{int}]{n, }
+\item[{int}]{nrhs, }
+\item[{double $\ast$}]{a, }
+\item[{int}]{lda, }
+\item[{double $\ast$}]{b, }
+\item[{int}]{ldb}
+\end{DoxyParamCaption}
+)}\label{d2/de8/clapack_8C_a736d87487f8879c6d7bf2dc6978f9af0}
+
+
+Solving linear equation (involving dpotrf) 
+
+Solving linear equation (symmetric positive definite) 
+
+Definition at line 83 of file clapack.\-C.
+
+
+
+References clapack\-\_\-dpotrf(), and clapack\-\_\-dpotrs().
+
+\index{clapack.\-C@{clapack.\-C}!clapack\-\_\-dpotrf@{clapack\-\_\-dpotrf}}
+\index{clapack\-\_\-dpotrf@{clapack\-\_\-dpotrf}!clapack.C@{clapack.\-C}}
+\subsubsection[{clapack\-\_\-dpotrf}]{\setlength{\rightskip}{0pt plus 5cm}int clapack\-\_\-dpotrf (
+\begin{DoxyParamCaption}
+\item[{{\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-U\-P\-L\-O}}]{Uplo, }
+\item[{int}]{n, }
+\item[{double $\ast$}]{a, }
+\item[{int}]{lda}
+\end{DoxyParamCaption}
+)}\label{d2/de8/clapack_8C_aedb30bdc9cadbd0040c8ebcbe325a7eb}
+
+
+Cholesky decomposition. 
+
+
+
+Definition at line 26 of file clapack.\-C.
+
+
+
+References Clapack\-Upper, and dpotrf\-\_\-().
+
+\index{clapack.\-C@{clapack.\-C}!clapack\-\_\-dpotrs@{clapack\-\_\-dpotrs}}
+\index{clapack\-\_\-dpotrs@{clapack\-\_\-dpotrs}!clapack.C@{clapack.\-C}}
+\subsubsection[{clapack\-\_\-dpotrs}]{\setlength{\rightskip}{0pt plus 5cm}int clapack\-\_\-dpotrs (
+\begin{DoxyParamCaption}
+\item[{{\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-U\-P\-L\-O}}]{Uplo, }
+\item[{int}]{n, }
+\item[{int}]{nrhs, }
+\item[{double $\ast$}]{a, }
+\item[{int}]{lda, }
+\item[{double $\ast$}]{b, }
+\item[{int}]{ldb}
+\end{DoxyParamCaption}
+)}\label{d2/de8/clapack_8C_a16bc5a50562ed48e32aefee308454301}
+
+
+Solving linear equation from triangular fragmented matrix (symmetric positive definite) 
+
+
+
+Definition at line 58 of file clapack.\-C.
+
+
+
+References Clapack\-Upper, and dpotrs\-\_\-().
+
+
+
+Referenced by clapack\-\_\-dposv().
+
+\index{clapack.\-C@{clapack.\-C}!clapack\-\_\-dsyev@{clapack\-\_\-dsyev}}
+\index{clapack\-\_\-dsyev@{clapack\-\_\-dsyev}!clapack.C@{clapack.\-C}}
+\subsubsection[{clapack\-\_\-dsyev}]{\setlength{\rightskip}{0pt plus 5cm}int clapack\-\_\-dsyev (
+\begin{DoxyParamCaption}
+\item[{{\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-C\-A\-L\-C\-V\-E\-C\-T\-O\-R}}]{Jobz, }
+\item[{{\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-U\-P\-L\-O}}]{Uplo, }
+\item[{int}]{n, }
+\item[{double $\ast$}]{a, }
+\item[{int}]{lda, }
+\item[{double $\ast$}]{w}
+\end{DoxyParamCaption}
+)}\label{d2/de8/clapack_8C_acc4801569ec7cd7bca4e815c6b3c4796}
+
+
+Solve symmetric eigenvalue problem for double precision real matrix. 
+
+eigenvalue decomposition for real-\/symmetric matrix 
+
+Definition at line 100 of file clapack.\-C.
+
+
+
+References Clapack\-No\-Calc\-Vector, Clapack\-Upper, and dsyev\-\_\-().
+
+
+
+Referenced by btas\-::\-Dsyev().
+
+\index{clapack.\-C@{clapack.\-C}!clapack\-\_\-dsygv@{clapack\-\_\-dsygv}}
+\index{clapack\-\_\-dsygv@{clapack\-\_\-dsygv}!clapack.C@{clapack.\-C}}
+\subsubsection[{clapack\-\_\-dsygv}]{\setlength{\rightskip}{0pt plus 5cm}int clapack\-\_\-dsygv (
+\begin{DoxyParamCaption}
+\item[{int}]{itype, }
+\item[{{\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-C\-A\-L\-C\-V\-E\-C\-T\-O\-R}}]{Jobz, }
+\item[{{\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-U\-P\-L\-O}}]{Uplo, }
+\item[{int}]{n, }
+\item[{double $\ast$}]{a, }
+\item[{int}]{lda, }
+\item[{double $\ast$}]{b, }
+\item[{int}]{ldb, }
+\item[{double $\ast$}]{w}
+\end{DoxyParamCaption}
+)}\label{d2/de8/clapack_8C_a2756b110d50a30ab9b74fa7d2bad9691}
+
+
+Solve generalized eigenvalue problem for double precision real symmetric matrix pair. 
+
+generalized eigenvalue decomposition for real-\/symmetric matrix
+
+itype = 1\-: A x = w B x 2\-: A B x = w x 3\-: B A x = w x 
+
+Definition at line 142 of file clapack.\-C.
+
+
+
+References Clapack\-No\-Calc\-Vector, Clapack\-Upper, and dsygv\-\_\-().
+
+
+
+Referenced by btas\-::\-Dsygv().
+
+\index{clapack.\-C@{clapack.\-C}!clapack\-\_\-dsysv@{clapack\-\_\-dsysv}}
+\index{clapack\-\_\-dsysv@{clapack\-\_\-dsysv}!clapack.C@{clapack.\-C}}
+\subsubsection[{clapack\-\_\-dsysv}]{\setlength{\rightskip}{0pt plus 5cm}int clapack\-\_\-dsysv (
+\begin{DoxyParamCaption}
+\item[{{\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-U\-P\-L\-O}}]{Uplo, }
+\item[{int}]{n, }
+\item[{int}]{nrhs, }
+\item[{double $\ast$}]{a, }
+\item[{int}]{lda, }
+\item[{int $\ast$}]{ipiv, }
+\item[{double $\ast$}]{b, }
+\item[{int}]{ldb}
+\end{DoxyParamCaption}
+)}\label{d2/de8/clapack_8C_a8851689f984d1d84efc345d4d6d0f6bb}
+
+
+Solving linear equation (involving dsytrf) 
+
+Solving linear equation (symmetric) 
+
+Definition at line 91 of file clapack.\-C.
+
+
+
+References clapack\-\_\-dsytrf(), and clapack\-\_\-dsytrs().
+
+\index{clapack.\-C@{clapack.\-C}!clapack\-\_\-dsytrf@{clapack\-\_\-dsytrf}}
+\index{clapack\-\_\-dsytrf@{clapack\-\_\-dsytrf}!clapack.C@{clapack.\-C}}
+\subsubsection[{clapack\-\_\-dsytrf}]{\setlength{\rightskip}{0pt plus 5cm}int clapack\-\_\-dsytrf (
+\begin{DoxyParamCaption}
+\item[{{\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-U\-P\-L\-O}}]{Uplo, }
+\item[{int}]{n, }
+\item[{double $\ast$}]{a, }
+\item[{int}]{lda, }
+\item[{int $\ast$}]{ipiv}
+\end{DoxyParamCaption}
+)}\label{d2/de8/clapack_8C_ac0b3963e1d7b9f3d4aa3e782d8eb355b}
+
+
+Bunch-\/\-Kaufman decomposition. 
+
+
+
+Definition at line 34 of file clapack.\-C.
+
+
+
+References Clapack\-Upper, and dsytrf\-\_\-().
+
+
+
+Referenced by clapack\-\_\-dsysv().
+
+\index{clapack.\-C@{clapack.\-C}!clapack\-\_\-dsytrs@{clapack\-\_\-dsytrs}}
+\index{clapack\-\_\-dsytrs@{clapack\-\_\-dsytrs}!clapack.C@{clapack.\-C}}
+\subsubsection[{clapack\-\_\-dsytrs}]{\setlength{\rightskip}{0pt plus 5cm}int clapack\-\_\-dsytrs (
+\begin{DoxyParamCaption}
+\item[{{\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-U\-P\-L\-O}}]{Uplo, }
+\item[{int}]{n, }
+\item[{int}]{nrhs, }
+\item[{double $\ast$}]{a, }
+\item[{int}]{lda, }
+\item[{int $\ast$}]{ipiv, }
+\item[{double $\ast$}]{b, }
+\item[{int}]{ldb}
+\end{DoxyParamCaption}
+)}\label{d2/de8/clapack_8C_a1a27ba239b99af13545a900e454f4a00}
+
+
+Solving linear equation from triangular fragmented matrix (symmetric) 
+
+
+
+Definition at line 66 of file clapack.\-C.
+
+
+
+References Clapack\-Upper, and dsytrs\-\_\-().
+
+
+
+Referenced by clapack\-\_\-dsysv().
+
+\index{clapack.\-C@{clapack.\-C}!clapack\-\_\-zgesvd@{clapack\-\_\-zgesvd}}
+\index{clapack\-\_\-zgesvd@{clapack\-\_\-zgesvd}!clapack.C@{clapack.\-C}}
+\subsubsection[{clapack\-\_\-zgesvd}]{\setlength{\rightskip}{0pt plus 5cm}int clapack\-\_\-zgesvd (
+\begin{DoxyParamCaption}
+\item[{{\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-C\-A\-L\-C\-V\-E\-C\-T\-O\-R}}]{Jobu, }
+\item[{{\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-C\-A\-L\-C\-V\-E\-C\-T\-O\-R}}]{Jobvt, }
+\item[{int}]{m, }
+\item[{int}]{n, }
+\item[{void $\ast$}]{a, }
+\item[{int}]{lda, }
+\item[{double $\ast$}]{s, }
+\item[{void $\ast$}]{u, }
+\item[{int}]{ldu, }
+\item[{void $\ast$}]{vt, }
+\item[{int}]{ldvt}
+\end{DoxyParamCaption}
+)}\label{d2/de8/clapack_8C_a7d24620e49c3c5332871d937828f2eb0}
+
+
+Singularvalue decomposition for double precision complex matrix. 
+
+singularvalue decomposition for complex general matrix 
+
+Definition at line 228 of file clapack.\-C.
+
+
+
+References Clapack\-Calc\-Thin\-Vector, Clapack\-Calc\-Vector, Clapack\-No\-Calc\-Vector, and zgesvd\-\_\-().
+
+\index{clapack.\-C@{clapack.\-C}!clapack\-\_\-zheev@{clapack\-\_\-zheev}}
+\index{clapack\-\_\-zheev@{clapack\-\_\-zheev}!clapack.C@{clapack.\-C}}
+\subsubsection[{clapack\-\_\-zheev}]{\setlength{\rightskip}{0pt plus 5cm}int clapack\-\_\-zheev (
+\begin{DoxyParamCaption}
+\item[{{\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-C\-A\-L\-C\-V\-E\-C\-T\-O\-R}}]{Jobz, }
+\item[{{\bf C\-L\-A\-P\-A\-C\-K\-\_\-\-U\-P\-L\-O}}]{Uplo, }
+\item[{int}]{n, }
+\item[{void $\ast$}]{a, }
+\item[{int}]{lda, }
+\item[{double $\ast$}]{w}
+\end{DoxyParamCaption}
+)}\label{d2/de8/clapack_8C_ab194221f149674c2b83971ba1c62d94d}
+
+
+Solve hermitian eigenvalue problem (H\-E\-P) for double precision complex matrix. 
+
+eigenvalue decomposition for complex-\/hermitian matrix 
+
+Definition at line 207 of file clapack.\-C.
+
+
+
+References Clapack\-No\-Calc\-Vector, Clapack\-Upper, and zheev\-\_\-().
+

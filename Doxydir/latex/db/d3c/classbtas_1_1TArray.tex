@@ -1,0 +1,2945 @@
+\section{btas\-:\-:T\-Array$<$ T, N $>$ Class Template Reference}
+\label{db/d3c/classbtas_1_1TArray}\index{btas\-::\-T\-Array$<$ T, N $>$@{btas\-::\-T\-Array$<$ T, N $>$}}
+
+
+Dense array class.  
+
+
+
+
+{\ttfamily \#include $<$T\-Array.\-h$>$}
+
+Inheritance diagram for btas\-:\-:T\-Array$<$ T, N $>$\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{db/d3c/classbtas_1_1TArray}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\-::vector$<$ T $>$\-::{\bf iterator} {\bf iterator}
+\begin{DoxyCompactList}\small\item\em \doxyref{T\-Array$<$\-T, N$>$\-::iterator}{p.}{db/d3c/classbtas_1_1TArray_ad5e17e7428d2ca293addf9e652ec477c}. \end{DoxyCompactList}\item 
+typedef std\-::vector$<$ T $>$\\*
+\-::{\bf const\-\_\-iterator} {\bf const\-\_\-iterator}
+\begin{DoxyCompactList}\small\item\em \doxyref{T\-Array$<$\-T, N$>$\-::const\-\_\-iterator}{p.}{db/d3c/classbtas_1_1TArray_afc4622d214e7ced620c448a5d0574ac8}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\bf T\-Array} ()
+\begin{DoxyCompactList}\small\item\em default constructor \end{DoxyCompactList}\item 
+{\bf $\sim$\-T\-Array} ()
+\begin{DoxyCompactList}\small\item\em destructor \end{DoxyCompactList}\item 
+{\bf T\-Array} (const {\bf T\-Array} \&other)
+\begin{DoxyCompactList}\small\item\em copy constructor \end{DoxyCompactList}\item 
+{\bf T\-Array} \& {\bf operator=} (const {\bf T\-Array} \&other)
+\begin{DoxyCompactList}\small\item\em copy assignment operator \end{DoxyCompactList}\item 
+{\bf T\-Array} \& {\bf operator+=} (const {\bf T\-Array} \&other)
+\begin{DoxyCompactList}\small\item\em addition assignment operator \end{DoxyCompactList}\item 
+void {\bf copy} (const {\bf T\-Array} \&other)
+\begin{DoxyCompactList}\small\item\em copying from other to this \end{DoxyCompactList}\item 
+{\bf T\-Array} {\bf copy} () const 
+\begin{DoxyCompactList}\small\item\em return copy of this \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t M$>$ }\\void {\bf copy} (const {\bf T\-Sub\-Array}$<$ T, M $>$ \&a)
+\begin{DoxyCompactList}\small\item\em Copy from sub-\/array to array. \end{DoxyCompactList}\item 
+void {\bf scale} (const T \&alpha)
+\begin{DoxyCompactList}\small\item\em scale by const value \end{DoxyCompactList}\item 
+void {\bf add} (const {\bf T\-Array} \&other)
+\begin{DoxyCompactList}\small\item\em adding from other to this \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t M$>$ }\\{\bf T\-Array} (const {\bf T\-Sub\-Array}$<$ T, M $>$ \&sub)
+\begin{DoxyCompactList}\small\item\em copy constructor from sub-\/array \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t M$>$ }\\{\bf T\-Array} \& {\bf operator=} (const {\bf T\-Sub\-Array}$<$ T, M $>$ \&sub)
+\begin{DoxyCompactList}\small\item\em copy assignment from sub-\/array \end{DoxyCompactList}\item 
+{\bf T\-Array} ({\bf T\-Array} \&\&other)
+\begin{DoxyCompactList}\small\item\em move constructor \end{DoxyCompactList}\item 
+{\bf T\-Array} \& {\bf operator=} ({\bf T\-Array} \&\&other)
+\begin{DoxyCompactList}\small\item\em move assignment \end{DoxyCompactList}\item 
+void {\bf reference} (const {\bf T\-Array} \&other)
+\begin{DoxyCompactList}\small\item\em take data reference from other \end{DoxyCompactList}\item 
+{\bf T\-Array} {\bf reference} () const 
+\begin{DoxyCompactList}\small\item\em return data reference of this \end{DoxyCompactList}\item 
+{\bf T\-Array} (int n01)
+\begin{DoxyCompactList}\small\item\em convenient constructor with array shape, for N = 1 \end{DoxyCompactList}\item 
+{\bf T\-Array} (int n01, int n02)
+\begin{DoxyCompactList}\small\item\em convenient constructor with array shape, for N = 2 \end{DoxyCompactList}\item 
+{\bf T\-Array} (int n01, int n02, int n03)
+\begin{DoxyCompactList}\small\item\em convenient constructor with array shape, for N = 3 \end{DoxyCompactList}\item 
+{\bf T\-Array} (int n01, int n02, int n03, int n04)
+\begin{DoxyCompactList}\small\item\em convenient constructor with array shape, for N = 4 \end{DoxyCompactList}\item 
+{\bf T\-Array} (int n01, int n02, int n03, int n04, int n05)
+\begin{DoxyCompactList}\small\item\em convenient constructor with array shape, for N = 5 \end{DoxyCompactList}\item 
+{\bf T\-Array} (int n01, int n02, int n03, int n04, int n05, int n06)
+\begin{DoxyCompactList}\small\item\em convenient constructor with array shape, for N = 6 \end{DoxyCompactList}\item 
+{\bf T\-Array} (int n01, int n02, int n03, int n04, int n05, int n06, int n07)
+\begin{DoxyCompactList}\small\item\em convenient constructor with array shape, for N = 7 \end{DoxyCompactList}\item 
+{\bf T\-Array} (int n01, int n02, int n03, int n04, int n05, int n06, int n07, int n08)
+\begin{DoxyCompactList}\small\item\em convenient constructor with array shape, for N = 8 \end{DoxyCompactList}\item 
+{\bf T\-Array} (int n01, int n02, int n03, int n04, int n05, int n06, int n07, int n08, int n09)
+\begin{DoxyCompactList}\small\item\em convenient constructor with array shape, for N = 9 \end{DoxyCompactList}\item 
+{\bf T\-Array} (int n01, int n02, int n03, int n04, int n05, int n06, int n07, int n08, int n09, int n10)
+\begin{DoxyCompactList}\small\item\em convenient constructor with array shape, for N = 10 \end{DoxyCompactList}\item 
+{\bf T\-Array} (int n01, int n02, int n03, int n04, int n05, int n06, int n07, int n08, int n09, int n10, int n11)
+\begin{DoxyCompactList}\small\item\em convenient constructor with array shape, for N = 11 \end{DoxyCompactList}\item 
+{\bf T\-Array} (int n01, int n02, int n03, int n04, int n05, int n06, int n07, int n08, int n09, int n10, int n11, int n12)
+\begin{DoxyCompactList}\small\item\em convenient constructor with array shape, for N = 12 \end{DoxyCompactList}\item 
+{\bf T\-Array} (const {\bf I\-Vector}$<$ N $>$ \&\-\_\-shape)
+\begin{DoxyCompactList}\small\item\em convenient constructor with array shape, for arbitrary N \end{DoxyCompactList}\item 
+void {\bf resize} (int n01)
+\begin{DoxyCompactList}\small\item\em resize array shape, for N = 1 \end{DoxyCompactList}\item 
+void {\bf resize} (int n01, int n02)
+\begin{DoxyCompactList}\small\item\em resize array shape, for N = 2 \end{DoxyCompactList}\item 
+void {\bf resize} (int n01, int n02, int n03)
+\begin{DoxyCompactList}\small\item\em resize array shape, for N = 3 \end{DoxyCompactList}\item 
+void {\bf resize} (int n01, int n02, int n03, int n04)
+\begin{DoxyCompactList}\small\item\em resize array shape, for N = 4 \end{DoxyCompactList}\item 
+void {\bf resize} (int n01, int n02, int n03, int n04, int n05)
+\begin{DoxyCompactList}\small\item\em resize array shape, for N = 5 \end{DoxyCompactList}\item 
+void {\bf resize} (int n01, int n02, int n03, int n04, int n05, int n06)
+\begin{DoxyCompactList}\small\item\em resize array shape, for N = 6 \end{DoxyCompactList}\item 
+void {\bf resize} (int n01, int n02, int n03, int n04, int n05, int n06, int n07)
+\begin{DoxyCompactList}\small\item\em resize array shape, for N = 7 \end{DoxyCompactList}\item 
+void {\bf resize} (int n01, int n02, int n03, int n04, int n05, int n06, int n07, int n08)
+\begin{DoxyCompactList}\small\item\em resize array shape, for N = 8 \end{DoxyCompactList}\item 
+void {\bf resize} (int n01, int n02, int n03, int n04, int n05, int n06, int n07, int n08, int n09)
+\begin{DoxyCompactList}\small\item\em resize array shape, for N = 9 \end{DoxyCompactList}\item 
+void {\bf resize} (int n01, int n02, int n03, int n04, int n05, int n06, int n07, int n08, int n09, int n10)
+\begin{DoxyCompactList}\small\item\em resize array shape, for N = 10 \end{DoxyCompactList}\item 
+void {\bf resize} (int n01, int n02, int n03, int n04, int n05, int n06, int n07, int n08, int n09, int n10, int n11)
+\begin{DoxyCompactList}\small\item\em resize array shape, for N = 11 \end{DoxyCompactList}\item 
+void {\bf resize} (int n01, int n02, int n03, int n04, int n05, int n06, int n07, int n08, int n09, int n10, int n11, int n12)
+\begin{DoxyCompactList}\small\item\em resize array shape, for N = 12 \end{DoxyCompactList}\item 
+void {\bf resize} (const {\bf I\-Vector}$<$ N $>$ \&\-\_\-shape)
+\begin{DoxyCompactList}\small\item\em resize array by \-\_\-shape, for arbitrary N \end{DoxyCompactList}\item 
+{\bf const\-\_\-iterator} {\bf begin} () const 
+\begin{DoxyCompactList}\small\item\em returns first iterator position (const) \end{DoxyCompactList}\item 
+{\bf iterator} {\bf begin} ()
+\begin{DoxyCompactList}\small\item\em returns first iterator position \end{DoxyCompactList}\item 
+{\bf const\-\_\-iterator} {\bf end} () const 
+\begin{DoxyCompactList}\small\item\em returns last iterator position (const) \end{DoxyCompactList}\item 
+{\bf iterator} {\bf end} ()
+\begin{DoxyCompactList}\small\item\em returns last iterator position \end{DoxyCompactList}\item 
+const {\bf I\-Vector}$<$ N $>$ \& {\bf shape} () const 
+\begin{DoxyCompactList}\small\item\em returns array shape \end{DoxyCompactList}\item 
+int {\bf shape} (int i) const 
+\begin{DoxyCompactList}\small\item\em returns array shape for rank i \end{DoxyCompactList}\item 
+const {\bf I\-Vector}$<$ N $>$ \& {\bf stride} () const 
+\begin{DoxyCompactList}\small\item\em returns array stride \end{DoxyCompactList}\item 
+int {\bf stride} (int i) const 
+\begin{DoxyCompactList}\small\item\em returns array stride for rank i \end{DoxyCompactList}\item 
+size\-\_\-t {\bf size} () const 
+\begin{DoxyCompactList}\small\item\em returns allocated size \end{DoxyCompactList}\item 
+const T \& {\bf operator()} (int i01) const 
+\begin{DoxyCompactList}\small\item\em returns array element (N = 1) without range check \end{DoxyCompactList}\item 
+const T \& {\bf operator()} (int i01, int i02) const 
+\begin{DoxyCompactList}\small\item\em returns array element (N = 2) without range check \end{DoxyCompactList}\item 
+const T \& {\bf operator()} (int i01, int i02, int i03) const 
+\begin{DoxyCompactList}\small\item\em returns array element (N = 3) without range check \end{DoxyCompactList}\item 
+const T \& {\bf operator()} (int i01, int i02, int i03, int i04) const 
+\begin{DoxyCompactList}\small\item\em returns array element (N = 4) without range check \end{DoxyCompactList}\item 
+const T \& {\bf operator()} (int i01, int i02, int i03, int i04, int i05) const 
+\begin{DoxyCompactList}\small\item\em returns array element (N = 5) without range check \end{DoxyCompactList}\item 
+const T \& {\bf operator()} (int i01, int i02, int i03, int i04, int i05, int i06) const 
+\begin{DoxyCompactList}\small\item\em returns array element (N = 6) without range check \end{DoxyCompactList}\item 
+const T \& {\bf operator()} (int i01, int i02, int i03, int i04, int i05, int i06, int i07) const 
+\begin{DoxyCompactList}\small\item\em returns array element (N = 7) without range check \end{DoxyCompactList}\item 
+const T \& {\bf operator()} (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08) const 
+\begin{DoxyCompactList}\small\item\em returns array element (N = 8) without range check \end{DoxyCompactList}\item 
+const T \& {\bf operator()} (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09) const 
+\begin{DoxyCompactList}\small\item\em returns array element (N = 9) without range check \end{DoxyCompactList}\item 
+const T \& {\bf operator()} (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10) const 
+\begin{DoxyCompactList}\small\item\em returns array element (N = 10) without range check \end{DoxyCompactList}\item 
+const T \& {\bf operator()} (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10, int i11) const 
+\begin{DoxyCompactList}\small\item\em returns array element (N = 11) without range check \end{DoxyCompactList}\item 
+const T \& {\bf operator()} (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10, int i11, int i12) const 
+\begin{DoxyCompactList}\small\item\em returns array element (N = 12) without range check \end{DoxyCompactList}\item 
+const T \& {\bf operator()} (const {\bf I\-Vector}$<$ N $>$ \&\-\_\-index) const 
+\begin{DoxyCompactList}\small\item\em returns array element (arbitrary N) without range check \end{DoxyCompactList}\item 
+T \& {\bf operator()} (int i01)
+\begin{DoxyCompactList}\small\item\em returns array element (N = 1) without range check \end{DoxyCompactList}\item 
+T \& {\bf operator()} (int i01, int i02)
+\begin{DoxyCompactList}\small\item\em returns array element (N = 2) without range check \end{DoxyCompactList}\item 
+T \& {\bf operator()} (int i01, int i02, int i03)
+\begin{DoxyCompactList}\small\item\em returns array element (N = 3) without range check \end{DoxyCompactList}\item 
+T \& {\bf operator()} (int i01, int i02, int i03, int i04)
+\begin{DoxyCompactList}\small\item\em returns array element (N = 4) without range check \end{DoxyCompactList}\item 
+T \& {\bf operator()} (int i01, int i02, int i03, int i04, int i05)
+\begin{DoxyCompactList}\small\item\em returns array element (N = 5) without range check \end{DoxyCompactList}\item 
+T \& {\bf operator()} (int i01, int i02, int i03, int i04, int i05, int i06)
+\begin{DoxyCompactList}\small\item\em returns array element (N = 6) without range check \end{DoxyCompactList}\item 
+T \& {\bf operator()} (int i01, int i02, int i03, int i04, int i05, int i06, int i07)
+\begin{DoxyCompactList}\small\item\em returns array element (N = 7) without range check \end{DoxyCompactList}\item 
+T \& {\bf operator()} (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08)
+\begin{DoxyCompactList}\small\item\em returns array element (N = 8) without range check \end{DoxyCompactList}\item 
+T \& {\bf operator()} (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09)
+\begin{DoxyCompactList}\small\item\em returns array element (N = 9) without range check \end{DoxyCompactList}\item 
+T \& {\bf operator()} (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10)
+\begin{DoxyCompactList}\small\item\em returns array element (N = 10) without range check \end{DoxyCompactList}\item 
+T \& {\bf operator()} (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10, int i11)
+\begin{DoxyCompactList}\small\item\em returns array element (N = 11) without range check \end{DoxyCompactList}\item 
+T \& {\bf operator()} (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10, int i11, int i12)
+\begin{DoxyCompactList}\small\item\em returns array element (N = 12) without range check \end{DoxyCompactList}\item 
+T \& {\bf operator()} (const {\bf I\-Vector}$<$ N $>$ \&\-\_\-index)
+\begin{DoxyCompactList}\small\item\em returns array element (arbitrary N) without range check \end{DoxyCompactList}\item 
+const T \& {\bf at} (int i01) const 
+\begin{DoxyCompactList}\small\item\em returns array element (N = 1) with range check \end{DoxyCompactList}\item 
+const T \& {\bf at} (int i01, int i02) const 
+\begin{DoxyCompactList}\small\item\em returns array element (N = 2) with range check \end{DoxyCompactList}\item 
+const T \& {\bf at} (int i01, int i02, int i03) const 
+\begin{DoxyCompactList}\small\item\em returns array element (N = 3) with range check \end{DoxyCompactList}\item 
+const T \& {\bf at} (int i01, int i02, int i03, int i04) const 
+\begin{DoxyCompactList}\small\item\em returns array element (N = 4) with range check \end{DoxyCompactList}\item 
+const T \& {\bf at} (int i01, int i02, int i03, int i04, int i05) const 
+\begin{DoxyCompactList}\small\item\em returns array element (N = 5) with range check \end{DoxyCompactList}\item 
+const T \& {\bf at} (int i01, int i02, int i03, int i04, int i05, int i06) const 
+\begin{DoxyCompactList}\small\item\em returns array element (N = 6) with range check \end{DoxyCompactList}\item 
+const T \& {\bf at} (int i01, int i02, int i03, int i04, int i05, int i06, int i07) const 
+\begin{DoxyCompactList}\small\item\em returns array element (N = 7) with range check \end{DoxyCompactList}\item 
+const T \& {\bf at} (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08) const 
+\begin{DoxyCompactList}\small\item\em returns array element (N = 8) with range check \end{DoxyCompactList}\item 
+const T \& {\bf at} (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09) const 
+\begin{DoxyCompactList}\small\item\em returns array element (N = 9) with range check \end{DoxyCompactList}\item 
+const T \& {\bf at} (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10) const 
+\begin{DoxyCompactList}\small\item\em returns array element (N = 10) with range check \end{DoxyCompactList}\item 
+const T \& {\bf at} (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10, int i11) const 
+\begin{DoxyCompactList}\small\item\em returns array element (N = 11) with range check \end{DoxyCompactList}\item 
+const T \& {\bf at} (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10, int i11, int i12) const 
+\begin{DoxyCompactList}\small\item\em returns array element (N = 12) with range check \end{DoxyCompactList}\item 
+const T \& {\bf at} (const {\bf I\-Vector}$<$ N $>$ \&\-\_\-index) const 
+\begin{DoxyCompactList}\small\item\em returns array element (arbitrary N) with range check \end{DoxyCompactList}\item 
+T \& {\bf at} (int i01)
+\begin{DoxyCompactList}\small\item\em returns array element (N = 1) with range check \end{DoxyCompactList}\item 
+T \& {\bf at} (int i01, int i02)
+\begin{DoxyCompactList}\small\item\em returns array element (N = 2) with range check \end{DoxyCompactList}\item 
+T \& {\bf at} (int i01, int i02, int i03)
+\begin{DoxyCompactList}\small\item\em returns array element (N = 3) with range check \end{DoxyCompactList}\item 
+T \& {\bf at} (int i01, int i02, int i03, int i04)
+\begin{DoxyCompactList}\small\item\em returns array element (N = 4) with range check \end{DoxyCompactList}\item 
+T \& {\bf at} (int i01, int i02, int i03, int i04, int i05)
+\begin{DoxyCompactList}\small\item\em returns array element (N = 5) with range check \end{DoxyCompactList}\item 
+T \& {\bf at} (int i01, int i02, int i03, int i04, int i05, int i06)
+\begin{DoxyCompactList}\small\item\em returns array element (N = 6) with range check \end{DoxyCompactList}\item 
+T \& {\bf at} (int i01, int i02, int i03, int i04, int i05, int i06, int i07)
+\begin{DoxyCompactList}\small\item\em returns array element (N = 7) with range check \end{DoxyCompactList}\item 
+T \& {\bf at} (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08)
+\begin{DoxyCompactList}\small\item\em returns array element (N = 8) with range check \end{DoxyCompactList}\item 
+T \& {\bf at} (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09)
+\begin{DoxyCompactList}\small\item\em returns array element (N = 9) with range check \end{DoxyCompactList}\item 
+T \& {\bf at} (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10)
+\begin{DoxyCompactList}\small\item\em returns array element (N = 10) with range check \end{DoxyCompactList}\item 
+T \& {\bf at} (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10, int i11)
+\begin{DoxyCompactList}\small\item\em returns array element (N = 11) with range check \end{DoxyCompactList}\item 
+T \& {\bf at} (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10, int i11, int i12)
+\begin{DoxyCompactList}\small\item\em returns array element (N = 12) with range check \end{DoxyCompactList}\item 
+T \& {\bf at} (const {\bf I\-Vector}$<$ N $>$ \&\-\_\-index)
+\begin{DoxyCompactList}\small\item\em returns array element (arbitrary N) with range check \end{DoxyCompactList}\item 
+{\bf T\-Sub\-Array}$<$ T, N $>$ {\bf subarray} (const {\bf I\-Vector}$<$ N $>$ \&lbound, const {\bf I\-Vector}$<$ N $>$ \&ubound) const 
+\begin{DoxyCompactList}\small\item\em slice array to return sub-\/array object \end{DoxyCompactList}\item 
+const T $\ast$ {\bf data} () const 
+\begin{DoxyCompactList}\small\item\em returns the first pointer of array elements \end{DoxyCompactList}\item 
+T $\ast$ {\bf data} ()
+\begin{DoxyCompactList}\small\item\em returns the first pointer of array elements \end{DoxyCompactList}\item 
+void {\bf fill} (const T \&val)
+\begin{DoxyCompactList}\small\item\em fills elements by constant value \end{DoxyCompactList}\item 
+void {\bf operator=} (const T \&val)
+\begin{DoxyCompactList}\small\item\em fills elements by constant value \end{DoxyCompactList}\item 
+{\footnotesize template$<$class Generator $>$ }\\void {\bf generate} (Generator gen)
+\begin{DoxyCompactList}\small\item\em generates array elements by function gen \end{DoxyCompactList}\item 
+void {\bf clear} ()
+\begin{DoxyCompactList}\small\item\em deallocate storage \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$class Archive $>$ }\\void {\bf serialize} (Archive \&ar, const unsigned int version)
+\begin{DoxyCompactList}\small\item\em Enables to use boost serialization. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+{\bf I\-Vector}$<$ N $>$ {\bf m\-\_\-shape}
+\begin{DoxyCompactList}\small\item\em array shape \end{DoxyCompactList}\item 
+{\bf I\-Vector}$<$ N $>$ {\bf m\-\_\-stride}
+\begin{DoxyCompactList}\small\item\em array stride \end{DoxyCompactList}\item 
+shared\-\_\-ptr$<$ std\-::vector$<$ T $>$ $>$ {\bf m\-\_\-store}
+\begin{DoxyCompactList}\small\item\em array storage \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+class {\bf boost\-::serialization\-::access}
+\item 
+{\footnotesize template$<$typename U , size\-\_\-t M$>$ }\\class {\bf T\-Sub\-Array}
+\begin{DoxyCompactList}\small\item\em Any \doxyref{T\-Sub\-Array}{p.}{da/d50/classbtas_1_1TSubArray} classes being friend of T\-Array$<$\-T, N$>$ \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename T, size\-\_\-t N$>$class btas\-::\-T\-Array$<$ T, N $>$}
+
+Dense array class. 
+
+Fixed-\/rank array class implemented in terms of std\-::array and std\-::vector Since using C++11 features, not compatible for C++03 compiler
+
+
+\begin{DoxyParams}{Parameters}
+{\em T} & value type \\
+\hline
+{\em N} & array rank \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 22 of file T\-Array.\-h.
+
+
+
+\subsection{Member Typedef Documentation}
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!const\-\_\-iterator@{const\-\_\-iterator}}
+\index{const\-\_\-iterator@{const\-\_\-iterator}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{const\-\_\-iterator}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ typedef std\-::vector$<$T$>$\-::{\bf const\-\_\-iterator} {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::{\bf const\-\_\-iterator}}\label{db/d3c/classbtas_1_1TArray_afc4622d214e7ced620c448a5d0574ac8}
+
+
+\doxyref{T\-Array$<$\-T, N$>$\-::const\-\_\-iterator}{p.}{db/d3c/classbtas_1_1TArray_afc4622d214e7ced620c448a5d0574ac8}. 
+
+
+
+Definition at line 61 of file T\-Array.\-h.
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!iterator@{iterator}}
+\index{iterator@{iterator}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{iterator}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ typedef std\-::vector$<$T$>$\-::{\bf iterator} {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::{\bf iterator}}\label{db/d3c/classbtas_1_1TArray_ad5e17e7428d2ca293addf9e652ec477c}
+
+
+\doxyref{T\-Array$<$\-T, N$>$\-::iterator}{p.}{db/d3c/classbtas_1_1TArray_ad5e17e7428d2ca293addf9e652ec477c}. 
+
+
+
+Definition at line 58 of file T\-Array.\-h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!T\-Array@{T\-Array}}
+\index{T\-Array@{T\-Array}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{T\-Array}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::{\bf T\-Array} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_af3e669326c7d5689fd909b8f5d011b1a}
+
+
+default constructor 
+
+
+
+Definition at line 72 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-shape, and btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-stride.
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!$\sim$\-T\-Array@{$\sim$\-T\-Array}}
+\index{$\sim$\-T\-Array@{$\sim$\-T\-Array}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{$\sim$\-T\-Array}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::$\sim${\bf T\-Array} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a133b4d82d1ea55711dd8ca25e8113885}
+
+
+destructor 
+
+
+
+Definition at line 78 of file T\-Array.\-h.
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!T\-Array@{T\-Array}}
+\index{T\-Array@{T\-Array}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{T\-Array}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::{\bf T\-Array} (
+\begin{DoxyParamCaption}
+\item[{const {\bf T\-Array}$<$ T, N $>$ \&}]{other}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}\label{db/d3c/classbtas_1_1TArray_abe5942e9f2464f5ad816f2e161ef29c6}
+
+
+copy constructor 
+
+
+
+Definition at line 81 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::copy().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!T\-Array@{T\-Array}}
+\index{T\-Array@{T\-Array}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{T\-Array}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ template$<$size\-\_\-t M$>$ {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::{\bf T\-Array} (
+\begin{DoxyParamCaption}
+\item[{const {\bf T\-Sub\-Array}$<$ T, M $>$ \&}]{sub}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}\label{db/d3c/classbtas_1_1TArray_a07313148cb759403443f0e292b43a233}
+
+
+copy constructor from sub-\/array 
+
+
+
+Definition at line 154 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::copy().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!T\-Array@{T\-Array}}
+\index{T\-Array@{T\-Array}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{T\-Array}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::{\bf T\-Array} (
+\begin{DoxyParamCaption}
+\item[{{\bf T\-Array}$<$ T, N $>$ \&\&}]{other}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}\label{db/d3c/classbtas_1_1TArray_a47ddd792899a337276227e1fbe63c5a6}
+
+
+move constructor 
+
+
+
+Definition at line 166 of file T\-Array.\-h.
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!T\-Array@{T\-Array}}
+\index{T\-Array@{T\-Array}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{T\-Array}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::{\bf T\-Array} (
+\begin{DoxyParamCaption}
+\item[{int}]{n01}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}\label{db/d3c/classbtas_1_1TArray_ac07050bcfdc09cb8b1f9842dd5cc032b}
+
+
+convenient constructor with array shape, for N = 1 
+
+
+
+Definition at line 192 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!T\-Array@{T\-Array}}
+\index{T\-Array@{T\-Array}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{T\-Array}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::{\bf T\-Array} (
+\begin{DoxyParamCaption}
+\item[{int}]{n01, }
+\item[{int}]{n02}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a2fcde972162e07b02ca9b3db7f47233f}
+
+
+convenient constructor with array shape, for N = 2 
+
+
+
+Definition at line 197 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!T\-Array@{T\-Array}}
+\index{T\-Array@{T\-Array}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{T\-Array}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::{\bf T\-Array} (
+\begin{DoxyParamCaption}
+\item[{int}]{n01, }
+\item[{int}]{n02, }
+\item[{int}]{n03}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a725dea63f583dbc2241a7de91f0b831a}
+
+
+convenient constructor with array shape, for N = 3 
+
+
+
+Definition at line 202 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!T\-Array@{T\-Array}}
+\index{T\-Array@{T\-Array}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{T\-Array}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::{\bf T\-Array} (
+\begin{DoxyParamCaption}
+\item[{int}]{n01, }
+\item[{int}]{n02, }
+\item[{int}]{n03, }
+\item[{int}]{n04}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a62f02eaeaed4ba260094f696f6127b48}
+
+
+convenient constructor with array shape, for N = 4 
+
+
+
+Definition at line 207 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!T\-Array@{T\-Array}}
+\index{T\-Array@{T\-Array}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{T\-Array}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::{\bf T\-Array} (
+\begin{DoxyParamCaption}
+\item[{int}]{n01, }
+\item[{int}]{n02, }
+\item[{int}]{n03, }
+\item[{int}]{n04, }
+\item[{int}]{n05}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_aae4d952d052c9139ad2b7bcde503d31c}
+
+
+convenient constructor with array shape, for N = 5 
+
+
+
+Definition at line 212 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!T\-Array@{T\-Array}}
+\index{T\-Array@{T\-Array}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{T\-Array}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::{\bf T\-Array} (
+\begin{DoxyParamCaption}
+\item[{int}]{n01, }
+\item[{int}]{n02, }
+\item[{int}]{n03, }
+\item[{int}]{n04, }
+\item[{int}]{n05, }
+\item[{int}]{n06}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a743b91015a342de6898c655da979a8c4}
+
+
+convenient constructor with array shape, for N = 6 
+
+
+
+Definition at line 217 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!T\-Array@{T\-Array}}
+\index{T\-Array@{T\-Array}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{T\-Array}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::{\bf T\-Array} (
+\begin{DoxyParamCaption}
+\item[{int}]{n01, }
+\item[{int}]{n02, }
+\item[{int}]{n03, }
+\item[{int}]{n04, }
+\item[{int}]{n05, }
+\item[{int}]{n06, }
+\item[{int}]{n07}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_ab19491424589633abbd37eb374b01368}
+
+
+convenient constructor with array shape, for N = 7 
+
+
+
+Definition at line 222 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!T\-Array@{T\-Array}}
+\index{T\-Array@{T\-Array}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{T\-Array}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::{\bf T\-Array} (
+\begin{DoxyParamCaption}
+\item[{int}]{n01, }
+\item[{int}]{n02, }
+\item[{int}]{n03, }
+\item[{int}]{n04, }
+\item[{int}]{n05, }
+\item[{int}]{n06, }
+\item[{int}]{n07, }
+\item[{int}]{n08}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a5a80816bd5ab25937c1f4c4982156889}
+
+
+convenient constructor with array shape, for N = 8 
+
+
+
+Definition at line 227 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!T\-Array@{T\-Array}}
+\index{T\-Array@{T\-Array}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{T\-Array}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::{\bf T\-Array} (
+\begin{DoxyParamCaption}
+\item[{int}]{n01, }
+\item[{int}]{n02, }
+\item[{int}]{n03, }
+\item[{int}]{n04, }
+\item[{int}]{n05, }
+\item[{int}]{n06, }
+\item[{int}]{n07, }
+\item[{int}]{n08, }
+\item[{int}]{n09}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a635442bea1d9cf259d8bcd437302fdf4}
+
+
+convenient constructor with array shape, for N = 9 
+
+
+
+Definition at line 232 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!T\-Array@{T\-Array}}
+\index{T\-Array@{T\-Array}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{T\-Array}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::{\bf T\-Array} (
+\begin{DoxyParamCaption}
+\item[{int}]{n01, }
+\item[{int}]{n02, }
+\item[{int}]{n03, }
+\item[{int}]{n04, }
+\item[{int}]{n05, }
+\item[{int}]{n06, }
+\item[{int}]{n07, }
+\item[{int}]{n08, }
+\item[{int}]{n09, }
+\item[{int}]{n10}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_af3e55d6929bf88deeb2843cfa19f4150}
+
+
+convenient constructor with array shape, for N = 10 
+
+
+
+Definition at line 237 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!T\-Array@{T\-Array}}
+\index{T\-Array@{T\-Array}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{T\-Array}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::{\bf T\-Array} (
+\begin{DoxyParamCaption}
+\item[{int}]{n01, }
+\item[{int}]{n02, }
+\item[{int}]{n03, }
+\item[{int}]{n04, }
+\item[{int}]{n05, }
+\item[{int}]{n06, }
+\item[{int}]{n07, }
+\item[{int}]{n08, }
+\item[{int}]{n09, }
+\item[{int}]{n10, }
+\item[{int}]{n11}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_ab711bba53a4c30662be333729c70d20f}
+
+
+convenient constructor with array shape, for N = 11 
+
+
+
+Definition at line 242 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!T\-Array@{T\-Array}}
+\index{T\-Array@{T\-Array}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{T\-Array}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::{\bf T\-Array} (
+\begin{DoxyParamCaption}
+\item[{int}]{n01, }
+\item[{int}]{n02, }
+\item[{int}]{n03, }
+\item[{int}]{n04, }
+\item[{int}]{n05, }
+\item[{int}]{n06, }
+\item[{int}]{n07, }
+\item[{int}]{n08, }
+\item[{int}]{n09, }
+\item[{int}]{n10, }
+\item[{int}]{n11, }
+\item[{int}]{n12}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_aa178bb0f39d6a719f67195fefe44a792}
+
+
+convenient constructor with array shape, for N = 12 
+
+
+
+Definition at line 247 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!T\-Array@{T\-Array}}
+\index{T\-Array@{T\-Array}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{T\-Array}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::{\bf T\-Array} (
+\begin{DoxyParamCaption}
+\item[{const {\bf I\-Vector}$<$ N $>$ \&}]{\-\_\-shape}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_aa09435c908a6ef20b1b2d83bfba469fe}
+
+
+convenient constructor with array shape, for arbitrary N 
+
+
+
+Definition at line 252 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+
+
+\subsection{Member Function Documentation}
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!add@{add}}
+\index{add@{add}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{add}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ void {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::add (
+\begin{DoxyParamCaption}
+\item[{const {\bf T\-Array}$<$ T, N $>$ \&}]{other}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a5dc49eb15f68ca6e7da1328e446511e7}
+
+
+adding from other to this 
+
+
+
+Definition at line 146 of file T\-Array.\-h.
+
+
+
+References btas\-::fast\-\_\-add(), btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-shape, btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-store, and btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-stride.
+
+
+
+Referenced by btas\-::\-T\-Array$<$ T, N $>$\-::operator+=().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{int}]{i01}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a5a2fc4e21e1f63db77a71e41aabcdca9}
+
+
+returns array element (N = 1) with range check 
+
+
+
+Definition at line 533 of file T\-Array.\-h.
+
+
+
+Referenced by btas\-::\-T\-Array$<$ T, N $>$\-::at().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_ad99bfb958b2b9bbd06080145362607aa}
+
+
+returns array element (N = 2) with range check 
+
+
+
+Definition at line 539 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::at().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a080e99679e920f9e2252bbcdaf571b1a}
+
+
+returns array element (N = 3) with range check 
+
+
+
+Definition at line 545 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::at().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a3de6f511e33316be2be007029f7819b9}
+
+
+returns array element (N = 4) with range check 
+
+
+
+Definition at line 551 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::at().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a2ab090c873dc444ae6f8749b62ca1b79}
+
+
+returns array element (N = 5) with range check 
+
+
+
+Definition at line 557 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::at().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_aa7fb7fd2cca658a85a64ca11c44f1447}
+
+
+returns array element (N = 6) with range check 
+
+
+
+Definition at line 563 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::at().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06, }
+\item[{int}]{i07}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_ac873765685eaf0b758e9a05f2cadbb4e}
+
+
+returns array element (N = 7) with range check 
+
+
+
+Definition at line 569 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::at().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06, }
+\item[{int}]{i07, }
+\item[{int}]{i08}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a327a1e1c778bcdbfe88fcac351c3d613}
+
+
+returns array element (N = 8) with range check 
+
+
+
+Definition at line 575 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::at().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06, }
+\item[{int}]{i07, }
+\item[{int}]{i08, }
+\item[{int}]{i09}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a8217778f4fe9b08ef026e5cf8ef266e5}
+
+
+returns array element (N = 9) with range check 
+
+
+
+Definition at line 581 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::at().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06, }
+\item[{int}]{i07, }
+\item[{int}]{i08, }
+\item[{int}]{i09, }
+\item[{int}]{i10}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a203886d4319159fcbfaa7f07509d4e1f}
+
+
+returns array element (N = 10) with range check 
+
+
+
+Definition at line 587 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::at().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06, }
+\item[{int}]{i07, }
+\item[{int}]{i08, }
+\item[{int}]{i09, }
+\item[{int}]{i10, }
+\item[{int}]{i11}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a922c9338b4d25b501b076d36eba4b896}
+
+
+returns array element (N = 11) with range check 
+
+
+
+Definition at line 593 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::at().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06, }
+\item[{int}]{i07, }
+\item[{int}]{i08, }
+\item[{int}]{i09, }
+\item[{int}]{i10, }
+\item[{int}]{i11, }
+\item[{int}]{i12}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a0c00a057a45ede8e610b1754916c3190}
+
+
+returns array element (N = 12) with range check 
+
+
+
+Definition at line 599 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::at().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{const {\bf I\-Vector}$<$ N $>$ \&}]{\-\_\-index}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a56d096666a6628ce14a2a15ae123c4aa}
+
+
+returns array element (arbitrary N) with range check 
+
+
+
+Definition at line 605 of file T\-Array.\-h.
+
+
+
+References btas\-::dot(), btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-store, and btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-stride.
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{int}]{i01}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_aeb2ab0791af6076319c6c7e43d13299e}
+
+
+returns array element (N = 1) with range check 
+
+
+
+Definition at line 610 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::at().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_adbf75a15c9e0f4bb7ffdcc75fb6e637c}
+
+
+returns array element (N = 2) with range check 
+
+
+
+Definition at line 616 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::at().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a3c18a98e34d7ed35d6ad218f7f34b4ef}
+
+
+returns array element (N = 3) with range check 
+
+
+
+Definition at line 622 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::at().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a79f194295f7fd5fd814a7dea9b16d58b}
+
+
+returns array element (N = 4) with range check 
+
+
+
+Definition at line 628 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::at().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_aa853bd2e5fd08141444235a846050275}
+
+
+returns array element (N = 5) with range check 
+
+
+
+Definition at line 634 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::at().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_add6a1625e67d7f049db1c6563e23b748}
+
+
+returns array element (N = 6) with range check 
+
+
+
+Definition at line 640 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::at().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06, }
+\item[{int}]{i07}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_aef3c4646a087fe4bfc6a5047fa4516e3}
+
+
+returns array element (N = 7) with range check 
+
+
+
+Definition at line 646 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::at().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06, }
+\item[{int}]{i07, }
+\item[{int}]{i08}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a4508919b468706de48da063b9de5e261}
+
+
+returns array element (N = 8) with range check 
+
+
+
+Definition at line 652 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::at().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06, }
+\item[{int}]{i07, }
+\item[{int}]{i08, }
+\item[{int}]{i09}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a1a454cd33f260b185a17644f1a1e1f99}
+
+
+returns array element (N = 9) with range check 
+
+
+
+Definition at line 658 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::at().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06, }
+\item[{int}]{i07, }
+\item[{int}]{i08, }
+\item[{int}]{i09, }
+\item[{int}]{i10}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_aee3efde9eae444598019a9c1c8a9c944}
+
+
+returns array element (N = 10) with range check 
+
+
+
+Definition at line 664 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::at().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06, }
+\item[{int}]{i07, }
+\item[{int}]{i08, }
+\item[{int}]{i09, }
+\item[{int}]{i10, }
+\item[{int}]{i11}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a5ef21d7f233435c90581620ed159f76f}
+
+
+returns array element (N = 11) with range check 
+
+
+
+Definition at line 670 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::at().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06, }
+\item[{int}]{i07, }
+\item[{int}]{i08, }
+\item[{int}]{i09, }
+\item[{int}]{i10, }
+\item[{int}]{i11, }
+\item[{int}]{i12}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a5a73e1788d63d0bfc32d0150038e3d87}
+
+
+returns array element (N = 12) with range check 
+
+
+
+Definition at line 676 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::at().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!at@{at}}
+\index{at@{at}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::at (
+\begin{DoxyParamCaption}
+\item[{const {\bf I\-Vector}$<$ N $>$ \&}]{\-\_\-index}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_ac443eb5e512ab98f2ec188a88ca5c32d}
+
+
+returns array element (arbitrary N) with range check 
+
+
+
+Definition at line 682 of file T\-Array.\-h.
+
+
+
+References btas\-::dot(), btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-store, and btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-stride.
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!begin@{begin}}
+\index{begin@{begin}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{begin}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf const\-\_\-iterator} {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::begin (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a204af17d56894237d5abad6f751d22c4}
+
+
+returns first iterator position (const) 
+
+
+
+Definition at line 352 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-store.
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!begin@{begin}}
+\index{begin@{begin}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{begin}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf iterator} {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::begin (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_aaadc7a18541aefd4a43817168720d4c3}
+
+
+returns first iterator position 
+
+
+
+Definition at line 355 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-store.
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!clear@{clear}}
+\index{clear@{clear}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{clear}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ void {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::clear (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_ad2c859a03faa709d17e482a78cd1802f}
+
+
+deallocate storage 
+
+
+
+Definition at line 718 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-shape, btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-store, and btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-stride.
+
+
+
+Referenced by btas\-::\-Dcopy().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!copy@{copy}}
+\index{copy@{copy}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{copy}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ void {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::copy (
+\begin{DoxyParamCaption}
+\item[{const {\bf T\-Array}$<$ T, N $>$ \&}]{other}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a91900a2006137c2ba5deeaf2c8eb611b}
+
+
+copying from other to this 
+
+
+
+Definition at line 98 of file T\-Array.\-h.
+
+
+
+References btas\-::fast\-\_\-copy(), btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-shape, btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-store, and btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-stride.
+
+
+
+Referenced by btas\-::\-T\-Array$<$ T, N $>$\-::copy().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!copy@{copy}}
+\index{copy@{copy}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{copy}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf T\-Array} {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::copy (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a7c1f431e65fcd180984ae18f1cbd191d}
+
+
+return copy of this 
+
+
+
+Definition at line 105 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::copy().
+
+
+
+Referenced by btas\-::\-T\-Sub\-Array$<$ T, N $>$\-::operator=(), btas\-::\-T\-Array$<$ T, N $>$\-::operator=(), and btas\-::\-T\-Array$<$ T, N $>$\-::\-T\-Array().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!copy@{copy}}
+\index{copy@{copy}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{copy}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ template$<$size\-\_\-t M$>$ void {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::copy (
+\begin{DoxyParamCaption}
+\item[{const {\bf T\-Sub\-Array}$<$ T, M $>$ \&}]{a}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_ad664e0061ae0c69741e04bfe600ed46f}
+
+
+Copy from sub-\/array to array. 
+
+
+
+Definition at line 113 of file T\-Array.\-h.
+
+
+
+References btas\-::\-\_\-fast\-\_\-copy(), btas\-::\-T\-Array$<$ T, N $>$\-::data(), btas\-::dot(), btas\-::\-T\-Sub\-Array$<$ T, N $>$\-::m\-\_\-lower\-\_\-bound, btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-store, btas\-::\-T\-Sub\-Array$<$ T, N $>$\-::m\-\_\-upper\-\_\-bound, and btas\-::\-T\-Array$<$ T, N $>$\-::stride().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!data@{data}}
+\index{data@{data}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{data}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T$\ast$ {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::data (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a0aac67ec07fc4e5177ca5de8896ea302}
+
+
+returns the first pointer of array elements 
+
+
+
+Definition at line 693 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-store.
+
+
+
+Referenced by btas\-::\-T\-Sub\-Array$<$ T, N $>$\-::copy(), btas\-::\-T\-Array$<$ T, N $>$\-::copy(), btas\-::\-Daxpy(), btas\-::\-Dcopy(), btas\-::\-Dcopy\-Flatten(), btas\-::\-Ddiagonal(), btas\-::\-Ddidm(), btas\-::\-Ddimd(), btas\-::\-Ddot(), btas\-::\-Dgeev(), btas\-::\-Dgemm(), btas\-::\-Dgemv(), btas\-::\-Dger(), btas\-::\-Dgesv(), btas\-::\-Dgesvd(), btas\-::\-Dgetrf(), btas\-::\-Dggev(), btas\-::\-Dnrm2(), btas\-::\-Dpermute(), btas\-::\-Dscal(), btas\-::\-Dsyev(), and btas\-::\-Dsygv().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!data@{data}}
+\index{data@{data}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{data}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T$\ast$ {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::data (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_abb61521c10d6cad09841683a2acb17af}
+
+
+returns the first pointer of array elements 
+
+
+
+Definition at line 696 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-store.
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!end@{end}}
+\index{end@{end}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{end}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf const\-\_\-iterator} {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::end (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_ae2dd267724dc439873cd9b32ef6ffc30}
+
+
+returns last iterator position (const) 
+
+
+
+Definition at line 358 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-store.
+
+
+
+Referenced by btas\-::\-Q\-S\-Dgesvd().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!end@{end}}
+\index{end@{end}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{end}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf iterator} {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::end (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a6b2f4a03d953776f2948c00d91804184}
+
+
+returns last iterator position 
+
+
+
+Definition at line 361 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-store.
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!fill@{fill}}
+\index{fill@{fill}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{fill}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ void {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::fill (
+\begin{DoxyParamCaption}
+\item[{const T \&}]{val}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_aabc902e49c68f8287dcc5ace7f6d1ee8}
+
+
+fills elements by constant value 
+
+
+
+Definition at line 699 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-store.
+
+
+
+Referenced by btas\-::\-T\-Array$<$ T, N $>$\-::operator=(), and btas\-::\-Q\-S\-Tmerge().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!generate@{generate}}
+\index{generate@{generate}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{generate}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ template$<$class Generator $>$ void {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::generate (
+\begin{DoxyParamCaption}
+\item[{Generator}]{gen}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a4122a7b3b0cc4a5442f761a29cf3c646}
+
+
+generates array elements by function gen 
+
+Generator is either default constructible class or function pointer, which can be called by gen() 
+
+Definition at line 709 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-store.
+
+
+
+Referenced by D\-E\-N\-S\-E\-\_\-\-T\-E\-S\-T().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{int}]{i01}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a176855209654d248cd0d578c05f2eea1}
+
+
+returns array element (N = 1) without range check 
+
+
+
+Definition at line 379 of file T\-Array.\-h.
+
+
+
+Referenced by btas\-::\-T\-Array$<$ T, N $>$\-::operator()().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a0395c1b16cde1ca337cd60df4ead82a4}
+
+
+returns array element (N = 2) without range check 
+
+
+
+Definition at line 385 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::operator()().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_ace423054eb1a4f6d6f0c7e38dc90525e}
+
+
+returns array element (N = 3) without range check 
+
+
+
+Definition at line 391 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::operator()().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a5c77a0a177bf7c06a4b52ddc02b03f19}
+
+
+returns array element (N = 4) without range check 
+
+
+
+Definition at line 397 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::operator()().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a9003f34e868ab38c654b519f66cf477b}
+
+
+returns array element (N = 5) without range check 
+
+
+
+Definition at line 403 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::operator()().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_ac8429bca73240df8f50d514320d6a70a}
+
+
+returns array element (N = 6) without range check 
+
+
+
+Definition at line 409 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::operator()().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06, }
+\item[{int}]{i07}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a643d2ddf91d8cf7dfcb550a2c0304c80}
+
+
+returns array element (N = 7) without range check 
+
+
+
+Definition at line 415 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::operator()().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06, }
+\item[{int}]{i07, }
+\item[{int}]{i08}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a8017b58adb1c56c00f579f5a455cbe28}
+
+
+returns array element (N = 8) without range check 
+
+
+
+Definition at line 421 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::operator()().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06, }
+\item[{int}]{i07, }
+\item[{int}]{i08, }
+\item[{int}]{i09}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a0f0bb600693b9ec45c576f262957066e}
+
+
+returns array element (N = 9) without range check 
+
+
+
+Definition at line 427 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::operator()().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06, }
+\item[{int}]{i07, }
+\item[{int}]{i08, }
+\item[{int}]{i09, }
+\item[{int}]{i10}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a4f4bca0f7557a4b960c880d306a50df6}
+
+
+returns array element (N = 10) without range check 
+
+
+
+Definition at line 433 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::operator()().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06, }
+\item[{int}]{i07, }
+\item[{int}]{i08, }
+\item[{int}]{i09, }
+\item[{int}]{i10, }
+\item[{int}]{i11}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_ac5868ae21a1b27e67cea71f35fd3ff21}
+
+
+returns array element (N = 11) without range check 
+
+
+
+Definition at line 439 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::operator()().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06, }
+\item[{int}]{i07, }
+\item[{int}]{i08, }
+\item[{int}]{i09, }
+\item[{int}]{i10, }
+\item[{int}]{i11, }
+\item[{int}]{i12}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a9b5130e796d0fe089123ab1db33fe83a}
+
+
+returns array element (N = 12) without range check 
+
+
+
+Definition at line 445 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::operator()().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{const {\bf I\-Vector}$<$ N $>$ \&}]{\-\_\-index}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a388642e5e067020622d2496d135ae3cc}
+
+
+returns array element (arbitrary N) without range check 
+
+
+
+Definition at line 451 of file T\-Array.\-h.
+
+
+
+References btas\-::dot(), btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-store, and btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-stride.
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{int}]{i01}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a0bac51ab718c21f7630b1395c2ce755c}
+
+
+returns array element (N = 1) without range check 
+
+
+
+Definition at line 456 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::operator()().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a2c7dcf50829c02d5eab4b20011d4c9e7}
+
+
+returns array element (N = 2) without range check 
+
+
+
+Definition at line 462 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::operator()().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a0b62a970e06b7d6833df3729b5370274}
+
+
+returns array element (N = 3) without range check 
+
+
+
+Definition at line 468 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::operator()().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a8765999ece8894598d150b745902f1ad}
+
+
+returns array element (N = 4) without range check 
+
+
+
+Definition at line 474 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::operator()().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_af4458e9f0e14610696018efc0a46bc44}
+
+
+returns array element (N = 5) without range check 
+
+
+
+Definition at line 480 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::operator()().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a21330dc26b51dc325a9c4b027d1bdf8b}
+
+
+returns array element (N = 6) without range check 
+
+
+
+Definition at line 486 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::operator()().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06, }
+\item[{int}]{i07}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_ab896a09c47e08e6fc6005b46b38545f1}
+
+
+returns array element (N = 7) without range check 
+
+
+
+Definition at line 492 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::operator()().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06, }
+\item[{int}]{i07, }
+\item[{int}]{i08}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a7e6deda5f8378698e2550d4869f73de6}
+
+
+returns array element (N = 8) without range check 
+
+
+
+Definition at line 498 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::operator()().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06, }
+\item[{int}]{i07, }
+\item[{int}]{i08, }
+\item[{int}]{i09}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a0ee02f5cc309c2585dafae57bc08f4eb}
+
+
+returns array element (N = 9) without range check 
+
+
+
+Definition at line 504 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::operator()().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06, }
+\item[{int}]{i07, }
+\item[{int}]{i08, }
+\item[{int}]{i09, }
+\item[{int}]{i10}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_ac07102edad8de0205dd8dbce1f8fbf5f}
+
+
+returns array element (N = 10) without range check 
+
+
+
+Definition at line 510 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::operator()().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06, }
+\item[{int}]{i07, }
+\item[{int}]{i08, }
+\item[{int}]{i09, }
+\item[{int}]{i10, }
+\item[{int}]{i11}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_aa1b435d59e1cc135df3ad5d2012ecd87}
+
+
+returns array element (N = 11) without range check 
+
+
+
+Definition at line 516 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::operator()().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{int}]{i01, }
+\item[{int}]{i02, }
+\item[{int}]{i03, }
+\item[{int}]{i04, }
+\item[{int}]{i05, }
+\item[{int}]{i06, }
+\item[{int}]{i07, }
+\item[{int}]{i08, }
+\item[{int}]{i09, }
+\item[{int}]{i10, }
+\item[{int}]{i11, }
+\item[{int}]{i12}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a2be111baba6b7857e22d2faf5f49c324}
+
+
+returns array element (N = 12) without range check 
+
+
+
+Definition at line 522 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::operator()().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator()@{operator()}}
+\index{operator()@{operator()}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ T\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator() (
+\begin{DoxyParamCaption}
+\item[{const {\bf I\-Vector}$<$ N $>$ \&}]{\-\_\-index}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a22caa03d605a38c2a07d6dbe6183e506}
+
+
+returns array element (arbitrary N) without range check 
+
+
+
+Definition at line 528 of file T\-Array.\-h.
+
+
+
+References btas\-::dot(), btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-store, and btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-stride.
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator+=@{operator+=}}
+\index{operator+=@{operator+=}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator+=}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf T\-Array}\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator+= (
+\begin{DoxyParamCaption}
+\item[{const {\bf T\-Array}$<$ T, N $>$ \&}]{other}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_afcd6d5bd67e36cde4abeb30b14b9b576}
+
+
+addition assignment operator 
+
+
+
+Definition at line 92 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::add().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator=@{operator=}}
+\index{operator=@{operator=}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator=}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf T\-Array}\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator= (
+\begin{DoxyParamCaption}
+\item[{const {\bf T\-Array}$<$ T, N $>$ \&}]{other}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a1c2dadd613bd3feac2d0e8a2358fa4b2}
+
+
+copy assignment operator 
+
+
+
+Definition at line 86 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::copy().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator=@{operator=}}
+\index{operator=@{operator=}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator=}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ template$<$size\-\_\-t M$>$ {\bf T\-Array}\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator= (
+\begin{DoxyParamCaption}
+\item[{const {\bf T\-Sub\-Array}$<$ T, M $>$ \&}]{sub}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a24ef13a49a916bf322fcc081756a0489}
+
+
+copy assignment from sub-\/array 
+
+
+
+Definition at line 160 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::copy().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator=@{operator=}}
+\index{operator=@{operator=}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator=}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf T\-Array}\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator= (
+\begin{DoxyParamCaption}
+\item[{{\bf T\-Array}$<$ T, N $>$ \&\&}]{other}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a75152c891833fe5f03e56f08d155385c}
+
+
+move assignment 
+
+
+
+Definition at line 170 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-shape, btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-store, and btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-stride.
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!operator=@{operator=}}
+\index{operator=@{operator=}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{operator=}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ void {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::operator= (
+\begin{DoxyParamCaption}
+\item[{const T \&}]{val}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a981f07ec730eb3003714273caa98c902}
+
+
+fills elements by constant value 
+
+
+
+Definition at line 704 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::fill().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!reference@{reference}}
+\index{reference@{reference}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{reference}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ void {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::reference (
+\begin{DoxyParamCaption}
+\item[{const {\bf T\-Array}$<$ T, N $>$ \&}]{other}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a3e72442984255335fcdd7bb725e89e2c}
+
+
+take data reference from other 
+
+
+
+Definition at line 178 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-shape, btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-store, and btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-stride.
+
+
+
+Referenced by btas\-::\-Dcontract(), and btas\-::\-T\-Array$<$ T, N $>$\-::reference().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!reference@{reference}}
+\index{reference@{reference}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{reference}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf T\-Array} {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::reference (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a8a26ea0be05dd29853aadf4d58a012dc}
+
+
+return data reference of this 
+
+
+
+Definition at line 185 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::reference().
+
+
+
+Referenced by btas\-::\-T\-Sub\-Array$<$ T, N $>$\-::\-T\-Sub\-Array().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!resize@{resize}}
+\index{resize@{resize}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{resize}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ void {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::resize (
+\begin{DoxyParamCaption}
+\item[{int}]{n01}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a58b5d9892d9537191c4848a00d37310c}
+
+
+resize array shape, for N = 1 
+
+
+
+Definition at line 261 of file T\-Array.\-h.
+
+
+
+Referenced by btas\-::\-\_\-lsv\-\_\-truncate(), btas\-::\-\_\-rsv\-\_\-truncate(), btas\-::\-Daxpy(), btas\-::\-Dcopy(), btas\-::\-Ddiagonal(), btas\-::\-Dgeev(), btas\-::\-Dgemm(), btas\-::\-Dgemv(), btas\-::\-Dger(), btas\-::\-Dgesvd(), btas\-::\-Dgetrf(), btas\-::\-Dggev(), btas\-::\-Dpermute(), btas\-::\-Dreshape(), btas\-::\-Dsyev(), btas\-::\-Dsygv(), btas\-::\-T\-Array$<$ T, N $>$\-::resize(), and btas\-::\-T\-Array$<$ T, N $>$\-::\-T\-Array().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!resize@{resize}}
+\index{resize@{resize}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{resize}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ void {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::resize (
+\begin{DoxyParamCaption}
+\item[{int}]{n01, }
+\item[{int}]{n02}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_ad30d60a23df1cf17669b89a3286c8aae}
+
+
+resize array shape, for N = 2 
+
+
+
+Definition at line 267 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!resize@{resize}}
+\index{resize@{resize}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{resize}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ void {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::resize (
+\begin{DoxyParamCaption}
+\item[{int}]{n01, }
+\item[{int}]{n02, }
+\item[{int}]{n03}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a8b7c12bc84576e2a02021daac5eb1f7d}
+
+
+resize array shape, for N = 3 
+
+
+
+Definition at line 273 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!resize@{resize}}
+\index{resize@{resize}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{resize}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ void {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::resize (
+\begin{DoxyParamCaption}
+\item[{int}]{n01, }
+\item[{int}]{n02, }
+\item[{int}]{n03, }
+\item[{int}]{n04}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a9510b0ec5ad6e998f3368567e9582f00}
+
+
+resize array shape, for N = 4 
+
+
+
+Definition at line 279 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!resize@{resize}}
+\index{resize@{resize}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{resize}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ void {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::resize (
+\begin{DoxyParamCaption}
+\item[{int}]{n01, }
+\item[{int}]{n02, }
+\item[{int}]{n03, }
+\item[{int}]{n04, }
+\item[{int}]{n05}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a43d4b95f1577ddbf669900fd315adcdb}
+
+
+resize array shape, for N = 5 
+
+
+
+Definition at line 285 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!resize@{resize}}
+\index{resize@{resize}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{resize}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ void {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::resize (
+\begin{DoxyParamCaption}
+\item[{int}]{n01, }
+\item[{int}]{n02, }
+\item[{int}]{n03, }
+\item[{int}]{n04, }
+\item[{int}]{n05, }
+\item[{int}]{n06}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a4e362565adb513a74da59382043080ea}
+
+
+resize array shape, for N = 6 
+
+
+
+Definition at line 291 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!resize@{resize}}
+\index{resize@{resize}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{resize}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ void {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::resize (
+\begin{DoxyParamCaption}
+\item[{int}]{n01, }
+\item[{int}]{n02, }
+\item[{int}]{n03, }
+\item[{int}]{n04, }
+\item[{int}]{n05, }
+\item[{int}]{n06, }
+\item[{int}]{n07}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a8729f20d4a9797f07aa8560e0c6756c1}
+
+
+resize array shape, for N = 7 
+
+
+
+Definition at line 297 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!resize@{resize}}
+\index{resize@{resize}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{resize}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ void {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::resize (
+\begin{DoxyParamCaption}
+\item[{int}]{n01, }
+\item[{int}]{n02, }
+\item[{int}]{n03, }
+\item[{int}]{n04, }
+\item[{int}]{n05, }
+\item[{int}]{n06, }
+\item[{int}]{n07, }
+\item[{int}]{n08}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_acca51a2b3f3ce4b1bdf0d1e39dc26fb2}
+
+
+resize array shape, for N = 8 
+
+
+
+Definition at line 303 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!resize@{resize}}
+\index{resize@{resize}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{resize}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ void {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::resize (
+\begin{DoxyParamCaption}
+\item[{int}]{n01, }
+\item[{int}]{n02, }
+\item[{int}]{n03, }
+\item[{int}]{n04, }
+\item[{int}]{n05, }
+\item[{int}]{n06, }
+\item[{int}]{n07, }
+\item[{int}]{n08, }
+\item[{int}]{n09}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a96b3637f5338dd4d5f2a1d0027430150}
+
+
+resize array shape, for N = 9 
+
+
+
+Definition at line 309 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!resize@{resize}}
+\index{resize@{resize}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{resize}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ void {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::resize (
+\begin{DoxyParamCaption}
+\item[{int}]{n01, }
+\item[{int}]{n02, }
+\item[{int}]{n03, }
+\item[{int}]{n04, }
+\item[{int}]{n05, }
+\item[{int}]{n06, }
+\item[{int}]{n07, }
+\item[{int}]{n08, }
+\item[{int}]{n09, }
+\item[{int}]{n10}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a4574e80b2bcff504fb59d8ea584e3044}
+
+
+resize array shape, for N = 10 
+
+
+
+Definition at line 315 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!resize@{resize}}
+\index{resize@{resize}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{resize}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ void {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::resize (
+\begin{DoxyParamCaption}
+\item[{int}]{n01, }
+\item[{int}]{n02, }
+\item[{int}]{n03, }
+\item[{int}]{n04, }
+\item[{int}]{n05, }
+\item[{int}]{n06, }
+\item[{int}]{n07, }
+\item[{int}]{n08, }
+\item[{int}]{n09, }
+\item[{int}]{n10, }
+\item[{int}]{n11}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a603ed16fa4bf2c17d7763eccf7446739}
+
+
+resize array shape, for N = 11 
+
+
+
+Definition at line 321 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!resize@{resize}}
+\index{resize@{resize}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{resize}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ void {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::resize (
+\begin{DoxyParamCaption}
+\item[{int}]{n01, }
+\item[{int}]{n02, }
+\item[{int}]{n03, }
+\item[{int}]{n04, }
+\item[{int}]{n05, }
+\item[{int}]{n06, }
+\item[{int}]{n07, }
+\item[{int}]{n08, }
+\item[{int}]{n09, }
+\item[{int}]{n10, }
+\item[{int}]{n11, }
+\item[{int}]{n12}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a39b180b3b3002ea80372beb023d528e1}
+
+
+resize array shape, for N = 12 
+
+
+
+Definition at line 327 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!resize@{resize}}
+\index{resize@{resize}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{resize}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ void {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::resize (
+\begin{DoxyParamCaption}
+\item[{const {\bf I\-Vector}$<$ N $>$ \&}]{\-\_\-shape}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_ae0080ab46f3c2e4083e71f43179f3524}
+
+
+resize array by \-\_\-shape, for arbitrary N 
+
+detects rank-\/mismatching error at compilation time 
+
+Definition at line 334 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-shape, btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-store, btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-stride, and btas\-::\-T\-Array$<$ T, N $>$\-::stride().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!scale@{scale}}
+\index{scale@{scale}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{scale}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ void {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::scale (
+\begin{DoxyParamCaption}
+\item[{const T \&}]{alpha}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a71609e0f5d80311e50d8d9df8f25b913}
+
+
+scale by const value 
+
+
+
+Definition at line 141 of file T\-Array.\-h.
+
+
+
+References btas\-::fast\-\_\-scal(), and btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-store.
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!serialize@{serialize}}
+\index{serialize@{serialize}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{serialize}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ template$<$class Archive $>$ void {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::serialize (
+\begin{DoxyParamCaption}
+\item[{Archive \&}]{ar, }
+\item[{const unsigned int}]{version}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}\label{db/d3c/classbtas_1_1TArray_a47aa989d964fe7a2204b026de64b157c}
+
+
+Enables to use boost serialization. 
+
+
+
+Definition at line 53 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-shape, btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-store, and btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-stride.
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!shape@{shape}}
+\index{shape@{shape}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{shape}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const {\bf I\-Vector}$<$N$>$\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::shape (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a415e76c923741c92ec6aa5bb66c2859a}
+
+
+returns array shape 
+
+
+
+Definition at line 364 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-shape.
+
+
+
+Referenced by btas\-::\-\_\-lsv\-\_\-truncate(), btas\-::\-\_\-rsv\-\_\-truncate(), btas\-::\-Daxpy(), btas\-::\-Dcontract(), btas\-::\-Dcopy(), btas\-::\-Ddiagonal(), btas\-::\-Ddidm(), btas\-::\-Ddimd(), btas\-::\-Ddot(), btas\-::\-Dgeev(), btas\-::\-Dgemm(), btas\-::\-Dgemv(), btas\-::\-Dger(), btas\-::\-Dgesv(), btas\-::\-Dgesvd(), btas\-::\-Dgetrf(), btas\-::\-Dggev(), btas\-::\-Dpermute(), btas\-::\-Dsyev(), btas\-::\-Dsygv(), btas\-::\-S\-T\-Array$<$ T, N $>$\-::insert(), and btas\-::\-Q\-S\-Texpand().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!shape@{shape}}
+\index{shape@{shape}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{shape}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ int {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::shape (
+\begin{DoxyParamCaption}
+\item[{int}]{i}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_aec150ec83617e482ae31ee59676f1da9}
+
+
+returns array shape for rank i 
+
+
+
+Definition at line 367 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-shape.
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!size@{size}}
+\index{size@{size}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{size}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ size\-\_\-t {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::size (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_aab4d086abe567436280b9ff5755af78b}
+
+
+returns allocated size 
+
+
+
+Definition at line 376 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-store.
+
+
+
+Referenced by btas\-::\-T\-Sub\-Array$<$ T, N $>$\-::copy(), btas\-::\-Daxpy(), btas\-::\-Dcopy(), btas\-::\-Dcopy\-Flatten(), btas\-::\-Ddiagonal(), btas\-::\-Ddidm(), btas\-::\-Ddimd(), btas\-::\-Ddot(), btas\-::decompose(), btas\-::\-Dgeev(), btas\-::\-Dgemm(), btas\-::\-Dgemv(), btas\-::\-Dger(), btas\-::\-Dgesv(), btas\-::\-Dgesvd(), btas\-::\-Dggev(), btas\-::\-Dindexed\-\_\-contract(), btas\-::\-Dnrm2(), btas\-::\-Dpermute(), btas\-::\-Dscal(), btas\-::\-Dsyev(), btas\-::\-Dsygv(), and btas\-::indexed\-\_\-decompose().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!stride@{stride}}
+\index{stride@{stride}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{stride}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ const {\bf I\-Vector}$<$N$>$\& {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::stride (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a7a611721849b42754d974181f5afd73a}
+
+
+returns array stride 
+
+
+
+Definition at line 370 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-stride.
+
+
+
+Referenced by btas\-::\-T\-Array$<$ T, N $>$\-::copy(), btas\-::\-Ddiagonal(), and btas\-::\-T\-Array$<$ T, N $>$\-::resize().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!stride@{stride}}
+\index{stride@{stride}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{stride}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ int {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::stride (
+\begin{DoxyParamCaption}
+\item[{int}]{i}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_a0b9721160c947409d06857f0338fbf9c}
+
+
+returns array stride for rank i 
+
+
+
+Definition at line 373 of file T\-Array.\-h.
+
+
+
+References btas\-::\-T\-Array$<$ T, N $>$\-::m\-\_\-stride.
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!subarray@{subarray}}
+\index{subarray@{subarray}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{subarray}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf T\-Sub\-Array}$<$T, N$>$ {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::subarray (
+\begin{DoxyParamCaption}
+\item[{const {\bf I\-Vector}$<$ N $>$ \&}]{lbound, }
+\item[{const {\bf I\-Vector}$<$ N $>$ \&}]{ubound}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{db/d3c/classbtas_1_1TArray_abff042a1c4dfed79a04a042324757a78}
+
+
+slice array to return sub-\/array object 
+
+sub-\/array is constructed from array elements [lbound[0]\-:ubound[0], lbound[1]\-:ubound[1], ...] 
+
+Definition at line 688 of file T\-Array.\-h.
+
+
+
+Referenced by btas\-::\-Q\-S\-Texpand().
+
+
+
+\subsection{Friends And Related Function Documentation}
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!boost\-::serialization\-::access@{boost\-::serialization\-::access}}
+\index{boost\-::serialization\-::access@{boost\-::serialization\-::access}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{boost\-::serialization\-::access}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ friend class boost\-::serialization\-::access\hspace{0.3cm}{\ttfamily [friend]}}\label{db/d3c/classbtas_1_1TArray_ac98d07dd8f7b70e16ccb9a01abf56b9c}
+
+
+Definition at line 45 of file T\-Array.\-h.
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!T\-Sub\-Array@{T\-Sub\-Array}}
+\index{T\-Sub\-Array@{T\-Sub\-Array}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{T\-Sub\-Array}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ template$<$typename U , size\-\_\-t M$>$ friend class {\bf T\-Sub\-Array}\hspace{0.3cm}{\ttfamily [friend]}}\label{db/d3c/classbtas_1_1TArray_aa96242705c86cd2b40ca153c2b12d45f}
+
+
+Any \doxyref{T\-Sub\-Array}{p.}{da/d50/classbtas_1_1TSubArray} classes being friend of T\-Array$<$\-T, N$>$ 
+
+
+
+Definition at line 49 of file T\-Array.\-h.
+
+
+
+\subsection{Field Documentation}
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!m\-\_\-shape@{m\-\_\-shape}}
+\index{m\-\_\-shape@{m\-\_\-shape}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{m\-\_\-shape}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf I\-Vector}$<$N$>$ {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::m\-\_\-shape\hspace{0.3cm}{\ttfamily [private]}}\label{db/d3c/classbtas_1_1TArray_aa3234cfd48a8bc515c8fe84ca0920dfa}
+
+
+array shape 
+
+
+
+Definition at line 732 of file T\-Array.\-h.
+
+
+
+Referenced by btas\-::\-T\-Array$<$ T, N $>$\-::add(), btas\-::\-T\-Array$<$ T, N $>$\-::clear(), btas\-::\-T\-Array$<$ T, N $>$\-::copy(), btas\-::\-T\-Array$<$ T, N $>$\-::operator=(), btas\-::\-T\-Array$<$ T, N $>$\-::reference(), btas\-::\-T\-Array$<$ T, N $>$\-::resize(), btas\-::\-T\-Array$<$ T, N $>$\-::serialize(), btas\-::\-T\-Array$<$ T, N $>$\-::shape(), and btas\-::\-T\-Array$<$ T, N $>$\-::\-T\-Array().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!m\-\_\-store@{m\-\_\-store}}
+\index{m\-\_\-store@{m\-\_\-store}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{m\-\_\-store}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ shared\-\_\-ptr$<$std\-::vector$<$T$>$ $>$ {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::m\-\_\-store\hspace{0.3cm}{\ttfamily [private]}}\label{db/d3c/classbtas_1_1TArray_a490310fd7c9f849144fd1840315c230a}
+
+
+array storage 
+
+
+
+Definition at line 740 of file T\-Array.\-h.
+
+
+
+Referenced by btas\-::\-T\-Array$<$ T, N $>$\-::add(), btas\-::\-T\-Array$<$ T, N $>$\-::at(), btas\-::\-T\-Array$<$ T, N $>$\-::begin(), btas\-::\-T\-Array$<$ T, N $>$\-::clear(), btas\-::\-T\-Array$<$ T, N $>$\-::copy(), btas\-::\-T\-Array$<$ T, N $>$\-::data(), btas\-::\-T\-Array$<$ T, N $>$\-::end(), btas\-::\-T\-Array$<$ T, N $>$\-::fill(), btas\-::\-T\-Array$<$ T, N $>$\-::generate(), btas\-::\-T\-Array$<$ T, N $>$\-::operator()(), btas\-::\-T\-Array$<$ T, N $>$\-::operator=(), btas\-::\-T\-Array$<$ T, N $>$\-::reference(), btas\-::\-T\-Array$<$ T, N $>$\-::resize(), btas\-::\-T\-Array$<$ T, N $>$\-::scale(), btas\-::\-T\-Array$<$ T, N $>$\-::serialize(), and btas\-::\-T\-Array$<$ T, N $>$\-::size().
+
+\index{btas\-::\-T\-Array@{btas\-::\-T\-Array}!m\-\_\-stride@{m\-\_\-stride}}
+\index{m\-\_\-stride@{m\-\_\-stride}!btas::TArray@{btas\-::\-T\-Array}}
+\subsubsection[{m\-\_\-stride}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T, size\-\_\-t N$>$ {\bf I\-Vector}$<$N$>$ {\bf btas\-::\-T\-Array}$<$ T, N $>$\-::m\-\_\-stride\hspace{0.3cm}{\ttfamily [private]}}\label{db/d3c/classbtas_1_1TArray_a3fcb36a437e51021138def7134cbc1dc}
+
+
+array stride 
+
+
+
+Definition at line 736 of file T\-Array.\-h.
+
+
+
+Referenced by btas\-::\-T\-Array$<$ T, N $>$\-::add(), btas\-::\-T\-Array$<$ T, N $>$\-::at(), btas\-::\-T\-Array$<$ T, N $>$\-::clear(), btas\-::\-T\-Sub\-Array$<$ T, N $>$\-::copy(), btas\-::\-T\-Array$<$ T, N $>$\-::copy(), btas\-::\-T\-Array$<$ T, N $>$\-::operator()(), btas\-::\-T\-Array$<$ T, N $>$\-::operator=(), btas\-::\-T\-Array$<$ T, N $>$\-::reference(), btas\-::\-T\-Array$<$ T, N $>$\-::resize(), btas\-::\-T\-Array$<$ T, N $>$\-::serialize(), btas\-::\-T\-Array$<$ T, N $>$\-::stride(), and btas\-::\-T\-Array$<$ T, N $>$\-::\-T\-Array().
+
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+include/btas/\-D\-E\-N\-S\-E/{\bf T\-Array.\-h}\end{DoxyCompactItemize}

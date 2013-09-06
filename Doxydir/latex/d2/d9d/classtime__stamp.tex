@@ -1,0 +1,182 @@
+\section{time\-\_\-stamp Class Reference}
+\label{d2/d9d/classtime__stamp}\index{time\-\_\-stamp@{time\-\_\-stamp}}
+
+
+Clock function for timing.  
+
+
+
+
+{\ttfamily \#include $<$time\-\_\-stamp.\-h$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef \\*
+std\-::chrono\-::time\-\_\-point\\*
+$<$ std\-::chrono\-::system\-\_\-clock, \\*
+std\-::chrono\-::microseconds $>$ {\bf time\-\_\-point\-\_\-type}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\bf time\-\_\-stamp} ()
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+void {\bf start} ()
+\begin{DoxyCompactList}\small\item\em Start / Restart. \end{DoxyCompactList}\item 
+double {\bf elapsed} (unsigned long n\-\_\-periods=1000000) const 
+\begin{DoxyCompactList}\small\item\em Get elapased time in microseconds. \end{DoxyCompactList}\item 
+double {\bf lap} (unsigned long n\-\_\-periods=1000000)
+\begin{DoxyCompactList}\small\item\em Get lap time in microseconds, and reset lap time record. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+{\bf time\-\_\-point\-\_\-type} {\bf m\-\_\-time\-\_\-point\-\_\-start}
+\begin{DoxyCompactList}\small\item\em Starting time point. \end{DoxyCompactList}\item 
+{\bf time\-\_\-point\-\_\-type} {\bf m\-\_\-time\-\_\-point\-\_\-lap}
+\begin{DoxyCompactList}\small\item\em Lap time record. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Clock function for timing. 
+
+Definition at line 7 of file time\-\_\-stamp.\-h.
+
+
+
+\subsection{Member Typedef Documentation}
+\index{time\-\_\-stamp@{time\-\_\-stamp}!time\-\_\-point\-\_\-type@{time\-\_\-point\-\_\-type}}
+\index{time\-\_\-point\-\_\-type@{time\-\_\-point\-\_\-type}!time_stamp@{time\-\_\-stamp}}
+\subsubsection[{time\-\_\-point\-\_\-type}]{\setlength{\rightskip}{0pt plus 5cm}typedef std\-::chrono\-::time\-\_\-point$<$std\-::chrono\-::system\-\_\-clock, std\-::chrono\-::microseconds$>$ {\bf time\-\_\-stamp\-::time\-\_\-point\-\_\-type}}\label{d2/d9d/classtime__stamp_afe7f2c3cfd4ff4d4ca944eefe6aa4152}
+
+
+Definition at line 9 of file time\-\_\-stamp.\-h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{time\-\_\-stamp@{time\-\_\-stamp}!time\-\_\-stamp@{time\-\_\-stamp}}
+\index{time\-\_\-stamp@{time\-\_\-stamp}!time_stamp@{time\-\_\-stamp}}
+\subsubsection[{time\-\_\-stamp}]{\setlength{\rightskip}{0pt plus 5cm}time\-\_\-stamp\-::time\-\_\-stamp (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{d2/d9d/classtime__stamp_a185f988aa816070964bd336297f6d1c4}
+
+
+Default constructor. 
+
+
+
+Definition at line 19 of file time\-\_\-stamp.\-h.
+
+
+
+References start().
+
+
+
+\subsection{Member Function Documentation}
+\index{time\-\_\-stamp@{time\-\_\-stamp}!elapsed@{elapsed}}
+\index{elapsed@{elapsed}!time_stamp@{time\-\_\-stamp}}
+\subsubsection[{elapsed}]{\setlength{\rightskip}{0pt plus 5cm}double time\-\_\-stamp\-::elapsed (
+\begin{DoxyParamCaption}
+\item[{unsigned long}]{n\-\_\-periods = {\ttfamily 1000000}}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{d2/d9d/classtime__stamp_aab7ef8acf3fcb6219d1bf4e7ffc2d1ee}
+
+
+Get elapased time in microseconds. 
+
+
+
+Definition at line 26 of file time\-\_\-stamp.\-h.
+
+
+
+References m\-\_\-time\-\_\-point\-\_\-start.
+
+
+
+Referenced by main().
+
+\index{time\-\_\-stamp@{time\-\_\-stamp}!lap@{lap}}
+\index{lap@{lap}!time_stamp@{time\-\_\-stamp}}
+\subsubsection[{lap}]{\setlength{\rightskip}{0pt plus 5cm}double time\-\_\-stamp\-::lap (
+\begin{DoxyParamCaption}
+\item[{unsigned long}]{n\-\_\-periods = {\ttfamily 1000000}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{d2/d9d/classtime__stamp_a8b820eec1136faaf010276de88cf5b21}
+
+
+Get lap time in microseconds, and reset lap time record. 
+
+
+
+Definition at line 31 of file time\-\_\-stamp.\-h.
+
+
+
+References m\-\_\-time\-\_\-point\-\_\-lap.
+
+\index{time\-\_\-stamp@{time\-\_\-stamp}!start@{start}}
+\index{start@{start}!time_stamp@{time\-\_\-stamp}}
+\subsubsection[{start}]{\setlength{\rightskip}{0pt plus 5cm}void time\-\_\-stamp\-::start (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{d2/d9d/classtime__stamp_aaaea515d75416e2d39d58e619767e753}
+
+
+Start / Restart. 
+
+
+
+Definition at line 21 of file time\-\_\-stamp.\-h.
+
+
+
+References m\-\_\-time\-\_\-point\-\_\-lap, and m\-\_\-time\-\_\-point\-\_\-start.
+
+
+
+Referenced by main(), and time\-\_\-stamp().
+
+
+
+\subsection{Field Documentation}
+\index{time\-\_\-stamp@{time\-\_\-stamp}!m\-\_\-time\-\_\-point\-\_\-lap@{m\-\_\-time\-\_\-point\-\_\-lap}}
+\index{m\-\_\-time\-\_\-point\-\_\-lap@{m\-\_\-time\-\_\-point\-\_\-lap}!time_stamp@{time\-\_\-stamp}}
+\subsubsection[{m\-\_\-time\-\_\-point\-\_\-lap}]{\setlength{\rightskip}{0pt plus 5cm}{\bf time\-\_\-point\-\_\-type} time\-\_\-stamp\-::m\-\_\-time\-\_\-point\-\_\-lap\hspace{0.3cm}{\ttfamily [private]}}\label{d2/d9d/classtime__stamp_aff39cfe49f5cb6e28c78bedfdc4b8289}
+
+
+Lap time record. 
+
+
+
+Definition at line 16 of file time\-\_\-stamp.\-h.
+
+
+
+Referenced by lap(), and start().
+
+\index{time\-\_\-stamp@{time\-\_\-stamp}!m\-\_\-time\-\_\-point\-\_\-start@{m\-\_\-time\-\_\-point\-\_\-start}}
+\index{m\-\_\-time\-\_\-point\-\_\-start@{m\-\_\-time\-\_\-point\-\_\-start}!time_stamp@{time\-\_\-stamp}}
+\subsubsection[{m\-\_\-time\-\_\-point\-\_\-start}]{\setlength{\rightskip}{0pt plus 5cm}{\bf time\-\_\-point\-\_\-type} time\-\_\-stamp\-::m\-\_\-time\-\_\-point\-\_\-start\hspace{0.3cm}{\ttfamily [private]}}\label{d2/d9d/classtime__stamp_a3e6b5219f5acb2f04b1fa1a87dc74555}
+
+
+Starting time point. 
+
+
+
+Definition at line 13 of file time\-\_\-stamp.\-h.
+
+
+
+Referenced by elapsed(), and start().
+
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+include/{\bf time\-\_\-stamp.\-h}\end{DoxyCompactItemize}

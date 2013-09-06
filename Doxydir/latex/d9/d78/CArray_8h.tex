@@ -1,0 +1,63 @@
+\section{include/btas/\-D\-E\-N\-S\-E/\-C\-Array.h File Reference}
+\label{d9/d78/CArray_8h}\index{include/btas/\-D\-E\-N\-S\-E/\-C\-Array.\-h@{include/btas/\-D\-E\-N\-S\-E/\-C\-Array.\-h}}
+
+
+Dense array for single precision complex number.  
+
+
+{\ttfamily \#include $<$iostream$>$}\\*
+{\ttfamily \#include $<$iomanip$>$}\\*
+{\ttfamily \#include $<$cmath$>$}\\*
+{\ttfamily \#include $<$btas/\-T\-Vector.\-h$>$}\\*
+{\ttfamily \#include $<$btas/blas\-\_\-cxx\-\_\-interface.\-h$>$}\\*
+{\ttfamily \#include $<$btas/\-D\-E\-N\-S\-E/\-T\-Array.\-h$>$}\\*
+{\ttfamily \#include $<$btas/\-D\-E\-N\-S\-E/\-T\-Sub\-Array.\-h$>$}\\*
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace {\bf btas}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\using {\bf btas\-::\-C\-Array} = T\-Array$<$ complex$<$ float $>$, N $>$
+\begin{DoxyCompactList}\small\item\em Alias to single precision complex array. \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\using {\bf btas\-::\-C\-Sub\-Array} = T\-Sub\-Array$<$ complex$<$ float $>$, N $>$
+\begin{DoxyCompactList}\small\item\em Alias to single precision complex sub-\/array. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$$>$ }\\void {\bf btas\-::\-\_\-fast\-\_\-copy$<$ complex$<$ float $>$ $>$} (size\-\_\-t n, const complex$<$ float $>$ $\ast$x, complex$<$ float $>$ $\ast$y)
+\begin{DoxyCompactList}\small\item\em Fast copying for single precision complex array (calling cblas\-\_\-ccopy) \end{DoxyCompactList}\item 
+{\footnotesize template$<$$>$ }\\void {\bf btas\-::\-\_\-fast\-\_\-scal$<$ complex$<$ float $>$ $>$} (size\-\_\-t n, const complex$<$ float $>$ \&alpha, complex$<$ float $>$ $\ast$x)
+\begin{DoxyCompactList}\small\item\em Fast scaling for single precision complex array (calling cblas\-\_\-cscal) \end{DoxyCompactList}\item 
+{\footnotesize template$<$$>$ }\\void {\bf btas\-::\-\_\-fast\-\_\-add$<$ complex$<$ float $>$ $>$} (size\-\_\-t n, const complex$<$ float $>$ $\ast$x, complex$<$ float $>$ $\ast$y)
+\begin{DoxyCompactList}\small\item\em Fast adding for single precision complex array (calling cblas\-\_\-caxpy) \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\std\-::ostream \& {\bf operator$<$$<$} (std\-::ostream \&ost, const {\bf btas\-::\-C\-Array}$<$ N $>$ \&a)
+\begin{DoxyCompactList}\small\item\em C++ style printing function. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Dense array for single precision complex number. 
+
+Definition in file {\bf C\-Array.\-h}.
+
+
+
+\subsection{Function Documentation}
+\index{C\-Array.\-h@{C\-Array.\-h}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!CArray.h@{C\-Array.\-h}}
+\subsubsection[{operator$<$$<$}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N$>$ std\-::ostream\& operator$<$$<$ (
+\begin{DoxyParamCaption}
+\item[{std\-::ostream \&}]{ost, }
+\item[{const {\bf btas\-::\-C\-Array}$<$ N $>$ \&}]{a}
+\end{DoxyParamCaption}
+)}\label{d9/d78/CArray_8h_a1c64c122bd6269e064dbb394b4492c4e}
+
+
+C++ style printing function. 
+
+
+
+Definition at line 52 of file C\-Array.\-h.
+

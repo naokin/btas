@@ -1,0 +1,300 @@
+\section{include/lapack/lapack\-\_\-fort\-\_\-predecl.h File Reference}
+\label{d9/dcd/lapack__fort__predecl_8h}\index{include/lapack/lapack\-\_\-fort\-\_\-predecl.\-h@{include/lapack/lapack\-\_\-fort\-\_\-predecl.\-h}}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void {\bf dgetrf\-\_\-} (int $\ast$m, int $\ast$n, double $\ast$a, int $\ast$lda, int $\ast$ipiv, int $\ast$info)
+\item 
+void {\bf dpotrf\-\_\-} (char $\ast$uplo, int $\ast$n, double $\ast$a, int $\ast$lda, int $\ast$info)
+\item 
+void {\bf dsytrf\-\_\-} (char $\ast$uplo, int $\ast$n, double $\ast$a, int $\ast$lda, int $\ast$ipiv, double $\ast$work, int $\ast$lwork, int $\ast$info)
+\item 
+void {\bf dgetrs\-\_\-} (char $\ast$transa, int $\ast$n, int $\ast$nrhs, double $\ast$a, int $\ast$lda, int $\ast$ipiv, double $\ast$b, int $\ast$ldb, int $\ast$info)
+\item 
+void {\bf dpotrs\-\_\-} (char $\ast$uplo, int $\ast$n, int $\ast$nrhs, double $\ast$a, int $\ast$lda, double $\ast$b, int $\ast$ldb, int $\ast$info)
+\item 
+void {\bf dsytrs\-\_\-} (char $\ast$uplo, int $\ast$n, int $\ast$nrhs, double $\ast$a, int $\ast$lda, int $\ast$ipiv, double $\ast$b, int $\ast$ldb, int $\ast$info)
+\item 
+void {\bf dsyev\-\_\-} (char $\ast$jobz, char $\ast$uplo, int $\ast$n, double $\ast$a, int $\ast$lda, double $\ast$w, double $\ast$work, int $\ast$lwork, int $\ast$info)
+\item 
+void {\bf dgeev\-\_\-} (char $\ast$jobl, char $\ast$jobr, int $\ast$n, double $\ast$a, int $\ast$lda, double $\ast$wr, double $\ast$wi, double $\ast$vl, int $\ast$ldvl, double $\ast$vr, int $\ast$ldvr, double $\ast$work, int $\ast$lwork, int $\ast$info)
+\item 
+void {\bf dsygv\-\_\-} (int $\ast$itype, char $\ast$jobz, char $\ast$uplo, int $\ast$n, double $\ast$a, int $\ast$lda, double $\ast$b, int $\ast$ldb, double $\ast$w, double $\ast$work, int $\ast$lwork, int $\ast$info)
+\item 
+void {\bf dggev\-\_\-} (char $\ast$jobl, char $\ast$jobr, int $\ast$n, double $\ast$a, int $\ast$lda, double $\ast$b, int $\ast$ldb, double $\ast$alphar, double $\ast$alphai, double $\ast$beta, double $\ast$vl, int $\ast$ldvl, double $\ast$vr, int $\ast$ldvr, double $\ast$work, int $\ast$lwork, int $\ast$info)
+\item 
+void {\bf dgesvd\-\_\-} (char $\ast$jobu, char $\ast$jobvt, int $\ast$m, int $\ast$n, double $\ast$a, int $\ast$lda, double $\ast$s, double $\ast$u, int $\ast$ldu, double $\ast$vt, int $\ast$ldvt, double $\ast$work, int $\ast$lwork, int $\ast$info)
+\item 
+void {\bf zheev\-\_\-} (char $\ast$jobz, char $\ast$uplo, int $\ast$n, {\bf F\-C\-\_\-\-C\-O\-M\-P\-L\-E\-X\-\_\-16} $\ast$a, int $\ast$lda, double $\ast$w, {\bf F\-C\-\_\-\-C\-O\-M\-P\-L\-E\-X\-\_\-16} $\ast$work, int $\ast$lwork, double $\ast$rwork, int $\ast$info)
+\item 
+void {\bf zgesvd\-\_\-} (char $\ast$jobu, char $\ast$jobvt, int $\ast$m, int $\ast$n, {\bf F\-C\-\_\-\-C\-O\-M\-P\-L\-E\-X\-\_\-16} $\ast$a, int $\ast$lda, double $\ast$s, {\bf F\-C\-\_\-\-C\-O\-M\-P\-L\-E\-X\-\_\-16} $\ast$u, int $\ast$ldu, {\bf F\-C\-\_\-\-C\-O\-M\-P\-L\-E\-X\-\_\-16} $\ast$vt, int $\ast$ldvt, {\bf F\-C\-\_\-\-C\-O\-M\-P\-L\-E\-X\-\_\-16} $\ast$work, int $\ast$lwork, double $\ast$rwork, int $\ast$info)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\index{lapack\-\_\-fort\-\_\-predecl.\-h@{lapack\-\_\-fort\-\_\-predecl.\-h}!dgeev\-\_\-@{dgeev\-\_\-}}
+\index{dgeev\-\_\-@{dgeev\-\_\-}!lapack_fort_predecl.h@{lapack\-\_\-fort\-\_\-predecl.\-h}}
+\subsubsection[{dgeev\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}void dgeev\-\_\- (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{jobl, }
+\item[{char $\ast$}]{jobr, }
+\item[{int $\ast$}]{n, }
+\item[{double $\ast$}]{a, }
+\item[{int $\ast$}]{lda, }
+\item[{double $\ast$}]{wr, }
+\item[{double $\ast$}]{wi, }
+\item[{double $\ast$}]{vl, }
+\item[{int $\ast$}]{ldvl, }
+\item[{double $\ast$}]{vr, }
+\item[{int $\ast$}]{ldvr, }
+\item[{double $\ast$}]{work, }
+\item[{int $\ast$}]{lwork, }
+\item[{int $\ast$}]{info}
+\end{DoxyParamCaption}
+)}\label{d9/dcd/lapack__fort__predecl_8h_a138c5116f5fa6bc2c9c5006258336c06}
+
+
+Referenced by clapack\-\_\-dgeev().
+
+\index{lapack\-\_\-fort\-\_\-predecl.\-h@{lapack\-\_\-fort\-\_\-predecl.\-h}!dgesvd\-\_\-@{dgesvd\-\_\-}}
+\index{dgesvd\-\_\-@{dgesvd\-\_\-}!lapack_fort_predecl.h@{lapack\-\_\-fort\-\_\-predecl.\-h}}
+\subsubsection[{dgesvd\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}void dgesvd\-\_\- (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{jobu, }
+\item[{char $\ast$}]{jobvt, }
+\item[{int $\ast$}]{m, }
+\item[{int $\ast$}]{n, }
+\item[{double $\ast$}]{a, }
+\item[{int $\ast$}]{lda, }
+\item[{double $\ast$}]{s, }
+\item[{double $\ast$}]{u, }
+\item[{int $\ast$}]{ldu, }
+\item[{double $\ast$}]{vt, }
+\item[{int $\ast$}]{ldvt, }
+\item[{double $\ast$}]{work, }
+\item[{int $\ast$}]{lwork, }
+\item[{int $\ast$}]{info}
+\end{DoxyParamCaption}
+)}\label{d9/dcd/lapack__fort__predecl_8h_a3e45f8d4a4bf16793e31a81771f2f69d}
+
+
+Referenced by clapack\-\_\-dgesvd().
+
+\index{lapack\-\_\-fort\-\_\-predecl.\-h@{lapack\-\_\-fort\-\_\-predecl.\-h}!dgetrf\-\_\-@{dgetrf\-\_\-}}
+\index{dgetrf\-\_\-@{dgetrf\-\_\-}!lapack_fort_predecl.h@{lapack\-\_\-fort\-\_\-predecl.\-h}}
+\subsubsection[{dgetrf\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}void dgetrf\-\_\- (
+\begin{DoxyParamCaption}
+\item[{int $\ast$}]{m, }
+\item[{int $\ast$}]{n, }
+\item[{double $\ast$}]{a, }
+\item[{int $\ast$}]{lda, }
+\item[{int $\ast$}]{ipiv, }
+\item[{int $\ast$}]{info}
+\end{DoxyParamCaption}
+)}\label{d9/dcd/lapack__fort__predecl_8h_ae56e8f1e7103728e3bc7c17b82868a81}
+
+
+Referenced by clapack\-\_\-dgetrf().
+
+\index{lapack\-\_\-fort\-\_\-predecl.\-h@{lapack\-\_\-fort\-\_\-predecl.\-h}!dgetrs\-\_\-@{dgetrs\-\_\-}}
+\index{dgetrs\-\_\-@{dgetrs\-\_\-}!lapack_fort_predecl.h@{lapack\-\_\-fort\-\_\-predecl.\-h}}
+\subsubsection[{dgetrs\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}void dgetrs\-\_\- (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{transa, }
+\item[{int $\ast$}]{n, }
+\item[{int $\ast$}]{nrhs, }
+\item[{double $\ast$}]{a, }
+\item[{int $\ast$}]{lda, }
+\item[{int $\ast$}]{ipiv, }
+\item[{double $\ast$}]{b, }
+\item[{int $\ast$}]{ldb, }
+\item[{int $\ast$}]{info}
+\end{DoxyParamCaption}
+)}\label{d9/dcd/lapack__fort__predecl_8h_adb8d4df0885b54317d3eba61877d162d}
+
+
+Referenced by clapack\-\_\-dgetrs().
+
+\index{lapack\-\_\-fort\-\_\-predecl.\-h@{lapack\-\_\-fort\-\_\-predecl.\-h}!dggev\-\_\-@{dggev\-\_\-}}
+\index{dggev\-\_\-@{dggev\-\_\-}!lapack_fort_predecl.h@{lapack\-\_\-fort\-\_\-predecl.\-h}}
+\subsubsection[{dggev\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}void dggev\-\_\- (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{jobl, }
+\item[{char $\ast$}]{jobr, }
+\item[{int $\ast$}]{n, }
+\item[{double $\ast$}]{a, }
+\item[{int $\ast$}]{lda, }
+\item[{double $\ast$}]{b, }
+\item[{int $\ast$}]{ldb, }
+\item[{double $\ast$}]{alphar, }
+\item[{double $\ast$}]{alphai, }
+\item[{double $\ast$}]{beta, }
+\item[{double $\ast$}]{vl, }
+\item[{int $\ast$}]{ldvl, }
+\item[{double $\ast$}]{vr, }
+\item[{int $\ast$}]{ldvr, }
+\item[{double $\ast$}]{work, }
+\item[{int $\ast$}]{lwork, }
+\item[{int $\ast$}]{info}
+\end{DoxyParamCaption}
+)}\label{d9/dcd/lapack__fort__predecl_8h_ae198ce3a21bbde275d25400fc87a5a84}
+
+
+Referenced by clapack\-\_\-dggev().
+
+\index{lapack\-\_\-fort\-\_\-predecl.\-h@{lapack\-\_\-fort\-\_\-predecl.\-h}!dpotrf\-\_\-@{dpotrf\-\_\-}}
+\index{dpotrf\-\_\-@{dpotrf\-\_\-}!lapack_fort_predecl.h@{lapack\-\_\-fort\-\_\-predecl.\-h}}
+\subsubsection[{dpotrf\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}void dpotrf\-\_\- (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{uplo, }
+\item[{int $\ast$}]{n, }
+\item[{double $\ast$}]{a, }
+\item[{int $\ast$}]{lda, }
+\item[{int $\ast$}]{info}
+\end{DoxyParamCaption}
+)}\label{d9/dcd/lapack__fort__predecl_8h_a00aa88fec61da4c2c7748c594ce5b2cd}
+
+
+Referenced by clapack\-\_\-dpotrf().
+
+\index{lapack\-\_\-fort\-\_\-predecl.\-h@{lapack\-\_\-fort\-\_\-predecl.\-h}!dpotrs\-\_\-@{dpotrs\-\_\-}}
+\index{dpotrs\-\_\-@{dpotrs\-\_\-}!lapack_fort_predecl.h@{lapack\-\_\-fort\-\_\-predecl.\-h}}
+\subsubsection[{dpotrs\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}void dpotrs\-\_\- (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{uplo, }
+\item[{int $\ast$}]{n, }
+\item[{int $\ast$}]{nrhs, }
+\item[{double $\ast$}]{a, }
+\item[{int $\ast$}]{lda, }
+\item[{double $\ast$}]{b, }
+\item[{int $\ast$}]{ldb, }
+\item[{int $\ast$}]{info}
+\end{DoxyParamCaption}
+)}\label{d9/dcd/lapack__fort__predecl_8h_ad594fd72dc6611eebd7553a0b9598730}
+
+
+Referenced by clapack\-\_\-dpotrs().
+
+\index{lapack\-\_\-fort\-\_\-predecl.\-h@{lapack\-\_\-fort\-\_\-predecl.\-h}!dsyev\-\_\-@{dsyev\-\_\-}}
+\index{dsyev\-\_\-@{dsyev\-\_\-}!lapack_fort_predecl.h@{lapack\-\_\-fort\-\_\-predecl.\-h}}
+\subsubsection[{dsyev\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}void dsyev\-\_\- (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{jobz, }
+\item[{char $\ast$}]{uplo, }
+\item[{int $\ast$}]{n, }
+\item[{double $\ast$}]{a, }
+\item[{int $\ast$}]{lda, }
+\item[{double $\ast$}]{w, }
+\item[{double $\ast$}]{work, }
+\item[{int $\ast$}]{lwork, }
+\item[{int $\ast$}]{info}
+\end{DoxyParamCaption}
+)}\label{d9/dcd/lapack__fort__predecl_8h_a6a370bd26cf656f8c3fa2f13d4c0956c}
+
+
+Referenced by clapack\-\_\-dsyev().
+
+\index{lapack\-\_\-fort\-\_\-predecl.\-h@{lapack\-\_\-fort\-\_\-predecl.\-h}!dsygv\-\_\-@{dsygv\-\_\-}}
+\index{dsygv\-\_\-@{dsygv\-\_\-}!lapack_fort_predecl.h@{lapack\-\_\-fort\-\_\-predecl.\-h}}
+\subsubsection[{dsygv\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}void dsygv\-\_\- (
+\begin{DoxyParamCaption}
+\item[{int $\ast$}]{itype, }
+\item[{char $\ast$}]{jobz, }
+\item[{char $\ast$}]{uplo, }
+\item[{int $\ast$}]{n, }
+\item[{double $\ast$}]{a, }
+\item[{int $\ast$}]{lda, }
+\item[{double $\ast$}]{b, }
+\item[{int $\ast$}]{ldb, }
+\item[{double $\ast$}]{w, }
+\item[{double $\ast$}]{work, }
+\item[{int $\ast$}]{lwork, }
+\item[{int $\ast$}]{info}
+\end{DoxyParamCaption}
+)}\label{d9/dcd/lapack__fort__predecl_8h_ad486646e6c5e45b4cb89f22c2cb68575}
+
+
+Referenced by clapack\-\_\-dsygv().
+
+\index{lapack\-\_\-fort\-\_\-predecl.\-h@{lapack\-\_\-fort\-\_\-predecl.\-h}!dsytrf\-\_\-@{dsytrf\-\_\-}}
+\index{dsytrf\-\_\-@{dsytrf\-\_\-}!lapack_fort_predecl.h@{lapack\-\_\-fort\-\_\-predecl.\-h}}
+\subsubsection[{dsytrf\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}void dsytrf\-\_\- (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{uplo, }
+\item[{int $\ast$}]{n, }
+\item[{double $\ast$}]{a, }
+\item[{int $\ast$}]{lda, }
+\item[{int $\ast$}]{ipiv, }
+\item[{double $\ast$}]{work, }
+\item[{int $\ast$}]{lwork, }
+\item[{int $\ast$}]{info}
+\end{DoxyParamCaption}
+)}\label{d9/dcd/lapack__fort__predecl_8h_a82d914e0f63ae58cd339186416cac232}
+
+
+Referenced by clapack\-\_\-dsytrf().
+
+\index{lapack\-\_\-fort\-\_\-predecl.\-h@{lapack\-\_\-fort\-\_\-predecl.\-h}!dsytrs\-\_\-@{dsytrs\-\_\-}}
+\index{dsytrs\-\_\-@{dsytrs\-\_\-}!lapack_fort_predecl.h@{lapack\-\_\-fort\-\_\-predecl.\-h}}
+\subsubsection[{dsytrs\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}void dsytrs\-\_\- (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{uplo, }
+\item[{int $\ast$}]{n, }
+\item[{int $\ast$}]{nrhs, }
+\item[{double $\ast$}]{a, }
+\item[{int $\ast$}]{lda, }
+\item[{int $\ast$}]{ipiv, }
+\item[{double $\ast$}]{b, }
+\item[{int $\ast$}]{ldb, }
+\item[{int $\ast$}]{info}
+\end{DoxyParamCaption}
+)}\label{d9/dcd/lapack__fort__predecl_8h_a0e3814be748631b5668f68b658b4de87}
+
+
+Referenced by clapack\-\_\-dsytrs().
+
+\index{lapack\-\_\-fort\-\_\-predecl.\-h@{lapack\-\_\-fort\-\_\-predecl.\-h}!zgesvd\-\_\-@{zgesvd\-\_\-}}
+\index{zgesvd\-\_\-@{zgesvd\-\_\-}!lapack_fort_predecl.h@{lapack\-\_\-fort\-\_\-predecl.\-h}}
+\subsubsection[{zgesvd\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}void zgesvd\-\_\- (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{jobu, }
+\item[{char $\ast$}]{jobvt, }
+\item[{int $\ast$}]{m, }
+\item[{int $\ast$}]{n, }
+\item[{{\bf F\-C\-\_\-\-C\-O\-M\-P\-L\-E\-X\-\_\-16} $\ast$}]{a, }
+\item[{int $\ast$}]{lda, }
+\item[{double $\ast$}]{s, }
+\item[{{\bf F\-C\-\_\-\-C\-O\-M\-P\-L\-E\-X\-\_\-16} $\ast$}]{u, }
+\item[{int $\ast$}]{ldu, }
+\item[{{\bf F\-C\-\_\-\-C\-O\-M\-P\-L\-E\-X\-\_\-16} $\ast$}]{vt, }
+\item[{int $\ast$}]{ldvt, }
+\item[{{\bf F\-C\-\_\-\-C\-O\-M\-P\-L\-E\-X\-\_\-16} $\ast$}]{work, }
+\item[{int $\ast$}]{lwork, }
+\item[{double $\ast$}]{rwork, }
+\item[{int $\ast$}]{info}
+\end{DoxyParamCaption}
+)}\label{d9/dcd/lapack__fort__predecl_8h_a7e8de0a8f8e5ea6e1a677a8e4baf0537}
+
+
+Referenced by clapack\-\_\-zgesvd().
+
+\index{lapack\-\_\-fort\-\_\-predecl.\-h@{lapack\-\_\-fort\-\_\-predecl.\-h}!zheev\-\_\-@{zheev\-\_\-}}
+\index{zheev\-\_\-@{zheev\-\_\-}!lapack_fort_predecl.h@{lapack\-\_\-fort\-\_\-predecl.\-h}}
+\subsubsection[{zheev\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}void zheev\-\_\- (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{jobz, }
+\item[{char $\ast$}]{uplo, }
+\item[{int $\ast$}]{n, }
+\item[{{\bf F\-C\-\_\-\-C\-O\-M\-P\-L\-E\-X\-\_\-16} $\ast$}]{a, }
+\item[{int $\ast$}]{lda, }
+\item[{double $\ast$}]{w, }
+\item[{{\bf F\-C\-\_\-\-C\-O\-M\-P\-L\-E\-X\-\_\-16} $\ast$}]{work, }
+\item[{int $\ast$}]{lwork, }
+\item[{double $\ast$}]{rwork, }
+\item[{int $\ast$}]{info}
+\end{DoxyParamCaption}
+)}\label{d9/dcd/lapack__fort__predecl_8h_ab0b37e5ae59b949269965ae26642027c}
+
+
+Referenced by clapack\-\_\-zheev().
+

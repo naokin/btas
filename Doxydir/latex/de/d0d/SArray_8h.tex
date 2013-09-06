@@ -1,0 +1,62 @@
+\section{include/btas/\-D\-E\-N\-S\-E/\-S\-Array.h File Reference}
+\label{de/d0d/SArray_8h}\index{include/btas/\-D\-E\-N\-S\-E/\-S\-Array.\-h@{include/btas/\-D\-E\-N\-S\-E/\-S\-Array.\-h}}
+
+
+Dense array for single precision real number.  
+
+
+{\ttfamily \#include $<$iostream$>$}\\*
+{\ttfamily \#include $<$iomanip$>$}\\*
+{\ttfamily \#include $<$btas/\-T\-Vector.\-h$>$}\\*
+{\ttfamily \#include $<$btas/blas\-\_\-cxx\-\_\-interface.\-h$>$}\\*
+{\ttfamily \#include $<$btas/\-D\-E\-N\-S\-E/\-T\-Array.\-h$>$}\\*
+{\ttfamily \#include $<$btas/\-D\-E\-N\-S\-E/\-T\-Sub\-Array.\-h$>$}\\*
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace {\bf btas}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\using {\bf btas\-::\-S\-Array} = T\-Array$<$ float, N $>$
+\begin{DoxyCompactList}\small\item\em Alias to single precision real array. \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\using {\bf btas\-::\-S\-Sub\-Array} = T\-Sub\-Array$<$ float, N $>$
+\begin{DoxyCompactList}\small\item\em Alias to single precision real sub-\/array. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$$>$ }\\void {\bf btas\-::\-\_\-fast\-\_\-copy$<$ float $>$} (size\-\_\-t n, const float $\ast$x, float $\ast$y)
+\begin{DoxyCompactList}\small\item\em Fast copying for single precision real array (calling cblas\-\_\-scopy) \end{DoxyCompactList}\item 
+{\footnotesize template$<$$>$ }\\void {\bf btas\-::\-\_\-fast\-\_\-scal$<$ float $>$} (size\-\_\-t n, const float \&alpha, float $\ast$x)
+\begin{DoxyCompactList}\small\item\em Fast scaling for single precision real array (calling cblas\-\_\-sscal) \end{DoxyCompactList}\item 
+{\footnotesize template$<$$>$ }\\void {\bf btas\-::\-\_\-fast\-\_\-add$<$ float $>$} (size\-\_\-t n, const float $\ast$x, float $\ast$y)
+\begin{DoxyCompactList}\small\item\em Fast adding for single precision real array (calling cblas\-\_\-saxpy) \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N$>$ }\\std\-::ostream \& {\bf operator$<$$<$} (std\-::ostream \&ost, const {\bf btas\-::\-S\-Array}$<$ N $>$ \&a)
+\begin{DoxyCompactList}\small\item\em C++ style printing function. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Dense array for single precision real number. 
+
+Definition in file {\bf S\-Array.\-h}.
+
+
+
+\subsection{Function Documentation}
+\index{S\-Array.\-h@{S\-Array.\-h}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!SArray.h@{S\-Array.\-h}}
+\subsubsection[{operator$<$$<$}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N$>$ std\-::ostream\& operator$<$$<$ (
+\begin{DoxyParamCaption}
+\item[{std\-::ostream \&}]{ost, }
+\item[{const {\bf btas\-::\-S\-Array}$<$ N $>$ \&}]{a}
+\end{DoxyParamCaption}
+)}\label{de/d0d/SArray_8h_a1434c606bf19169589da759204e7fbda}
+
+
+C++ style printing function. 
+
+
+
+Definition at line 44 of file S\-Array.\-h.
+

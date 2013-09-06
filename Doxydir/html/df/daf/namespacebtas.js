@@ -1,0 +1,26 @@
+var namespacebtas =
+[
+    [ "null_deleter", "d8/d8a/structbtas_1_1null__deleter.html", "d8/d8a/structbtas_1_1null__deleter" ],
+    [ "DcopyArglist", "d9/dfc/classbtas_1_1DcopyArglist.html", "d9/dfc/classbtas_1_1DcopyArglist" ],
+    [ "DscalArglist", "d0/d2f/classbtas_1_1DscalArglist.html", "d0/d2f/classbtas_1_1DscalArglist" ],
+    [ "DaxpyArglist", "d3/d12/classbtas_1_1DaxpyArglist.html", "d3/d12/classbtas_1_1DaxpyArglist" ],
+    [ "DpermuteArglist", "d6/d58/classbtas_1_1DpermuteArglist.html", "d6/d58/classbtas_1_1DpermuteArglist" ],
+    [ "DgemvArglist", "df/d7c/classbtas_1_1DgemvArglist.html", "df/d7c/classbtas_1_1DgemvArglist" ],
+    [ "DgerArglist", "da/db6/classbtas_1_1DgerArglist.html", "da/db6/classbtas_1_1DgerArglist" ],
+    [ "DgemmArglist", "d6/d9b/classbtas_1_1DgemmArglist.html", "d6/d9b/classbtas_1_1DgemmArglist" ],
+    [ "DgesvdArglist", "d5/d3c/classbtas_1_1DgesvdArglist.html", "d5/d3c/classbtas_1_1DgesvdArglist" ],
+    [ "TArray", "db/d3c/classbtas_1_1TArray.html", "db/d3c/classbtas_1_1TArray" ],
+    [ "TSubArray", "da/d50/classbtas_1_1TSubArray.html", "da/d50/classbtas_1_1TSubArray" ],
+    [ "Qshapes", "dd/df1/classbtas_1_1Qshapes.html", "dd/df1/classbtas_1_1Qshapes" ],
+    [ "QSTArray", "db/dff/classbtas_1_1QSTArray.html", "db/dff/classbtas_1_1QSTArray" ],
+    [ "QSTmergeInfo", "d0/de7/classbtas_1_1QSTmergeInfo.html", "d0/de7/classbtas_1_1QSTmergeInfo" ],
+    [ "STArray", "d7/d05/classbtas_1_1STArray.html", "d7/d05/classbtas_1_1STArray" ],
+    [ "T_arglist_base", "d7/dd4/classbtas_1_1T__arglist__base.html", "d7/dd4/classbtas_1_1T__arglist__base" ],
+    [ "R_arglist_single", "d5/d3b/classbtas_1_1R__arglist__single.html", "d5/d3b/classbtas_1_1R__arglist__single" ],
+    [ "R_arglist_double", "d5/dcd/classbtas_1_1R__arglist__double.html", "d5/dcd/classbtas_1_1R__arglist__double" ],
+    [ "R_arglist_triple", "dd/d0a/classbtas_1_1R__arglist__triple.html", "dd/d0a/classbtas_1_1R__arglist__triple" ],
+    [ "R_arglist_quadra", "d4/dec/classbtas_1_1R__arglist__quadra.html", "d4/dec/classbtas_1_1R__arglist__quadra" ],
+    [ "C_arglist_triple", "d5/d67/classbtas_1_1C__arglist__triple.html", "d5/d67/classbtas_1_1C__arglist__triple" ],
+    [ "indexed_loop", "d4/d84/classbtas_1_1indexed__loop.html", "d4/d84/classbtas_1_1indexed__loop" ],
+    [ "indexed_loop< 1 >", "d7/d39/classbtas_1_1indexed__loop_3_011_01_4.html", "d7/d39/classbtas_1_1indexed__loop_3_011_01_4" ]
+];

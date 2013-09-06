@@ -1,0 +1,573 @@
+\section{mps Namespace Reference}
+\label{d1/d7b/namespacemps}\index{mps@{mps}}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$size\-\_\-t N, class Q $>$ }\\using {\bf M\-P\-X} = std\-::vector$<$ {\bf Q\-S\-D\-Array}$<$ N, Q $>$ $>$
+\begin{DoxyCompactList}\small\item\em typedefine M\-P\-X as a std\-::vector$<$ Q\-S\-D\-Array$<$\-N$>$ $>$ for functions the same for both M\-P\-S and M\-P\-O \end{DoxyCompactList}\item 
+{\footnotesize template$<$class Q $>$ }\\using {\bf M\-P\-S} = std\-::vector$<$ {\bf Q\-S\-D\-Array}$<$ 3, Q $>$ $>$
+\begin{DoxyCompactList}\small\item\em typedefine M\-P\-S as an std\-::vector$<$ Q\-S\-D\-Array$<$3$>$ $>$ \end{DoxyCompactList}\item 
+{\footnotesize template$<$class Q $>$ }\\using {\bf M\-P\-O} = std\-::vector$<$ {\bf Q\-S\-D\-Array}$<$ 4, Q $>$ $>$
+\begin{DoxyCompactList}\small\item\em typedefine M\-P\-O as an std\-::vector$<$ Q\-S\-D\-Array$<$4$>$ $>$ \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum {\bf M\-P\-S\-\_\-\-D\-I\-R\-E\-C\-T\-I\-O\-N} \{ {\bf Left}, 
+{\bf Right}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$class Q $>$ }\\void {\bf calc\-\_\-qdim} (int L, const Q \&qt, const {\bf Qshapes}$<$ Q $>$ \&qp, std\-::vector$<$ {\bf Qshapes}$<$ Q $>$ $>$ \&qr, std\-::vector$<$ {\bf Dshapes} $>$ \&dr, int D)
+\item 
+{\footnotesize template$<$class Q $>$ }\\{\bf M\-P\-S}$<$ Q $>$ {\bf create} (int L, const Q \&qt, const {\bf Qshapes}$<$ Q $>$ \&qp, int D, const function$<$ double(void)$>$ \&f\-\_\-random\-\_\-generator)
+\item 
+{\footnotesize template$<$class Q $>$ }\\{\bf M\-P\-S}$<$ Q $>$ {\bf create} (int L, const Q \&qt, const {\bf Qshapes}$<$ Q $>$ \&qp, int D, double value=0.\-0)
+\item 
+{\footnotesize template$<$class Q $>$ }\\{\bf M\-P\-S}$<$ Q $>$ {\bf product\-\_\-state} (int L, const {\bf Qshapes}$<$ Q $>$ \&qp, const std\-::vector$<$ int $>$ \&occ)
+\item 
+{\footnotesize template$<$size\-\_\-t N, class Q $>$ }\\void {\bf scal} (double alpha, {\bf M\-P\-X}$<$ N, Q $>$ \&mpx)
+\item 
+{\footnotesize template$<$size\-\_\-t N, class Q $>$ }\\{\bf M\-P\-X}$<$ N, Q $>$ {\bf add} (const {\bf M\-P\-X}$<$ N, Q $>$ \&A, const {\bf M\-P\-X}$<$ N, Q $>$ \&B)
+\item 
+{\footnotesize template$<$size\-\_\-t N, class Q $>$ }\\void {\bf compress} ({\bf M\-P\-X}$<$ N, Q $>$ \&mpx, const {\bf M\-P\-S\-\_\-\-D\-I\-R\-E\-C\-T\-I\-O\-N} \&dir, int D)
+\item 
+{\footnotesize template$<$size\-\_\-t N, class Q $>$ }\\void {\bf clean} ({\bf M\-P\-X}$<$ N, Q $>$ \&mpx)
+\item 
+{\footnotesize template$<$class Q $>$ }\\double {\bf inprod} (const {\bf M\-P\-S\-\_\-\-D\-I\-R\-E\-C\-T\-I\-O\-N} \&dir, const {\bf M\-P\-S}$<$ Q $>$ \&A, const {\bf M\-P\-O}$<$ Q $>$ \&O, const {\bf M\-P\-S}$<$ Q $>$ \&B)
+\item 
+{\footnotesize template$<$class Q $>$ }\\{\bf M\-P\-S}$<$ Q $>$ {\bf gemv} (const {\bf M\-P\-O}$<$ Q $>$ \&O, const {\bf M\-P\-S}$<$ Q $>$ \&A)
+\item 
+{\footnotesize template$<$class Q $>$ }\\{\bf M\-P\-O}$<$ Q $>$ {\bf gemm} (const {\bf M\-P\-O}$<$ Q $>$ \&O1, const {\bf M\-P\-O}$<$ Q $>$ \&O2)
+\item 
+{\footnotesize template$<$class Q $>$ }\\double {\bf dot} (const {\bf M\-P\-S\-\_\-\-D\-I\-R\-E\-C\-T\-I\-O\-N} \&dir, const {\bf M\-P\-S}$<$ Q $>$ \&X, const {\bf M\-P\-S}$<$ Q $>$ \&Y)
+\item 
+{\footnotesize template$<$class Q $>$ }\\double {\bf nrm2} (const {\bf M\-P\-S}$<$ Q $>$ \&mps)
+\item 
+{\footnotesize template$<$class Q $>$ }\\double {\bf dist} (const {\bf M\-P\-S}$<$ Q $>$ \&X, const {\bf M\-P\-S}$<$ Q $>$ \&Y)
+\item 
+{\footnotesize template$<$class Q $>$ }\\void {\bf normalize} ({\bf M\-P\-S}$<$ Q $>$ \&mps)
+\item 
+{\footnotesize template$<$class Q $>$ }\\{\bf M\-P\-S}$<$ Q $>$ {\bf exp} (const {\bf M\-P\-O}$<$ Q $>$ \&O, const {\bf M\-P\-S}$<$ Q $>$ \&A, int cutoff)
+\item 
+{\footnotesize template$<$size\-\_\-t N, class Q $>$ }\\void {\bf save} (const {\bf M\-P\-X}$<$ N, Q $>$ \&mpx, const char $\ast$filename)
+\item 
+{\footnotesize template$<$size\-\_\-t N, class Q $>$ }\\void {\bf load} ({\bf M\-P\-X}$<$ N, Q $>$ \&mpx, const char $\ast$filename)
+\end{DoxyCompactItemize}
+
+
+\subsection{Typedef Documentation}
+\index{mps@{mps}!M\-P\-O@{M\-P\-O}}
+\index{M\-P\-O@{M\-P\-O}!mps@{mps}}
+\subsubsection[{M\-P\-O}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Q $>$ using {\bf mps\-::\-M\-P\-O} = typedef std\-::vector$<$ {\bf Q\-S\-D\-Array}$<$4,Q$>$ $>$}\label{d1/d7b/namespacemps_abe11c169d93a4e72b657b166debe9d38}
+
+
+typedefine M\-P\-O as an std\-::vector$<$ Q\-S\-D\-Array$<$4$>$ $>$ 
+
+
+
+Definition at line 81 of file M\-P\-Sblas.\-h.
+
+\index{mps@{mps}!M\-P\-S@{M\-P\-S}}
+\index{M\-P\-S@{M\-P\-S}!mps@{mps}}
+\subsubsection[{M\-P\-S}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Q $>$ using {\bf mps\-::\-M\-P\-S} = typedef std\-::vector$<$ {\bf Q\-S\-D\-Array}$<$3,Q$>$ $>$}\label{d1/d7b/namespacemps_a3ec6b7bfece940b1dadb03aeb36fa284}
+
+
+typedefine M\-P\-S as an std\-::vector$<$ Q\-S\-D\-Array$<$3$>$ $>$ 
+
+
+
+Definition at line 77 of file M\-P\-Sblas.\-h.
+
+\index{mps@{mps}!M\-P\-X@{M\-P\-X}}
+\index{M\-P\-X@{M\-P\-X}!mps@{mps}}
+\subsubsection[{M\-P\-X}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N, class Q $>$ using {\bf mps\-::\-M\-P\-X} = typedef std\-::vector$<$ {\bf Q\-S\-D\-Array}$<$N,Q$>$ $>$}\label{d1/d7b/namespacemps_a5838d946f927bd8a88881fe9e29f830d}
+
+
+typedefine M\-P\-X as a std\-::vector$<$ Q\-S\-D\-Array$<$\-N$>$ $>$ for functions the same for both M\-P\-S and M\-P\-O 
+
+
+
+Definition at line 73 of file M\-P\-Sblas.\-h.
+
+
+
+\subsection{Enumeration Type Documentation}
+\index{mps@{mps}!M\-P\-S\-\_\-\-D\-I\-R\-E\-C\-T\-I\-O\-N@{M\-P\-S\-\_\-\-D\-I\-R\-E\-C\-T\-I\-O\-N}}
+\index{M\-P\-S\-\_\-\-D\-I\-R\-E\-C\-T\-I\-O\-N@{M\-P\-S\-\_\-\-D\-I\-R\-E\-C\-T\-I\-O\-N}!mps@{mps}}
+\subsubsection[{M\-P\-S\-\_\-\-D\-I\-R\-E\-C\-T\-I\-O\-N}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf mps\-::\-M\-P\-S\-\_\-\-D\-I\-R\-E\-C\-T\-I\-O\-N}}\label{d1/d7b/namespacemps_a2584e5eaf9fdf62c48664041aef54e86}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{Left@{Left}!mps@{mps}}\index{mps@{mps}!Left@{Left}}\item[{\em 
+Left\label{d1/d7b/namespacemps_a2584e5eaf9fdf62c48664041aef54e86abe34a9bd1e83433506f7a7f7ae0458ae}
+}]\index{Right@{Right}!mps@{mps}}\index{mps@{mps}!Right@{Right}}\item[{\em 
+Right\label{d1/d7b/namespacemps_a2584e5eaf9fdf62c48664041aef54e86afa8e6b46f0d42b897324dea4d60b1a51}
+}]left to right right to left \end{description}
+\end{Desc}
+
+
+Definition at line 64 of file M\-P\-Sblas.\-h.
+
+
+
+\subsection{Function Documentation}
+\index{mps@{mps}!add@{add}}
+\index{add@{add}!mps@{mps}}
+\subsubsection[{add}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N, class Q $>$ {\bf M\-P\-X}$<$N,Q$>$ mps\-::add (
+\begin{DoxyParamCaption}
+\item[{const M\-P\-X$<$ N, Q $>$ \&}]{A, }
+\item[{const M\-P\-X$<$ N, Q $>$ \&}]{B}
+\end{DoxyParamCaption}
+)}\label{d1/d7b/namespacemps_a2654a8e7c2ac3090fd1a73b734ea30f2}
+construct new M\-P\-X A\-B that is the sum of A + B\-: this is done by making a larger M\-P\-X object with larger bond dimension, taking the direct sum of the individual tensors in the chain 
+\begin{DoxyParams}{Parameters}
+{\em A} & input M\-P\-X \\
+\hline
+{\em B} & input M\-P\-X \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the M\-P\-X result 
+\end{DoxyReturn}
+
+
+Definition at line 481 of file M\-P\-Sblas.\-h.
+
+
+
+References B\-T\-A\-S\-\_\-\-T\-H\-R\-O\-W, btas\-::\-Q\-S\-T\-Array$<$ T, N, Q $>$\-::clear(), btas\-::\-S\-T\-Array$<$ T, N $>$\-::dshape(), btas\-::\-Q\-S\-Ddsum(), btas\-::\-Q\-S\-T\-Array$<$ T, N, Q $>$\-::qshape(), btas\-::\-Q\-S\-Tmerge(), and btas\-::\-Q\-S\-Tmerge\-Info$<$ N, Q $>$\-::reset().
+
+
+
+Referenced by exp().
+
+\index{mps@{mps}!calc\-\_\-qdim@{calc\-\_\-qdim}}
+\index{calc\-\_\-qdim@{calc\-\_\-qdim}!mps@{mps}}
+\subsubsection[{calc\-\_\-qdim}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Q $>$ void mps\-::calc\-\_\-qdim (
+\begin{DoxyParamCaption}
+\item[{int}]{L, }
+\item[{const Q \&}]{qt, }
+\item[{const {\bf Qshapes}$<$ Q $>$ \&}]{qp, }
+\item[{std\-::vector$<$ {\bf Qshapes}$<$ Q $>$ $>$ \&}]{qr, }
+\item[{std\-::vector$<$ {\bf Dshapes} $>$ \&}]{dr, }
+\item[{int}]{D}
+\end{DoxyParamCaption}
+)}\label{d1/d7b/namespacemps_a496dd1db8e061ff63a729b6ccfc7573a}
+given the length, total quantumnumber and physical quantumnumbers, and some cutoff block dimension \begin{DoxyReturn}{Returns}
+the right-\/bond quantumnumbers and dimensions 
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em L} & length of the chain \\
+\hline
+{\em qt} & total quantumnumber \\
+\hline
+{\em qp} & array of physical quantumnumbers on the sites \\
+\hline
+{\em qr} & std\-::vector of Qshapes length L, will contain the right bond quantumnumbers on exit, input will be destroyed \\
+\hline
+{\em dr} & std\-::vector of Dshapes length L, will contain the right bond dimensions corresponding to the numbers on exit, input will be destroyed \\
+\hline
+{\em D} & cutoff block dimension (max dimension of each quantumsector) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 94 of file M\-P\-Sblas.\-h.
+
+
+
+Referenced by create().
+
+\index{mps@{mps}!clean@{clean}}
+\index{clean@{clean}!mps@{mps}}
+\subsubsection[{clean}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N, class Q $>$ void mps\-::clean (
+\begin{DoxyParamCaption}
+\item[{M\-P\-X$<$ N, Q $>$ \&}]{mpx}
+\end{DoxyParamCaption}
+)}\label{d1/d7b/namespacemps_a01f7b36a76c2992bb138ecf9d3077b7a}
+clean up the M\-P\-X, i.\-e. make sure the right quantumblocks are connected, remove unnecessary quantumnumbers and blocks 
+\begin{DoxyParams}{Parameters}
+{\em mpx} & input M\-P\-X, will be changed 'cleaned' on exit \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 670 of file M\-P\-Sblas.\-h.
+
+\index{mps@{mps}!compress@{compress}}
+\index{compress@{compress}!mps@{mps}}
+\subsubsection[{compress}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N, class Q $>$ void mps\-::compress (
+\begin{DoxyParamCaption}
+\item[{M\-P\-X$<$ N, Q $>$ \&}]{mpx, }
+\item[{const M\-P\-S\-\_\-\-D\-I\-R\-E\-C\-T\-I\-O\-N \&}]{dir, }
+\item[{int}]{D}
+\end{DoxyParamCaption}
+)}\label{d1/d7b/namespacemps_a875f4dedf9cb4461d6289668d8fa3fcb}
+Compress an M\-P object by performing an S\-V\-D 
+\begin{DoxyParams}{Parameters}
+{\em mpx} & is the input M\-P\-X, will be lost/overwritten by the compressed M\-P\-X \\
+\hline
+{\em dir} & direction of the canonicalization, from left to right if Left, right to left if Right \\
+\hline
+{\em D} & if $>$ 0 this specifies the number of states to be kept if == 0 all the states are kept if $<$ 0 all singular values $>$ 10$^\wedge$-\/\-D are kept \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 574 of file M\-P\-Sblas.\-h.
+
+
+
+References btas\-::\-Q\-S\-T\-Array$<$ T, N, Q $>$\-::clear(), btas\-::\-Left, btas\-::\-Q\-S\-Dcontract(), btas\-::\-Q\-S\-Dcopy(), btas\-::\-Q\-S\-Ddotc(), btas\-::\-Q\-S\-Dgesvd(), btas\-::\-Q\-S\-Dscal(), btas\-::\-Right\-Arrow, scal(), btas\-::\-S\-Ddidm(), btas\-::\-S\-Ddimd(), and btas\-::shape().
+
+
+
+Referenced by exp().
+
+\index{mps@{mps}!create@{create}}
+\index{create@{create}!mps@{mps}}
+\subsubsection[{create}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Q $>$ {\bf M\-P\-S}$<$Q$>$ mps\-::create (
+\begin{DoxyParamCaption}
+\item[{int}]{L, }
+\item[{const Q \&}]{qt, }
+\item[{const {\bf Qshapes}$<$ Q $>$ \&}]{qp, }
+\item[{int}]{D, }
+\item[{const function$<$ double(void)$>$ \&}]{f\-\_\-random\-\_\-generator}
+\end{DoxyParamCaption}
+)}\label{d1/d7b/namespacemps_a7d3e88ff08e71b2fbd3215bc15ce5f9a}
+create an M\-P\-S chain of length L initialized randomly on total Q number qt, with physical quantumnumber qp 
+\begin{DoxyParams}{Parameters}
+{\em L} & length of the chain \\
+\hline
+{\em qt} & total quantumnumber \\
+\hline
+{\em qp} & Qshapes object containing the physical quantumnumbers \\
+\hline
+{\em D} & maximal dimension of the quantum blocks \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the M\-P\-S chain randomly filled and with correct quantumnumbers and dimensions 
+\end{DoxyReturn}
+
+
+Definition at line 304 of file M\-P\-Sblas.\-h.
+
+
+
+References calc\-\_\-qdim(), and btas\-::make\-\_\-array().
+
+\index{mps@{mps}!create@{create}}
+\index{create@{create}!mps@{mps}}
+\subsubsection[{create}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Q $>$ {\bf M\-P\-S}$<$Q$>$ mps\-::create (
+\begin{DoxyParamCaption}
+\item[{int}]{L, }
+\item[{const Q \&}]{qt, }
+\item[{const {\bf Qshapes}$<$ Q $>$ \&}]{qp, }
+\item[{int}]{D, }
+\item[{double}]{value = {\ttfamily 0.0}}
+\end{DoxyParamCaption}
+)}\label{d1/d7b/namespacemps_acfab6120e744dfd541ce36a7634a5477}
+create an M\-P\-S chain of length L initialized on a contant number on total Q number qt, with physical quantumnumber qp 
+\begin{DoxyParams}{Parameters}
+{\em L} & length of the chain \\
+\hline
+{\em qt} & total quantumnumber \\
+\hline
+{\em qp} & Qshapes object containing the physical quantumnumbers \\
+\hline
+{\em D} & maximal dimension of the quantum blocks \\
+\hline
+{\em value} & the number the mps is initialized onto, standard 0 \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the M\-P\-S chain randomly filled and with correct quantumnumbers and dimensions 
+\end{DoxyReturn}
+
+
+Definition at line 359 of file M\-P\-Sblas.\-h.
+
+
+
+References calc\-\_\-qdim(), and btas\-::make\-\_\-array().
+
+\index{mps@{mps}!dist@{dist}}
+\index{dist@{dist}!mps@{mps}}
+\subsubsection[{dist}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Q $>$ double mps\-::dist (
+\begin{DoxyParamCaption}
+\item[{const M\-P\-S$<$ Q $>$ \&}]{X, }
+\item[{const M\-P\-S$<$ Q $>$ \&}]{Y}
+\end{DoxyParamCaption}
+)}\label{d1/d7b/namespacemps_a661e2966b370e23c848dc07b99623569}
+\begin{DoxyReturn}{Returns}
+the distance between 2 mps's $|$$|$\-X -\/ Y$|$$|$\-\_\-2 
+\end{DoxyReturn}
+
+
+Definition at line 1116 of file M\-P\-Sblas.\-h.
+
+
+
+References btas\-::dot(), btas\-::\-Left, and nrm2().
+
+\index{mps@{mps}!dot@{dot}}
+\index{dot@{dot}!mps@{mps}}
+\subsubsection[{dot}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Q $>$ double mps\-::dot (
+\begin{DoxyParamCaption}
+\item[{const M\-P\-S\-\_\-\-D\-I\-R\-E\-C\-T\-I\-O\-N \&}]{dir, }
+\item[{const M\-P\-S$<$ Q $>$ \&}]{X, }
+\item[{const M\-P\-S$<$ Q $>$ \&}]{Y}
+\end{DoxyParamCaption}
+)}\label{d1/d7b/namespacemps_a574830f20867cba807bed3ffe562bcfa}
+the contraction of two M\-P\-S's \begin{DoxyReturn}{Returns}
+the overlap of two M\-P\-S objects 
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em X} & input M\-P\-S \\
+\hline
+{\em Y} & input M\-P\-S \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1028 of file M\-P\-Sblas.\-h.
+
+
+
+References btas\-::\-S\-T\-Array$<$ T, N $>$\-::begin(), btas\-::\-Q\-S\-T\-Array$<$ T, N, Q $>$\-::clear(), btas\-::\-S\-T\-Array$<$ T, N $>$\-::end(), btas\-::\-S\-T\-Array$<$ T, N $>$\-::find(), btas\-::\-Left, btas\-::\-Q\-S\-Dcontract(), btas\-::\-Q\-S\-Dindexed\-\_\-contract(), and btas\-::shape().
+
+\index{mps@{mps}!exp@{exp}}
+\index{exp@{exp}!mps@{mps}}
+\subsubsection[{exp}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Q $>$ {\bf M\-P\-S}$<$Q$>$ mps\-::exp (
+\begin{DoxyParamCaption}
+\item[{const M\-P\-O$<$ Q $>$ \&}]{O, }
+\item[{const M\-P\-S$<$ Q $>$ \&}]{A, }
+\item[{int}]{cutoff}
+\end{DoxyParamCaption}
+)}\label{d1/d7b/namespacemps_a90ad3eb8fa9768ed35dcd97fdc7bc179}
+\begin{DoxyReturn}{Returns}
+the M\-P\-S that is the result of the expontential of the operator M\-P\-O O acting on input M\-P\-S A. 
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em cutoff} & number of terms in the expansion that will be kept. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1139 of file M\-P\-Sblas.\-h.
+
+
+
+References add(), compress(), gemv(), Left, Right, and scal().
+
+\index{mps@{mps}!gemm@{gemm}}
+\index{gemm@{gemm}!mps@{mps}}
+\subsubsection[{gemm}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Q $>$ {\bf M\-P\-O}$<$Q$>$ mps\-::gemm (
+\begin{DoxyParamCaption}
+\item[{const M\-P\-O$<$ Q $>$ \&}]{O1, }
+\item[{const M\-P\-O$<$ Q $>$ \&}]{O2}
+\end{DoxyParamCaption}
+)}\label{d1/d7b/namespacemps_ac2f50ac42e146db0b3a2da922214996f}
+M\-P\-O equivalent of a matrix matrix multiplication. M\-P\-O action on M\-P\-O gives new M\-P\-O\-: O1-\/\-O2$|$\-M\-P\-S$>$ 
+\begin{DoxyParams}{Parameters}
+{\em O1} & input M\-P\-O \\
+\hline
+{\em O2} & input M\-P\-O \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the new M\-P\-O object created by the multiplication 
+\end{DoxyReturn}
+
+
+Definition at line 963 of file M\-P\-Sblas.\-h.
+
+
+
+References B\-T\-A\-S\-\_\-\-T\-H\-R\-O\-W, btas\-::\-Q\-S\-T\-Array$<$ T, N, Q $>$\-::clear(), btas\-::\-S\-T\-Array$<$ T, N $>$\-::dshape(), btas\-::\-Q\-S\-Dindexed\-\_\-contract(), btas\-::\-Q\-S\-T\-Array$<$ T, N, Q $>$\-::qshape(), btas\-::\-Q\-S\-Tmerge(), btas\-::\-Q\-S\-Tmerge\-Info$<$ N, Q $>$\-::reset(), and btas\-::shape().
+
+\index{mps@{mps}!gemv@{gemv}}
+\index{gemv@{gemv}!mps@{mps}}
+\subsubsection[{gemv}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Q $>$ {\bf M\-P\-S}$<$Q$>$ mps\-::gemv (
+\begin{DoxyParamCaption}
+\item[{const M\-P\-O$<$ Q $>$ \&}]{O, }
+\item[{const M\-P\-S$<$ Q $>$ \&}]{A}
+\end{DoxyParamCaption}
+)}\label{d1/d7b/namespacemps_aeeaeadc211098303ef56b4cc4d688cc5}
+M\-P\-O/\-S equivalent of a matrix vector multiplication. Let an M\-P\-O act on an M\-P\-S and return the new M\-P\-S 
+\begin{DoxyParams}{Parameters}
+{\em O} & input M\-P\-O \\
+\hline
+{\em A} & input M\-P\-S \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the new M\-P\-S object created by the multiplication 
+\end{DoxyReturn}
+
+
+Definition at line 897 of file M\-P\-Sblas.\-h.
+
+
+
+References B\-T\-A\-S\-\_\-\-T\-H\-R\-O\-W, btas\-::\-Q\-S\-T\-Array$<$ T, N, Q $>$\-::clear(), btas\-::\-S\-T\-Array$<$ T, N $>$\-::dshape(), btas\-::\-Q\-S\-Dindexed\-\_\-contract(), btas\-::\-Q\-S\-T\-Array$<$ T, N, Q $>$\-::qshape(), btas\-::\-Q\-S\-Tmerge(), btas\-::\-Q\-S\-Tmerge\-Info$<$ N, Q $>$\-::reset(), and btas\-::shape().
+
+
+
+Referenced by exp().
+
+\index{mps@{mps}!inprod@{inprod}}
+\index{inprod@{inprod}!mps@{mps}}
+\subsubsection[{inprod}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Q $>$ double mps\-::inprod (
+\begin{DoxyParamCaption}
+\item[{const M\-P\-S\-\_\-\-D\-I\-R\-E\-C\-T\-I\-O\-N \&}]{dir, }
+\item[{const M\-P\-S$<$ Q $>$ \&}]{A, }
+\item[{const M\-P\-O$<$ Q $>$ \&}]{O, }
+\item[{const M\-P\-S$<$ Q $>$ \&}]{B}
+\end{DoxyParamCaption}
+)}\label{d1/d7b/namespacemps_ae6806ef095da78898481c3a8c3d6c447}
+
+\begin{DoxyParams}{Parameters}
+{\em dir} & go from left to right (Left) or right to left (Right) for contraction \\
+\hline
+{\em A} & input M\-P\-S \\
+\hline
+{\em O} & input M\-P\-O \\
+\hline
+{\em B} & input M\-P\-S \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the number containing $<$ A $|$ O $|$ B $>$ 
+\end{DoxyReturn}
+
+
+Definition at line 768 of file M\-P\-Sblas.\-h.
+
+
+
+References btas\-::\-S\-T\-Array$<$ T, N $>$\-::begin(), B\-T\-A\-S\-\_\-\-T\-H\-R\-O\-W, btas\-::\-Q\-S\-T\-Array$<$ T, N, Q $>$\-::clear(), btas\-::\-S\-T\-Array$<$ T, N $>$\-::dshape(), btas\-::\-S\-T\-Array$<$ T, N $>$\-::end(), btas\-::\-S\-T\-Array$<$ T, N $>$\-::find(), btas\-::\-Left, btas\-::\-Q\-S\-Dindexed\-\_\-contract(), btas\-::\-Q\-S\-T\-Array$<$ T, N, Q $>$\-::qshape(), btas\-::\-Q\-S\-Tmerge(), and btas\-::shape().
+
+\index{mps@{mps}!load@{load}}
+\index{load@{load}!mps@{mps}}
+\subsubsection[{load}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N, class Q $>$ void mps\-::load (
+\begin{DoxyParamCaption}
+\item[{M\-P\-X$<$ N, Q $>$ \&}]{mpx, }
+\item[{const char $\ast$}]{filename}
+\end{DoxyParamCaption}
+)}\label{d1/d7b/namespacemps_ad894bba5c224139ef27abee2d4d896e4}
+load the M\-P\-X object from a file in binary format. 
+
+Definition at line 1200 of file M\-P\-Sblas.\-h.
+
+\index{mps@{mps}!normalize@{normalize}}
+\index{normalize@{normalize}!mps@{mps}}
+\subsubsection[{normalize}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Q $>$ void mps\-::normalize (
+\begin{DoxyParamCaption}
+\item[{M\-P\-S$<$ Q $>$ \&}]{mps}
+\end{DoxyParamCaption}
+)}\label{d1/d7b/namespacemps_ac33af7a2b54f017dd15dd241ee3e70dc}
+normalize the M\-P\-S 
+
+Definition at line 1126 of file M\-P\-Sblas.\-h.
+
+
+
+References nrm2(), and scal().
+
+\index{mps@{mps}!nrm2@{nrm2}}
+\index{nrm2@{nrm2}!mps@{mps}}
+\subsubsection[{nrm2}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Q $>$ double mps\-::nrm2 (
+\begin{DoxyParamCaption}
+\item[{const M\-P\-S$<$ Q $>$ \&}]{mps}
+\end{DoxyParamCaption}
+)}\label{d1/d7b/namespacemps_a608f782225026e6fc67e335a96e6c1b6}
+\begin{DoxyReturn}{Returns}
+the norm of the state 
+\end{DoxyReturn}
+
+
+Definition at line 1106 of file M\-P\-Sblas.\-h.
+
+
+
+References btas\-::dot(), and btas\-::\-Left.
+
+
+
+Referenced by dist(), btas\-::\-Dnormalize(), and normalize().
+
+\index{mps@{mps}!product\-\_\-state@{product\-\_\-state}}
+\index{product\-\_\-state@{product\-\_\-state}!mps@{mps}}
+\subsubsection[{product\-\_\-state}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Q $>$ {\bf M\-P\-S}$<$Q$>$ mps\-::product\-\_\-state (
+\begin{DoxyParamCaption}
+\item[{int}]{L, }
+\item[{const {\bf Qshapes}$<$ Q $>$ \&}]{qp, }
+\item[{const std\-::vector$<$ int $>$ \&}]{occ}
+\end{DoxyParamCaption}
+)}\label{d1/d7b/namespacemps_a31e73428d4d7c797f13fc2e8562646ca}
+
+\begin{DoxyParams}{Parameters}
+{\em L} & length of the chain \\
+\hline
+{\em qp} & physical quantumnumbers \\
+\hline
+{\em occ} & std\-::vector of length L ints containing the local physical quantumnumber on every site in the product state \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+create an product state chain of length L with physical indices qp and 
+\end{DoxyReturn}
+
+
+Definition at line 411 of file M\-P\-Sblas.\-h.
+
+
+
+References btas\-::make\-\_\-array().
+
+\index{mps@{mps}!save@{save}}
+\index{save@{save}!mps@{mps}}
+\subsubsection[{save}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N, class Q $>$ void mps\-::save (
+\begin{DoxyParamCaption}
+\item[{const M\-P\-X$<$ N, Q $>$ \&}]{mpx, }
+\item[{const char $\ast$}]{filename}
+\end{DoxyParamCaption}
+)}\label{d1/d7b/namespacemps_a7dbde7c20b013d08d18e9f3447644d6c}
+save the M\-P\-X object to a file in binary format. 
+
+Definition at line 1179 of file M\-P\-Sblas.\-h.
+
+\index{mps@{mps}!scal@{scal}}
+\index{scal@{scal}!mps@{mps}}
+\subsubsection[{scal}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N, class Q $>$ void mps\-::scal (
+\begin{DoxyParamCaption}
+\item[{double}]{alpha, }
+\item[{M\-P\-X$<$ N, Q $>$ \&}]{mpx}
+\end{DoxyParamCaption}
+)}\label{d1/d7b/namespacemps_a7fc24213d15c2eaabf5becde7f132968}
+scale the M\-P\-X with a constant factor 
+\begin{DoxyParams}{Parameters}
+{\em alpha} & scalingfactor \\
+\hline
+{\em mpx} & the M\-P\-X to be scaled \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 462 of file M\-P\-Sblas.\-h.
+
+
+
+References btas\-::\-Q\-S\-Dscal().
+
+
+
+Referenced by compress(), exp(), and normalize().
+

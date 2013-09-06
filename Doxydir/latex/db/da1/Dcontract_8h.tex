@@ -1,0 +1,19 @@
+\section{include/btas/\-D\-E\-N\-S\-E/\-Dcontract.h File Reference}
+\label{db/da1/Dcontract_8h}\index{include/btas/\-D\-E\-N\-S\-E/\-Dcontract.\-h@{include/btas/\-D\-E\-N\-S\-E/\-Dcontract.\-h}}
+{\ttfamily \#include $<$btas/btas.\-h$>$}\\*
+{\ttfamily \#include $<$btas/btas\-\_\-contract\-\_\-shape.\-h$>$}\\*
+{\ttfamily \#include $<$btas/\-D\-E\-N\-S\-E/\-D\-Array.\-h$>$}\\*
+{\ttfamily \#include $<$btas/\-D\-E\-N\-S\-E/\-Dblas.\-h$>$}\\*
+{\ttfamily \#include $<$btas/\-D\-E\-N\-S\-E/\-Dpermute.\-h$>$}\\*
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace {\bf btas}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t K$>$ }\\void {\bf btas\-::\-Dcontract} (const double \&alpha, const D\-Array$<$ N\-A $>$ \&a, const I\-Vector$<$ K $>$ \&a\-\_\-contract, const D\-Array$<$ N\-B $>$ \&b, const I\-Vector$<$ K $>$ \&b\-\_\-contract, const double \&beta, D\-Array$<$ N\-A+N\-B-\/K-\/K $>$ \&c)
+\begin{DoxyCompactList}\small\item\em Convenient contraction function for D\-Array. \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ }\\void {\bf btas\-::\-Dindexed\-\_\-contract} (const double \&alpha, const D\-Array$<$ N\-A $>$ \&a, const I\-Vector$<$ N\-A $>$ \&a\-\_\-symbols, const D\-Array$<$ N\-B $>$ \&b, const I\-Vector$<$ N\-B $>$ \&b\-\_\-symbols, const double \&beta, D\-Array$<$ N\-C $>$ \&c, const I\-Vector$<$ N\-C $>$ \&c\-\_\-symbols)
+\begin{DoxyCompactList}\small\item\em Convenient indexed contraction function for D\-Array. \end{DoxyCompactList}\end{DoxyCompactItemize}

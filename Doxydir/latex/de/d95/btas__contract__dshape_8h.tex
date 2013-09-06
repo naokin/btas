@@ -1,0 +1,32 @@
+\section{include/btas/\-S\-P\-A\-R\-S\-E/btas\-\_\-contract\-\_\-dshape.h File Reference}
+\label{de/d95/btas__contract__dshape_8h}\index{include/btas/\-S\-P\-A\-R\-S\-E/btas\-\_\-contract\-\_\-dshape.\-h@{include/btas/\-S\-P\-A\-R\-S\-E/btas\-\_\-contract\-\_\-dshape.\-h}}
+
+
+Block-\/shape contraction for sparse array B\-L\-A\-S calls.  
+
+
+{\ttfamily \#include $<$btas/btas.\-h$>$}\\*
+{\ttfamily \#include $<$btas/btas\-\_\-contract\-\_\-shape.\-h$>$}\\*
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace {\bf btas}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool {\bf btas\-::\-\_\-btas\-\_\-contract\-\_\-allowed} (const Dshapes \&x, const Dshapes \&y)
+\begin{DoxyCompactList}\small\item\em Compare Dshapes ignoring 0-\/sized index. \end{DoxyCompactList}\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ }\\void {\bf btas\-::gemv\-\_\-contract\-\_\-dshape} (const B\-T\-A\-S\-\_\-\-T\-R\-A\-N\-S\-P\-O\-S\-E \&Trans\-A, const T\-Vector$<$ Dshapes, N\-A $>$ \&a\-\_\-dshape, const T\-Vector$<$ Dshapes, N\-B $>$ \&b\-\_\-dshape, T\-Vector$<$ Dshapes, N\-C $>$ \&c\-\_\-dshape)
+\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ }\\void {\bf btas\-::ger\-\_\-contract\-\_\-dshape} (const T\-Vector$<$ Dshapes, N\-A $>$ \&a\-\_\-dshape, const T\-Vector$<$ Dshapes, N\-B $>$ \&b\-\_\-dshape, T\-Vector$<$ Dshapes, N\-C $>$ \&c\-\_\-dshape)
+\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ }\\void {\bf btas\-::gemm\-\_\-contract\-\_\-dshape} (const B\-T\-A\-S\-\_\-\-T\-R\-A\-N\-S\-P\-O\-S\-E \&Trans\-A, const B\-T\-A\-S\-\_\-\-T\-R\-A\-N\-S\-P\-O\-S\-E \&Trans\-B, const T\-Vector$<$ Dshapes, N\-A $>$ \&a\-\_\-dshape, const T\-Vector$<$ Dshapes, N\-B $>$ \&b\-\_\-dshape, T\-Vector$<$ Dshapes, N\-C $>$ \&c\-\_\-dshape)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Block-\/shape contraction for sparse array B\-L\-A\-S calls. 
+
+Definition in file {\bf btas\-\_\-contract\-\_\-dshape.\-h}.
+

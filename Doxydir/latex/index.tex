@@ -1,0 +1,53 @@
+This is C++11 version of B\-T\-A\-S Dependency to B\-L\-I\-T\-Z++ library has been removed.
+
+T\-: value type N\-: rank of array Q\-: quantum number class\section{F\-E\-A\-T\-U\-R\-E\-S}\label{index_FEATURES}
+
+\begin{DoxyEnumerate}
+\item Provided generic type array classes, T\-Array$<$\-T, N$>$, S\-T\-Array$<$\-T, N$>$, and Q\-S\-T\-Array$<$T, N, Q = \doxyref{Quantum}{p.}{d8/df8/classQuantum}$>$
+\end{DoxyEnumerate}
+
+
+\begin{DoxyEnumerate}
+\item Defined D\-Array$<$\-N$>$ as the alias to T\-Array$<$double, N$>$ (using template alias in C++11). S\-D\-Array$<$\-N$>$ and Q\-S\-D\-Array$<$\-N, Q$>$ as well
+\end{DoxyEnumerate}
+
+
+\begin{DoxyEnumerate}
+\item Provided L\-A\-P\-A\-C\-K interfaces written in C
+\end{DoxyEnumerate}
+
+
+\begin{DoxyEnumerate}
+\item Provided B\-L\-A\-S/\-L\-A\-P\-A\-C\-K-\/like interfaces called with D\-Array$<$\-N$>$, S\-T\-Array$<$\-N$>$, and Q\-S\-T\-Array$<$\-N, Q$>$
+\end{DoxyEnumerate}
+
+
+\begin{DoxyEnumerate}
+\item Provided expressive contraction, permutation, and decomposition functions
+\end{DoxyEnumerate}\section{C\-O\-M\-P\-I\-L\-A\-T\-I\-O\-N}\label{index_COMPILATION}
+
+\begin{DoxyEnumerate}
+\item Compiler and Library Dependencies
+\end{DoxyEnumerate}
+
+G\-N\-U G\-C\-C 4.\-7.\-0 or later Intel C/\-C++ Compiler 13.\-0 or later
+
+B\-O\-O\-S\-T library ({\tt http\-://www.\-boost.\-org/}) C\-B\-L\-A\-S \& L\-A\-P\-A\-C\-K library or Intel M\-K\-L library
+
+
+\begin{DoxyEnumerate}
+\item Build libbtas.\-a
+
+cd \$\-B\-T\-A\-S\-\_\-\-R\-O\-O\-T/lib/ make
+\end{DoxyEnumerate}
+
+
+\begin{DoxyEnumerate}
+\item Build your code with B\-T\-A\-S library (G\-C\-C with M\-K\-L library)
+
+g++ -\/std=c++0x -\/\-O3 -\/fopnemp -\/\-I\$\-B\-T\-A\-S\-\_\-\-R\-O\-O\-T/include \$\-B\-T\-A\-S\-\_\-\-R\-O\-O\-T/lib/libbtas.a -\/lboost\-\_\-serialization -\/lmkl\-\_\-core -\/lmkl\-\_\-intel\-\_\-lp64 -\/lmkl\-\_\-sequential
+\end{DoxyEnumerate}
+
+For coding, {\ttfamily \$\-B\-T\-A\-S\-\_\-\-R\-O\-O\-T/lib/tests.C} and {\ttfamily \$\-B\-T\-A\-S\-\_\-\-R\-O\-O\-T/dmrg/} involves helpful example to use B\-T\-A\-S
+
+If '-\/\-D\-\_\-\-P\-R\-I\-N\-T\-\_\-\-W\-A\-R\-N\-I\-N\-G\-S' is specified, warning that S\-D\-Array\-::reserve or S\-D\-Array\-::insert is called with prohibited (quantum number) block is printed. It gives verbose output, but helps to check undesirable behavior upon reservation and insertion. 

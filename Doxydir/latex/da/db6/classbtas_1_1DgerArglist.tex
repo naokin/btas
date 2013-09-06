@@ -1,0 +1,219 @@
+\section{btas\-:\-:Dger\-Arglist$<$ N\-A, N\-B, N\-C $>$ Class Template Reference}
+\label{da/db6/classbtas_1_1DgerArglist}\index{btas\-::\-Dger\-Arglist$<$ N\-A, N\-B, N\-C $>$@{btas\-::\-Dger\-Arglist$<$ N\-A, N\-B, N\-C $>$}}
+
+
+{\ttfamily \#include $<$Darglist.\-h$>$}
+
+Inheritance diagram for btas\-:\-:Dger\-Arglist$<$ N\-A, N\-B, N\-C $>$\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{da/db6/classbtas_1_1DgerArglist}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\bf Dger\-Arglist} ()
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+{\bf Dger\-Arglist} (const shared\-\_\-ptr$<$ {\bf D\-Array}$<$ N\-C $>$$>$ \&c\-\_\-ptr, const double \&alpha=1.\-0)
+\item 
+void {\bf reset} (const shared\-\_\-ptr$<$ {\bf D\-Array}$<$ N\-C $>$$>$ \&c\-\_\-ptr, const double \&alpha=1.\-0)
+\begin{DoxyCompactList}\small\item\em Reset arglist. \end{DoxyCompactList}\item 
+void {\bf clear} ()
+\begin{DoxyCompactList}\small\item\em Clear argments. \end{DoxyCompactList}\item 
+void {\bf add} (const shared\-\_\-ptr$<$ {\bf D\-Array}$<$ N\-A $>$$>$ \&a\-\_\-ptr, const shared\-\_\-ptr$<$ {\bf D\-Array}$<$ N\-B $>$$>$ \&b\-\_\-ptr, double scale=1.\-0)
+\begin{DoxyCompactList}\small\item\em Add arglist. \end{DoxyCompactList}\item 
+void {\bf call} () const 
+\begin{DoxyCompactList}\small\item\em Call Dger. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+size\-\_\-t {\bf mf\-\_\-flops\-\_\-count} (const shared\-\_\-ptr$<$ {\bf D\-Array}$<$ N\-A $>$$>$ \&a\-\_\-ptr, const shared\-\_\-ptr$<$ {\bf D\-Array}$<$ N\-B $>$$>$ \&b\-\_\-ptr)
+\begin{DoxyCompactList}\small\item\em return F\-L\-O\-P\-S count \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\-::vector$<$ double $>$ {\bf m\-\_\-scale}
+\begin{DoxyCompactList}\small\item\em this contains index-\/dependent scaling s.\-t. parity, Clebsch-\/\-Gordan coeff., etc. \end{DoxyCompactList}\item 
+double {\bf m\-\_\-alpha}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$class btas\-::\-Dger\-Arglist$<$ N\-A, N\-B, N\-C $>$}
+
+
+
+Definition at line 181 of file Darglist.\-h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{btas\-::\-Dger\-Arglist@{btas\-::\-Dger\-Arglist}!Dger\-Arglist@{Dger\-Arglist}}
+\index{Dger\-Arglist@{Dger\-Arglist}!btas::DgerArglist@{btas\-::\-Dger\-Arglist}}
+\subsubsection[{Dger\-Arglist}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ {\bf btas\-::\-Dger\-Arglist}$<$ N\-A, N\-B, N\-C $>$\-::{\bf Dger\-Arglist} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{da/db6/classbtas_1_1DgerArglist_a5c0dcf17c4c15d87c280830435d34920}
+
+
+Default constructor. 
+
+
+
+Definition at line 194 of file Darglist.\-h.
+
+\index{btas\-::\-Dger\-Arglist@{btas\-::\-Dger\-Arglist}!Dger\-Arglist@{Dger\-Arglist}}
+\index{Dger\-Arglist@{Dger\-Arglist}!btas::DgerArglist@{btas\-::\-Dger\-Arglist}}
+\subsubsection[{Dger\-Arglist}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ {\bf btas\-::\-Dger\-Arglist}$<$ N\-A, N\-B, N\-C $>$\-::{\bf Dger\-Arglist} (
+\begin{DoxyParamCaption}
+\item[{const shared\-\_\-ptr$<$ {\bf D\-Array}$<$ N\-C $>$$>$ \&}]{c\-\_\-ptr, }
+\item[{const double \&}]{alpha = {\ttfamily 1.0}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{da/db6/classbtas_1_1DgerArglist_adf0896b31c82eadfd9e1424a36c9d2e2}
+
+
+Definition at line 196 of file Darglist.\-h.
+
+
+
+\subsection{Member Function Documentation}
+\index{btas\-::\-Dger\-Arglist@{btas\-::\-Dger\-Arglist}!add@{add}}
+\index{add@{add}!btas::DgerArglist@{btas\-::\-Dger\-Arglist}}
+\subsubsection[{add}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ void {\bf btas\-::\-Dger\-Arglist}$<$ N\-A, N\-B, N\-C $>$\-::add (
+\begin{DoxyParamCaption}
+\item[{const shared\-\_\-ptr$<$ {\bf D\-Array}$<$ N\-A $>$$>$ \&}]{a\-\_\-ptr, }
+\item[{const shared\-\_\-ptr$<$ {\bf D\-Array}$<$ N\-B $>$$>$ \&}]{b\-\_\-ptr, }
+\item[{double}]{scale = {\ttfamily 1.0}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{da/db6/classbtas_1_1DgerArglist_a1cc61d98f06df930dc79f7e043f5cbab}
+
+
+Add arglist. 
+
+
+
+Definition at line 215 of file Darglist.\-h.
+
+
+
+References btas\-::\-C\-\_\-arglist\-\_\-triple$<$ T, N1, N2, N3 $>$\-::add(), and btas\-::\-Dger\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::m\-\_\-scale.
+
+
+
+Referenced by btas\-::thread\-\_\-\-S\-Dger().
+
+\index{btas\-::\-Dger\-Arglist@{btas\-::\-Dger\-Arglist}!call@{call}}
+\index{call@{call}!btas::DgerArglist@{btas\-::\-Dger\-Arglist}}
+\subsubsection[{call}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ void {\bf btas\-::\-Dger\-Arglist}$<$ N\-A, N\-B, N\-C $>$\-::call (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{da/db6/classbtas_1_1DgerArglist_a573486de45c5dc8ea3838c7cad1ed0db}
+
+
+Call Dger. 
+
+
+
+Definition at line 221 of file Darglist.\-h.
+
+
+
+References btas\-::\-Dger(), btas\-::\-Dger\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::m\-\_\-alpha, btas\-::\-Dger\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::m\-\_\-scale, and btas\-::\-C\-\_\-arglist\-\_\-triple$<$ double, N\-A, N\-B, N\-C $>$\-::size().
+
+\index{btas\-::\-Dger\-Arglist@{btas\-::\-Dger\-Arglist}!clear@{clear}}
+\index{clear@{clear}!btas::DgerArglist@{btas\-::\-Dger\-Arglist}}
+\subsubsection[{clear}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ void {\bf btas\-::\-Dger\-Arglist}$<$ N\-A, N\-B, N\-C $>$\-::clear (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{da/db6/classbtas_1_1DgerArglist_a43a8a8922741041d0724da534ccf866b}
+
+
+Clear argments. 
+
+
+
+Reimplemented from {\bf btas\-::\-C\-\_\-arglist\-\_\-triple$<$ double, N\-A, N\-B, N\-C $>$} \doxyref{}{p.}{d5/d67/classbtas_1_1C__arglist__triple_a2df507deb003fe1a16a692dd76a408c5}.
+
+
+
+Definition at line 208 of file Darglist.\-h.
+
+
+
+References btas\-::\-C\-\_\-arglist\-\_\-triple$<$ T, N1, N2, N3 $>$\-::clear(), btas\-::\-Dger\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::m\-\_\-alpha, and btas\-::\-Dger\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::m\-\_\-scale.
+
+\index{btas\-::\-Dger\-Arglist@{btas\-::\-Dger\-Arglist}!mf\-\_\-flops\-\_\-count@{mf\-\_\-flops\-\_\-count}}
+\index{mf\-\_\-flops\-\_\-count@{mf\-\_\-flops\-\_\-count}!btas::DgerArglist@{btas\-::\-Dger\-Arglist}}
+\subsubsection[{mf\-\_\-flops\-\_\-count}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ size\-\_\-t {\bf btas\-::\-Dger\-Arglist}$<$ N\-A, N\-B, N\-C $>$\-::mf\-\_\-flops\-\_\-count (
+\begin{DoxyParamCaption}
+\item[{const shared\-\_\-ptr$<$ {\bf D\-Array}$<$ N\-A $>$$>$ \&}]{a\-\_\-ptr, }
+\item[{const shared\-\_\-ptr$<$ {\bf D\-Array}$<$ N\-B $>$$>$ \&}]{b\-\_\-ptr}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}\label{da/db6/classbtas_1_1DgerArglist_ae091d8dfeb314e46973ef86a888395d2}
+
+
+return F\-L\-O\-P\-S count 
+
+
+
+Definition at line 190 of file Darglist.\-h.
+
+\index{btas\-::\-Dger\-Arglist@{btas\-::\-Dger\-Arglist}!reset@{reset}}
+\index{reset@{reset}!btas::DgerArglist@{btas\-::\-Dger\-Arglist}}
+\subsubsection[{reset}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ void {\bf btas\-::\-Dger\-Arglist}$<$ N\-A, N\-B, N\-C $>$\-::reset (
+\begin{DoxyParamCaption}
+\item[{const shared\-\_\-ptr$<$ {\bf D\-Array}$<$ N\-C $>$$>$ \&}]{c\-\_\-ptr, }
+\item[{const double \&}]{alpha = {\ttfamily 1.0}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{da/db6/classbtas_1_1DgerArglist_a4d193365ea8979e1913911e8ffa2c981}
+
+
+Reset arglist. 
+
+
+
+Definition at line 202 of file Darglist.\-h.
+
+
+
+References btas\-::\-Dger\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::m\-\_\-alpha, and btas\-::\-C\-\_\-arglist\-\_\-triple$<$ T, N1, N2, N3 $>$\-::reset().
+
+
+
+\subsection{Field Documentation}
+\index{btas\-::\-Dger\-Arglist@{btas\-::\-Dger\-Arglist}!m\-\_\-alpha@{m\-\_\-alpha}}
+\index{m\-\_\-alpha@{m\-\_\-alpha}!btas::DgerArglist@{btas\-::\-Dger\-Arglist}}
+\subsubsection[{m\-\_\-alpha}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ double {\bf btas\-::\-Dger\-Arglist}$<$ N\-A, N\-B, N\-C $>$\-::m\-\_\-alpha\hspace{0.3cm}{\ttfamily [private]}}\label{da/db6/classbtas_1_1DgerArglist_a0d3533782348de6543dfe780d7db0e71}
+
+
+Definition at line 187 of file Darglist.\-h.
+
+
+
+Referenced by btas\-::\-Dger\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::call(), btas\-::\-Dger\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::clear(), and btas\-::\-Dger\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::reset().
+
+\index{btas\-::\-Dger\-Arglist@{btas\-::\-Dger\-Arglist}!m\-\_\-scale@{m\-\_\-scale}}
+\index{m\-\_\-scale@{m\-\_\-scale}!btas::DgerArglist@{btas\-::\-Dger\-Arglist}}
+\subsubsection[{m\-\_\-scale}]{\setlength{\rightskip}{0pt plus 5cm}template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ std\-::vector$<$double$>$ {\bf btas\-::\-Dger\-Arglist}$<$ N\-A, N\-B, N\-C $>$\-::m\-\_\-scale\hspace{0.3cm}{\ttfamily [private]}}\label{da/db6/classbtas_1_1DgerArglist_adfcfebc0f11af221edf44ba980628ee1}
+
+
+this contains index-\/dependent scaling s.\-t. parity, Clebsch-\/\-Gordan coeff., etc. 
+
+
+
+Definition at line 185 of file Darglist.\-h.
+
+
+
+Referenced by btas\-::\-Dger\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::add(), btas\-::\-Dger\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::call(), and btas\-::\-Dger\-Arglist$<$ N\-A, N\-B, N\-C $>$\-::clear().
+
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+include/btas/\-D\-E\-N\-S\-E/{\bf Darglist.\-h}\end{DoxyCompactItemize}

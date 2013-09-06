@@ -1,0 +1,25 @@
+\section{include/contract.h File Reference}
+\label{dd/d9c/contract_8h}\index{include/contract.\-h@{include/contract.\-h}}
+{\ttfamily \#include $<$btas/\-D\-E\-N\-S\-E/\-Dcontract.\-h$>$}\\*
+{\ttfamily \#include $<$btas/\-S\-P\-A\-R\-S\-E/\-S\-Dcontract.\-h$>$}\\*
+{\ttfamily \#include $<$btas/\-Q\-S\-P\-A\-R\-S\-E/\-Q\-S\-Dcontract.\-h$>$}\\*
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace {\bf btas}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t K$>$ }\\void {\bf btas\-::contract} (const double \&alpha, const D\-Array$<$ N\-A $>$ \&a, const I\-Vector$<$ K $>$ \&a\-\_\-contract, const D\-Array$<$ N\-B $>$ \&b, const I\-Vector$<$ K $>$ \&b\-\_\-contract, const double \&beta, D\-Array$<$ N\-A+N\-B-\/K-\/K $>$ \&c)
+\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ }\\void {\bf btas\-::indexed\-\_\-contract} (const double \&alpha, const D\-Array$<$ N\-A $>$ \&a, const I\-Vector$<$ N\-A $>$ \&a\-\_\-symbols, const D\-Array$<$ N\-B $>$ \&b, const I\-Vector$<$ N\-B $>$ \&b\-\_\-symbols, const double \&beta, D\-Array$<$ N\-C $>$ \&c, const I\-Vector$<$ N\-C $>$ \&c\-\_\-symbols)
+\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t K$>$ }\\void {\bf btas\-::contract} (const double \&alpha, const S\-D\-Array$<$ N\-A $>$ \&a, const I\-Vector$<$ K $>$ \&a\-\_\-contract, const S\-D\-Array$<$ N\-B $>$ \&b, const I\-Vector$<$ K $>$ \&b\-\_\-contract, const double \&beta, S\-D\-Array$<$ N\-A+N\-B-\/K-\/K $>$ \&c)
+\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C$>$ }\\void {\bf btas\-::indexed\-\_\-contract} (const double \&alpha, const S\-D\-Array$<$ N\-A $>$ \&a, const I\-Vector$<$ N\-A $>$ \&a\-\_\-symbols, const S\-D\-Array$<$ N\-B $>$ \&b, const I\-Vector$<$ N\-B $>$ \&b\-\_\-symbols, const double \&beta, S\-D\-Array$<$ N\-C $>$ \&c, const I\-Vector$<$ N\-C $>$ \&c\-\_\-symbols)
+\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t K, class Q  = Quantum$>$ }\\void {\bf btas\-::contract} (const double \&alpha, const Q\-S\-D\-Array$<$ N\-A, Q $>$ \&a, const I\-Vector$<$ K $>$ \&a\-\_\-contract, const Q\-S\-D\-Array$<$ N\-B, Q $>$ \&b, const I\-Vector$<$ K $>$ \&b\-\_\-contract, const double \&beta, Q\-S\-D\-Array$<$ N\-A+N\-B-\/K-\/K, Q $>$ \&c)
+\item 
+{\footnotesize template$<$size\-\_\-t N\-A, size\-\_\-t N\-B, size\-\_\-t N\-C, class Q  = Quantum$>$ }\\void {\bf btas\-::indexed\-\_\-contract} (const double \&alpha, const Q\-S\-D\-Array$<$ N\-A, Q $>$ \&a, const I\-Vector$<$ N\-A $>$ \&a\-\_\-symbols, const Q\-S\-D\-Array$<$ N\-B, Q $>$ \&b, const I\-Vector$<$ N\-B $>$ \&b\-\_\-symbols, const double \&beta, Q\-S\-D\-Array$<$ N\-C, Q $>$ \&c, const I\-Vector$<$ N\-C $>$ \&c\-\_\-symbols)
+\end{DoxyCompactItemize}
