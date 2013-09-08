@@ -37,7 +37,7 @@
  *
  * 3. Build your code with BTAS library (GCC with MKL library)
  *
- *    g++ -std=c++0x -O3 -fopnemp -I$BTAS_ROOT/include $BTAS_ROOT/lib/libbtas.a -lboost_serialization -lmkl_core -lmkl_intel_lp64 -lmkl_sequential
+ *    g++ -std=c++0x -O3 -fopenmp -I$BTAS_ROOT/include $BTAS_ROOT/lib/libbtas.a -lboost_serialization -lmkl_core -lmkl_intel_lp64 -lmkl_sequential
  *
  * For coding, `$BTAS_ROOT/lib/tests.C` and `$BTAS_ROOT/dmrg/` involves helpful example to use BTAS
  *
@@ -487,7 +487,7 @@ namespace mps {
     * @return the MPX result
     */
    template<size_t N,class Q>
-      MPX<N,Q> add(const MPX<N,Q> &A,const MPX<N,Q> &B){
+      MPX<N,Q> operator+(const MPX<N,Q> &A,const MPX<N,Q> &B){
 
          //first check if we can sum these two:
          if(A.size() != B.size())
@@ -570,6 +570,105 @@ namespace mps {
          return AB;
 
       }
+
+   /**
+    * MPS/O equivalent of the axpy blas function: Y <- alpha X + Y
+    * taking the direct sum of the individual tensors in the chain
+    * @param alpha double scaling factor
+    * @param X input MPX
+    * @param Y output MPX: alpha * X will be added to the input Y and put in output Y
+    */
+   template<size_t N,class Q>
+     void axpy(double alpha,const MPX<N,Q> &X,MPX<N,Q> &Y){
+
+         //first check if we can sum these two:
+         if(X.size() != Y.size())
+            BTAS_THROW(false, "Error: input MP objects do not have the same length!");
+
+         int L = X.size();
+
+         QSDArray<N> tmp1;
+         QSDArray<N> tmp2;
+
+         IVector<N-1> left;
+
+         for(int i = 0;i < N-1;++i)
+            left[i] = i;
+
+         //first left: scale the B term
+         QSDscal(1.0/alpha,Y[0]);
+
+         QSDdsum(X[0],Y[0],left,tmp1);
+
+         //merge the column quantumnumbers together
+         TVector<Qshapes<Q>,1> qmerge;
+         TVector<Dshapes,1> dmerge;
+
+         qmerge[0] = tmp1.qshape(N-1);
+         dmerge[0] = tmp1.dshape(N-1);
+
+         QSTmergeInfo<1> info(qmerge,dmerge);
+
+         //then merge
+         Y[0].clear();
+         QSTmerge(tmp1,info,Y[0]);
+
+         //rescale again
+         QSDscal(alpha,Y[0]);
+
+         IVector<N-2> middle;
+
+         for(int i = 1;i < N-1;++i)
+            middle[i - 1] = i;
+
+         //row and column addition in the middle of the chain
+         for(int i = 1;i < L - 1;++i){
+
+            tmp1.clear();
+            QSDdsum(X[i],Y[i],middle,tmp1);
+
+            //merge the row quantumnumbers together
+            qmerge[0] = tmp1.qshape(0);
+            dmerge[0] = tmp1.dshape(0);
+
+            info.reset(qmerge,dmerge);
+
+            //then merge
+            tmp2.clear();
+            QSTmerge(info,tmp1,tmp2);
+
+            //column quantumnumbers
+            qmerge[0] = tmp2.qshape(N-1);
+            dmerge[0] = tmp2.dshape(N-1);
+
+            info.reset(qmerge,dmerge);
+
+            //then merge
+            Y[i].clear();
+            QSTmerge(tmp2,info,Y[i]);
+
+         }
+
+         IVector<N-1> right;
+
+         for(int i = 0;i < N-1;++i)
+            right[i] = i + 1;
+
+         //finally the right
+         tmp1.clear();
+         QSDdsum(X[L-1],Y[L-1],right,tmp1);
+
+         //merge the row quantumnumbers together
+         qmerge[0] = tmp1.qshape(0);
+         dmerge[0] = tmp1.dshape(0);
+
+         info.reset(qmerge,dmerge);
+
+         //then merge
+         Y[L - 1].clear();
+         QSTmerge(info,tmp1,Y[L-1]);
+
+     }
 
    /**
     * Compress an MP object by performing an SVD
@@ -665,7 +764,6 @@ namespace mps {
             QSDscal(1.0/nrm,mpx[0]);
 
             scal(nrm,mpx);
-
 
          }
 
@@ -903,7 +1001,7 @@ namespace mps {
     * @return the new MPS object created by the multiplication
     */
    template<class Q>
-      MPS<Q> gemv(const MPO<Q> &O,const MPS<Q> &A){
+      MPS<Q> operator*(const MPO<Q> &O,const MPS<Q> &A){
 
          //first check if we can sum these two:
          if(O.size() != A.size())
@@ -961,6 +1059,135 @@ namespace mps {
          return B;
 
       }
+   /**
+    * MPO/S equivalent of the blas gemv function: Y <- alpha * A X + beta Y
+    * @param alpha scaling factor of the input MPO
+    * @param A input MPO
+    * @param X input MPS
+    * @param beta scaling factor of the output MPS
+    * @param Y output MPS, its content will change on exit.
+    */
+   template<class Q>
+      void gemv(double alpha,const MPO<Q> &A,const MPS<Q> &X,double beta,MPS<Q> &Y){
+/*
+         //first check if length is the same
+         if(A.size() != X.size())
+            BTAS_THROW(false, "Error: input objects do not have the same length!");
+
+         if(fabs(beta) < 1.0e-15){
+
+            int L = A.size();
+
+            Y.resize(L);
+
+            enum {j,k,l,m,n,o};
+
+            QSDArray<5> tmp;
+            QSDArray<4> mrows;
+
+            for(int i = 0;i < L;++i){
+
+               //clear the tmp object first
+               tmp.clear();
+
+               QSDindexed_contract(1.0,O[i],shape(j,k,l,m),A[i],shape(n,l,o),0.0,tmp,shape(n,j,k,o,m));
+
+               //merge 2 rows together
+               TVector<Qshapes<Q>,2> qmerge;
+               TVector<Dshapes,2> dmerge;
+
+               for(int r = 0;r < 2;++r){
+
+                  qmerge[r] = tmp.qshape(r);
+                  dmerge[r] = tmp.dshape(r);
+
+               }
+
+               QSTmergeInfo<2> info(qmerge,dmerge);
+
+               //clear the mrows object first
+               mrows.clear();
+
+               //then merge
+               QSTmerge(info,tmp,mrows);
+
+               //merge 2 columns together
+               for(int r = 2;r < 4;++r){
+
+                  qmerge[r - 2] = mrows.qshape(r);
+                  dmerge[r - 2] = mrows.dshape(r);
+
+               }
+
+               info.reset(qmerge,dmerge);
+
+               QSTmerge(mrows,info,Y[i]);
+
+            }
+
+            if( fabs(alpha - 1.0) > 1.0e-15)
+               scal(alpha,Y);
+
+         }
+         else{//beta > 0.0:
+
+            int L = A.size();
+
+            //first check if we can sum these two:
+            if(L != Y.size())
+               BTAS_THROW(false, "Error: input objects do not have the same length!");
+
+            MPO<Q> Ax(L);
+
+            enum {j,k,l,m,n,o,p};
+
+            QSDArray<6> tmp;
+            QSDArray<5> mrows;
+
+            for(int i = 0;i < L;++i){
+
+               //clear the tmp object first
+               tmp.clear();
+
+               QSDindexed_contract(1.0,O1[i],shape(n,o,k,p),O2[i],shape(j,k,l,m),0.0,tmp,shape(n,j,o,l,p,m));
+
+               //merge 2 rows together
+               TVector<Qshapes<Q>,2> qmerge;
+               TVector<Dshapes,2> dmerge;
+
+               for(int r = 0;r < 2;++r){
+
+                  qmerge[r] = tmp.qshape(r);
+                  dmerge[r] = tmp.dshape(r);
+
+               }
+
+               QSTmergeInfo<2> info(qmerge,dmerge);
+
+               //clear the mrows object first
+               mrows.clear();
+
+               //then merge
+               QSTmerge(info,tmp,mrows);
+
+               //merge 2 columns together
+               for(int r = 3;r < 5;++r){
+
+                  qmerge[r - 3] = mrows.qshape(r);
+                  dmerge[r - 3] = mrows.dshape(r);
+
+               }
+
+               info.reset(qmerge,dmerge);
+               QSTmerge(mrows,info,Ax[i]);
+
+            }
+
+            return Ax;
+
+         }
+*/
+      }
 
    /**
     * MPO equivalent of a matrix matrix multiplication. MPO action on MPO gives new MPO: O1-O2|MPS>
@@ -969,7 +1196,7 @@ namespace mps {
     * @return the new MPO object created by the multiplication
     */
    template<class Q>
-      MPO<Q> gemm(const MPO<Q> &O1,const MPO<Q> &O2){
+      void operator*(const MPO<Q> &O1,const MPO<Q> &O2){
 
          //first check if we can sum these two:
          if(O1.size() != O2.size())
@@ -1114,7 +1341,7 @@ namespace mps {
    template<class Q>
       double nrm2(const MPS<Q> &mps){
 
-         return dot(Left,mps,mps);
+         return sqrt(dot(Left,mps,mps));
 
       }
 
@@ -1124,7 +1351,7 @@ namespace mps {
    template<class Q>
       double dist(const MPS<Q> &X,const MPS<Q> &Y){
 
-         return nrm2(X) + nrm2(Y) - 2.0 * dot(Left,X,Y);
+         return dot(Left,X,X) + dot(Left,Y,Y) - 2.0 * dot(Left,X,Y);
 
       }
 
@@ -1134,7 +1361,7 @@ namespace mps {
    template<class Q>
       void normalize(MPS<Q> &mps){
 
-         double nrm = sqrt(nrm2(mps));
+         double nrm = nrm2(mps);
 
          scal(1.0/nrm,mps);
 
