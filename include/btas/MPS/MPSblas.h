@@ -871,22 +871,18 @@ namespace mps {
    template<size_t N,class Q>
       void clean(MPX<N,Q> &mpx){
 
-         int nlegs = mpx[0].qshape().size();
-
          Dshapes dr;
-
-         int i = 0;
 
          //from left to right
          for(int i = 0;i < mpx.size() - 1;++i){
 
-            dr = mpx[i].dshape()[nlegs - 1];
+            dr = mpx[i].dshape()[N - 1];
 
             std::vector<Q> qrem;
 
             for(int j = 0;j < dr.size();++j)
                if(dr[j] == 0)
-                  qrem.push_back(mpx[i].qshape()[nlegs - 1][j]);//what is the quantumnumber with 0 dimension?
+                  qrem.push_back(mpx[i].qshape()[N - 1][j]);//what is the quantumnumber with 0 dimension?
 
             if(qrem.size() != 0){
 
@@ -894,11 +890,11 @@ namespace mps {
                for(int j = 0;j < qrem.size();++j){
 
                   //find the index corresponding to quantumnumber qrem[j]
-                  Qshapes<Q> qr = mpx[i].qshape()[nlegs - 1];
+                  Qshapes<Q> qr = mpx[i].qshape()[N - 1];
 
                   for(int k = 0;k < qr.size();++k)
                      if(qr[k] == qrem[j])
-                        mpx[i].erase(nlegs - 1,k);
+                        mpx[i].erase(N - 1,k);
 
                }
 
@@ -945,11 +941,11 @@ namespace mps {
                for(int j = 0;j < qrem.size();++j){
 
                   //remove the corresponding blocks on the (nlegs-1) leg of the previous site
-                  Qshapes<Q> ql = mpx[i - 1].qshape()[nlegs-1];
+                  Qshapes<Q> ql = mpx[i - 1].qshape()[N-1];
 
                   for(int k = 0;k < ql.size();++k)
                      if(ql[k] == -qrem[j])
-                        mpx[i - 1].erase(nlegs-1,k);
+                        mpx[i - 1].erase(N-1,k);
 
                }
 
@@ -1400,17 +1396,17 @@ namespace mps {
                right[i] = i + 1;
 
             //finally the right
-            tmp.clear();
-            QSDdsum(Ax,Y[L - 1],right,tmp);
+            tmp1.clear();
+            QSDdsum(Ax,Y[L - 1],right,tmp1);
 
             //merge the row quantumnumbers together
-            qmerge2[0] = tmp.qshape(0);
-            dmerge2[0] = tmp.dshape(0);
+            qmerge2[0] = tmp1.qshape(0);
+            dmerge2[0] = tmp1.dshape(0);
 
             info2.reset(qmerge2,dmerge2);
 
             //then merge
-            QSTmerge(info2,tmp,Y[L-1]);
+            QSTmerge(info2,tmp1,Y[L-1]);
 
             if( fabs(alpha - 1.0) > 1.0e-15)
                scal(alpha,Y);
