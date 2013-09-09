@@ -572,6 +572,101 @@ namespace mps {
       }
 
    /**
+    * construct new MPX AB that is the difference of A and B: A - B this is done by making an MPX object with larger bond dimension,
+    * taking the direct sum of the individual tensors in the chain
+    * @param A input MPX
+    * @param B input MPX
+    * @return the MPX result
+    */
+   template<size_t N,class Q>
+      MPX<N,Q> operator-(const MPX<N,Q> &A,const MPX<N,Q> &B){
+
+         //first check if we can sum these two:
+         if(A.size() != B.size())
+            BTAS_THROW(false, "Error: input MP objects do not have the same length!");
+
+         int L = A.size();
+
+         MPX<N,Q> AB(L);
+
+         QSDArray<N> tmp;
+
+         IVector<N-1> left;
+
+         for(int i = 0;i < N-1;++i)
+            left[i] = i;
+
+         //first left: multiply with - sign
+         AB[0] = B[0];
+         QSDscal(-1.0,AB[0]);
+
+         QSDdsum(A[0],AB[0],left,tmp);
+
+         //merge the column quantumnumbers together
+         TVector<Qshapes<Q>,1> qmerge;
+         TVector<Dshapes,1> dmerge;
+
+         qmerge[0] = tmp.qshape(N-1);
+         dmerge[0] = tmp.dshape(N-1);
+
+         QSTmergeInfo<1> info(qmerge,dmerge);
+
+         //then merge
+         QSTmerge(tmp,info,AB[0]);
+
+         IVector<N-2> middle;
+
+         for(int i = 1;i < N-1;++i)
+            middle[i - 1] = i;
+
+         //row and column addition in the middle of the chain
+         for(int i = 1;i < L - 1;++i){
+
+            QSDdsum(A[i],B[i],middle,AB[i]);
+
+            //merge the row quantumnumbers together
+            qmerge[0] = AB[i].qshape(0);
+            dmerge[0] = AB[i].dshape(0);
+
+            info.reset(qmerge,dmerge);
+
+            //then merge
+            QSTmerge(info,AB[i],tmp);
+
+            //column quantumnumbers
+            qmerge[0] = tmp.qshape(N-1);
+            dmerge[0] = tmp.dshape(N-1);
+
+            info.reset(qmerge,dmerge);
+
+            //then merge
+            QSTmerge(tmp,info,AB[i]);
+
+         }
+
+         IVector<N-1> right;
+
+         for(int i = 0;i < N-1;++i)
+            right[i] = i + 1;
+
+         //finally the right
+         tmp.clear();
+         QSDdsum(A[L-1],B[L-1],right,tmp);
+
+         //merge the row quantumnumbers together
+         qmerge[0] = tmp.qshape(0);
+         dmerge[0] = tmp.dshape(0);
+
+         info.reset(qmerge,dmerge);
+
+         //then merge
+         QSTmerge(info,tmp,AB[L-1]);
+
+         return AB;
+
+      }
+
+   /**
     * MPS/O equivalent of the axpy blas function: Y <- alpha X + Y
     * taking the direct sum of the individual tensors in the chain
     * @param alpha double scaling factor
@@ -1069,7 +1164,7 @@ namespace mps {
     */
    template<class Q>
       void gemv(double alpha,const MPO<Q> &A,const MPS<Q> &X,double beta,MPS<Q> &Y){
-/*
+
          //first check if length is the same
          if(A.size() != X.size())
             BTAS_THROW(false, "Error: input objects do not have the same length!");
@@ -1090,7 +1185,7 @@ namespace mps {
                //clear the tmp object first
                tmp.clear();
 
-               QSDindexed_contract(1.0,O[i],shape(j,k,l,m),A[i],shape(n,l,o),0.0,tmp,shape(n,j,k,o,m));
+               QSDindexed_contract(1.0,A[i],shape(j,k,l,m),X[i],shape(n,l,o),0.0,tmp,shape(n,j,k,o,m));
 
                //merge 2 rows together
                TVector<Qshapes<Q>,2> qmerge;
@@ -1129,7 +1224,7 @@ namespace mps {
                scal(alpha,Y);
 
          }
-         else{//beta > 0.0:
+         else{//beta != 0.0:
 
             int L = A.size();
 
@@ -1137,56 +1232,191 @@ namespace mps {
             if(L != Y.size())
                BTAS_THROW(false, "Error: input objects do not have the same length!");
 
-            MPO<Q> Ax(L);
+            scal(beta/alpha,Y);
 
-            enum {j,k,l,m,n,o,p};
+            enum {j,k,l,m,n,o};
 
-            QSDArray<6> tmp;
-            QSDArray<5> mrows;
+            QSDArray<5> tmp;
+            QSDArray<4> mrows;
 
-            for(int i = 0;i < L;++i){
+            QSDindexed_contract(1.0,A[0],shape(j,k,l,m),X[0],shape(n,l,o),0.0,tmp,shape(n,j,k,o,m));
+
+            //merge 2 rows together
+            TVector<Qshapes<Q>,2> qmerge1;
+            TVector<Dshapes,2> dmerge1;
+
+            for(int r = 0;r < 2;++r){
+
+               qmerge1[r] = tmp.qshape(r);
+               dmerge1[r] = tmp.dshape(r);
+
+            }
+
+            QSTmergeInfo<2> info1(qmerge1,dmerge1);
+
+            //clear the mrows object first
+            mrows.clear();
+
+            //then merge
+            QSTmerge(info1,tmp,mrows);
+
+            //merge 2 columns together
+            for(int r = 2;r < 4;++r){
+
+               qmerge1[r - 2] = mrows.qshape(r);
+               dmerge1[r - 2] = mrows.dshape(r);
+
+            }
+
+            info1.reset(qmerge1,dmerge1);
+
+            QSDArray<3> Ax;
+            QSTmerge(mrows,info1,Ax);
+
+            IVector<2> left;
+
+            for(int i = 0;i < 2;++i)
+               left[i] = i;
+
+            QSDArray<3> tmp1;
+            QSDArray<3> tmp2;
+            QSDdsum(Ax,Y[0],left,tmp1);
+
+            //merge the column quantumnumbers together
+            TVector<Qshapes<Q>,1> qmerge2;
+            TVector<Dshapes,1> dmerge2;
+
+            qmerge2[0] = tmp1.qshape(2);
+            dmerge2[0] = tmp1.dshape(2);
+
+            QSTmergeInfo<1> info2(qmerge2,dmerge2);
+
+            //then merge
+            Y[0].clear();
+            QSTmerge(tmp1,info2,Y[0]);
+
+            IVector<1> middle;
+            middle[0] = 1;
+
+            for(int i = 1;i < L - 1;++i){
 
                //clear the tmp object first
                tmp.clear();
 
-               QSDindexed_contract(1.0,O1[i],shape(n,o,k,p),O2[i],shape(j,k,l,m),0.0,tmp,shape(n,j,o,l,p,m));
+               QSDindexed_contract(1.0,A[i],shape(j,k,l,m),X[i],shape(n,l,o),0.0,tmp,shape(n,j,k,o,m));
 
                //merge 2 rows together
-               TVector<Qshapes<Q>,2> qmerge;
-               TVector<Dshapes,2> dmerge;
-
                for(int r = 0;r < 2;++r){
 
-                  qmerge[r] = tmp.qshape(r);
-                  dmerge[r] = tmp.dshape(r);
+                  qmerge1[r] = tmp.qshape(r);
+                  dmerge1[r] = tmp.dshape(r);
 
                }
 
-               QSTmergeInfo<2> info(qmerge,dmerge);
+               info1.reset(qmerge1,dmerge1);
 
                //clear the mrows object first
                mrows.clear();
 
                //then merge
-               QSTmerge(info,tmp,mrows);
+               QSTmerge(info1,tmp,mrows);
 
                //merge 2 columns together
-               for(int r = 3;r < 5;++r){
+               for(int r = 2;r < 4;++r){
 
-                  qmerge[r - 3] = mrows.qshape(r);
-                  dmerge[r - 3] = mrows.dshape(r);
+                  qmerge1[r - 2] = mrows.qshape(r);
+                  dmerge1[r - 2] = mrows.dshape(r);
 
                }
 
-               info.reset(qmerge,dmerge);
-               QSTmerge(mrows,info,Ax[i]);
+               info1.reset(qmerge1,dmerge1);
+
+               //this makes the AX
+               QSTmerge(mrows,info1,Ax);
+
+               tmp1.clear();
+               QSDdsum(Ax,Y[i],middle,tmp1);
+
+               //merge the row quantumnumbers together
+               qmerge2[0] = tmp1.qshape(0);
+               dmerge2[0] = tmp1.dshape(0);
+
+               info2.reset(qmerge2,dmerge2);
+
+               //then merge
+               tmp2.clear();
+               QSTmerge(info2,tmp1,tmp2);
+
+               //column quantumnumbers
+               qmerge2[0] = tmp2.qshape(2);
+               dmerge2[0] = tmp2.dshape(2);
+
+               info2.reset(qmerge2,dmerge2);
+
+               //then merge
+               Y[i].clear();
+               QSTmerge(tmp2,info2,Y[i]);
 
             }
 
-            return Ax;
+            //last site
+            //clear the tmp object first
+            tmp.clear();
+
+            QSDindexed_contract(1.0,A[L - 1],shape(j,k,l,m),X[L - 1],shape(n,l,o),0.0,tmp,shape(n,j,k,o,m));
+
+            //merge 2 rows together
+            for(int r = 0;r < 2;++r){
+
+               qmerge1[r] = tmp.qshape(r);
+               dmerge1[r] = tmp.dshape(r);
+
+            }
+
+            info1.reset(qmerge1,dmerge1);
+
+            //clear the mrows object first
+            mrows.clear();
+
+            //then merge
+            QSTmerge(info1,tmp,mrows);
+
+            //merge 2 columns together
+            for(int r = 2;r < 4;++r){
+
+               qmerge1[r - 2] = mrows.qshape(r);
+               dmerge1[r - 2] = mrows.dshape(r);
+
+            }
+
+            info1.reset(qmerge1,dmerge1);
+
+            //this makes the AX
+            QSTmerge(mrows,info1,Ax);
+
+            IVector<2> right;
+
+            for(int i = 0;i < 2;++i)
+               right[i] = i + 1;
+
+            //finally the right
+            tmp.clear();
+            QSDdsum(Ax,Y[L - 1],right,tmp);
+
+            //merge the row quantumnumbers together
+            qmerge2[0] = tmp.qshape(0);
+            dmerge2[0] = tmp.dshape(0);
+
+            info2.reset(qmerge2,dmerge2);
+
+            //then merge
+            QSTmerge(info2,tmp,Y[L-1]);
+
+            if( fabs(alpha - 1.0) > 1.0e-15)
+               scal(alpha,Y);
 
          }
-*/
+
       }
 
    /**
