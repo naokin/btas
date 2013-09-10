@@ -478,194 +478,7 @@ namespace mps {
             QSDscal(alpha,mpx[i]);
 
       }
-
-   /**
-    * construct new MPX AB that is the sum of A + B: this is done by making a larger MPX object with larger bond dimension,
-    * taking the direct sum of the individual tensors in the chain
-    * @param A input MPX
-    * @param B input MPX
-    * @return the MPX result
-    */
-   template<size_t N,class Q>
-      MPX<N,Q> operator+(const MPX<N,Q> &A,const MPX<N,Q> &B){
-
-         //first check if we can sum these two:
-         if(A.size() != B.size())
-            BTAS_THROW(false, "Error: input MP objects do not have the same length!");
-
-         int L = A.size();
-
-         MPX<N,Q> AB(L);
-
-         QSDArray<N> tmp;
-
-         IVector<N-1> left;
-
-         for(int i = 0;i < N-1;++i)
-            left[i] = i;
-
-         //first left 
-         QSDdsum(A[0],B[0],left,tmp);
-
-         //merge the column quantumnumbers together
-         TVector<Qshapes<Q>,1> qmerge;
-         TVector<Dshapes,1> dmerge;
-
-         qmerge[0] = tmp.qshape(N-1);
-         dmerge[0] = tmp.dshape(N-1);
-
-         QSTmergeInfo<1> info(qmerge,dmerge);
-
-         //then merge
-         QSTmerge(tmp,info,AB[0]);
-
-         IVector<N-2> middle;
-
-         for(int i = 1;i < N-1;++i)
-            middle[i - 1] = i;
-
-         //row and column addition in the middle of the chain
-         for(int i = 1;i < L - 1;++i){
-
-            QSDdsum(A[i],B[i],middle,AB[i]);
-
-            //merge the row quantumnumbers together
-            qmerge[0] = AB[i].qshape(0);
-            dmerge[0] = AB[i].dshape(0);
-
-            info.reset(qmerge,dmerge);
-
-            //then merge
-            QSTmerge(info,AB[i],tmp);
-
-            //column quantumnumbers
-            qmerge[0] = tmp.qshape(N-1);
-            dmerge[0] = tmp.dshape(N-1);
-
-            info.reset(qmerge,dmerge);
-
-            //then merge
-            QSTmerge(tmp,info,AB[i]);
-
-         }
-
-         IVector<N-1> right;
-
-         for(int i = 0;i < N-1;++i)
-            right[i] = i + 1;
-
-         //finally the right
-         tmp.clear();
-         QSDdsum(A[L-1],B[L-1],right,tmp);
-
-         //merge the row quantumnumbers together
-         qmerge[0] = tmp.qshape(0);
-         dmerge[0] = tmp.dshape(0);
-
-         info.reset(qmerge,dmerge);
-
-         //then merge
-         QSTmerge(info,tmp,AB[L-1]);
-
-         return AB;
-
-      }
-
-   /**
-    * construct new MPX AB that is the difference of A and B: A - B this is done by making an MPX object with larger bond dimension,
-    * taking the direct sum of the individual tensors in the chain
-    * @param A input MPX
-    * @param B input MPX
-    * @return the MPX result
-    */
-   template<size_t N,class Q>
-      MPX<N,Q> operator-(const MPX<N,Q> &A,const MPX<N,Q> &B){
-
-         //first check if we can sum these two:
-         if(A.size() != B.size())
-            BTAS_THROW(false, "Error: input MP objects do not have the same length!");
-
-         int L = A.size();
-
-         MPX<N,Q> AB(L);
-
-         QSDArray<N> tmp;
-
-         IVector<N-1> left;
-
-         for(int i = 0;i < N-1;++i)
-            left[i] = i;
-
-         //first left: multiply with - sign
-         AB[0] = B[0];
-         QSDscal(-1.0,AB[0]);
-
-         QSDdsum(A[0],AB[0],left,tmp);
-
-         //merge the column quantumnumbers together
-         TVector<Qshapes<Q>,1> qmerge;
-         TVector<Dshapes,1> dmerge;
-
-         qmerge[0] = tmp.qshape(N-1);
-         dmerge[0] = tmp.dshape(N-1);
-
-         QSTmergeInfo<1> info(qmerge,dmerge);
-
-         //then merge
-         QSTmerge(tmp,info,AB[0]);
-
-         IVector<N-2> middle;
-
-         for(int i = 1;i < N-1;++i)
-            middle[i - 1] = i;
-
-         //row and column addition in the middle of the chain
-         for(int i = 1;i < L - 1;++i){
-
-            QSDdsum(A[i],B[i],middle,AB[i]);
-
-            //merge the row quantumnumbers together
-            qmerge[0] = AB[i].qshape(0);
-            dmerge[0] = AB[i].dshape(0);
-
-            info.reset(qmerge,dmerge);
-
-            //then merge
-            QSTmerge(info,AB[i],tmp);
-
-            //column quantumnumbers
-            qmerge[0] = tmp.qshape(N-1);
-            dmerge[0] = tmp.dshape(N-1);
-
-            info.reset(qmerge,dmerge);
-
-            //then merge
-            QSTmerge(tmp,info,AB[i]);
-
-         }
-
-         IVector<N-1> right;
-
-         for(int i = 0;i < N-1;++i)
-            right[i] = i + 1;
-
-         //finally the right
-         tmp.clear();
-         QSDdsum(A[L-1],B[L-1],right,tmp);
-
-         //merge the row quantumnumbers together
-         qmerge[0] = tmp.qshape(0);
-         dmerge[0] = tmp.dshape(0);
-
-         info.reset(qmerge,dmerge);
-
-         //then merge
-         QSTmerge(info,tmp,AB[L-1]);
-
-         return AB;
-
-      }
-
+   
    /**
     * MPS/O equivalent of the axpy blas function: Y <- alpha X + Y
     * taking the direct sum of the individual tensors in the chain
@@ -764,6 +577,42 @@ namespace mps {
          QSTmerge(info,tmp1,Y[L-1]);
 
      }
+
+   /**
+    * construct new MPX AB that is the sum of A + B: this is done by making a larger MPX object with larger bond dimension,
+    * taking the direct sum of the individual tensors in the chain
+    * @param A input MPX
+    * @param B input MPX
+    * @return the MPX result
+    */
+   template<size_t N,class Q>
+      MPX<N,Q> operator+(const MPX<N,Q> &A,const MPX<N,Q> &B){
+
+         MPX<N,Q> AB(B);
+         axpy(1.0,A,AB);
+
+         return AB;
+
+      }
+
+   /**
+    * construct new MPX AB that is the difference of A and B: A - B this is done by making an MPX object with larger bond dimension,
+    * taking the direct sum of the individual tensors in the chain
+    * @param A input MPX
+    * @param B input MPX
+    * @return the MPX result
+    */
+   template<size_t N,class Q>
+      MPX<N,Q> operator-(const MPX<N,Q> &A,const MPX<N,Q> &B){
+
+         MPX<N,Q> AB(A);
+         axpy(-1.0,B,AB);
+
+         return AB;
+
+      }
+
+
 
    /**
     * Compress an MP object by performing an SVD
@@ -1086,71 +935,6 @@ namespace mps {
       }
 
    /**
-    * MPO/S equivalent of a matrix vector multiplication. Let an MPO act on an MPS and return the new MPS
-    * @param O input MPO
-    * @param A input MPS
-    * @return the new MPS object created by the multiplication
-    */
-   template<class Q>
-      MPS<Q> operator*(const MPO<Q> &O,const MPS<Q> &A){
-
-         //first check if we can sum these two:
-         if(O.size() != A.size())
-            BTAS_THROW(false, "Error: input objects do not have the same length!");
-
-         int L = A.size();
-
-         MPS<Q> B(L);
-
-         enum {j,k,l,m,n,o};
-
-         QSDArray<5> tmp;
-         QSDArray<4> mrows;
-
-         for(int i = 0;i < L;++i){
-
-            //clear the tmp object first
-            tmp.clear();
-
-            QSDindexed_contract(1.0,O[i],shape(j,k,l,m),A[i],shape(n,l,o),0.0,tmp,shape(n,j,k,o,m));
-
-            //merge 2 rows together
-            TVector<Qshapes<Q>,2> qmerge;
-            TVector<Dshapes,2> dmerge;
-
-            for(int r = 0;r < 2;++r){
-
-               qmerge[r] = tmp.qshape(r);
-               dmerge[r] = tmp.dshape(r);
-
-            }
-
-            QSTmergeInfo<2> info(qmerge,dmerge);
-
-            //clear the mrows object first
-            mrows.clear();
-
-            //then merge
-            QSTmerge(info,tmp,mrows);
-
-            //merge 2 columns together
-            for(int r = 2;r < 4;++r){
-
-               qmerge[r - 2] = mrows.qshape(r);
-               dmerge[r - 2] = mrows.dshape(r);
-
-            }
-
-            info.reset(qmerge,dmerge);
-
-            QSTmerge(mrows,info,B[i]);
-
-         }
-
-         return B;
-
-      }
-   /**
     * MPO/S equivalent of the blas gemv function: Y <- alpha * A X + beta Y
     * @param alpha scaling factor of the input MPO
     * @param A input MPO
@@ -1416,67 +1200,19 @@ namespace mps {
       }
 
    /**
-    * MPO equivalent of a matrix matrix multiplication. MPO action on MPO gives new MPO: O1-O2|MPS>
-    * @param O1 input MPO
-    * @param O2 input MPO
-    * @return the new MPO object created by the multiplication
+    * MPO/S equivalent of a matrix vector multiplication. Let an MPO act on an MPS and return the new MPS
+    * @param O input MPO
+    * @param A input MPS
+    * @return the new MPS object created by the multiplication
     */
    template<class Q>
-      MPO<Q> operator*(const MPO<Q> &O1,const MPO<Q> &O2){
+      MPS<Q> operator*(const MPO<Q> &O,const MPS<Q> &A){
 
-         //first check if we can sum these two:
-         if(O1.size() != O2.size())
-            BTAS_THROW(false, "Error: input objects do not have the same length!");
+         MPS<Q> OA(O.size());
 
-         int L = O1.size();
+         gemv(1.0,O,A,0.0,OA);
 
-         MPO<Q> mpo(L);
-
-         enum {j,k,l,m,n,o,p};
-
-         QSDArray<6> tmp;
-         QSDArray<5> mrows;
-
-         for(int i = 0;i < L;++i){
-
-            //clear the tmp object first
-            tmp.clear();
-
-            QSDindexed_contract(1.0,O1[i],shape(n,o,k,p),O2[i],shape(j,k,l,m),0.0,tmp,shape(n,j,o,l,p,m));
-
-            //merge 2 rows together
-            TVector<Qshapes<Q>,2> qmerge;
-            TVector<Dshapes,2> dmerge;
-
-            for(int r = 0;r < 2;++r){
-
-               qmerge[r] = tmp.qshape(r);
-               dmerge[r] = tmp.dshape(r);
-
-            }
-
-            QSTmergeInfo<2> info(qmerge,dmerge);
-
-            //clear the mrows object first
-            mrows.clear();
-
-            //then merge
-            QSTmerge(info,tmp,mrows);
-
-            //merge 2 columns together
-            for(int r = 3;r < 5;++r){
-
-               qmerge[r - 3] = mrows.qshape(r);
-               dmerge[r - 3] = mrows.dshape(r);
-
-            }
-
-            info.reset(qmerge,dmerge);
-            QSTmerge(mrows,info,mpo[i]);
-
-         }
-
-         return mpo;
+         return OA;
 
       }
 
@@ -1752,6 +1488,24 @@ namespace mps {
       }
 
    /**
+    * MPO equivalent of a matrix matrix multiplication. MPO action on MPO gives new MPO: O1-O2|MPS>
+    * @param O1 input MPO
+    * @param O2 input MPO
+    * @return the new MPO object created by the multiplication
+    */
+   template<class Q>
+      MPO<Q> operator*(const MPO<Q> &O1,const MPO<Q> &O2){
+
+         MPO<Q> O12(O1.size());
+
+         gemm(1.0,O1,O2,0.0,O12);
+
+         return O12;
+
+      }
+
+
+   /**
     * the contraction of two MPS's
     * @return the overlap of two MPS objects
     * @param X input MPS
@@ -1865,45 +1619,82 @@ namespace mps {
       }
 
    /**
-    * @return the MPS that is the result of the expontential of the operator MPO O acting on input MPS A. 
-    * @param cutoff number of terms in the expansion that will be kept.
+    * @return the MPO that is the result of the expontential of the input operator MPO O 
+    * @param cutoff vector of size the number of terms in the expansion that will be kept, and containing the dimension for svd for every order
     */
    template<class Q>
-      MPS<Q> exp(const MPO<Q> &O,const MPS<Q> &A,int cutoff){
+      MPO<Q> exp(const MPO<Q> &O,std::vector<int> cutoff){
 
-         std::vector< MPS<Q> > term(cutoff);
+         std::vector< MPO<Q> > term(cutoff.size());
 
          //form the list of contributing terms in the expansion
-         term[0] = gemv(O,A);
-         compress(term[0],mps::Left,0);
-         compress(term[0],mps::Right,0);
+         term[0] = O;
 
-         for(int i = 1;i < cutoff;++i){
+         compress(term[0],mps::Left,cutoff[0]);
+         compress(term[0],mps::Right,cutoff[0]);
 
-            term[i] = gemv(O,term[i - 1]);
-            compress(term[i],mps::Left,0);
-            compress(term[i],mps::Right,0);
+         for(int i = 1;i < cutoff.size();++i){
+
+            term[i] = O*term[i - 1];
+            compress(term[i],mps::Left,cutoff[i]);
+            compress(term[i],mps::Right,cutoff[i]);
             scal(1.0/(i + 1.0),term[i]);
 
          }
 
-         //now sum all the terms:
-         MPS<Q> tmp = add(A,term[0]);
-         compress(tmp,mps::Left,0);
-         compress(tmp,mps::Right,0);
+         //now sum all the terms together:
+         for(int i = 1;i < cutoff.size();++i){
 
-         for(int i = 1;i < cutoff;++i){
-
-            term[0] = add(tmp,term[i]);
-            compress(term[0],mps::Left,0);
-            compress(term[0],mps::Right,0);
-            tmp = term[0];
+            axpy(1.0,term[i],term[0]);
+            compress(term[0],mps::Left,cutoff[0]);
+            compress(term[0],mps::Right,cutoff[0]);
 
          }
 
-         return tmp;
+         return term[0];
 
       }
+
+   /**
+    * @return the MPS that is the result of the expontential of the operator MPO O acting on input MPS A. 
+    * @param cutoff vector of size the number of terms in the expansion that will be kept, and containing the dimension for svd for every order
+    */
+   template<class Q>
+      MPS<Q> exp(const MPO<Q> &O,const MPS<Q> &A,std::vector<int> cutoff){
+
+         std::vector< MPS<Q> > term(cutoff.size());
+
+         //form the list of contributing terms in the expansion
+         term[0] = O*A;
+
+         compress(term[0],mps::Left,cutoff[0]);
+         compress(term[0],mps::Right,cutoff[0]);
+
+         for(int i = 1;i < cutoff.size();++i){
+
+            term[i] = O*term[i - 1];
+            compress(term[i],mps::Left,cutoff[i]);
+            compress(term[i],mps::Right,cutoff[i]);
+            scal(1.0/(i + 1.0),term[i]);
+
+         }
+
+         //now sum all the terms together:
+         for(int i = 1;i < cutoff.size();++i){
+
+            axpy(1.0,term[i],term[0]);
+            compress(term[0],mps::Left,cutoff[0]);
+            compress(term[0],mps::Right,cutoff[0]);
+
+         }
+
+         axpy(1.0,A,term[0]);
+
+         return term[0];
+
+      }
+
+
 
    /**
     * save the MPX object to a file in binary format.
