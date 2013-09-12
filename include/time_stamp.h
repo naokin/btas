@@ -19,8 +19,8 @@ public:
   time_stamp() { start(); }
   //! Start / Restart
   void start() {
-    m_time_point_start = std::chrono::system_clock::now();
-    m_time_point_lap   = std::chrono::system_clock::now();
+    m_time_point_start = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());
+    m_time_point_lap   = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());
   }
   //! Get elapased time in microseconds
   double elapsed(unsigned long n_periods = 1000000 /* to seconds */) const {
@@ -29,7 +29,7 @@ public:
   }
   //! Get lap time in microseconds, and reset lap time record
   double lap(unsigned long n_periods = 1000000 /* to seconds */) {
-    time_point_type record = std::chrono::system_clock::now();
+    time_point_type record = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());
     auto t = record - m_time_point_lap;
     m_time_point_lap = record;
     return static_cast<double>(t.count())/n_periods;

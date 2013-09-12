@@ -273,9 +273,8 @@ public:
   //! Deallocation
   virtual void clear() {
     m_shape.fill(0);
-    for(int i = 0; i < N; ++i)
-      m_dn_shape[i].clear();
     m_stride.fill(0);
+    for(int i = 0; i < N; ++i) m_dn_shape[i].clear();
     m_store.clear();
   }
 
