@@ -24,7 +24,8 @@ public:
   }
   //! Get elapased time in microseconds
   double elapsed(unsigned long n_periods = 1000000 /* to seconds */) const {
-    auto t = std::chrono::system_clock::now() - m_time_point_start;
+    time_point_type record = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());
+    auto t = record - m_time_point_start;
     return static_cast<double>(t.count())/n_periods;
   }
   //! Get lap time in microseconds, and reset lap time record
