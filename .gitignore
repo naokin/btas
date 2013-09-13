@@ -8,4 +8,4 @@
 *.tmp
 *log
 .*.swp
-Doxydir
+docs
