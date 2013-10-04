@@ -229,17 +229,10 @@ double QSDgesvd
   vt_merge_nz.check_dshape();
   vt_merge.clear();
 
-  cout << endl;
-  cout << "U matrix" << endl;
-  cout << u_merge_nz.dshape() << endl;
-  cout << endl;
-  cout << u_merge_nz << endl;
-  cout << endl;
-
   // Reshape matrix to array form
   SDcopy  (s_value_nz, s);
   QSDexpand(a_qinfo_left, u_merge_nz, u);
-//  QSDexpand(vt_merge_nz, a_qinfo_right, vt);
+  QSDexpand(vt_merge_nz, a_qinfo_right, vt);
 
   return dnorm;
 
