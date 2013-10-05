@@ -265,13 +265,11 @@ namespace btas {
             for(int i = 0; i < 1+MC; ++i)
                subend[i] = block.shape(i) - 1;
 
-
-            IVector<N> bind;
-
             for(typename QSTmergeInfo<MR, Q>::const_iterator itr = irow_range.first; itr != irow_range.second; ++itr) {
 
                int irow = itr->second;
                int drow = rows_info.dshape_packed(irow);
+
                // skip if size of block to be created = 0
                if(drow == 0) continue;
 
@@ -280,24 +278,10 @@ namespace btas {
                // expand
                int tag = irow * b_stride + j;
 
-               bind = b.index(tag);
+               typename QSTArray<T, N, Q>::iterator itb = b.reserve(tag);
 
-//             //check if dimensions of block to be created are != 0
-//             int flag = 0;
-
-//             for(int i = 0;i < N;++i)
-//                if(b.dshape(i)[bind[i]] == 0)
-//                   flag = 1;
-
-//             //only allocate if flag == 0, so if all dimensions exist
-//             if(flag == 0){
-
-                  typename QSTArray<T, N, Q>::iterator itb = b.reserve(tag);
-
-                  if(itb != b.end())
-                     *itb->second = block.subarray(subbeg, subend);
-
-//             }
+               if(itb != b.end())
+                  *itb->second = block.subarray(subbeg, subend);
 
                subbeg[0] = subend[0] + 1;
 
@@ -357,8 +341,6 @@ namespace btas {
             IVector<MR+1> subbeg = uniform<int, MR+1>(0);
             IVector<MR+1> subend;
 
-            IVector<N> bind;
-
             for(int i = 0; i < MR+1; ++i) 
                subend[i] = block.shape(i) - 1;
 
@@ -366,6 +348,7 @@ namespace btas {
 
                int jcol = itc->second;
                int dcol = cols_info.dshape_packed(jcol);
+
                // skip if size of block to be created = 0
                if(dcol == 0) continue;
 
@@ -374,23 +357,10 @@ namespace btas {
                //expand
                int tag = i * b_stride + jcol;
 
-               bind = b.index(tag);
+               typename QSTArray<T, N, Q>::iterator itb = b.reserve(tag);
 
-//             //check if dimensions of block to be created are != 0
-//             int flag = 0;
-
-//             for(int i = 0;i < N;++i)
-//                if(b.dshape(i)[bind[i]] == 0)
-//                   flag = 1;
-
-//             if(flag == 0){
-
-                  typename QSTArray<T, N, Q>::iterator itb = b.reserve(tag);
-
-                  if(itb != b.end())
-                     *itb->second = block.subarray(subbeg, subend);
-
-//             }
+               if(itb != b.end())
+                  *itb->second = block.subarray(subbeg, subend);
 
                subbeg[MR] = subend[MR] + 1;
 
@@ -424,8 +394,6 @@ namespace btas {
 
          // resizing
          b.resize(a.q(), b_qshape, b_dshape, false);
-
-         IVector<N> bind;
 
          // strides
          int a_stride = a.stride(0);
@@ -469,23 +437,10 @@ namespace btas {
                   // expand
                   int tag = irow * b_stride + jcol;
 
-                  bind = b.index(tag);
+                  typename QSTArray<T, N, Q>::iterator itb = b.reserve(tag);
 
-//                //check if dimensions of block to be created are != 0
-//                int flag = 0;
-
-//                for(int i = 0;i < N;++i)
-//                   if(b.dshape(i)[bind[i]] == 0)
-//                      flag = 1;
-
-//                if(flag == 0){
-
-                     typename QSTArray<T, N, Q>::iterator itb = b.reserve(tag);
-
-                     if(itb != b.end())
-                        *itb->second = block.subarray(subbeg, subend);
-
-//                }
+                  if(itb != b.end())
+                     *itb->second = block.subarray(subbeg, subend);
 
                   subbeg[1] = subend[1] + 1;
 
