@@ -78,7 +78,8 @@ public:
  ~TArray() { }
 
   //! copy constructor
-  explicit TArray(const TArray& other) : m_store(new std::vector<T>()) {
+//explicit TArray(const TArray& other) : m_store(new std::vector<T>()) {
+  TArray(const TArray& other) : m_store(new std::vector<T>()) {
     copy(other);
   }
 

@@ -101,13 +101,16 @@ unsigned int get_contract_jobs
   //! job_type = 2 calls GEMM by default
   unsigned int job_type = 2;
 
+  std::set<int> a_contract_set(a_contract.begin(), a_contract.end());
+  std::set<int> b_contract_set(b_contract.begin(), b_contract.end());
+
   if(NA == K) {
     //! job_type = 1 calls GEMV(Trans, B, A, C)
     job_type = 1 | (0xff & JOBMASK_B_TRANS);
+    if(!std::equal(a_contract.begin(), a_contract.end(), a_contract_set.begin())) job_type |= JOBMASK_A_PMUTE;
     for(int i = 0; i < NA; ++i) a_permute[i] = a_contract[i];
   }
   else {
-    std::set<int> a_contract_set(a_contract.begin(), a_contract.end());
     int n = 0;
     for(int i = 0; i < NA; ++i) if(a_contract_set.find(i) == a_contract_set.end()) a_permute[n++] = i;
     for(int i = 0; i < K;  ++i)                                                    a_permute[n++] = a_contract[i];
@@ -118,10 +121,10 @@ unsigned int get_contract_jobs
   }
   if(NB == K) {
     job_type = 0;
+    if(!std::equal(b_contract.begin(), b_contract.end(), b_contract_set.begin())) job_type |= JOBMASK_B_PMUTE;
     for(int i = 0; i < NB; ++i) b_permute[i] = b_contract[i];
   }
   else {
-    std::set<int> b_contract_set(b_contract.begin(), b_contract.end());
     int n = 0;
     for(int i = 0; i < K;  ++i)                                                    b_permute[n++] = b_contract[i];
     for(int i = 0; i < NB; ++i) if(b_contract_set.find(i) == b_contract_set.end()) b_permute[n++] = i;

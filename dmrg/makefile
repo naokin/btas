@@ -1,11 +1,11 @@
 CXX=g++ -std=c++0x
 CXXFLAGS=-g -O3 -fopenmp -D_HAS_CBLAS -D_HAS_INTEL_MKL
 
-BLASDIR=
-BLASINC=
-BLASLIB=-lmkl_intel_lp64 -lmkl_sequential -lmkl_core
+BLASDIR=/opt/intel/mkl
+BLASINC=-I$(BLASDIR)/include
+BLASLIB=-L$(BLASDIR)/lib/intel64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core
 
-BOOSTDIR=/usr
+BOOSTDIR=/usr/local
 BOOSTINC=-I$(BOOSTDIR)/include
 BOOSTLIB=-L$(BOOSTDIR)/lib -lboost_serialization
 
@@ -26,7 +26,7 @@ OBJ_SAMPLE = $(SRC_SAMPLE:.C=.o)
 all	: dmrg.x
 
 dmrg.x	: $(OBJ_SAMPLE)
-	$(CXX) $(CXXFLAGS) $(LIBRARYFLAGS) -o dmrg.x $(OBJ_SAMPLE) $(BTASLIB)/libbtas.a
+	$(CXX) $(CXXFLAGS) -o dmrg.x $(OBJ_SAMPLE) $(BTASLIB)/libbtas.a $(LIBRARYFLAGS)
 
 clean	:
 	rm *.o; rm *.x; rm *.a;

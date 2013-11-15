@@ -1,11 +1,11 @@
 CXX=g++ -std=c++11
 CXXFLAGS=-g -fopenmp -D_HAS_CBLAS -D_HAS_INTEL_MKL
 
-BLASDIR=
-BLASINC=
-BLASLIB=-lmkl_intel_lp64 -lmkl_sequential -lmkl_core
+BLASDIR=/opt/intel/mkl
+BLASINC=-I$(BLASDIR)/include
+BLASLIB=-L$(BLASDIR)/lib/intel64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core
 
-BOOSTDIR=/usr
+BOOSTDIR=/usr/local
 BOOSTINC=-I$(BOOSTDIR)/include
 BOOSTLIB=-L$(BOOSTDIR)/lib -lboost_serialization
 
@@ -25,7 +25,7 @@ libbtas.a : $(OBJ_LIBBTAS)
 	ar cr libbtas.a $(OBJ_LIBBTAS)
 
 tests.x : tests.o
-	$(CXX) $(CXXFLAGS) $(LIBRARYFLAGS) -o tests.x tests.o libbtas.a
+	$(CXX) $(CXXFLAGS) -o tests.x tests.o libbtas.a $(LIBRARYFLAGS)
 
 clean:
 	rm *.o; rm *.x; rm *.a;

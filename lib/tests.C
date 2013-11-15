@@ -97,6 +97,12 @@ int DENSE_TEST(int iprint = 0)
       cout << "====================================================================================================" << endl;
       cout << "[DENSE_TEST] [Dcontract(1.0, a, shape(3), b, shape(0), 1.0, c)] print tensor [c]: " << c << endl;
     }
+    DArray<2> c2;
+    Dcontract(1.0, a, shape(1, 3), b, shape(1, 0), 1.0, c2);
+    if(iprint > 0) {
+      cout << "====================================================================================================" << endl;
+      cout << "[DENSE_TEST] [Dcontract(1.0, a, shape(1, 3), b, shape(1, 0), 1.0, c2)] print tensor [c2]: " << c2 << endl;
+    }
     // Dindexed_contract
     DArray<4> d;
     enum { i, j, k, l, p };
