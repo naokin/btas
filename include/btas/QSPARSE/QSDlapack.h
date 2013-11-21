@@ -163,6 +163,7 @@ double QSDgesvd
     cutoff = s_sorted[Dim-1];
   if(Dim < 0)
     cutoff = fabs(Tol) * pow(10.0, Dim);
+
   // Select singular values
   int nnz = 0;
   for(typename SDArray<1>::iterator its = s_value.begin(); its != s_value.end(); ++its) {
