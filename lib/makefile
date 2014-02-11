@@ -1,5 +1,5 @@
-CXX=g++ -std=c++11
-CXXFLAGS=-g -fopenmp -D_HAS_CBLAS -D_HAS_INTEL_MKL
+CXX=icpc -ipo -O3 -std=c++11
+CXXFLAGS= -D_HAS_CBLAS -D_HAS_INTEL_MKL -ipo -O3
 
 BLASDIR=/opt/intel/mkl
 BLASINC=-I$(BLASDIR)/include
