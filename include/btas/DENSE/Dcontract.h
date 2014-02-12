@@ -1,8 +1,8 @@
 #ifndef _BTAS_CXX11_DCONTRACT_H
 #define _BTAS_CXX11_DCONTRACT_H 1
 
-#include <btas/btas.h>
-#include <btas/btas_contract_shape.h>
+#include <btas/COMMON/btas.h>
+#include <btas/COMMON/btas_contract_shape.h>
 
 #include <btas/DENSE/DArray.h>
 #include <btas/DENSE/Dblas.h>

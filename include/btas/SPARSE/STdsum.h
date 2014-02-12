@@ -1,7 +1,7 @@
 #ifndef _BTAS_CXX11_STDSUM_H
 #define _BTAS_CXX11_STDSUM_H 1
 
-#include <btas/TVector.h>
+#include <btas/COMMON/TVector.h>
 
 #include <btas/SPARSE/STArray.h>
 

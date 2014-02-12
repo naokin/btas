@@ -11,7 +11,7 @@
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/vector.hpp>
 
-#include <btas/TVector.h>
+#include <btas/COMMON/TVector.h>
 
 namespace btas {
 

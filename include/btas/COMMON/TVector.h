@@ -20,7 +20,7 @@
 
 #include <boost/serialization/serialization.hpp>
 
-#include <btas/btas.h>
+#include <btas/COMMON/btas.h>
 
 namespace boost {
 namespace serialization {

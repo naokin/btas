@@ -17,8 +17,8 @@
 
 #include <lapack/clapack.h>
 
-#include <btas/btas.h>
-#include <btas/TVector.h>
+#include <btas/COMMON/btas.h>
+#include <btas/COMMON/TVector.h>
 
 #include <btas/DENSE/DArray.h>
 

@@ -7,7 +7,7 @@
 #ifndef _BTAS_CXX11_QSDCONTRACT_H
 #define _BTAS_CXX11_QSDCONTRACT_H 1
 
-#include <btas/btas_contract_shape.h>
+#include <btas/COMMON/btas_contract_shape.h>
 
 #include <btas/QSPARSE/QSDArray.h>
 #include <btas/QSPARSE/QSDblas.h>

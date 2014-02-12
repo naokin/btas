@@ -11,8 +11,6 @@ double rgen() { return (static_cast<double>(rand())/RAND_MAX-0.5)*2; }
 
 #define _DEFAULT_QUANTUM 1
 
-#include <btas/TVector.h>
-
 #include <btas/DENSE/DArray.h>
 #include <btas/QSPARSE/QSDArray.h>
 

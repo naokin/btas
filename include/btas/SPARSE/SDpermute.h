@@ -5,8 +5,8 @@
 #include <set>
 #include <algorithm>
 
-#include <btas/TVector.h>
-#include <btas/btas_permute_shape.h>
+#include <btas/COMMON/TVector.h>
+#include <btas/COMMON/btas_permute_shape.h>
 
 #include <btas/DENSE/DArray.h>
 #include <btas/DENSE/Darglist.h>

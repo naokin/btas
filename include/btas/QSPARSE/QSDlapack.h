@@ -1,7 +1,7 @@
 #ifndef _BTAS_CXX11_QSDLAPACK_H
 #define _BTAS_CXX11_QSDLAPACK_H 1
 
-#include <btas/btas.h>
+#include <btas/COMMON/btas.h>
 
 #include <btas/DENSE/Dlapack.h>
 #include <btas/DENSE/Darglist.h>

@@ -48,8 +48,8 @@
 #ifndef _BTAS_CXX11_QSDARRAY_H
 #define _BTAS_CXX11_QSDARRAY_H 1
 
-#include <btas/btas.h>
-#include <btas/TVector.h>
+#include <btas/COMMON/btas.h>
+#include <btas/COMMON/TVector.h>
 
 #include <btas/QSPARSE/QSTArray.h>
 #include <btas/QSPARSE/QSTdsum.h>

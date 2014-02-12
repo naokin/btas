@@ -9,8 +9,8 @@
 #include <iostream>
 #include <iomanip>
 
-#include <btas/TVector.h>
-#include <btas/blas_cxx_interface.h>
+#include <btas/COMMON/TVector.h>
+#include <btas/COMMON/blas_cxx_interface.h>
 
 #include <btas/DENSE/TArray.h>
 #include <btas/DENSE/TSubArray.h>

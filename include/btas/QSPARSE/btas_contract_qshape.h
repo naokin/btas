@@ -7,8 +7,8 @@
 #ifndef _BTAS_CXX11_CONTRACT_QSHAPE_H
 #define _BTAS_CXX11_CONTRACT_QSHAPE_H 1
 
-#include <btas/btas.h>
-#include <btas/btas_contract_shape.h>
+#include <btas/COMMON/btas.h>
+#include <btas/COMMON/btas_contract_shape.h>
 
 #include <btas/QSPARSE/Qshapes.h>
 

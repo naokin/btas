@@ -3,7 +3,7 @@
 
 #include <set>
 
-#include <btas/btas.h>
+#include <btas/COMMON/btas.h>
 
 #include <btas/DENSE/DArray.h>
 #include <btas/DENSE/Dreindex.h>

@@ -1,8 +1,8 @@
 #ifndef _BTAS_CXX11_SDARRAY_H
 #define _BTAS_CXX11_SDARRAY_H 1
 
-#include <btas/btas.h>
-#include <btas/TVector.h>
+#include <btas/COMMON/btas.h>
+#include <btas/COMMON/TVector.h>
 
 #include <btas/SPARSE/STArray.h>
 #include <btas/SPARSE/STdsum.h>

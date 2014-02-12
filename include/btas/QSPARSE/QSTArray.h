@@ -1,7 +1,7 @@
 #ifndef _BTAS_CXX11_QSTARRAY_H
 #define _BTAS_CXX11_QSTARRAY_H 1
 
-#include <btas/btas.h>
+#include <btas/COMMON/btas.h>
 
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/base_object.hpp>

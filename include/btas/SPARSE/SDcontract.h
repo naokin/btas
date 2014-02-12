@@ -1,7 +1,7 @@
 #ifndef _BTAS_CXX11_SDCONTRACT_H
 #define _BTAS_CXX11_SDCONTRACT_H 1
 
-#include <btas/btas_contract_shape.h>
+#include <btas/COMMON/btas_contract_shape.h>
 
 #include <btas/SPARSE/SDArray.h>
 #include <btas/SPARSE/SDblas.h>

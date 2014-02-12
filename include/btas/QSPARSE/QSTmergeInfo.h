@@ -3,7 +3,7 @@
 
 #include <map>
 
-#include <btas/btas.h>
+#include <btas/COMMON/btas.h>
 #include <btas/QSPARSE/Qshapes.h>
 
 namespace btas {

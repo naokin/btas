@@ -4,7 +4,7 @@
 #include <functional>
 #include <numeric>
 
-#include <btas/Targlist.h>
+#include <btas/COMMON/Targlist.h>
 
 #include <btas/DENSE/Dblas.h>
 #include <btas/DENSE/Dpermute.h>

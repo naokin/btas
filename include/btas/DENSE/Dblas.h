@@ -9,9 +9,9 @@
 #include <algorithm>
 #include <numeric>
 
-#include <btas/btas.h>
-#include <btas/btas_contract_shape.h>
-#include <btas/blas_cxx_interface.h>
+#include <btas/COMMON/btas.h>
+#include <btas/COMMON/btas_contract_shape.h>
+#include <btas/COMMON/blas_cxx_interface.h>
 
 #include <btas/DENSE/DArray.h>
 

@@ -1,8 +1,8 @@
 #ifndef _BTAS_DREINDEX_H
 #define _BTAS_DREINDEX_H 1
 
-#include <btas/btas.h>
-#include <btas/TVector.h>
+#include <btas/COMMON/btas.h>
+#include <btas/COMMON/TVector.h>
 
 namespace btas {
 
