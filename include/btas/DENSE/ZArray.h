@@ -69,11 +69,12 @@ std::ostream& operator<< (std::ostream& ost, const btas::ZArray<N>& a) {
    int stride = a.shape(N-1);
    int n = 0;
    for(typename btas::ZArray<N>::const_iterator it = a.begin(); it != a.end(); ++it, ++n) {
-      if(n % stride == 0) ost << endl << "\t";
-      if(it->imag() < 0)
-         ost << setw(width) << it->real() << " - " << setw(width) << fabs(it->imag()) << "i";
-      else
-         ost << setw(width) << it->real() << " + " << setw(width) << fabs(it->imag()) << "i";
+
+      if(n % stride == 0)
+         ost << endl << "\t";
+
+      ost << *it << "\t";
+
    }
    ost << endl;
 
