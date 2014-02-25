@@ -239,118 +239,131 @@ namespace btas {
    //####################################################################################################
    // BLAS LEVEL 3
    //####################################################################################################
- 
-      //! DGEMM: Matrix-matrix multiplication, c := alpha * a * b + beta * c
-      /*! \param alpha scalar number
-       *  \param beta  scalar number
-       *  \param a     array to be contracted, regarded as matrix
-       *  \param b     array to be contracted, regarded as matrix
-       *  \param c     array to be returned,   regarded as matrix */
-      /*
-         template<size_t NA, size_t NB, size_t NC>
-         void Dgemm(const BTAS_TRANSPOSE& TransA, const BTAS_TRANSPOSE& TransB,
-         const double& alpha, const DArray<NA>& a, const DArray<NB>& b, const double& beta, DArray<NC>& c) {
+
+   //! DGEMM: Matrix-matrix multiplication, c := alpha * a * b + beta * c
+   /*! \param alpha scalar number
+    *  \param beta  scalar number
+    *  \param a     array to be contracted, regarded as matrix
+    *  \param b     array to be contracted, regarded as matrix
+    *  \param c     array to be returned,   regarded as matrix */
+   template<size_t NA, size_t NB, size_t NC>
+      void Zgemm(const BTAS_TRANSPOSE& TransA, const BTAS_TRANSPOSE& TransB,
+            const complex<double> &alpha, const ZArray<NA>& a, const ZArray<NB>& b, const complex<double> &beta, ZArray<NC>& c) {
+
          const size_t K = (NA + NB - NC)/2; //! ranks to be contracted 
 
          if(a.size() == 0 || b.size() == 0)
-         BTAS_THROW(false, "btas::Dgemm: array data not found");
+            BTAS_THROW(false, "btas::Zgemm: array data not found");
 
          IVector<K> contracts;
          IVector<NC> c_shape;
+
          gemm_contract_shape(TransA, TransB, a.shape(), b.shape(), contracts, c_shape);
-      // check and resize c
-      if(c.size() > 0) {
-      if(c_shape != c.shape())
-      BTAS_THROW(false, "btas::Dgemm: array shape of c mismatched");
+
+         // check and resize c
+         if(c.size() > 0) {
+
+            if(c_shape != c.shape())
+               BTAS_THROW(false, "btas::Dgemm: array shape of c mismatched");
+
+         }
+         else {
+
+            c.resize(c_shape);
+            c = 0.0;
+
+         }
+
+         // calling cblas_dgemm
+         int arows = std::accumulate(c_shape.begin(), c_shape.begin()+NA-K, 1, std::multiplies<int>());
+         int acols = std::accumulate(contracts.begin(), contracts.end(), 1, std::multiplies<int>());
+         int bcols = std::accumulate(c_shape.begin()+NA-K, c_shape.end(), 1, std::multiplies<int>());
+
+         int lda = acols;
+         
+         if(TransA != NoTrans)
+            lda = arows;
+
+         int ldb = bcols;
+
+         if(TransB != NoTrans)
+            ldb = acols;
+
+         cblas_zgemm(RowMajor, TransA, TransB, arows, bcols, acols, &alpha, a.data(), lda, b.data(), ldb, &beta, c.data(), bcols);
+
       }
-      else {
-      c.resize(c_shape);
-      c = 0.0;
-      }
-      // calling cblas_dgemm
-      int arows = std::accumulate(c_shape.begin(), c_shape.begin()+NA-K, 1, std::multiplies<int>());
-      int acols = std::accumulate(contracts.begin(), contracts.end(), 1, std::multiplies<int>());
-      int bcols = std::accumulate(c_shape.begin()+NA-K, c_shape.end(), 1, std::multiplies<int>());
-      int lda = acols; if(TransA != NoTrans) lda = arows;
-      int ldb = bcols; if(TransB != NoTrans) ldb = acols;
-      cblas_dgemm(RowMajor, TransA, TransB, arows, bcols, acols, alpha, a.data(), lda, b.data(), ldb, beta, c.data(), bcols);
-      }
-       */
-      //! Non-BLAS function: a := a(general matrix) * b(diagonal matrix)
-      /*! NB <= NA */
-      /*
-         template<size_t NA, size_t NB>
-         void Ddimd(DArray<NA>& a, const DArray<NB>& b) {
+
+   //! Non-BLAS function: a := a(general matrix) * b(diagonal matrix)
+   /*! NB <= NA */
+   template<size_t NA, size_t NB>
+      void Zdimd(ZArray<NA>& a, const ZArray<NB>& b) {
+
          const IVector<NA>& a_shape = a.shape();
          IVector<NB>  b_shape;
-         for(int i = 0; i < NB; ++i) b_shape[i] = a_shape[i+NA-NB];
+
+         for(int i = 0; i < NB; ++i)
+            b_shape[i] = a_shape[i+NA-NB];
+
          if(!std::equal(b_shape.begin(), b_shape.end(), a_shape.begin()+NA-NB))
-         BTAS_THROW(false, "Ddimd: array shape mismatched");
+            BTAS_THROW(false, "Zdimd: array shape mismatched");
 
          int nrows = std::accumulate(a_shape.begin(), a_shape.begin()+NA-NB, 1, std::multiplies<int>());
+
          int ncols = b.size();
-         double* pa = a.data();
+         complex<double> *pa = a.data();
+
          for(int i = 0; i < nrows; ++i) {
-         const double* pb = b.data();
-         for(int j = 0; j < ncols; ++j, ++pa, ++pb)
-         (*pa) *= (*pb);
+
+            const complex<double> *pb = b.data();
+
+            for(int j = 0; j < ncols; ++j, ++pa, ++pb)
+               (*pa) *= (*pb);
          }
-         }
-       */
-      //! Non-BLAS function: b := a(diagonal matrix) * b(general matrix)
-      /*! NA <= NB */
-      /*
-         template<size_t NA, size_t NB>
-         void Ddidm(const DArray<NA>& a, DArray<NB>& b) {
+      }
+
+   //! Non-BLAS function: b := a(diagonal matrix) * b(general matrix)
+   /*! NA <= NB */
+   template<size_t NA, size_t NB>
+      void Zdidm(const ZArray<NA>& a, ZArray<NB>& b) {
+
          IVector<NA>  a_shape;
          const IVector<NB>& b_shape = b.shape();
-         for(int i = 0; i < NA; ++i) a_shape[i] = b_shape[i];
+
+         for(int i = 0; i < NA; ++i)
+            a_shape[i] = b_shape[i];
+
          if(!std::equal(a_shape.begin(), a_shape.end(), b_shape.begin()))
-         BTAS_THROW(false, "Ddidm: array shape mismatched");
+            BTAS_THROW(false, "Zdidm: array shape mismatched");
 
          int nrows = a.size();
          int ncols = std::accumulate(b_shape.begin()+NA, b_shape.end(), 1, std::multiplies<int>());
-         const double* pa = a.data();
-         double* pb = b.data();
+
+         const complex<double> *pa = a.data();
+         complex<double> *pb = b.data();
+
          for(int i = 0; i < nrows; ++i, ++pa, pb += ncols)
-         cblas_dscal(ncols, *pa, pb, 1);
-         }
-       */
-      //! Wrapper function for ZBLAS
-      /*! When calling as vector-matrix multiplication (i.e. call DGEMV with Trans),
-       *  tranposed array is returned: c = (a * b)^T = b^T * a^T */
-      /*
-         template<size_t NA, size_t NB, size_t NC>
-         void DblasWrapper(const double& alpha, const DArray<NA>& a, const DArray<NB>& b, const double& beta, DArray<NC>& c) {
-         const size_t K = (NA + NB - NC)/2;
-         if(NA == K) {
-      // FIXME: this may be wrong or give undesired result
-      //        array c needs to be permuted before and after calling Dgemv
-      //        otherwise, user has to take care of it
-      Dgemv(Trans,   alpha, b, a, beta, c);
+            cblas_zscal(ncols, pa, pb, 1);
+
       }
-      else if(NB == K) {
-      Dgemv(NoTrans, alpha, a, b, beta, c);
-      }
-      else {
-      Dgemm(NoTrans, NoTrans, alpha, a, b, beta, c);
-      }
+   
+   //! Normalization
+   template<size_t N>
+      void Znormalize(ZArray<N>& x) {
+
+         double nrm2 = Znrm2(x);
+         Zscal(1.0/nrm2, x);
+
       }
 
-      //! Normalization
-      template<size_t N>
-      void Dnormalize(DArray<N>& x) {
-      double nrm2 = Dnrm2(x);
-      Dscal(1.0/nrm2, x);
-      }
+   //! Orthogonalization: only works when x is normalized!
+   template<size_t N>
+      void Zorthogonalize(const ZArray<N>& x, ZArray<N>& y) {
 
-      //! Orthogonalization
-      template<size_t N>
-      void Dorthogonalize(const DArray<N>& x, DArray<N>& y) {
-      double ovlp = Ddot(x, y);
-      Daxpy(-ovlp, x, y);
+         complex<double> ovlp = Zdotc(x, y);
+         Zaxpy(-ovlp, x, y);
+
       }
-       */
+  
 }; // namespace btas
 
 #endif // _BTAS_CXX11_ZBLAS_H
