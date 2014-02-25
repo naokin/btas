@@ -1,12 +1,16 @@
 #ifndef __BTAS_TVECTOR_H
 #define __BTAS_TVECTOR_H 1
 
-#include <array>
 #include <type_traits>
 
 #include <boost/serialization/serialization.hpp>
 
 #include <btas/common/types.h>
+#include <btas/common/numeric_type.h>
+
+#if BOOST_VERSION / 100 % 100 > 50
+
+#include <array>
 
 namespace boost {
 namespace serialization {
@@ -21,6 +25,13 @@ void serialize (_Archive& ar, std::array<_T, _N>& x, const unsigned int version)
 } // namespace serialization
 } // namespace boost
 
+#else
+
+#include <boost/array.hpp>
+#include <boost/serialization/array.hpp>
+
+#endif
+
 namespace btas {
 
 //  ====================================================================================================
@@ -29,65 +40,70 @@ namespace btas {
 
 /// alias to std::array
 template<typename _T, size_t _N>
+#if BOOST_VERSION / 100 % 100 > 50
 using TVector = std::array<_T, _N>;
+#else
+using TVector = boost::array<_T, _N>;
+#endif
 
 /// alias for index, shape, etc.
 template<size_t _N>
 using IVector = TVector<size_t, _N>;
 
 //  ====================================================================================================
-//    Rational operators
-//  ====================================================================================================
-
-/**
-
-/// rational operator, is equal
-template<typename _T, size_t _N>
-bool operator== (const TVector<_T, _N>& x, const TVector<_T, _N>& y)
-{
-   size_t i = 0;
-   for(; i < _N-1; ++i) if(x[i] != y[i]) break;
-   return x[i] == y[i];
-}
-
-/// rational operator, is not equal
-template<typename _T, size_t _N>
-bool operator!= (const TVector<_T, _N>& x, const TVector<_T, _N>& y)
-{
-   size_t i = 0;
-   for(; i < _N-1; ++i) if(x[i] != y[i]) break;
-   return x[i] != y[i];
-}
-
-/// rational operator, less than
-template<typename _T, size_t _N>
-bool operator< (const TVector<_T, _N>& x, const TVector<_T, _N>& y)
-{
-   size_t i = 0;
-   for(; i < _N-1; ++i) if(x[i] != y[i]) break;
-   return x[i] < y[i];
-}
-
-/// rational operator, greater than
-template<typename _T, size_t _N>
-bool operator> (const TVector<_T, _N>& x, const TVector<_T, _N>& y)
-{
-   size_t i = 0;
-   for(; i < _N-1; ++i) if(x[i] != y[i]) break;
-   return x[i] > y[i];
-}
-
-**/
-
-//  ====================================================================================================
 //    Convenient constructors
 //  ====================================================================================================
 
+/// faster initializer
+template<size_t _I, size_t _N, typename _T>
+struct __set_value_helper
+{
+   inline void zero (TVector<_T, _N>& x)
+   {
+      x[_I-1] = numeric_type<_T>::zero();
+      __set_value_helper<_I+1, _N, _T>::zero(x);
+   }
+
+   inline void one (TVector<_T, _N>& x)
+   {
+      x[_I-1] = numeric_type<_T>::one();
+      __set_value_helper<_I+1, _N, _T>::one(x);
+   }
+
+   inline void set (TVector<_T, _N>& x, const _T& value)
+   {
+      x[_I-1] = value;
+      __set_value_helper<_I+1, _N, _T>::set(x, value);
+   }
+
+};
+
+template<size_t _N, typename _T>
+struct __set_value_helper<_N, _N, _T>
+{
+   inline void zero (TVector<_T, _N>& x)
+   {
+      x[_N-1] = numeric_type<_T>::zero();
+   }
+
+   inline void one (TVector<_T, _N>& x)
+   {
+      x[_N-1] = numeric_type<_T>::one();
+   }
+
+   inline void set (TVector<_T, _N>& x, const _T& value)
+   {
+      x[_N-1] = value;
+   }
+
+};
+
 /// construct TVector with constant value
 template<size_t _N, typename _T>
-TVector<_T, _N> uniform (const _T& val)
+TVector<_T, _N> uniform (const _T& value)
 {
-   TVector<_T, _N> x; x.fill(val);
+   TVector<_T, _N> x;
+   __set_value_helper<1, _N, _T>::set(x, value);
    return x;
 }
 

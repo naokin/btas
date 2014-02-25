@@ -8,6 +8,7 @@
 namespace btas
 {
 
+/// recall dotu
 template<class Tensor, bool = std::is_same<typename Tensor::value_type, typename element_type<Tensor>::type>::value>
 struct dot_impl
 {
@@ -15,10 +16,11 @@ struct dot_impl
 
    static return_type call (const Tensor& X, const Tensor& Y)
    {
-      BTAS_ASSERT(false, "dot_impl::call must be specialized"); return static_cast<return_type>(0);
+      return dotu_impl<Tensor>::call(X, Y);
    }
 };
 
+/// calculate dot product: X * Y
 template<class Tensor, bool = std::is_same<typename Tensor::value_type, typename element_type<Tensor>::type>::value>
 struct dotu_impl
 {
@@ -26,10 +28,11 @@ struct dotu_impl
 
    static return_type call (const Tensor& X, const Tensor& Y)
    {
-      return dot_impl<Tensor>::call(X, Y);
+      BTAS_ASSERT(false, "dotu_impl::call must be specialized"); return static_cast<return_type>(0);
    }
 };
 
+/// calculate dot product: X^H * Y
 template<class Tensor, bool = std::is_same<typename Tensor::value_type, typename element_type<Tensor>::type>::value>
 struct dotc_impl
 {
@@ -37,7 +40,7 @@ struct dotc_impl
 
    static return_type call (const Tensor& X, const Tensor& Y)
    {
-      return dot_impl<Tensor>::call(X, Y);
+      BTAS_ASSERT(false, "dotc_impl::call must be specialized"); return static_cast<return_type>(0);
    }
 };
 

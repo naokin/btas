@@ -123,39 +123,57 @@ public:
    //  Size Functions
    //
 
+   /// resize by comma-separated sizes
    template<typename... Args>
    void resize (const size_t& n, const Args&... ns)
    {
       __resize_by_args<1>(n, ns...);
    }
 
+   /// resize by extent object
    void resize (const extent_type& ext)
    {
       extent_ = ext;
       store_.resize(normal_stride<1, N, Order>::set(extent_, stride_));
    }
 
+   /// resize by extent object and initialize with val
+   /// note that present data will be kept. it is the same as std::vector::resize(n, val)
    void resize (const extent_type& ext, const value_type& val)
    {
       extent_ = ext;
       store_.resize(normal_stride<1, N, Order>::set(extent_, stride_), val);
    }
 
+   /// return number of elements
    size_t size () const
    { return extent_[leading_rank<N, Order>::value]*stride_[leading_rank<N, Order>::value]; }
 
+   /// return tensor extent
    const extent_type& extent () const
    { return extent_; }
 
+   /// return tensor extent for n-th rank
    const typename extent_type::value_type& extent (const size_t& n) const
    { return extent_[n]; }
 
+   /// backward compatibility to TArray::shape()
+   const extent_type& shape () const
+   { return extent_; }
+
+   /// backward compatibility to TArray::shape(n)
+   const typename extent_type::value_type& shape (const size_t& n) const
+   { return extent_[n]; }
+
+   /// return tensor stride
    const stride_type& stride () const
    { return stride_; }
 
+   /// return tensor stride for n-th rank
    const typename stride_type::value_type& stride (const size_t& n) const
    { return stride_[n]; }
 
+   /// convert ordinal index to tensor index
    index_type index (const size_t& n) const
    {
       index_type idx;
@@ -330,5 +348,7 @@ protected:
 
 #include <btas/dense/blas/package.h>
 #include <btas/dense/lapack/package.h>
+
+#include <btas/dense/reindex/permute.h>
 
 #endif // __BTAS_DENSE_TENSOR_H

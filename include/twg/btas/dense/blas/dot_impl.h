@@ -1,62 +1,81 @@
 #ifndef __BTAS_DENSE_DOT_IMPL_H
 #define __BTAS_DENSE_DOT_IMPL_H 1
 
-#include <blas/package.h>
-#include <btas/generic/blas/dot_impl.h>
+#include <blas/package.h> // blas wrapper
+#include <btas/generic/blas/dot_impl.h> // generic header
+
+#include <btas/dense/DnTensor.h>
 
 namespace btas
 {
 
-template<class T, size_t N, CBLAS_ORDER Order>
-struct dot_impl<DnTensor<T, N, Order>>
+template<typename T, size_t N, CBLAS_ORDER Order>
+struct dotu_impl<DnTensor<T, N, Order>, false>
 {
-   typedef typename dot_result_type<T>::type return_type;
+   typedef typename element_type<T>::type return_type;
 
-   static return_type call (const T& X, const T& Y)
+   static return_type call (const DnTensor<T, N, Order>& X, const DnTensor<T, N, Order>& Y)
    {
-      BTAS_ASSERT(false, "dot_impl::call must be specialized"); return static_cast<return_type>(0);
+      BTAS_ASSERT(X.extent() == Y.extent(), "dotu: mismatched shape b/w X and Y");
+
+      return_type value = numeric_type<return_type>::zero();
+
+      auto X_itr = X.begin();
+      auto Y_itr = Y.begin();
+      for(; X_itr != X.end(); ++X_itr, ++Y_itr)
+      {
+         value += dotu(*X_itr, *Y_itr); // recursive call
+      }
+
+      return value;
    }
 };
 
-template<class T>
-struct dotu_impl
+template<typename T, size_t N, CBLAS_ORDER Order>
+struct dotu_impl<DnTensor<T, N, Order>, true>
 {
-   typedef typename dot_result_type<T>::type return_type;
+   typedef T return_type;
 
-   static return_type call (const T& X, const T& Y)
+   static return_type call (const DnTensor<T, N, Order>& X, const DnTensor<T, N, Order>& Y)
    {
-      return dot_impl<T>::call(X, Y);
+      BTAS_ASSERT(X.extent() == Y.extent(), "dotu: mismatched shape b/w X and Y");
+      return dotu(X.size(), X.data(), 1, Y.data(), 1);
    }
 };
 
-template<class T>
-struct dotc_impl
+template<typename T, size_t N, CBLAS_ORDER Order>
+struct dotc_impl<DnTensor<T, N, Order>, false>
 {
-   typedef typename dot_result_type<T>::type return_type;
+   typedef typename element_type<T>::type return_type;
 
-   static return_type call (const T& X, const T& Y)
+   static return_type call (const DnTensor<T, N, Order>& X, const DnTensor<T, N, Order>& Y)
    {
-      return dot_impl<T>::call(X, Y);
+      BTAS_ASSERT(X.extent() == Y.extent(), "dotc: mismatched shape b/w X and Y");
+
+      return_type value = numeric_type<return_type>::zero();
+
+      auto X_itr = X.begin();
+      auto Y_itr = Y.begin();
+      for(; X_itr != X.end(); ++X_itr, ++Y_itr)
+      {
+         value += dotc(*X_itr, *Y_itr); // recursive call
+      }
+
+      return value;
    }
 };
 
-template<class T>
-inline auto dot (const T& X, const T& Y) -> typename dot_impl<T>::return_type
+template<typename T, size_t N, CBLAS_ORDER Order>
+struct dotc_impl<DnTensor<T, N, Order>, true>
 {
-   return dot_impl<T>::call(X, Y);
-}
+   typedef T return_type;
 
-template<class T>
-inline auto dotu (const T& X, const T& Y) -> typename dotu_impl<T>::return_type
-{
-   return dotu_impl<T>::call(X, Y);
-}
-
-template<class T>
-inline auto dotc (const T& X, const T& Y) -> typename dotc_impl<T>::return_type
-{
-   return dotc_impl<T>::call(X, Y);
-}
+   static return_type call (const DnTensor<T, N, Order>& X, const DnTensor<T, N, Order>& Y)
+   {
+      BTAS_ASSERT(X.extent() == Y.extent(), "dotc: mismatched shape b/w X and Y");
+      return dotc(X.size(), X.data(), 1, Y.data(), 1);
+   }
+};
 
 } // namespace btas
 
