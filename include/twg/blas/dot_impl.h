@@ -14,7 +14,7 @@ T dot (
    const T* Y,
    const size_t& incY)
 {
-   return dotc(N, X, incX, Y, incY);
+   return dotu(N, X, incX, Y, incY);
 }
 
 template<typename T>

@@ -16,8 +16,10 @@ void axpy (
          T* Y,
    const size_t& incY)
 {
+#ifdef _ENABLE_DENSE_SMP
 #pragma omp parallel default(shared)
 #pragma for schedule(static)
+#endif
    for(size_t i = 0; i < N; ++i)
    {
       Y[i*incY] = alpha * X[i*incX];

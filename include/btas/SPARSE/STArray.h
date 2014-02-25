@@ -62,7 +62,7 @@ public:
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   //! Default constructor
-  STArray() { m_shape.fill(0); m_stride.fill(0); }
+  STArray() : m_shape(uniform<int, N>(0)), m_stride(uniform<int, N>(0)) { }
 
   //! Destructor
   virtual ~STArray() { }
@@ -272,8 +272,8 @@ public:
 
   //! Deallocation
   virtual void clear() {
-    m_shape.fill(0);
-    m_stride.fill(0);
+    m_shape = uniform<int, N>(0);
+    m_stride = uniform<int, N>(0);
     for(int i = 0; i < N; ++i) m_dn_shape[i].clear();
     m_store.clear();
   }

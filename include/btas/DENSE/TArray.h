@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <vector>
-#include <array>
 #include <algorithm>
 #include <functional>
 #include <numeric>
@@ -69,10 +68,7 @@ public:
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   //! default constructor
-  TArray() : m_store(new std::vector<T>()) {
-    m_shape.fill(0);
-    m_stride.fill(0);
-  }
+  TArray() : m_shape(uniform<int, N>(0)), m_stride(uniform<int, N>(0)), m_store(new std::vector<T>()) { }
 
   //! destructor
  ~TArray() { }
@@ -717,8 +713,8 @@ public:
 
   //! deallocate storage
   void clear() {
-    m_shape.fill(0);
-    m_stride.fill(0);
+    m_shape = uniform<int, N>(0);
+    m_stride = uniform<int, N>(0);
     m_store->clear();
   }
 

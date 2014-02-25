@@ -14,13 +14,16 @@
 #define _BTAS_CXX11_TVECTOR_H 1
 
 #include <vector>
-#include <array>
 #include <complex>
 #include <algorithm>
 
 #include <boost/serialization/serialization.hpp>
 
 #include <btas/COMMON/btas.h>
+
+#if BOOST_VERSION / 100 % 100 > 64
+
+#include <array>
 
 namespace boost {
 namespace serialization {
@@ -38,25 +41,39 @@ void serialize(Archive& ar, std::array<T, N>& vec, const unsigned int version) {
 }; // namespace serialization
 }; // namespace boost
 
+#else
+
+#include <boost/array.hpp>
+#include <boost/serialization/array.hpp>
+
+#endif
+
 namespace btas {
 
 //####################################################################################################
 // Template aliases to fixed-rank array
 //####################################################################################################
 
+#if BOOST_VERSION / 100 % 100 > 54
 //! Template aliases to std::array<T, N>, for convenience
 template<typename T, size_t N>
 using TVector = std::array<T, N>;
+#else
+//! Template aliases to boost::array<T, N>, for convenience
+template<typename T, size_t N>
+using TVector = boost::array<T, N>;
+#endif
 
-//! Template aliases to std::array<int, N>, for convenience
+//! Template aliases to TVector<int, N>, for convenience
 template<size_t N>
-using IVector = std::array<int, N>;
+using IVector = TVector<int, N>;
 
 //! Convenient constructor of TVector with const value
 template<typename T, size_t N>
 TVector<T, N> uniform(const T& value) {
-  TVector<T, N> vec; vec.fill(value);
-  return std::move(vec);
+  TVector<T, N> vec;
+  std::fill(vec.begin(),vec.end(),value);
+  return vec;
 }
 
 //####################################################################################################
@@ -456,7 +473,7 @@ void fast_add(const std::vector<T>& v1, std::vector<T>& v2) {
 
 //! Printing elements in array as " [ v[0], v[1], v[2], ... ] "
 template<typename T, size_t N>
-std::ostream& operator<< (std::ostream& ost, const std::array<T, N>& vec) {
+std::ostream& operator<< (std::ostream& ost, const btas::TVector<T, N>& vec) {
   ost << "[ ";
   for(int i = 0; i < N-1; ++i) ost << vec[i] << ", ";
   ost << vec[N-1] << " ]";

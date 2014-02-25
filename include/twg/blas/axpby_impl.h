@@ -1,16 +1,19 @@
-#ifndef __BTAS_CXX_BLAS_COPY_IMPL_H
-#define __BTAS_CXX_BLAS_COPY_IMPL_H 1
+#ifndef __BTAS_CXX_BLAS_AXPBY_IMPL_H
+#define __BTAS_CXX_BLAS_AXPBY_IMPL_H 1
 
 #include <blas/blas_types.h>
 
 namespace btas
 {
 
+/// generic axpby function (to be overriden)
 template<typename T>
-void copy (
+void axpby (
    const size_t& N,
+   const T& alpha,
    const T* X,
    const size_t& incX,
+   const T& beta,
          T* Y,
    const size_t& incY)
 {
@@ -20,50 +23,59 @@ void copy (
 #endif
    for(size_t i = 0; i < N; ++i)
    {
-      Y[i*incY] = X[i*incX];
+      Y[i*incY] *= beta;
+      Y[i*incY] += alpha * X[i*incX];
    }
 }
 
-inline void copy (
+void axpby (
    const size_t& N,
+   const float& alpha,
    const float* X,
    const size_t& incX,
+   const float& beta,
          float* Y,
    const size_t& incY)
 {
-   cblas_scopy(N, X, incX, Y, incY);
+   cblas_saxpby(N, alpha, X, incX, beta, Y, incY);
 }
 
-inline void copy (
+void axpby (
    const size_t& N,
+   const double& alpha,
    const double* X,
    const size_t& incX,
+   const double& beta,
          double* Y,
    const size_t& incY)
 {
-   cblas_dcopy(N, X, incX, Y, incY);
+   cblas_daxpby(N, alpha, X, incX, beta, Y, incY);
 }
 
-inline void copy (
+void axpby (
    const size_t& N,
+   const std::complex<float>& alpha,
    const std::complex<float>* X,
    const size_t& incX,
+   const std::complex<float>& beta,
          std::complex<float>* Y,
    const size_t& incY)
 {
-   cblas_ccopy(N, X, incX, Y, incY);
+   cblas_caxpby(N, &alpha, X, incX, &beta, Y, incY);
 }
 
-inline void copy (
+void axpby (
    const size_t& N,
+   const std::complex<double>& alpha,
    const std::complex<double>* X,
    const size_t& incX,
+   const std::complex<double>& beta,
          std::complex<double>* Y,
    const size_t& incY)
 {
-   cblas_zcopy(N, X, incX, Y, incY);
+   cblas_zaxpby(N, &alpha, X, incX, &beta, Y, incY);
 }
 
 } // namespace btas
 
-#endif // __BTAS_CXX_BLAS_COPY_IMPL_H
+#endif // __BTAS_DENSE_BLAS_AXPBY_IMPL_H
