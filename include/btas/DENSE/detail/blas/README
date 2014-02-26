@@ -1,0 +1,6 @@
+Define _ENABLE_DENSE_SMP to turn OpenMP flag ON in this layer
+
+NOTE:
+Sparse layer also has OpenMP flag (_ENABLE_SPARSE_SMP) which is competed with this
+if _ENABLE_SPARSE_SMP is defined, _ENABLE_DENSE_SMP is ignored
+

@@ -5,12 +5,14 @@
 #include <set>
 #include <map>
 #include <algorithm>
+#include <type_traits>
 
 #include <btas/COMMON/btas.h>
 #include <btas/COMMON/TVector.h>
 #include <btas/COMMON/blas_cxx_interface.h>
 
-namespace btas {
+namespace btas
+{
 
 template<size_t NA, size_t NB, size_t NC>
 inline void gemv_contract_shape
