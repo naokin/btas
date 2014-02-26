@@ -13,6 +13,7 @@ template<typename T, size_t N, CBLAS_ORDER Order>
 void permute (const DnTensor<T, N, Order>& x, const IVector<N>& index, DnTensor<T, N, Order>& y)
 {
    y.resize(permute(x.extent(), index));
+
    reindex<T, N, Order>(x.data(), y.data(), permute(x.stride(), index), y.shape());
 }
 

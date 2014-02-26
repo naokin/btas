@@ -2,7 +2,7 @@
 #define __BTAS_DENSE_DIMM_IMPL_H 1
 
 #include <blas/package.h> // blas wrapper
-#include <btas/generic/blas/gemv_impl.h> // generic header
+#include <btas/generic/blas/dimm_impl.h> // generic header
 
 #include <btas/dense/DnTensor.h>
 

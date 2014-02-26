@@ -78,6 +78,7 @@ template<typename T, size_t N, size_t K, CBLAS_ORDER Order>
 void tie (const DnTensor<T, N, Order>& x, const IVector<K>& index, DnTensor<T, N-K+1, Order>& y)
 {
    y.resize(tie_extent(x.extent(), index));
+
    reindex(x.data(), y.data(), tie_stride(x.stride(), index), y.shape());
 }
 
