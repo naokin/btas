@@ -11,7 +11,7 @@
 
 #include <btas/QSPARSE/QSDArray.h>
 
-#include "btas_template_specialize.h"
+//#include "btas_template_specialize.h"
 
 namespace davidson {
 
@@ -60,7 +60,7 @@ double diagonalize
   std::vector<btas::QSDArray<N>> sigma(max_ritz);
 
   btas::QSDcopy(wfnc, trial[0]);
-  btas::QSDnormalize(trial[0]);
+  btas::Normalize(trial[0]);
   f_contract(trial[0], sigma[0]);
 
   int niter = 0;
@@ -85,7 +85,7 @@ double diagonalize
       // solve eigenvalue problem to obtain Ritz value & vector
       btas::DArray<2> rvec;
       btas::DArray<1> rval;
-      Dsyev(heff, rval, rvec);
+      Dsyev('V', 'U', heff, rval, rvec);
       eval = rval(0);
       // rotate trial & sigma vectors by Ritz vector
       std::vector<btas::QSDArray<N>> trial_save(m);
@@ -116,10 +116,10 @@ double diagonalize
       if(m < max_ritz) {
         precondition(eval, diag, errv);
         for(int i = 0; i < m; ++i) {
-          btas::QSDnormalize(errv);
-          btas::QSDorthogonalize(trial[i], errv);
+          btas::Normalize(errv);
+          btas::Orthogonalize(trial[i], errv);
         }
-        btas::QSDnormalize(errv);
+        btas::Normalize(errv);
         btas::QSDcopy(errv, trial[m]);
         sigma[m].clear();
         f_contract(trial[m], sigma[m]);

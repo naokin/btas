@@ -1,5 +1,5 @@
-#ifndef _BTAS_CXX11_QSTARRAY_H
-#define _BTAS_CXX11_QSTARRAY_H 1
+#ifndef __BTAS_QSPARSE_QSTARRAY_H
+#define __BTAS_QSPARSE_QSTARRAY_H 1
 
 #include <btas/COMMON/btas.h>
 
@@ -13,8 +13,9 @@
 namespace btas {
 
 //! Quantum number-based block sparse array
-template<typename T, size_t N, class Q = Quantum>
-class QSTArray : public STArray<T, N> {
+template<typename T, size_t N, class Q>
+class QSTArray : public STArray<T, N>
+{
 public:
   typedef typename STArray<T, N>::const_iterator const_iterator;
   typedef typename STArray<T, N>::iterator       iterator;
@@ -336,4 +337,11 @@ std::ostream& operator<< (std::ostream& ost, const btas::QSTArray<T, N, Q>& a) {
   return ost;
 }
 
-#endif // _BTAS_CXX11_QSTARRAY_H
+#include <btas/QSPARSE/QSTBLAS.h>
+#include <btas/QSPARSE/QSTLAPACK.h>
+#include <btas/QSPARSE/QSTREINDEX.h>
+#include <btas/QSPARSE/QSTCONTRACT.h>
+
+#include <btas/QSPARSE/QSTdsum.h>
+
+#endif // __BTAS_QSPARSE_QSTARRAY_H

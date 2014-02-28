@@ -19,6 +19,9 @@
 #define BTAS_THROW(truth, msg)\
 { if (!(truth)) { throw std::runtime_error(msg); } }
 
+#include <boost/serialization/serialization.hpp>
+#include <boost/serialization/complex.hpp>
+
 namespace btas {
 
 typedef unsigned int  uint;

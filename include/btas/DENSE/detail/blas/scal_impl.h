@@ -9,6 +9,7 @@ namespace btas
 namespace detail
 {
 
+/**** not really need for now
 template<typename T>
 void scal (
    const size_t& N,
@@ -18,6 +19,7 @@ void scal (
 {
    //  Here, the generic implementation
 }
+****/
 
 inline void scal (
    const size_t& N,

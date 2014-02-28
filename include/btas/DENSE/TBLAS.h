@@ -1,10 +1,15 @@
+
+#ifndef __BTAS_DENSE_TARRAY_H
+#include <btas/DENSE/TArray.h>
+#endif
+
 #ifndef __BTAS_SPARSE_TBLAS_H
-#ifndef __BTAS_SPARSE_TBLAS_H 1
+#define __BTAS_SPARSE_TBLAS_H 1
 
 // STL
 #include <algorithm>
 #include <numeric>
-#include <type_tratis>
+#include <type_traits>
 
 // Common
 #include <btas/COMMON/btas.h>
@@ -12,7 +17,6 @@
 #include <btas/COMMON/btas_contract_shape.h>
 
 // Dense Tensor
-#include <btas/DENSE/TArray.h>
 #include <btas/DENSE/detail/blas/package.h>
 
 namespace btas
@@ -56,8 +60,8 @@ void CopyR (const TArray<T, M>& x, TArray<T, N>& y)
 }
 
 /// Scale x by alpha
-template<typename T, size_t N>
-void Scal (const T& alpha, TArray<T, N>& x)
+template<typename T, typename U, size_t N>
+void Scal (const T& alpha, TArray<U, N>& x)
 {
    if(x.size() == 0) return;
 
@@ -257,13 +261,13 @@ template<size_t M, size_t N, bool = (M > N)> struct __T_dimm_helper;
 template<size_t M, size_t N>
 struct __T_dimm_helper<M, N, true> /* (general matrix) x (diagonal matrix) */
 {
-   template<typename T>
-   static void call (TArray<T, M>& a, const TArray<T, N>& b)
+   template<typename T, typename U>
+   static void call (TArray<T, M>& a, const TArray<U, N>& b)
    {
       IVector<N> shapeB;
       std::copy(a.shape().begin()+M-N, a.shape().end(), shapeB.begin());
 
-      BTAS_THROW(b.shape() == shapeB, "Dimm(DENSE): b must have the same shape of column ranks of a".);
+      BTAS_THROW(b.shape() == shapeB, "Dimm(DENSE): b must have the same shape of column ranks of a.");
 
       size_t rowsA = std::accumulate(a.shape().begin(), a.shape().begin()+M-N, 1ul, std::multiplies<size_t>());
       size_t colsA = b.size();
@@ -271,7 +275,7 @@ struct __T_dimm_helper<M, N, true> /* (general matrix) x (diagonal matrix) */
       T* ptrA = a.data();
       for(size_t i = 0; i < rowsA; ++i)
       {
-         const T* ptrB = b.data();
+         const U* ptrB = b.data();
          for(size_t j = 0; j < colsA; ++j, ++ptrA, ++ptrB)
          {
             (*ptrA) *= (*ptrB);
@@ -283,19 +287,19 @@ struct __T_dimm_helper<M, N, true> /* (general matrix) x (diagonal matrix) */
 template<size_t M, size_t N>
 struct __T_dimm_helper<M, N, false> /* (diagonal matrix) x (general matrix) */
 {
-   template<typename T>
-   static void call (const TArray<T, M>& a, TArray<T, N>& b)
+   template<typename T, typename U>
+   static void call (const TArray<T, M>& a, TArray<U, N>& b)
    {
       IVector<M> shapeA;
       std::copy(b.shape().begin(), b.shape().begin()+M, shapeA.begin());
 
-      BTAS_THROW(a.shape() == shapeA, "Dimm(DENSE): a must have the same shape of column ranks of b".);
+      BTAS_THROW(a.shape() == shapeA, "Dimm(DENSE): a must have the same shape of column ranks of b.");
 
       size_t rowsB = a.size();
       size_t colsB = std::accumulate(b.shape().begin()+M, b.shape().end(), 1ul, std::multiplies<size_t>());
 
       const T* ptrA = a.data();
-            T* ptrB = b.data();
+            U* ptrB = b.data();
       for(size_t i = 0; i < rowsB; ++i, ++ptrA, ptrB += colsB)
       {
          detail::scal(colsB, *ptrA, ptrB, 1);
@@ -304,10 +308,10 @@ struct __T_dimm_helper<M, N, false> /* (diagonal matrix) x (general matrix) */
 };
 
 /// Diagonal matrix multiplication
-template<typename T, size_t M, size_t N>
-void Dimm (const TArray<T, M>& a, const TArray<T, N>& b)
+template<typename T, typename U, size_t M, size_t N>
+void Dimm (const TArray<T, M>& a, const TArray<U, N>& b)
 {
-   __T_dimm_helper<M, N>::call(const_cast<TArray<T, M>&>(a), const_cast<TArray<T, N>&>(b));
+   __T_dimm_helper<M, N>::call(const_cast<TArray<T, M>&>(a), const_cast<TArray<U, N>&>(b));
 }
 
 /// Copy x to y with reshape
@@ -344,87 +348,72 @@ void Orthogonalize (const TArray<T, N>& x, TArray<T, N>& y)
 //  ====================================================================================================
 
 /// By default, call GEMM
-template<size_t L, size_t M, size_t N>
+template<size_t L, size_t M, size_t N, int = blas_call_type<L, M, N>::value>
 struct __T_BlasContract_helper
 {
    template<typename T>
    static void call (
+      const CBLAS_TRANSPOSE& transa,
+      const CBLAS_TRANSPOSE& transb,
       const T& alpha,
       const TArray<T, L>& a,
       const TArray<T, M>& b,
       const T& beta,
             TArray<T, N>& c)
    {
-      Gemm(CblasNoTrans, CblasNoTrans, alpha, a, b, beta, c);
+      Gemm(transa, transb, alpha, a, b, beta, c);
    }
 };
 
-/// Case GEMV, further divided into 2 cases, (A * B) or (B * A)
-template<size_t M, size_t N, bool = (M > N)>
-struct __T_BlasContract_Gemv_handler;
-
-/// Case GEMV, (A * B)
-template<size_t M, size_t N>
-struct __T_BlasContract_Gemv_handler<M, N, true>
+/// Case Gemv (A * B)
+template<size_t L, size_t M, size_t N>
+struct __T_BlasContract_helper<L, M, N, 2>
 {
    template<typename T>
    static void call (
+      const CBLAS_TRANSPOSE& transa,
+      const CBLAS_TRANSPOSE& transb,
       const T& alpha,
-      const TArray<T, M>& a,
-      const TArray<T, N>& b,
+      const TArray<T, L>& a,
+      const TArray<T, M>& b,
       const T& beta,
-            TArray<T, M-N>& c)
+            TArray<T, N>& c)
    {
-      Gemv(CblasNoTrans, alpha, a, b, beta, c);
+      Gemv(transa, alpha, a, b, beta, c);
    }
 };
 
-/// Case GEMV, (B * A)
-template<size_t M, size_t N>
-struct __T_BlasContract_Gemv_handler<M, N, false>
+/// Case Gemv (B * A)
+template<size_t L, size_t M, size_t N>
+struct __T_BlasContract_helper<L, M, N, 3>
 {
    template<typename T>
    static void call (
+      const CBLAS_TRANSPOSE& transa,
+      const CBLAS_TRANSPOSE& transb,
       const T& alpha,
-      const TArray<T, M>& a,
-      const TArray<T, N>& b,
+      const TArray<T, L>& a,
+      const TArray<T, M>& b,
       const T& beta,
-            TArray<T, N-M>& c)
+            TArray<T, N>& c)
    {
-      Gemv(CblasTrans, alpha, b, a, beta, c);
-      // FIXME: transpose c here?
-   }
-};
-
-/// Case GEMV, gateway
-template<size_t M, size_t N>
-struct __T_BlasContract_helper<M, N, rank_diff<M, N>::value>
-{
-   const size_t K = rank_diff<M, N>::value;
-
-   template<typename T>
-   static void call (
-      const T& alpha,
-      const TArray<T, M>& a,
-      const TArray<T, N>& b,
-      const T& beta,
-            TArray<T, K>& c)
-   {
-      __T_BlasContract_Gemv_handler<M, N>::call(alpha, a, b, beta, c);
+      Gemv(transb, alpha, b, a, beta, c);
    }
 };
 
 /// Case Ger
-template<size_t M, size_t N>
-struct __T_BlasContract_helper<M, N, M+N>
+template<size_t L, size_t M, size_t N>
+struct __T_BlasContract_helper<L, M, N, 4>
 {
    template<typename T>
    static void call (
+      const CBLAS_TRANSPOSE& transa,
+      const CBLAS_TRANSPOSE& transb,
       const T& alpha,
-      const TArray<T, M>& a,
-      const TArray<T, N>& b,
+      const TArray<T, L>& a,
+      const TArray<T, M>& b,
       const T& beta,
-            TArray<T, M+N>& c)
+            TArray<T, N>& c)
    {
       Scal(beta, c); Ger(alpha, a, b, c);
    }
@@ -433,13 +422,15 @@ struct __T_BlasContract_helper<M, N, M+N>
 /// Wrapper function for BLAS contractions
 template<typename T, size_t L, size_t M, size_t N>
 void BlasContract (
+      const CBLAS_TRANSPOSE& transa,
+      const CBLAS_TRANSPOSE& transb,
       const T& alpha,
       const TArray<T, L>& a,
       const TArray<T, M>& b,
       const T& beta,
             TArray<T, N>& c)
 {
-   __T_BlasContract_helper<L, M, N>::call(alpha, a, b, beta, c);
+   __T_BlasContract_helper<L, M, N>::call(transa, transb, alpha, a, b, beta, c);
 }
 
 } // namespace btas

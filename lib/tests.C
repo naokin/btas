@@ -101,13 +101,13 @@ int DENSE_TEST(int iprint = 0)
       cout << "====================================================================================================" << endl;
       cout << "[DENSE_TEST] [Dcontract(1.0, a, shape(1, 3), b, shape(1, 0), 1.0, c2)] print tensor [c2]: " << c2 << endl;
     }
-    // Dindexed_contract
+    // Dcontract by index label
     DArray<4> d;
     enum { i, j, k, l, p };
-    Dindexed_contract(1.0, a, shape(i,p,k,j), b, shape(l,p), 1.0, d, shape(i,l,j,k));
+    Dcontract(1.0, a, shape(i,p,k,j), b, shape(l,p), 1.0, d, shape(i,l,j,k));
     if(iprint > 0) {
       cout << "====================================================================================================" << endl;
-      cout << "[DENSE_TEST] [Dindexed_contract(1.0, a, shape(i,p,k,j), b, shape(l,p), 1.0, d, shape(i,l,j,k))] print tensor [d]: " << d << endl;
+      cout << "[DENSE_TEST] [Dcontract(1.0, a, shape(i,p,k,j), b, shape(l,p), 1.0, d, shape(i,l,j,k))] print tensor [d]: " << d << endl;
     }
   }
 
@@ -125,12 +125,12 @@ int DENSE_TEST(int iprint = 0)
       cout << "====================================================================================================" << endl;
       cout << "[DENSE_TEST] [Dpermute(a, shape(2, 0, 1, 3), c)] print tensor [c]: " << c << endl;
     }
-    // Ddiagonal
+    // Dtie
     DArray<3> d;
-    Ddiagonal(c, shape(1, 3), d);
+    Dtie(c, shape(1, 3), d);
     if(iprint > 0) {
       cout << "====================================================================================================" << endl;
-      cout << "[DENSE_TEST] [Ddiagonal(c, shape(1, 3), d)] print tensor [d]: " << d << endl;
+      cout << "[DENSE_TEST] [Dtie(c, shape(1, 3), d)] print tensor [d]: " << d << endl;
     }
   }
 
@@ -214,7 +214,7 @@ int QSPARSE_TEST(int iprint = 0)
      SDArray<1> s_rm;
     QSDArray<3> u_rm;
     QSDArray<3> v_rm;
-    QSDgesvd(LeftArrow, a, s, s_rm, 1, u, u_rm, 1, v, v_rm, 12);
+    QSDgesvd(LeftArrow, a, s, s_rm, u, u_rm, v, v_rm, 12);
     if(iprint > 0) {
       cout << "====================================================================================================" << endl;
       cout << "[QSPARSE_TEST] [QSDgesvd(LeftArrow, a, s, s_rm, 1, u, u_rm, 1, v, v_rm, 4)] print tensor [s]: " << s << endl;

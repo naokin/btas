@@ -9,6 +9,7 @@ namespace btas
 namespace detail
 {
 
+/**** not really need for now
 template<typename T>
 T nrm2 (
    const size_t& N,
@@ -19,6 +20,7 @@ T nrm2 (
 {
    //  Here, the generic implementation
 }
+****/
 
 inline float nrm2 (
    const size_t& N,

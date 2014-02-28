@@ -1,5 +1,5 @@
-#ifndef _BTAS_CXX11_STARRAY_H
-#define _BTAS_CXX11_STARRAY_H 1
+#ifndef __BTAS_SPARSE_STARRAY_H
+#define __BTAS_SPARSE_STARRAY_H
 
 #include <iostream>
 #include <iomanip>
@@ -639,4 +639,10 @@ std::ostream& operator<< (std::ostream& ost, const btas::STArray<T, N>& a) {
   return ost;
 }
 
-#endif // _BTAS_CXX11_STARRAY_H
+#include <btas/SPARSE/STBLAS.h>
+#include <btas/SPARSE/STREINDEX.h>
+#include <btas/SPARSE/STCONTRACT.h>
+
+#include <btas/SPARSE/STdsum.h>
+
+#endif // __BTAS_SPARSE_STARRAY_H

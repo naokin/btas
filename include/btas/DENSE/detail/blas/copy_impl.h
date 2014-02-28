@@ -9,6 +9,7 @@ namespace btas
 namespace detail
 {
 
+/**** not really need for now
 template<typename T>
 void copy (
    const size_t& N,
@@ -26,6 +27,7 @@ void copy (
       Y[i*incY] = X[i*incX];
    }
 }
+*/
 
 inline void copy (
    const size_t& N,

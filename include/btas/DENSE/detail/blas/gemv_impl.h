@@ -9,6 +9,7 @@ namespace btas
 namespace detail
 {
 
+/**** not really need for now
 template<typename T>
 void gemv (
    const CBLAS_ORDER& order,
@@ -26,6 +27,7 @@ void gemv (
 {
    //  Here, the generic implementation
 }
+*/
 
 inline void gemv (
    const CBLAS_ORDER& order,

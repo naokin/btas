@@ -12,7 +12,8 @@ BOOSTLIB=-L$(BOOSTDIR)/lib -lboost_serialization
 INCLUDEFLAGS=-I. -I../include $(BLASINC) $(BOOSTINC)
 LIBRARYFLAGS=                 $(BLASLIB) $(BOOSTLIB)
 
-SRC_LIBBTAS = Dreindex.C clapack.C libbtas.C
+#SRC_LIBBTAS = Dreindex.C clapack.C libbtas.C
+SRC_LIBBTAS = libbtas.C
 
 OBJ_LIBBTAS = $(SRC_LIBBTAS:.C=.o)
 
@@ -26,6 +27,9 @@ libbtas.a : $(OBJ_LIBBTAS)
 
 tests.x : tests.o
 	$(CXX) $(CXXFLAGS) -o tests.x tests.o libbtas.a $(LIBRARYFLAGS)
+
+tests_new.x : tests_new.o
+	$(CXX) $(CXXFLAGS) -o tests_new.x tests_new.o libbtas.a $(LIBRARYFLAGS)
 
 clean:
 	rm *.o; rm *.x; rm *.a;
