@@ -1,15 +1,11 @@
 CXX=g++ -std=c++11
 CXXFLAGS=-g -fopenmp -D_HAS_CBLAS -D_HAS_INTEL_MKL
 
-BLASDIR=/opt/intel/mkl
-BLASINC=-I$(BLASDIR)/include
-BLASLIB=-L$(BLASDIR)/lib/intel64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core
+BLASLIB=-lmkl_intel_lp64 -lmkl_sequential -lmkl_core
 
-BOOSTDIR=/usr/local
-BOOSTINC=-I$(BOOSTDIR)/include
-BOOSTLIB=-L$(BOOSTDIR)/lib -lboost_serialization
+BOOSTLIB=-lboost_serialization
 
-INCLUDEFLAGS=-I. -I../include $(BLASINC) $(BOOSTINC)
+INCLUDEFLAGS=-I. -I../include 
 LIBRARYFLAGS=                 $(BLASLIB) $(BOOSTLIB)
 
 SRC_LIBBTAS = Dreindex.C clapack.C libbtas.C
