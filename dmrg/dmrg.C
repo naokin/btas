@@ -7,7 +7,7 @@ using namespace std;
 namespace btas { typedef FermiQuantum Quantum; }; // Define FermiQuantum as default quantum class
 
 #include <btas/QSPARSE/QSDArray.h>
-#include "btas_template_specialize.h"
+//#include "btas_template_specialize.h"
 
 #include "dmrg.h"
 #include "driver.h"
@@ -375,7 +375,7 @@ void prototype::initialize(MpStorages& sites, const Quantum& qt, int M)
   sites[L-1].ropr = 1.0;
 
   for(int i = L-1; i > 0; --i) {
-    btas::QSDnormalize(sites[i].wfnc);
+    btas::Normalize(sites[i].wfnc);
     Canonicalize(0, sites[i].wfnc, sites[i].rmps, Mx);
     QSDcopy(sites[i-1].wfnc, sites[i-1].lmps);
     ComputeGuess(0, sites[i].rmps, sites[i].wfnc, sites[i-1].lmps, sites[i-1].wfnc);
@@ -383,7 +383,7 @@ void prototype::initialize(MpStorages& sites, const Quantum& qt, int M)
     Renormalize (0, sites[i].mpo, sites[i].ropr, sites[i].rmps, sites[i].rmps, sites[i-1].ropr);
   }
 
-  btas::QSDnormalize(sites[0].wfnc);
+  btas::Normalize(sites[0].wfnc);
   sites[0].lopr.resize(Quantum::zero(), qshape, dshape);
   sites[0].lopr = 1.0;
 }

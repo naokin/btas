@@ -9,6 +9,7 @@ namespace btas
 namespace detail
 {
 
+/**** not really need for now
 /// generic axpby function (to be overriden)
 template<typename T>
 void axpby (
@@ -30,8 +31,9 @@ void axpby (
       Y[i*incY] += alpha * X[i*incX];
    }
 }
+****/
 
-void axpby (
+inline void axpby (
    const size_t& N,
    const float& alpha,
    const float* X,
@@ -43,7 +45,7 @@ void axpby (
    cblas_saxpby(N, alpha, X, incX, beta, Y, incY);
 }
 
-void axpby (
+inline void axpby (
    const size_t& N,
    const double& alpha,
    const double* X,
@@ -55,7 +57,7 @@ void axpby (
    cblas_daxpby(N, alpha, X, incX, beta, Y, incY);
 }
 
-void axpby (
+inline void axpby (
    const size_t& N,
    const std::complex<float>& alpha,
    const std::complex<float>* X,
@@ -67,7 +69,7 @@ void axpby (
    cblas_caxpby(N, &alpha, X, incX, &beta, Y, incY);
 }
 
-void axpby (
+inline void axpby (
    const size_t& N,
    const std::complex<double>& alpha,
    const std::complex<double>* X,

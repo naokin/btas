@@ -1,7 +1,9 @@
 #ifndef __BTAS_CXX_BLAS_DOT_IMPL_H
 #define __BTAS_CXX_BLAS_DOT_IMPL_H 1
 
-#include <blas/blas_types.h>
+#include <btas/COMMON/btas.h>
+
+#include <btas/DENSE/detail/blas/blas_types.h>
 #include <btas/DENSE/detail/blas/blas_types.h>
 
 namespace btas
@@ -9,39 +11,6 @@ namespace btas
 
 namespace detail
 {
-
-template<typename T>
-T dot (
-   const size_t& N,
-   const T* X,
-   const size_t& incX,
-   const T* Y,
-   const size_t& incY)
-{
-   return dotu(N, X, incX, Y, incY);
-}
-
-template<typename T>
-T dotc (
-   const size_t& N,
-   const T* X,
-   const size_t& incX,
-   const T* Y,
-   const size_t& incY)
-{
-   //  Here, the generic implementation
-}
-
-template<typename T>
-T dotu (
-   const size_t& N,
-   const T* X,
-   const size_t& incX,
-   const T* Y,
-   const size_t& incY)
-{
-   //  Here, the generic implementation
-}
 
 inline float dot (
    const size_t& N,
@@ -63,7 +32,7 @@ inline double dot (
    return cblas_ddot(N, X, incX, Y, incY);
 }
 
-inline std::complex<float> dotu (
+inline std::complex<float> dot (
    const size_t& N,
    const std::complex<float>* X,
    const size_t& incX,
@@ -87,7 +56,7 @@ inline std::complex<float> dotc (
    return dotc_;
 }
 
-inline std::complex<double> dotu (
+inline std::complex<double> dot (
    const size_t& N,
    const std::complex<double>* X,
    const size_t& incX,
@@ -109,6 +78,40 @@ inline std::complex<double> dotc (
    std::complex<double> dotc_;
    cblas_zdotc_sub(N, X, incX, Y, incY, &dotc_);
    return dotc_;
+}
+
+template<typename T>
+T dot (
+   const size_t& N,
+   const T* X,
+   const size_t& incX,
+   const T* Y,
+   const size_t& incY)
+{
+   // here a generic implementation
+   BTAS_THROW(false, "detail::dot must be specialized.");
+}
+
+template<typename T>
+T dotc (
+   const size_t& N,
+   const T* X,
+   const size_t& incX,
+   const T* Y,
+   const size_t& incY)
+{
+   return dot(N, X, incX, Y, incY);
+}
+
+template<typename T>
+T dotu (
+   const size_t& N,
+   const T* X,
+   const size_t& incX,
+   const T* Y,
+   const size_t& incY)
+{
+   return dot(N, X, incX, Y, incY);
 }
 
 } // namespace detail

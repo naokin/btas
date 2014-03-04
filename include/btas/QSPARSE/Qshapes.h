@@ -29,7 +29,11 @@ namespace btas {
  *
  *  Default quantum number class is named by 'btas::Quantum'
  */
+#ifdef _ENABLE_DEFAULT_QUANTUM
 template<class Q = Quantum>
+#else
+template<class Q>
+#endif
 class Qshapes : public std::vector<Q> {
 private:
   friend class boost::serialization::access;

@@ -9,22 +9,7 @@ namespace btas
 namespace detail
 {
 
-template<typename T>
-void ger (
-   const CBLAS_ORDER& order,
-   const size_t& M,
-   const size_t& N,
-   const T& alpha,
-   const T* X,
-   const size_t& incX,
-   const T* Y,
-   const size_t& incY,
-         T* A,
-   const size_t& ldA)
-{
-   gerc(order, M, N, alpha, X, incX, Y, incY, A, ldA);
-}
-
+/**** not really need for now
 template<typename T>
 void geru (
    const CBLAS_ORDER& order,
@@ -56,6 +41,7 @@ void gerc (
 {
    //  Here, the generic implementation
 }
+***/
 
 inline void ger (
    const CBLAS_ORDER& order,
@@ -145,6 +131,22 @@ inline void gerc (
    const size_t& ldA)
 {
    cblas_zgerc(order, M, N, &alpha, X, incX, Y, incY, A, ldA);
+}
+
+template<typename T>
+inline void ger (
+   const CBLAS_ORDER& order,
+   const size_t& M,
+   const size_t& N,
+   const T& alpha,
+   const T* X,
+   const size_t& incX,
+   const T* Y,
+   const size_t& incY,
+         T* A,
+   const size_t& ldA)
+{
+   geru(order, M, N, alpha, X, incX, Y, incY, A, ldA);
 }
 
 } // namespace detail

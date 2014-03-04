@@ -4,8 +4,8 @@
  *  \brief Default quantum number class named Quantum.
  */
 
-#ifndef _BTAS_CXX11_DEFAULT_QUANTUM_H
-#define _BTAS_CXX11_DEFAULT_QUANTUM_H 1
+#ifndef __BTAS_QSPARSE_QUANTUM_H
+#define __BTAS_QSPARSE_QUANTUM_H 1
 
 #include <iostream>
 #include <iomanip>
@@ -68,4 +68,4 @@ private:
   int m_q_val;
 };
 
-#endif // _BTAS_CXX11_DEFAULT_QUANTUM_H
+#endif // __BTAS_QSPARSE_QUANTUM_H

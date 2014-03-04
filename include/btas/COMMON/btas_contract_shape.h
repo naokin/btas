@@ -83,6 +83,69 @@ inline void gemm_contract_shape
 // permute index is ascending order [0,1,2,..,N].
 //####################################################################################################
 
+const int CALL_GEMM  = 1;
+const int CALL_GEMV  = 2;
+const int CALL_GEMVT = 3;
+const int CALL_GER   = 4;
+
+template<size_t L, size_t M, size_t N, bool = (N < (L + M))>
+struct blas_call_gemm
+{
+   static const int value = 0;
+};
+
+template<size_t L, size_t M, size_t N>
+struct blas_call_gemm<L, M, N, true>
+{
+   static const int value = 1;
+};
+
+template<size_t L, size_t M, size_t N, bool = (L == M + N)>
+struct blas_call_gemv
+{
+   static const int value = 0;
+};
+
+template<size_t L, size_t M, size_t N>
+struct blas_call_gemv<L, M, N, true>
+{
+   static const int value = 1;
+};
+
+template<size_t L, size_t M, size_t N, bool = (M == L + N)>
+struct blas_call_gemvt
+{
+   static const int value = 0;
+};
+
+template<size_t L, size_t M, size_t N>
+struct blas_call_gemvt<L, M, N, true>
+{
+   static const int value = 2;
+};
+
+template<size_t L, size_t M, size_t N, bool = (N == L + M)>
+struct blas_call_ger
+{
+   static const int value = 0;
+};
+
+template<size_t L, size_t M, size_t N>
+struct blas_call_ger<L, M, N, true>
+{
+   static const int value = 4;
+};
+
+template<size_t L, size_t M, size_t N>
+struct blas_call_type
+{
+   static const int value
+      = blas_call_gemm <L, M, N>::value
+      + blas_call_gemv <L, M, N>::value
+      + blas_call_gemvt<L, M, N>::value
+      + blas_call_ger  <L, M, N>::value;
+};
+
 enum BTAS_CONTRACT_TUNING {
   JOBMASK_A_PMUTE   = 0x20, // 100000
   JOBMASK_A_TRANS   = 0x10, // 010000

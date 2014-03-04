@@ -1,6 +1,6 @@
 #ifndef _BTAS_DENSE_TEMPLATE_SPECIALIZE
 #define _BTAS_DENSE_TEMPLATE_SPECIALIZE 1
-#include <btas/DENSE/Dblas.h>
+#include <btas/DENSE/DArray.h>
 namespace btas
 {
 
@@ -317,7 +317,7 @@ extern template void Dgemm<5,5,5>(const BTAS_TRANSPOSE& transa, const BTAS_TRANS
 #endif // _BTAS_DENSE_TEMPLATE_SPECIALIZE
 #ifndef _BTAS_SPARSE_TEMPLATE_SPECIALIZE
 #define _BTAS_SPARSE_TEMPLATE_SPECIALIZE 1
-#include <btas/SPARSE/SDblas.h>
+#include <btas/SPARSE/SDArray.h>
 namespace btas
 {
 
@@ -634,7 +634,7 @@ template<> void SDgemm<5,5,5>(const BTAS_TRANSPOSE& transa, const BTAS_TRANSPOSE
 #endif // _BTAS_SPARSE_TEMPLATE_SPECIALIZE
 #ifndef _BTAS_QSPARSE_TEMPLATE_SPECIALIZE
 #define _BTAS_QSPARSE_TEMPLATE_SPECIALIZE 1
-#include <btas/QSPARSE/QSDblas.h>
+#include <btas/QSPARSE/QSDArray.h>
 namespace btas
 {
 

@@ -1,5 +1,5 @@
 CXX=g++ -std=c++0x
-CXXFLAGS=-g -O3 -fopenmp -D_HAS_CBLAS -D_HAS_INTEL_MKL
+CXXFLAGS=-g -O3 -fopenmp -D_HAS_CBLAS -D_HAS_INTEL_MKL -D_ENABLE_DEFAULT_QUANTUM
 
 BLASDIR=/opt/intel/mkl
 BLASINC=-I$(BLASDIR)/include
@@ -16,7 +16,8 @@ BTASLIB=  $(BTASDIR)/lib
 INCLUDEFLAGS=-I. $(BLASINC) $(BOOSTINC) $(BTASINC)
 LIBRARYFLAGS=    $(BLASLIB) $(BOOSTLIB)
 
-SRC_SAMPLE = main.C dmrg.C driver.C btas_template_specialize.C
+#SRC_SAMPLE = main.C dmrg.C driver.C btas_template_specialize.C
+SRC_SAMPLE = main.C dmrg.C driver.C
 
 OBJ_SAMPLE = $(SRC_SAMPLE:.C=.o)
 
