@@ -592,7 +592,8 @@ struct __ST_dimm_helper<M, N, true> /* (general matrix) x (diagonal matrix) */
       {
          auto bjj = b.find(aij->first % n);
 
-         if(bjj != b.end()) Dimm(*(aij->second), *(bjj->second));
+         if(bjj != b.end())
+            Dimm(*(aij->second), *(bjj->second));
       }
    }
 };
@@ -609,7 +610,8 @@ struct __ST_dimm_helper<M, N, false> /* (diagonal matrix) x (general matrix) */
       {
          auto aii = a.find(bij->first / n);
 
-         if(aii != a.end()) Dimm(*(aii->second), *(bij->second));
+         if(aii != a.end())
+            Dimm(*(aii->second), *(bij->second));
       }
    }
 };

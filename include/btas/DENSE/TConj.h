@@ -22,14 +22,14 @@ inline void conj (size_t n, std::complex<float>* x)
 
 inline void conj (size_t n, std::complex<double>* x)
 {
-   scal(n, -1.0, static_cast<double*>(static_cast<void*>(x))+1, 2);
+   scal(n, -1.0, static_cast<double*>( static_cast<void*>(x) ) + 1, 2);
 }
 
 } // namespace detail
 
 /// take implaced conjugation
 template<typename T, size_t N>
-void Conj (const TArray<T, N>& x)
+void Conj (TArray<T, N>& x)
 {
    detail::conj(x.size(), x.data());
 }
