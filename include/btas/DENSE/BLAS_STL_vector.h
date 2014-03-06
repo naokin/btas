@@ -5,7 +5,7 @@
 
 #include <btas/COMMON/btas.h> // BTAS_THROW
 
-#include <btas/DENSE/detail/blas/package.h>
+#include <blas/package.h>
 
 namespace btas
 {
@@ -15,13 +15,13 @@ void Copy (const std::vector<T>& x, std::vector<T>& y)
 {
    y.resize(x.size());
 
-   detail::copy(x.size(), x.data(), 1, y.data(), 1);
+   blas::copy(x.size(), x.data(), 1, y.data(), 1);
 }
 
 template<typename T>
 void Scal (const T& alpha, std::vector<T>& x)
 {
-   detail::scal(x.size(), alpha, x.data(), 1);
+   blas::scal(x.size(), alpha, x.data(), 1);
 }
 
 template<typename T>
@@ -36,7 +36,7 @@ void Axpy (const T& alpha, const std::vector<T>& x, std::vector<T>& y)
       y.resize(x.size(), static_cast<T>(0));
    }
 
-   detail::axpy(x.size(), alpha, x.data(), 1, y.data(), 1);
+   blas::axpy(x.size(), alpha, x.data(), 1, y.data(), 1);
 }
 
 } // namespace btas

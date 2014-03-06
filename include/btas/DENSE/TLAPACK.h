@@ -13,7 +13,7 @@
 #include <btas/COMMON/TVector.h>
 #include <btas/COMMON/numeric_traits.h>
 
-#include <btas/DENSE/detail/lapack/package.h>
+#include <lapack/package.h>
 
 namespace btas
 {
@@ -44,7 +44,7 @@ void Syev (
 
    d.resize(colsA);
 
-   detail::syev(CblasRowMajor, jobz, uplo, colsA, z.data(), colsA, d.data());
+   lapack::syev(CblasRowMajor, jobz, uplo, colsA, z.data(), colsA, d.data());
 }
 
 /// Solve hermitian eigenvalue problem (HEP)
@@ -73,7 +73,7 @@ void Heev (
 
    d.resize(colsA);
 
-   detail::heev(CblasRowMajor, jobz, uplo, colsA, z.data(), colsA, d.data());
+   lapack::heev(CblasRowMajor, jobz, uplo, colsA, z.data(), colsA, d.data());
 }
 
 /// Solve singular value decomposition (SVD)
@@ -120,7 +120,7 @@ void Gesvd (
    vt.resize(shapeVt);
 
    TArray<T, M> acp(a);
-   detail::gesvd(CblasRowMajor, jobu, jobvt, rowsA, colsA, acp.data(), ldA, s.data(), u.data(), ldU, vt.data(), ldVt);
+   lapack::gesvd(CblasRowMajor, jobu, jobvt, rowsA, colsA, acp.data(), ldA, s.data(), u.data(), ldU, vt.data(), ldVt);
 }
 
 } // namespace btas
