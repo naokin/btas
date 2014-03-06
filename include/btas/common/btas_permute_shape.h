@@ -4,8 +4,8 @@
 #include <set>
 #include <map>
 
-#include <btas/COMMON/btas.h>
-#include <btas/COMMON/TVector.h>
+#include <btas/common/btas.h>
+#include <btas/common/TVector.h>
 
 namespace btas {
 

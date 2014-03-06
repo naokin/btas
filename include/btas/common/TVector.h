@@ -19,7 +19,7 @@
 
 #include <boost/serialization/serialization.hpp>
 
-#include <btas/COMMON/btas.h>
+#include <btas/common/btas.h>
 
 #if BOOST_VERSION / 100 % 100 > 64
 

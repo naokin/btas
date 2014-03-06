@@ -1,8 +1,8 @@
 #ifndef __BTAS_SPARSE_STCONTRACT_H
 #define __BTAS_SPARSE_STCONTRACT_H 1
 
-#include <btas/COMMON/btas.h>
-#include <btas/COMMON/btas_contract_shape.h>
+#include <btas/common/btas.h>
+#include <btas/common/btas_contract_shape.h>
 
 #include <btas/SPARSE/STArray.h>
 #include <btas/SPARSE/STBLAS.h>

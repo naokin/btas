@@ -10,7 +10,7 @@
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/vector.hpp>
 
-#include <btas/COMMON/TVector.h>
+#include <btas/common/TVector.h>
 
 #include <btas/DENSE/BLAS_STL_vector.h>
 

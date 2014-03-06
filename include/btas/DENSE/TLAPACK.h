@@ -9,9 +9,9 @@
 #include <algorithm>
 #include <numeric>
 
-#include <btas/COMMON/btas.h>
-#include <btas/COMMON/TVector.h>
-#include <btas/COMMON/numeric_traits.h>
+#include <btas/common/btas.h>
+#include <btas/common/TVector.h>
+#include <btas/common/numeric_traits.h>
 
 #include <lapack/package.h>
 

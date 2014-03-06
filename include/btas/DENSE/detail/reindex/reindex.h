@@ -3,7 +3,7 @@
 
 #include <type_traits>
 
-#include <btas/COMMON/TVector.h>
+#include <btas/common/TVector.h>
 
 namespace btas {
 

@@ -1,7 +1,7 @@
 #ifndef _BTAS_CXX11_QSTDSUM_H
 #define _BTAS_CXX11_QSTDSUM_H 1
 
-#include <btas/COMMON/TVector.h>
+#include <btas/common/TVector.h>
 
 #include <btas/QSPARSE/QSTArray.h>
 #include <btas/SPARSE/STdsum.h>

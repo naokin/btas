@@ -12,8 +12,8 @@
 #endif
 
 // Common
-#include <btas/COMMON/btas.h>
-#include <btas/COMMON/numeric_traits.h>
+#include <btas/common/btas.h>
+#include <btas/common/numeric_traits.h>
 
 // Dense Tensor
 #include <btas/DENSE/TArray.h>

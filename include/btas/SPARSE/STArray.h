@@ -10,8 +10,8 @@
 #include <boost/serialization/map.hpp>
 #include <boost/serialization/shared_ptr.hpp>
 
-#include <btas/COMMON/btas.h>
-#include <btas/COMMON/TVector.h>
+#include <btas/common/btas.h>
+#include <btas/common/TVector.h>
 
 #include <btas/DENSE/TArray.h>
 

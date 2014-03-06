@@ -12,9 +12,9 @@
 #include <type_traits>
 
 // Common
-#include <btas/COMMON/btas.h>
-#include <btas/COMMON/numeric_traits.h>
-#include <btas/COMMON/btas_contract_shape.h>
+#include <btas/common/btas.h>
+#include <btas/common/numeric_traits.h>
+#include <btas/common/btas_contract_shape.h>
 
 // Dense Tensor
 #include <blas/package.h>

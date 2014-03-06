@@ -1,7 +1,7 @@
 #ifndef __BTAS_QSPARSE_QSTARRAY_H
 #define __BTAS_QSPARSE_QSTARRAY_H 1
 
-#include <btas/COMMON/btas.h>
+#include <btas/common/btas.h>
 
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/base_object.hpp>

@@ -1,4 +1,4 @@
-#include <btas/COMMON/blas_cxx_interface.h>
+#include <btas/common/blas_cxx_interface.h>
 
 namespace btas {
 

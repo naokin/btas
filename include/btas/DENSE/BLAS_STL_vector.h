@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include <btas/COMMON/btas.h> // BTAS_THROW
+#include <btas/common/btas.h> // BTAS_THROW
 
 #include <blas/package.h>
 

@@ -11,7 +11,7 @@
 
 #include <complex>
 
-#include <btas/COMMON/TVector.h>
+#include <btas/common/TVector.h>
 
 #include <btas/DENSE/TSubArray.h>
 
