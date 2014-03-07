@@ -4,34 +4,29 @@
 #include <complex>
 
 #include <btas/DENSE/TArray.h>
-#include <btas/DENSE/detail/blas/package.h>
+#include <blas/package.h>
 
 namespace btas
 {
 
-namespace detail
-{
-
 template<typename T>
-void conj (size_t n, T* x) { }
+void __conj (size_t n, T* x) { }
 
-inline void conj (size_t n, std::complex<float>* x)
+inline void __conj (size_t n, std::complex<float>* x)
 {
-   scal(n, -1.0f, static_cast<float*>(static_cast<void*>(x))+1, 2);
+   blas::scal(n, -1.0f, static_cast<float*>(static_cast<void*>(x))+1, 2);
 }
 
-inline void conj (size_t n, std::complex<double>* x)
+inline void __conj (size_t n, std::complex<double>* x)
 {
-   scal(n, -1.0, static_cast<double*>( static_cast<void*>(x) ) + 1, 2);
+   blas::scal(n, -1.0, static_cast<double*>(static_cast<void*>(x))+1, 2);
 }
-
-} // namespace detail
 
 /// take implaced conjugation
 template<typename T, size_t N>
 void Conj (TArray<T, N>& x)
 {
-   detail::conj(x.size(), x.data());
+   __conj(x.size(), x.data());
 }
 
 } // namespace btas

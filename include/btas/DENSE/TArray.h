@@ -10,7 +10,7 @@
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/vector.hpp>
 
-#include <btas/COMMON/TVector.h>
+#include <btas/common/TVector.h>
 
 #include <btas/DENSE/BLAS_STL_vector.h>
 
@@ -128,7 +128,7 @@ public:
     int nrows = a_size / ldt;
     for(int j = 0; j < nrows; ++j, t_ptr += ldt) {
       int offset = dot(a_stride, index);
-      detail::copy(ldt, a_ptr+offset, 1, t_ptr, 1);
+      blas::copy(ldt, a_ptr+offset, 1, t_ptr, 1);
       for(int i = static_cast<int>(M)-2; i >= 0; --i) {
         if(++index[i] <= a.m_upper_bound[i]) break;
         index[i] = a.m_lower_bound[i];

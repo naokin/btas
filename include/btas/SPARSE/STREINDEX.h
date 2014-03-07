@@ -4,8 +4,8 @@
 #include <vector>
 #include <algorithm>
 
-#include <btas/COMMON/TVector.h>
-#include <btas/COMMON/btas_permute_shape.h>
+#include <btas/common/TVector.h>
+#include <btas/common/btas_permute_shape.h>
 
 #include <btas/DENSE/TArray.h>
 #include <btas/DENSE/TREINDEX.h>

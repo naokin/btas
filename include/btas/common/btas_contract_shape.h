@@ -7,9 +7,9 @@
 #include <algorithm>
 #include <type_traits>
 
-#include <btas/COMMON/btas.h>
-#include <btas/COMMON/TVector.h>
-#include <btas/COMMON/blas_cxx_interface.h>
+#include <btas/common/btas.h>
+#include <btas/common/TVector.h>
+#include <btas/common/blas_cxx_interface.h>
 
 namespace btas
 {

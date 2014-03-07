@@ -1,7 +1,7 @@
 #ifndef __BTAS_SPARSE_SSARRAY_H
 #define __BTAS_SPARSE_SSARRAY_H
 
-#include <btas/COMMON/TVector.h>
+#include <btas/common/TVector.h>
 
 #include <btas/SPARSE/STArray.h>
 

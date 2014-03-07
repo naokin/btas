@@ -1,8 +1,8 @@
 #ifndef __BTAS_QSPARSE_QSTCONTRACT_H
 #define __BTAS_QSPARSE_QSTCONTRACT_H 1
 
-#include <btas/COMMON/btas.h>
-#include <btas/COMMON/btas_contract_shape.h>
+#include <btas/common/btas.h>
+#include <btas/common/btas_contract_shape.h>
 
 #include <btas/QSPARSE/QSTArray.h>
 #include <btas/QSPARSE/QSTBLAS.h>

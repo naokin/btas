@@ -1,7 +1,7 @@
 #ifndef __BTAS_QSPARSE_QSDARRAY_H
 #define __BTAS_QSPARSE_QSDARRAY_H
 
-#include <btas/COMMON/TVector.h>
+#include <btas/common/TVector.h>
 
 #include <btas/SPARSE/SDArray.h>
 

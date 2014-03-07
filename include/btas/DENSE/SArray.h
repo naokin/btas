@@ -15,7 +15,7 @@
 #ifndef __BTAS_DENSE_SARRAY_H
 #define __BTAS_DENSE_SARRAY_H
 
-#include <btas/COMMON/TVector.h>
+#include <btas/common/TVector.h>
 
 #include <btas/DENSE/TSubArray.h>
 

@@ -3,7 +3,7 @@
 
 #include <complex>
 
-#include <btas/COMMON/TVector.h>
+#include <btas/common/TVector.h>
 
 #include <btas/SPARSE/STArray.h>
 

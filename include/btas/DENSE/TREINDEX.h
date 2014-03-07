@@ -3,8 +3,8 @@
 
 #include <algorithm>
 
-#include <btas/COMMON/btas.h>
-#include <btas/COMMON/btas_permute_shape.h>
+#include <btas/common/btas.h>
+#include <btas/common/btas_permute_shape.h>
 
 #include <btas/DENSE/TArray.h>
 #include <btas/DENSE/detail/reindex/reindex.h>

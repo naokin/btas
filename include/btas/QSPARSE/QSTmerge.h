@@ -17,7 +17,7 @@
 #ifndef _BTAS_CXX11_QSTMERGE_H
 #define _BTAS_CXX11_QSTMERGE_H 1
 
-#include <btas/COMMON/btas.h>
+#include <btas/common/btas.h>
 
 #include <btas/DENSE/TSubArray.h>
 

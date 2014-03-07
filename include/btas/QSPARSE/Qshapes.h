@@ -13,7 +13,7 @@
 #include <btas/QSPARSE/Quantum.h>
 #endif
 
-#include <btas/COMMON/TVector.h>
+#include <btas/common/TVector.h>
 
 namespace btas {
 
