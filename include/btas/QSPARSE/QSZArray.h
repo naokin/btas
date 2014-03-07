@@ -10,7 +10,7 @@
 #include <btas/QSPARSE/QSTArray.h>
 
 namespace btas
-{
+t{
 
 /// Alias to single precision real array
 #ifdef _ENABLE_DEFAULT_QUANTUM

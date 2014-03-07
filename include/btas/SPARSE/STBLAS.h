@@ -583,8 +583,8 @@ template<size_t M, size_t N, bool = (M > N)> struct __ST_dimm_helper;
 template<size_t M, size_t N>
 struct __ST_dimm_helper<M, N, true> /* (general matrix) x (diagonal matrix) */
 {
-   template<typename T>
-   static void call (STArray<T, M>& a, const STArray<T, N>& b)
+   template<typename T,typename U>
+   static void call (STArray<T, M>& a, const STArray<U, N>& b)
    {
       size_t n = b.size();
 
@@ -601,8 +601,8 @@ struct __ST_dimm_helper<M, N, true> /* (general matrix) x (diagonal matrix) */
 template<size_t M, size_t N>
 struct __ST_dimm_helper<M, N, false> /* (diagonal matrix) x (general matrix) */
 {
-   template<typename T>
-   static void call (const STArray<T, M>& a, STArray<T, N>& b)
+   template<typename T,typename U>
+   static void call (const STArray<T, M>& a, STArray<U, N>& b)
    {
       size_t n = std::accumulate(b.shape().begin()+M, b.shape().end(), 1ul, std::multiplies<size_t>());
 
@@ -617,10 +617,10 @@ struct __ST_dimm_helper<M, N, false> /* (diagonal matrix) x (general matrix) */
 };
 
 /// Diagonal matrix multiplication
-template<typename T, size_t M, size_t N>
-void Dimm (const STArray<T, M>& a, const STArray<T, N>& b)
+template<typename T, typename U,size_t M, size_t N>
+void Dimm (const STArray<T, M>& a, const STArray<U, N>& b)
 {
-   __ST_dimm_helper<M, N>::call(const_cast<STArray<T, M>&>(a), const_cast<STArray<T, N>&>(b));
+   __ST_dimm_helper<M, N>::call(const_cast<STArray<T, M>&>(a), const_cast<STArray<U, N>&>(b));
 }
 
 /// Normalization
