@@ -4,7 +4,7 @@
 // STL
 #include <vector>
 #include <algorithm>
-#include <type_tratis>
+#include <type_traits>
 
 // Intel TBB, has not yet implemented
 #ifdef _HAS_INTEL_TBB
@@ -12,7 +12,8 @@
 #endif
 
 // Common
-#include <btas/COMMON/btas.h>
+#include <btas/common/btas.h>
+#include <btas/common/numeric_traits.h>
 
 // Dense Tensor
 #include <btas/DENSE/TArray.h>
@@ -29,7 +30,7 @@ namespace btas
 struct T_arguments_base
 {
    /// approximate FLOPS count
-   FLOPS_;
+   size_t FLOPS_;
 
    /// default constructor
    T_arguments_base (size_t value = 0) : FLOPS_ (value) { }
@@ -68,21 +69,29 @@ struct T_arguments_base
 template<class T, class... Ts>
 struct R_arguments_base
 {
-   std::shared_ptr<T> arg_;
+   typedef shared_ptr<T> argument_type;
+
+   argument_type arg_;
 
    R_arguments_base<Ts...> args_;
 
+   R_arguments_base () { }
+
    template<class... Tp>
-   R_arguments_base (const std::shared_ptr<T>& x, Tp... r) : arg_ (x), args_ (r...) { }
+   R_arguments_base (const shared_ptr<T>& x, Tp... r) : arg_ (x), args_ (r...) { }
 };
 
 /// Replication arguments (single)
 template<class T>
-struct R_arguments_base
+struct R_arguments_base<T>
 {
-   std::shared_ptr<T> arg_;
+   typedef shared_ptr<T> argument_type;
 
-   R_arguments_base (const std::shared_ptr<T>& x) : arg_ (x) { }
+   argument_type arg_;
+
+   R_arguments_base () { }
+
+   R_arguments_base (const shared_ptr<T>& x) : arg_ (x) { }
 };
 
 /// Helper function class
@@ -100,7 +109,7 @@ struct R_arguments_element
 template<class T, class... Ts>
 struct R_arguments_element<0, T, Ts...>
 {
-   typedef T type;
+   typedef typename R_arguments_base<T, Ts...>::argument_type type;
 
    static type& get(R_arguments_base<T, Ts...>& x) { return x.arg_; }
 
@@ -116,7 +125,7 @@ typename R_arguments_element<N, T, Ts...>::type& get (R_arguments_base<T, Ts...>
 
 /// Get N-th element of replication arguments
 template<size_t N, class T, class... Ts>
-typename const R_arguments_element<N, T, Ts...>::type& get (const R_arguments_base<T, Ts...>& x)
+const typename R_arguments_element<N, T, Ts...>::type& get (const R_arguments_base<T, Ts...>& x)
 {
    return R_arguments_element<N, T, Ts...>::get(x);
 }
@@ -134,48 +143,48 @@ struct Copy_arguments
    Copy_arguments () { }
 
    Copy_arguments (
-      const std::shared_ptr<TArray<T, M>>& x,
-      const std::shared_ptr<TArray<T, N>>& y)
+      const shared_ptr<TArray<T, M>>& x,
+      const shared_ptr<TArray<T, N>>& y)
    :  T_arguments_base (x->size()),
       R_arguments_base<TArray<T, M>, TArray<T, N>>(x, y)
    { }
 
    void reset (
-      const std::shared_ptr<TArray<T, M>>& x,
-      const std::shared_ptr<TArray<T, N>>& y)
+      const shared_ptr<TArray<T, M>>& x,
+      const shared_ptr<TArray<T, N>>& y)
    {
       T_arguments_base::FLOPS_ = x->size();
-      get<0>(*this).swap(x);
-      get<1>(*this).swap(y);
+      get<0>(*this) = x;
+      get<1>(*this) = y;
    }
 
    void call () const { Copy(*get<0>(*this), *get<1>(*this)); }
 };
 
 /// Arguments list for Scal
-template<typename T, size_t N>
+template<typename T, typename U, size_t N>
 struct Scal_arguments
 :  public T_arguments_base,
-   public R_arguments_base<TArray<T, N>>
+   public R_arguments_base<TArray<U, N>>
 {
    T alpha_;
 
-   Scal_arguments () { }
+   Scal_arguments () : alpha_ (static_cast<T>(0)) { }
 
    Scal_arguments (
       const T& alpha,
-      const std::shared_ptr<TArray<T, M>>& x)
+      const shared_ptr<TArray<U, N>>& x)
    :  T_arguments_base (x->size()),
-      R_arguments_base<TArray<T, N>>(x),
+      R_arguments_base<TArray<U, N>>(x),
       alpha_ (alpha)
    { }
 
    void reset (
       const T& alpha,
-      const std::shared_ptr<TArray<T, M>>& x)
+      const shared_ptr<TArray<U, N>>& x)
    {
       T_arguments_base::FLOPS_ = x->size();
-      get<0>(*this).swap(x);
+      get<0>(*this) = x;
       alpha_ = alpha;
    }
 
@@ -190,12 +199,12 @@ struct Axpy_arguments
 {
    T alpha_;
 
-   Axpy_arguments () { }
+   Axpy_arguments () : alpha_ (static_cast<T>(0)) { }
 
    Axpy_arguments (
       const T& alpha,
-      const std::shared_ptr<TArray<T, M>>& x,
-      const std::shared_ptr<TArray<T, N>>& y)
+      const shared_ptr<TArray<T, M>>& x,
+      const shared_ptr<TArray<T, N>>& y)
    :  T_arguments_base (x->size()),
       R_arguments_base<TArray<T, M>, TArray<T, N>>(x, y),
       alpha_ (alpha)
@@ -203,12 +212,12 @@ struct Axpy_arguments
 
    void reset (
       const T& alpha,
-      const std::shared_ptr<TArray<T, M>>& x,
-      const std::shared_ptr<TArray<T, N>>& y)
+      const shared_ptr<TArray<T, M>>& x,
+      const shared_ptr<TArray<T, N>>& y)
    {
       T_arguments_base::FLOPS_ = x->size();
-      get<0>(*this).swap(x);
-      get<1>(*this).swap(y);
+      get<0>(*this) = x;
+      get<1>(*this) = y;
       alpha_ = alpha;
    }
 
@@ -225,13 +234,13 @@ struct Axpby_arguments
 
    T beta_;
 
-   Axpby_arguments () { }
+   Axpby_arguments () : alpha_ (static_cast<T>(0)), beta_ (static_cast<T>(0)) { }
 
    Axpby_arguments (
       const T& alpha,
-      const std::shared_ptr<TArray<T, M>>& x,
+      const shared_ptr<TArray<T, M>>& x,
       const T& beta,
-      const std::shared_ptr<TArray<T, N>>& y)
+      const shared_ptr<TArray<T, N>>& y)
    :  T_arguments_base (x->size()),
       R_arguments_base<TArray<T, M>, TArray<T, N>>(x, y),
       alpha_ (alpha),
@@ -240,13 +249,13 @@ struct Axpby_arguments
 
    void reset (
       const T& alpha,
-      const std::shared_ptr<TArray<T, M>>& x,
+      const shared_ptr<TArray<T, M>>& x,
       const T& beta,
-      const std::shared_ptr<TArray<T, N>>& y)
+      const shared_ptr<TArray<T, N>>& y)
    {
       T_arguments_base::FLOPS_ = x->size();
-      get<0>(*this).swap(x);
-      get<1>(*this).swap(y);
+      get<0>(*this) = x;
+      get<1>(*this) = y;
       alpha_ = alpha;
       beta_ = beta;
    }
@@ -260,27 +269,27 @@ struct Permute_arguments
 :  public T_arguments_base,
    public R_arguments_base<TArray<T, N>, TArray<T, N>>
 {
-   IVector<N>& index_;
+   IVector<N> index_;
 
    Permute_arguments () { }
 
    Permute_arguments (
-      const std::shared_ptr<TArray<T, N>>& x,
+      const shared_ptr<TArray<T, N>>& x,
       const IVector<N>& idx,
-      const std::shared_ptr<TArray<T, N>>& y)
+      const shared_ptr<TArray<T, N>>& y)
    :  T_arguments_base (x->size()),
       R_arguments_base<TArray<T, N>, TArray<T, N>>(x, y),
       index_ (idx)
    { }
 
    void reset (
-      const std::shared_ptr<TArray<T, N>>& x,
+      const shared_ptr<TArray<T, N>>& x,
       const IVector<N>& idx,
-      const std::shared_ptr<TArray<T, N>>& y)
+      const shared_ptr<TArray<T, N>>& y)
    {
       T_arguments_base::FLOPS_ = x->size();
-      get<0>(*this).swap(x);
-      get<1>(*this).swap(y);
+      get<0>(*this) = x;
+      get<1>(*this) = y;
       index_ = idx;
    }
 
@@ -295,13 +304,13 @@ struct Ger_arguments
 {
    T alpha_;
 
-   Ger_arguments () { }
+   Ger_arguments () : alpha_ (static_cast<T>(0)) { }
 
    Ger_arguments (
       const T& alpha,
-      const std::shared_ptr<TArray<T, M>>& x,
-      const std::shared_ptr<TArray<T, N>>& y,
-      const std::shared_ptr<TArray<T, M+N>>& a)
+      const shared_ptr<TArray<T, M>>& x,
+      const shared_ptr<TArray<T, N>>& y,
+      const shared_ptr<TArray<T, M+N>>& a)
    :  T_arguments_base (),
       R_arguments_base<TArray<T, M>, TArray<T, N>, TArray<T, M+N>>(x, y, a),
       alpha_ (alpha)
@@ -309,14 +318,14 @@ struct Ger_arguments
 
    void reset (
       const T& alpha,
-      const std::shared_ptr<TArray<T, M>>& x,
-      const std::shared_ptr<TArray<T, N>>& y,
-      const std::shared_ptr<TArray<T, M+N>>& a)
+      const shared_ptr<TArray<T, M>>& x,
+      const shared_ptr<TArray<T, N>>& y,
+      const shared_ptr<TArray<T, M+N>>& a)
    {
       T_arguments_base::FLOPS_ = (x->size() * y->size());
-      get<0>(*this).swap(x);
-      get<1>(*this).swap(y);
-      get<2>(*this).swap(a);
+      get<0>(*this) = x;
+      get<1>(*this) = y;
+      get<2>(*this) = a;
       alpha_ = alpha;
    }
 
@@ -327,28 +336,29 @@ struct Ger_arguments
 };
 
 /// Arguments list for Gesvd
-template<typename T, size_t NA, size_t NU>
+template<typename T, size_t N, size_t K>
 struct Gesvd_arguments
 :  public T_arguments_base,
-   public R_arguments_base<TArray<T, NA>, TArray<T, 1>, TArray<T, NU>, TArray<T, NA-NU+2>>
+   public R_arguments_base<TArray<T, N>, TArray<typename remove_complex<T>::type, 1>, TArray<T, K>, TArray<T, N-K+2>>
 {
-   const size_t NS = 1;
-   const size_t NV = NA-NU+2;
+   typedef typename remove_complex<T>::type U;
+
+   static const size_t L = N-K+2;
 
    char jobu_;
    char jobvt_;
 
-   Gesvd_arguments () { }
+   Gesvd_arguments () : jobu_ ('S'), jobvt_ ('S') { }
 
    Gesvd_arguments (
       const char& jobu,
       const char& jobvt,
-      const std::shared_ptr<TArray<T, NA>>& a,
-      const std::shared_ptr<TArray<T, NS>>& s,
-      const std::shared_ptr<TArray<T, NU>>& u,
-      const std::shared_ptr<TArray<T, NV>>& vt)
-   :  T_arguments_base (x->size()),
-      R_arguments_base<TArray<T, NA>, TArray<T, NS>, TArray<T, NU>, TArray<T, NV>>(a, s, u, vt),
+      const shared_ptr<TArray<T, N>>& a,
+      const shared_ptr<TArray<U, 1>>& s,
+      const shared_ptr<TArray<T, K>>& u,
+      const shared_ptr<TArray<T, L>>& vt)
+   :  T_arguments_base (a->size()),
+      R_arguments_base<TArray<T, N>, TArray<U, 1>, TArray<T, K>, TArray<T, L>>(a, s, u, vt),
       jobu_ (jobu),
       jobvt_ (jobvt)
    { }
@@ -356,16 +366,16 @@ struct Gesvd_arguments
    void reset (
       const char& jobu,
       const char& jobvt,
-      const std::shared_ptr<TArray<T, NA>>& a,
-      const std::shared_ptr<TArray<T, NS>>& s,
-      const std::shared_ptr<TArray<T, NU>>& u,
-      const std::shared_ptr<TArray<T, NV>>& vt)
+      const shared_ptr<TArray<T, N>>& a,
+      const shared_ptr<TArray<U, 1>>& s,
+      const shared_ptr<TArray<T, K>>& u,
+      const shared_ptr<TArray<T, L>>& vt)
    {
       T_arguments_base::FLOPS_ = a->size();
-      get<0>(*this).swap(a);
-      get<1>(*this).swap(s);
-      get<2>(*this).swap(u);
-      get<3>(*this).swap(vt);
+      get<0>(*this) = a;
+      get<1>(*this) = s;
+      get<2>(*this) = u;
+      get<3>(*this) = vt;
       jobu_ = jobu;
       jobvt_ = jobvt;
    }
@@ -381,9 +391,13 @@ struct Gesvd_arguments
 template<class T, class... Ts>
 struct C_arguments_base
 {
-   std::vector<std::shared_ptr<T>> arg_;
+   typedef std::vector<shared_ptr<T>> argument_type;
+
+   argument_type arg_;
 
    C_arguments_base<Ts...> args_;
+
+   C_arguments_base () { }
 
    template<class Tp>
    C_arguments_base (const Tp& x) : args_ (x) { }
@@ -391,11 +405,15 @@ struct C_arguments_base
 
 /// Replication arguments (single)
 template<class T>
-struct C_arguments_base
+struct C_arguments_base<T>
 {
-   std::shared_ptr<T> arg_;
+   typedef shared_ptr<T> argument_type;
 
-   C_arguments_base (const std::shared_ptr<T>& x) : arg_ (x) { }
+   argument_type arg_;
+
+   C_arguments_base () { }
+
+   C_arguments_base (const shared_ptr<T>& x) : arg_ (x) { }
 };
 
 /// Helper function class
@@ -413,7 +431,7 @@ struct C_arguments_element
 template<class T, class... Ts>
 struct C_arguments_element<0, T, Ts...>
 {
-   typedef T type;
+   typedef typename C_arguments_base<T, Ts...>::argument_type type;
 
    static type& get(C_arguments_base<T, Ts...>& x) { return x.arg_; }
 
@@ -429,7 +447,7 @@ typename C_arguments_element<N, T, Ts...>::type& get (C_arguments_base<T, Ts...>
 
 /// Get N-th element of replication arguments
 template<size_t N, class T, class... Ts>
-typename const C_arguments_element<N, T, Ts...>::type& get (const C_arguments_base<T, Ts...>& x)
+const typename C_arguments_element<N, T, Ts...>::type& get (const C_arguments_base<T, Ts...>& x)
 {
    return C_arguments_element<N, T, Ts...>::get(x);
 }
@@ -450,13 +468,13 @@ struct Gemv_arguments
 
    T beta_;
 
-   Gemv_arguments () { }
+   Gemv_arguments () : transa_ (CblasNoTrans), alpha_ (static_cast<T>(0)) { }
 
    Gemv_arguments (
       const CBLAS_TRANSPOSE& tra,
       const T& alpha,
       const T& beta,
-      const std::shared_ptr<TArray<T, M-N>>& y)
+      const shared_ptr<TArray<T, M-N>>& y)
    :  T_arguments_base (),
       C_arguments_base<TArray<T, M>, TArray<T, N>, TArray<T, M-N>>(y),
       transa_ (tra),
@@ -468,18 +486,18 @@ struct Gemv_arguments
       const CBLAS_TRANSPOSE& tra,
       const T& alpha,
       const T& beta,
-      const std::shared_ptr<TArray<T, M-N>>& y)
+      const shared_ptr<TArray<T, M-N>>& y)
    {
       T_arguments_base::FLOPS_ = 0;
-      get<2>(*this).swap(y);
+      get<2>(*this) = y;
       transa_ = tra;
       alpha_ = alpha;
       beta_ = beta;
    }
 
    void add_args (
-      const std::shared_ptr<TArray<T, M>>& a,
-      const std::shared_ptr<TArray<T, N>>& x)
+      const shared_ptr<TArray<T, M>>& a,
+      const shared_ptr<TArray<T, N>>& x)
    {
       T_arguments_base::FLOPS_ += a->size();
       get<0>(*this).push_back(a);
@@ -509,14 +527,14 @@ struct Gemm_arguments
 
    T beta_;
 
-   Gemm_arguments () { }
+   Gemm_arguments () : transa_ (CblasNoTrans), transb_ (CblasNoTrans), alpha_ (static_cast<T>(0)), beta_ (static_cast<T>(0)) { }
 
    Gemm_arguments (
       const CBLAS_TRANSPOSE& tra,
       const CBLAS_TRANSPOSE& trb,
       const T& alpha,
       const T& beta,
-      const std::shared_ptr<TArray<T, N>>& c)
+      const shared_ptr<TArray<T, N>>& c)
    :  T_arguments_base (),
       C_arguments_base<TArray<T, L>, TArray<T, M>, TArray<T, N>>(c),
       transa_ (tra),
@@ -530,10 +548,10 @@ struct Gemm_arguments
       const CBLAS_TRANSPOSE& trb,
       const T& alpha,
       const T& beta,
-      const std::shared_ptr<TArray<T, N>>& c)
+      const shared_ptr<TArray<T, N>>& c)
    {
       T_arguments_base::FLOPS_ = 0;
-      get<2>(*this).swap(c);
+      get<2>(*this) = c;
       transa_ = tra;
       transb_ = trb;
       alpha_ = alpha;
@@ -541,8 +559,8 @@ struct Gemm_arguments
    }
 
    void add_args (
-      const std::shared_ptr<TArray<T, L>>& a,
-      const std::shared_ptr<TArray<T, M>>& b)
+      const shared_ptr<TArray<T, L>>& a,
+      const shared_ptr<TArray<T, M>>& b)
    {
       T_arguments_base::FLOPS_ += std::max(a->size(), b->size()); // FIXME: what's the best approximation?
       get<0>(*this).push_back(a);

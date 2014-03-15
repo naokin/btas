@@ -3,7 +3,7 @@
  *  \brief Dense sub-array class and its copy semantics
  */
 
-#ifndef _BTAS_CXX11_TARRAY_H
+#ifndef __BTAS_DENSE_TARRAY_H
 #include <btas/DENSE/TArray.h>
 #endif
 
@@ -12,6 +12,8 @@
 
 #include <functional>
 #include <numeric>
+
+#include <blas/package.h>
 
 namespace btas {
 
@@ -63,7 +65,7 @@ public:
     int nrows = t_size / lda;
     for(int j = 0; j < nrows; ++j, a_ptr += lda) {
       int offset = dot(t_stride, index);
-      _fast_copy(lda, a_ptr, t_ptr+offset);
+      blas::copy(lda, a_ptr, 1, t_ptr+offset, 1);
       for(int i = static_cast<int>(N)-2; i >= 0; --i) {
         if(++index[i] <= m_upper_bound[i]) break;
         index[i] = m_lower_bound[i];

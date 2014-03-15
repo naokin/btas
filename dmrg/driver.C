@@ -6,7 +6,7 @@ using namespace std;
 namespace btas { typedef FermiQuantum Quantum; }; // Define FermiQuantum as default quantum class
 
 #include <btas/QSPARSE/QSDArray.h>
-#include "btas_template_specialize.h"
+//#include "btas_template_specialize.h"
 
 #include "driver.h"
 using namespace btas;
@@ -58,12 +58,12 @@ void prototype::Canonicalize
   if(forward) {
     btas::SDArray <1> s;
     btas::QSDgesvd(btas::LeftArrow,  wfnx, s, mps0, wfn1, M);
-    btas::SDdidm(s, wfn1);
+    btas::Dimm(s, wfn1);
   }
   else {
     btas::SDArray <1> s;
     btas::QSDgesvd(btas::RightArrow, wfnx, s, wfn1, mps0, M);
-    btas::SDdimd(wfn1, s);
+    btas::Dimm(wfn1, s);
   }
 }
 
@@ -100,9 +100,9 @@ void prototype::ComputeDiagonal
   btas::SDArray<2> lopr_diag;
   btas::SDArray<2> ropr_diag;
 
-  btas::SDdiagonal(mpo0, shape(1, 2), mpo0_diag);
-  btas::SDdiagonal(lopr, shape(0, 2), lopr_diag);
-  btas::SDdiagonal(ropr, shape(0, 2), ropr_diag);
+  btas::SDtie(mpo0, shape(1, 2), mpo0_diag);
+  btas::SDtie(lopr, shape(0, 2), lopr_diag);
+  btas::SDtie(ropr, shape(0, 2), ropr_diag);
 
   btas::SDArray<3> scr1;
   btas::SDcontract(1.0, lopr_diag, shape(1), mpo0_diag, shape(0), 1.0, scr1);
@@ -123,10 +123,10 @@ void prototype::ComputeDiagonal
   btas::SDArray<2> lopr_diag;
   btas::SDArray<2> ropr_diag;
 
-  btas::SDdiagonal(lmpo, shape(1, 2), lmpo_diag);
-  btas::SDdiagonal(rmpo, shape(1, 2), rmpo_diag);
-  btas::SDdiagonal(lopr, shape(0, 2), lopr_diag);
-  btas::SDdiagonal(ropr, shape(0, 2), ropr_diag);
+  btas::SDtie(lmpo, shape(1, 2), lmpo_diag);
+  btas::SDtie(rmpo, shape(1, 2), rmpo_diag);
+  btas::SDtie(lopr, shape(0, 2), lopr_diag);
+  btas::SDtie(ropr, shape(0, 2), ropr_diag);
 
   btas::SDArray<3> scr1;
   btas::SDcontract(1.0, lopr_diag, shape(1), lmpo_diag, shape(0), 1.0, scr1);

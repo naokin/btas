@@ -4,11 +4,11 @@
 // STL
 #include <vector>
 #include <algorithm>
-#include <type_tratis>
+#include <type_traits>
 
 // Common
-#include <btas/COMMON/btas.h>
-#include <btas/COMMON/numeric_traits.h>
+#include <btas/common/btas.h>
+#include <btas/common/numeric_traits.h>
 
 // Dense BLAS
 #include <btas/DENSE/TBLAS.h>
@@ -51,7 +51,9 @@ void ST_Copy_serial (const STArray<T, N>& x, STArray<T, N>& y, const bool& UpCas
    {
       auto yi = y.reserve(xi->first);
 
-      BTAS_THROW(UpCast || yi != y.end(), "ST_Copy_serial: reservation failed. requested block must be zero.");
+      BTAS_THROW(UpCast || yi != y.end(), "ST_Copy_serial: reservation failed; requested block must be zero.");
+
+      if(yi == y.end()) continue;
 
       Copy(*(xi->second), *(yi->second));
    }
@@ -67,7 +69,7 @@ T ST_Dot_serial (const STArray<T, N>& x, const STArray<T, N>& y)
    {
       auto yi = y.find(xi->first);
 
-      if(yi != y.end) value += Dot(*(xi->second), *(yi->second));
+      if(yi != y.end()) value += Dot(*(xi->second), *(yi->second));
    }
 
    return value;
@@ -99,7 +101,7 @@ T ST_Dotc_serial (const STArray<T, N>& x, const STArray<T, N>& y)
    {
       auto yi = y.find(xi->first);
 
-      if(yi != y.end) value += Dotc(*(xi->second), *(yi->second));
+      if(yi != y.end()) value += Dotc(*(xi->second), *(yi->second));
    }
 
    return value;
@@ -109,19 +111,21 @@ T ST_Dotc_serial (const STArray<T, N>& x, const STArray<T, N>& y)
 template<typename T, size_t N>
 typename remove_complex<T>::type ST_Nrm2_serial (const STArray<T, N>& x)
 {
-   typename remove_complex<T>::type value = static_cast<T>(0);
+   typedef typename remove_complex<T>::type T_real;
+
+   T_real value = static_cast<T_real>(0);
 
    for(auto xi = x.begin(); xi != x.end(); ++xi)
    {
-      value += Dotc(*(xi->second), *(xi->second));
+      value += std::real(Dotc(*(xi->second), *(xi->second)));
    }
 
    return sqrt(value);
 }
 
 /// Serial algo' of Scal
-template<typename T, size_t N>
-void ST_Scal_serial (const T& alpha, STArray<T, N>& x)
+template<typename T, typename U, size_t N>
+void ST_Scal_serial (const T& alpha, STArray<U, N>& x)
 {
    for(auto xi = x.begin(); xi != x.end(); ++xi) Scal(alpha, *(xi->second));
 }
@@ -134,7 +138,7 @@ void ST_Axpy_serial (const T& alpha, const STArray<T, N>& x, STArray<T, N>& y)
    {
       auto yi = y.reserve(xi->first);
 
-      BTAS_THROW(yi != y.end(), "ST_Axpy_serial: reservation failed. requested block must be zero.");
+      BTAS_THROW(yi != y.end(), "ST_Axpy_serial: reservation failed; requested block must be zero.");
 
       Axpy(alpha, *(xi->second), *(yi->second));
   }
@@ -154,13 +158,16 @@ void ST_Axpy_serial (const T& alpha, const STArray<T, N>& x, STArray<T, N>& y)
 template<typename T, size_t N>
 void ST_Copy_thread (const STArray<T, N>& x, STArray<T, N>& y, const bool& UpCast = false)
 {
-   std::vector<Copy_arguments<T, N, N>> task(x.nnz());
+   std::vector<Copy_arguments<T, N, N>> task;
+   task.reserve(x.nnz());
 
    for(auto xi = x.begin(); xi != x.end(); ++xi)
    {
       auto yi = y.reserve(xi->first);
 
-      BTAS_THROW(UpCast || yi != y.end(), "ST_Copy_thread: reservation failed. requested block must be zero.");
+      BTAS_THROW(UpCast || yi != y.end(), "ST_Copy_thread: reservation failed; requested block must be zero.");
+
+      if(yi == y.end()) continue;
 
       task.push_back(Copy_arguments<T, N, N>(xi->second, yi->second));
    }
@@ -169,14 +176,15 @@ void ST_Copy_thread (const STArray<T, N>& x, STArray<T, N>& y, const bool& UpCas
 }
 
 /// SMP parallel algo' of Scal
-template<typename T, size_t N>
-void ST_Scal_thread (const T& alpha, STArray<T, N>& x)
+template<typename T, typename U, size_t N>
+void ST_Scal_thread (const T& alpha, STArray<U, N>& x)
 {
-   std::vector<Scal_arguments<T, N>> task(x.nnz());
+   std::vector<Scal_arguments<T, U, N>> task;
+   task.reserve(x.nnz());
 
    for(auto xi = x.begin(); xi != x.end(); ++xi)
    {
-      task.push_back(Scal_arguments<T, N>(alpha, xi->second));
+      task.push_back(Scal_arguments<T, U, N>(alpha, xi->second));
    }
 
    parallel_call(task);
@@ -186,13 +194,14 @@ void ST_Scal_thread (const T& alpha, STArray<T, N>& x)
 template<typename T, size_t N>
 void ST_Axpy_thread (const T& alpha, const STArray<T, N>& x, STArray<T, N>& y)
 {
-   std::vector<Axpy_arguments<T, N, N>> task(x.nnz());
+   std::vector<Axpy_arguments<T, N, N>> task;
+   task.reserve(x.nnz());
 
    for(auto xi = x.begin(); xi != x.end(); ++xi)
    {
       auto yi = y.reserve(xi->first);
 
-      BTAS_THROW(yi != y.end(), "ST_Axpy_thread: reservation failed. requested block must be zero.");
+      BTAS_THROW(yi != y.end(), "ST_Axpy_thread: reservation failed; requested block must be zero.");
 
       task.push_back(Axpy_arguments<T, N, N>(alpha, xi->second, yi->second));
    }
@@ -214,7 +223,8 @@ void ST_Gemv_thread (
    size_t rowsA = std::accumulate(a.shape().begin(), a.shape().begin()+M-N, 1ul, std::multiplies<size_t>());
    size_t colsA = std::accumulate(a.shape().begin()+M-N, a.shape().end(), 1ul, std::multiplies<size_t>());
 
-   std::vector<Gemv_arguments<T, M, N>> task(a.nnz);
+   std::vector<Gemv_arguments<T, M, N>> task;
+   task.reserve(a.nnz());
 
    // loop for row-index
    for(size_t i = 0; i < rowsA; ++i)
@@ -256,10 +266,11 @@ void ST_Ger_thread (
       const STArray<T, N>& y,
             STArray<T, M+N>& a)
 {
-   size_t rowsA = std::accumute(x.shape().begin(), x.shape().end(), 1ul, std::multiplies<size_t>());
-   size_t colsA = std::accumute(y.shape().begin(), y.shape().end(), 1ul, std::multiplies<size_t>());
+   size_t rowsA = std::accumulate(x.shape().begin(), x.shape().end(), 1ul, std::multiplies<size_t>());
+   size_t colsA = std::accumulate(y.shape().begin(), y.shape().end(), 1ul, std::multiplies<size_t>());
 
-   std::vector<Ger_arguments<T, M, N>> task(x.nnz()*y.nnz());
+   std::vector<Ger_arguments<T, M, N>> task;
+   task.reserve(x.nnz()*y.nnz());
 
    for(auto xi = x.begin(); xi != x.end(); ++xi)
    {
@@ -290,7 +301,7 @@ void ST_Gemm_thread (
       const T& alpha,
       const STArray<T, L>& a,
       const STArray<T, M>& b,
-      const STArray<T, N>& c)
+            STArray<T, N>& c)
 {
    const size_t K = (L + M - N) / 2;
 
@@ -299,7 +310,8 @@ void ST_Gemm_thread (
    size_t colsA = std::accumulate(a.shape().begin()+L-K, a.shape().end(), 1ul, std::multiplies<size_t>());
    size_t colsB = std::accumulate(b.shape().begin(), b.shape().begin()+M-K, 1ul, std::multiplies<size_t>());
 
-   std::vector<Gemm_arguments<T, L, M, N>> task(std::max(a.nnz(), b.nnz()));
+   std::vector<Gemm_arguments<T, L, M, N>> task;
+   task.reserve(std::max(a.nnz(), b.nnz()));
 
    for(size_t i = 0; i < rowsA; ++i)
    {
@@ -325,7 +337,7 @@ void ST_Gemm_thread (
 
          if(lwbB == upbB) continue;
 
-         Gemm_arguments<T, M, N> args;
+         Gemm_arguments<T, L, M, N> args;
 
          for(auto aik = lwbA; aik != upbA; ++aik)
          {
@@ -375,8 +387,8 @@ void Copy (const STArray<T, N>& x, STArray<T, N>& y, bool UpCast = false)
 #endif
 }
 
-template<typename T, size_t N>
-void Scal (const T& alpha, STArray<T, N>& x)
+template<typename T, typename U, size_t N>
+void Scal (const T& alpha, STArray<U, N>& x)
 {
 #ifndef _SERIAL
    if(x.nnz() < SERIAL_REPLICATION_LIMIT)
@@ -391,7 +403,7 @@ void Scal (const T& alpha, STArray<T, N>& x)
 template<typename T, size_t N>
 T Dot (const STArray<T, N>& x, const STArray<T, N>& y)
 {
-  if(x.shape() != y.shape()) BTAS_THROW(x.shape() == y.shape(), "Dot(SPARSE): x and y must have the same shape.");
+  BTAS_THROW(x.shape() == y.shape(), "Dot(SPARSE): x and y must have the same shape.");
 
   return ST_Dot_serial(x, y);
 }
@@ -399,7 +411,7 @@ T Dot (const STArray<T, N>& x, const STArray<T, N>& y)
 template<typename T, size_t N>
 T Dotu (const STArray<T, N>& x, const STArray<T, N>& y)
 {
-  if(x.shape() != y.shape()) BTAS_THROW(x.shape() == y.shape(), "Dotu(SPARSE): x and y must have the same shape.");
+  BTAS_THROW(x.shape() == y.shape(), "Dotu(SPARSE): x and y must have the same shape.");
 
   return ST_Dotu_serial(x, y);
 }
@@ -407,7 +419,7 @@ T Dotu (const STArray<T, N>& x, const STArray<T, N>& y)
 template<typename T, size_t N>
 T Dotc (const STArray<T, N>& x, const STArray<T, N>& y)
 {
-  if(x.shape() != y.shape()) BTAS_THROW(x.shape() == y.shape(), "Dotc(SPARSE): x and y must have the same shape.");
+  BTAS_THROW(x.shape() == y.shape(), "Dotc(SPARSE): x and y must have the same shape.");
 
   return ST_Dotc_serial(x, y);
 }
@@ -422,9 +434,13 @@ template<typename T, size_t N>
 void Axpy (const T& alpha, const STArray<T, N>& x, STArray<T, N>& y)
 {
    if(y.size() > 0)
+   {
       BTAS_THROW(x.dshape() == y.dshape(), "Axpy(SPARSE): x and y must have the same shape."); /* FIXME: this is double-check */
+   }
    else
+   {
       y.resize(x.dshape(), false);
+   }
 
 #ifndef _SERIAL
    if(x.nnz() < SERIAL_REPLICATION_LIMIT)
@@ -487,9 +503,13 @@ void Ger (
    ger_contract_dshape(x.dshape(), y.dshape(), dshapeA);
 
    if(a.size() > 0)
+   {
       BTAS_THROW(a.dshape() == dshapeA, "Ger(SPARSE): a must have the same shape as [ x ^ y ].");
+   }
    else
+   {
       a.resize(dshapeA, false);
+   }
 
    ST_Ger_thread(alpha, x, y, a);
 }
@@ -563,8 +583,8 @@ template<size_t M, size_t N, bool = (M > N)> struct __ST_dimm_helper;
 template<size_t M, size_t N>
 struct __ST_dimm_helper<M, N, true> /* (general matrix) x (diagonal matrix) */
 {
-   template<typename T>
-   static void call (STArray<T, M>& a, const STArray<T, N>& b)
+   template<typename T,typename U>
+   static void call (STArray<T, M>& a, const STArray<U, N>& b)
    {
       size_t n = b.size();
 
@@ -572,7 +592,8 @@ struct __ST_dimm_helper<M, N, true> /* (general matrix) x (diagonal matrix) */
       {
          auto bjj = b.find(aij->first % n);
 
-         if(bjj != b.end()) Dimm(*(aij->second), *(bjj->second));
+         if(bjj != b.end())
+            Dimm(*(aij->second), *(bjj->second));
       }
    }
 };
@@ -580,8 +601,8 @@ struct __ST_dimm_helper<M, N, true> /* (general matrix) x (diagonal matrix) */
 template<size_t M, size_t N>
 struct __ST_dimm_helper<M, N, false> /* (diagonal matrix) x (general matrix) */
 {
-   template<typename T>
-   static void call (const STArray<T, M>& a, STArray<T, N>& b)
+   template<typename T,typename U>
+   static void call (const STArray<T, M>& a, STArray<U, N>& b)
    {
       size_t n = std::accumulate(b.shape().begin()+M, b.shape().end(), 1ul, std::multiplies<size_t>());
 
@@ -589,16 +610,17 @@ struct __ST_dimm_helper<M, N, false> /* (diagonal matrix) x (general matrix) */
       {
          auto aii = a.find(bij->first / n);
 
-         if(aii != a.end()) Dimm(*(aii->second), *(bij->second));
+         if(aii != a.end())
+            Dimm(*(aii->second), *(bij->second));
       }
    }
 };
 
 /// Diagonal matrix multiplication
-template<typename T, size_t M, size_t N>
-void Dimm (const STArray<T, M>& a, const STArray<T, N>& b)
+template<typename T, typename U,size_t M, size_t N>
+void Dimm (const STArray<T, M>& a, const STArray<U, N>& b)
 {
-   __ST_dimm_helper<M, N>::call(const_cast<STArray<T, M>&>(a), const_cast<STArray<T, N>&>(b));
+   __ST_dimm_helper<M, N>::call(const_cast<STArray<T, M>&>(a), const_cast<STArray<U, N>&>(b));
 }
 
 /// Normalization
@@ -628,87 +650,72 @@ void Orthogonalize (const STArray<T, N>& x, STArray<T, N>& y)
 //  ====================================================================================================
 
 /// By default, call GEMM
-template<size_t L, size_t M, size_t N>
+template<size_t L, size_t M, size_t N, int = blas_call_type<L, M, N>::value>
 struct __ST_BlasContract_helper
 {
    template<typename T>
    static void call (
+      const CBLAS_TRANSPOSE& transa,
+      const CBLAS_TRANSPOSE& transb,
       const T& alpha,
       const STArray<T, L>& a,
       const STArray<T, M>& b,
       const T& beta,
             STArray<T, N>& c)
    {
-      Gemm(CblasNoTrans, CblasNoTrans, alpha, a, b, beta, c);
+      Gemm(transa, transb, alpha, a, b, beta, c);
    }
 };
 
-/// Case GEMV, further divided into 2 cases, (A * B) or (B * A)
-template<size_t M, size_t N, bool = (M > N)>
-struct __ST_BlasContract_Gemv_handler;
-
-/// Case GEMV, (A * B)
-template<size_t M, size_t N>
-struct __ST_BlasContract_Gemv_handler<M, N, true>
+/// Case Gemv (A * B)
+template<size_t L, size_t M, size_t N>
+struct __ST_BlasContract_helper<L, M, N, 2>
 {
    template<typename T>
    static void call (
+      const CBLAS_TRANSPOSE& transa,
+      const CBLAS_TRANSPOSE& transb,
       const T& alpha,
-      const STArray<T, M>& a,
-      const STArray<T, N>& b,
+      const STArray<T, L>& a,
+      const STArray<T, M>& b,
       const T& beta,
-            STArray<T, M-N>& c)
+            STArray<T, N>& c)
    {
-      Gemv(CblasNoTrans, alpha, a, b, beta, c);
+      Gemv(transa, alpha, a, b, beta, c);
    }
 };
 
-/// Case GEMV, (B * A)
-template<size_t M, size_t N>
-struct __ST_BlasContract_Gemv_handler<M, N, false>
+/// Case Gemv (B * A)
+template<size_t L, size_t M, size_t N>
+struct __ST_BlasContract_helper<L, M, N, 3>
 {
    template<typename T>
    static void call (
+      const CBLAS_TRANSPOSE& transa,
+      const CBLAS_TRANSPOSE& transb,
       const T& alpha,
-      const STArray<T, M>& a,
-      const STArray<T, N>& b,
+      const STArray<T, L>& a,
+      const STArray<T, M>& b,
       const T& beta,
-            STArray<T, N-M>& c)
+            STArray<T, N>& c)
    {
-      Gemv(CblasTrans, alpha, b, a, beta, c);
-      // FIXME: transpose c here?
-   }
-};
-
-/// Case GEMV, gateway
-template<size_t M, size_t N>
-struct __ST_BlasContract_helper<M, N, rank_diff<M, N>::value>
-{
-   const size_t K = rank_diff<M, N>::value;
-
-   template<typename T>
-   static void call (
-      const T& alpha,
-      const STArray<T, M>& a,
-      const STArray<T, N>& b,
-      const T& beta,
-            STArray<T, K>& c)
-   {
-      __ST_BlasContract_Gemv_handler<M, N>::call(alpha, a, b, beta, c);
+      Gemv(transb, alpha, b, a, beta, c);
    }
 };
 
 /// Case Ger
-template<size_t M, size_t N>
-struct __ST_BlasContract_helper<M, N, M+N>
+template<size_t L, size_t M, size_t N>
+struct __ST_BlasContract_helper<L, M, N, 4>
 {
    template<typename T>
    static void call (
+      const CBLAS_TRANSPOSE& transa,
+      const CBLAS_TRANSPOSE& transb,
       const T& alpha,
-      const STArray<T, M>& a,
-      const STArray<T, N>& b,
+      const STArray<T, L>& a,
+      const STArray<T, M>& b,
       const T& beta,
-            STArray<T, M+N>& c)
+            STArray<T, N>& c)
    {
       Scal(beta, c); Ger(alpha, a, b, c);
    }
@@ -717,13 +724,15 @@ struct __ST_BlasContract_helper<M, N, M+N>
 /// Wrapper function for BLAS contractions
 template<typename T, size_t L, size_t M, size_t N>
 void BlasContract (
+      const CBLAS_TRANSPOSE& transa,
+      const CBLAS_TRANSPOSE& transb,
       const T& alpha,
       const STArray<T, L>& a,
       const STArray<T, M>& b,
       const T& beta,
             STArray<T, N>& c)
 {
-   __ST_BlasContract_helper<L, M, N>::call(alpha, a, b, beta, c);
+   __ST_BlasContract_helper<L, M, N>::call(transa, transb, alpha, a, b, beta, c);
 }
 
 } // namespace btas

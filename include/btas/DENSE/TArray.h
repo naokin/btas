@@ -1,5 +1,5 @@
-#ifndef _BTAS_CXX11_TARRAY_H
-#define _BTAS_CXX11_TARRAY_H 1
+#ifndef __BTAS_DENSE_TARRAY_H
+#define __BTAS_DENSE_TARRAY_H 1
 
 #include <iostream>
 #include <vector>
@@ -10,7 +10,9 @@
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/vector.hpp>
 
-#include <btas/COMMON/TVector.h>
+#include <btas/common/TVector.h>
+
+#include <btas/DENSE/BLAS_STL_vector.h>
 
 namespace btas {
 
@@ -95,7 +97,7 @@ public:
   void copy(const TArray& other) {
     m_shape  = other.m_shape;
     m_stride = other.m_stride;
-    fast_copy(*other.m_store, *m_store);
+    Copy(*other.m_store, *m_store);
   }
 
   //! return copy of this
@@ -126,7 +128,7 @@ public:
     int nrows = a_size / ldt;
     for(int j = 0; j < nrows; ++j, t_ptr += ldt) {
       int offset = dot(a_stride, index);
-      _fast_copy(ldt, a_ptr+offset, t_ptr);
+      blas::copy(ldt, a_ptr+offset, 1, t_ptr, 1);
       for(int i = static_cast<int>(M)-2; i >= 0; --i) {
         if(++index[i] <= a.m_upper_bound[i]) break;
         index[i] = a.m_lower_bound[i];
@@ -136,14 +138,14 @@ public:
 
   //! scale by const value
   void scale(const T& alpha) {
-    fast_scal(alpha, *m_store);
+    Scal(alpha, *m_store);
   }
 
   //! adding  from other to this
   void add (const TArray& other) {
     assert(m_shape  == other.m_shape);
     assert(m_stride == other.m_stride);
-    fast_add (*other.m_store, *m_store);
+    Axpy(static_cast<T>(1), *other.m_store, *m_store);
   }
 
   //! copy constructor from sub-array
@@ -742,4 +744,16 @@ private:
 
 #include <btas/DENSE/TSubArray.h>
 
-#endif // _BTAS_CXX11_TARRAY_H
+#include <btas/DENSE/TBLAS.h>
+#include <btas/DENSE/TLAPACK.h>
+#include <btas/DENSE/TREINDEX.h>
+#include <btas/DENSE/TCONTRACT.h>
+
+#include <btas/DENSE/TConj.h>
+
+#include <btas/DENSE/SArray.h>
+#include <btas/DENSE/DArray.h>
+#include <btas/DENSE/CArray.h>
+#include <btas/DENSE/ZArray.h>
+
+#endif // __BTAS_DENSE_TARRAY_H
