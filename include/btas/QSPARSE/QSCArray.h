@@ -261,7 +261,7 @@ inline void QSCgesvd (
              SSArray<1>& s,
             QSCArray<K, Q>& u,
             QSCArray<N-K+2, Q>& vt,
-      const int& DMAX = 0,
+      const long& DMAX = 0,
       const float& DTOL = 1.0f)
 {
    if(dir == LeftArrow)
@@ -281,7 +281,7 @@ inline void QSCgesvd (
             QSCArray<K, Q>& u_rm,
             QSCArray<N-K+2, Q>& vt,
             QSCArray<N-K+2, Q>& vt_rm,
-      const int& DMAX = 0,
+      const long& DMAX = 0,
       const float& DTOL = 1.0f)
 {
    if(dir == LeftArrow)

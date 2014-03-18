@@ -112,7 +112,7 @@ public:
 template<size_t N, class Q>
 inline Q operator* (const TVector<Qshapes<Q>, N>& vec, const IVector<N>& index) {
   Q prod = vec[0][index[0]];
-  for(int i = 1; i < N; ++i) prod = prod * vec[i][index[i]];
+  for(size_t i = 1; i < N; ++i) prod = prod * vec[i][index[i]];
   return prod;
 }
 
@@ -122,7 +122,7 @@ inline Q operator* (const TVector<Qshapes<Q>, N>& vec, const IVector<N>& index) 
 template<size_t N, class Q>
 inline Q operator* (const IVector<N>& index, const TVector<Qshapes<Q>, N>& vec) {
   Q prod = vec[0][index[0]];
-  for(int i = 1; i < N; ++i) prod = prod * vec[i][index[i]];
+  for(size_t i = 1; i < N; ++i) prod = prod * vec[i][index[i]];
   return prod;
 }
 

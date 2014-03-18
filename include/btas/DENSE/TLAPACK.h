@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <numeric>
 
-#include <btas/common/btas.h>
+#include <btas/common/btas_assert.h>
 #include <btas/common/TVector.h>
 #include <btas/common/numeric_traits.h>
 
@@ -31,7 +31,7 @@ void Syev (
    if(a.size() == 0) return;
 
    const size_t K = N-1;
-   BTAS_THROW(std::equal(a.shape().begin(), a.shape().begin()+K, a.shape().begin()+K), "Syev(DENSE): shape of a must be symmetric.");
+   BTAS_ASSERT(std::equal(a.shape().begin(), a.shape().begin()+K, a.shape().begin()+K), "Syev(DENSE): shape of a must be symmetric.");
 
    size_t colsA = std::accumulate(a.shape().begin()+K, a.shape().end(), 1ul, std::multiplies<size_t>());
 
@@ -60,7 +60,7 @@ void Heev (
    if(a.size() == 0) return;
 
    const size_t K = N-1;
-   BTAS_THROW(std::equal(a.shape().begin(), a.shape().begin()+K, a.shape().begin()+K), "Heev(DENSE): shape of a must be symmetric.");
+   BTAS_ASSERT(std::equal(a.shape().begin(), a.shape().begin()+K, a.shape().begin()+K), "Heev(DENSE): shape of a must be symmetric.");
 
    size_t colsA = std::accumulate(a.shape().begin()+K, a.shape().end(), 1ul, std::multiplies<size_t>());
 

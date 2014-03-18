@@ -10,7 +10,7 @@
 #include <boost/serialization/map.hpp>
 #include <boost/serialization/shared_ptr.hpp>
 
-#include <btas/common/btas.h>
+#include <btas/common/types.h>
 #include <btas/common/TVector.h>
 
 #include <btas/DENSE/TArray.h>
@@ -26,7 +26,7 @@ template<typename T, size_t N>
 class STArray {
 private:
   // Alias to data type
-  typedef std::map<int, shared_ptr<TArray<T, N>>> DataType;
+  typedef std::map<size_t, shared_ptr<TArray<T, N>>> DataType;
 
 public:
   // Alias to iterator
@@ -48,9 +48,9 @@ protected:
 
   void mf_check_dshape(const IVector<N>& _index, const IVector<N>& _shape) {
     IVector<N> _chk_shape = m_dn_shape & _index;
-    for(int i = 0; i < N; ++i) {
+    for(size_t i = 0; i < N; ++i) {
       if(_chk_shape[i] == _shape[i]) continue;
-      BTAS_THROW(_chk_shape[i] == 0, "btas::STArray::mf_check_dshape: requested shape is inconsistent");
+      BTAS_ASSERT(_chk_shape[i] == 0, "btas::STArray::mf_check_dshape: requested shape is inconsistent");
       m_dn_shape[i][_index[i]] = _shape[i]; // update dense-block shape
     }
   }
@@ -62,7 +62,7 @@ public:
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   //! Default constructor
-  STArray() : m_shape(uniform<int, N>(0)), m_stride(uniform<int, N>(0)) { }
+  STArray() : m_shape(uniform<size_t, N>(0)), m_stride(uniform<size_t, N>(0)) { }
 
   //! Destructor
   virtual ~STArray() { }
@@ -128,7 +128,7 @@ public:
   /*! not complete reference, since elements in m_store are only shared.
    *  so, even if m_shape or m_stride is changed, it won't be affected.
    */
-  void reference(const STArray& other) {
+  void ref(const STArray& other) {
     m_shape     = other.m_shape;
     m_dn_shape  = other.m_dn_shape;
     m_stride    = other.m_stride;
@@ -157,11 +157,12 @@ public:
   STArray subarray(const TVector<Dshapes, N>& _indxs) const {
     TVector<Dshapes, N> _indx_map;
     TVector<Dshapes, N> _dn_shape;
-    for(int i = 0; i < N; ++i) {
-      _indx_map[i].resize(m_shape[i], -1);
+    for(size_t i = 0; i < N; ++i) {
+//    _indx_map[i].resize(m_shape[i], -1);
+      _indx_map[i].resize(m_shape[i], m_shape[i]);
       _dn_shape[i].reserve(_indxs[i].size());
-      int n = 0;
-      for(int j = 0; j < _indxs[i].size(); ++j) {
+      size_t n = 0;
+      for(size_t j = 0; j < _indxs[i].size(); ++j) {
         _indx_map[i].at(_indxs[i][j]) = n++;
         _dn_shape[i].push_back(m_dn_shape[i].at(_indxs[i][j]));
       }
@@ -173,8 +174,8 @@ public:
     for(const_iterator it = m_store.begin(); it != m_store.end(); ++it) {
       IVector<N> _index = _indx_map & index(it->first);
       bool kept = true;
-      for(int i = 0; kept && i < N; ++i) {
-        kept &= (_index[i] >= 0);
+      for(size_t i = 0; kept && i < N; ++i) {
+        kept &= (_index[i] < m_shape[i]);
       }
       if(kept) ip = _ref.m_store.insert(ip, std::make_pair(_ref.tag(_index), it->second));
     }
@@ -188,11 +189,11 @@ public:
   //! Resize by sparse-block shape
   void resize(const IVector<N>& _shape) {
     m_shape = _shape;
-    for(int i = 0; i < N; ++i) {
+    for(size_t i = 0; i < N; ++i) {
       m_dn_shape[i] = Dshapes(m_shape[i], 0);
     }
-    int stride = 1;
-    for(int i = N-1; i >= 0; --i) {
+    size_t stride = 1;
+    for(long i = N-1; i >= 0; --i) {
       m_stride[i] = stride;
       stride *= m_shape[i];
     }
@@ -203,7 +204,7 @@ public:
   void resize(const TVector<Dshapes, N>& _dn_shape, bool _allocate = true) {
     // calc. sparse-block shape
     IVector<N> _shape;
-    for(int i = 0; i < N; ++i) _shape[i] = _dn_shape[i].size();
+    for(size_t i = 0; i < N; ++i) _shape[i] = _dn_shape[i].size();
     resize(_shape);
     m_dn_shape = _dn_shape;
 
@@ -213,7 +214,7 @@ public:
   //! Allocate all allowed blocks (existed blocks are collapsed)
   void allocate() {
     iterator it = m_store.begin();
-    IVector<N> _index = uniform<int, N>(0);
+    IVector<N> _index = uniform<size_t, N>(0);
 
     m_store.clear();
 
@@ -224,7 +225,7 @@ public:
           it = m_store.insert(it, std::make_pair(ib, shared_ptr<TArray<T, N>>(new TArray<T, N>(m_dn_shape & _index))));
       }
       // index increment
-      for(int id = N-1; id >= 0; --id) {
+      for(long id = N-1; id >= 0; --id) {
         if(++_index[id] < m_shape[id]) break;
         _index[id] = 0;
       }
@@ -268,13 +269,13 @@ public:
   iterator erase (const IVector<N>& _index) { return m_store.erase(tag(_index)); }
 
   //! Erase certain block by tag
-  iterator erase (const int& _tag) { return m_store.erase(_tag); }
+  iterator erase (const size_t& _tag) { return m_store.erase(_tag); }
 
   //! Deallocation
   virtual void clear() {
-    m_shape = uniform<int, N>(0);
-    m_stride = uniform<int, N>(0);
-    for(int i = 0; i < N; ++i) m_dn_shape[i].clear();
+    m_shape = uniform<size_t, N>(0);
+    m_stride = uniform<size_t, N>(0);
+    for(size_t i = 0; i < N; ++i) m_dn_shape[i].clear();
     m_store.clear();
   }
 
@@ -283,7 +284,7 @@ public:
    *  \param _rank  rank in which index is associated
    *  \param _index index to be removed
    */
-  virtual void erase(int _rank, int _index_erase) {
+  virtual void erase(size_t _rank, size_t _index_erase) {
     assert(_index_erase >= 0 && _index_erase < m_shape[_rank]);
     IVector<N> _shape = m_shape; --_shape[_rank];
     STArray _ref(_shape);
@@ -302,7 +303,7 @@ public:
 // *  \param _rank  rank in which index is associated
 // *  \param _indxs indices to be removed
 // */
-//virtual void erase(int _rank, const std::vector<int>& _indxs) {
+//virtual void erase(size_t _rank, const std::vector<int>& _indxs) {
 //  std::set<int> _indx_set(_indxs.begin(), _indxs.end());
 //  assert(_indx_set.size() <= m_shape[_rank]);
 //  assert(*_indx_set.begin() >= 0 && *_indx_set.rbegin() < m_shape[_rank]);
@@ -330,9 +331,9 @@ public:
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   //! convert tag to index
-  IVector<N> index(int _tag) const {
+  IVector<N> index(size_t _tag) const {
     IVector<N> _index;
-    for(int i = 0; i < N; ++i) {
+    for(size_t i = 0; i < N; ++i) {
       _index[i] = _tag / m_stride[i];
       _tag      = _tag % m_stride[i];
     }
@@ -340,7 +341,7 @@ public:
   }
 
   //! convert index to tag
-  int tag(const IVector<N>& _index) const { return dot(_index, m_stride); }
+  size_t tag(const IVector<N>& _index) const { return dot(_index, m_stride); }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Access member variables
@@ -350,13 +351,13 @@ public:
   const IVector<N>& shape() const { return m_shape; }
 
   //! Returns sparse-block shape for rank i
-  const int& shape(int i) const { return m_shape[i]; }
+  const size_t& shape(size_t i) const { return m_shape[i]; }
 
   //! Returns sparse-block stride
   const IVector<N>& stride() const { return m_stride; }
 
   //! Returns sparse-block stride for rank i
-  const int& stride(int i) const { return m_stride[i]; }
+  const size_t& stride(size_t i) const { return m_stride[i]; }
 
   //! Returns number of non-zero sparse-blocks
   size_t nnz() const { return m_store.size(); }
@@ -368,7 +369,7 @@ public:
   const TVector<Dshapes, N>& dshape() const { return m_dn_shape; }
 
   //! Returns dense-block shapes for rank i
-  const Dshapes& dshape(int i) const { return m_dn_shape[i]; }
+  const Dshapes& dshape(size_t i) const { return m_dn_shape[i]; }
 
   //! Check and update dense-block shapes
   const TVector<Dshapes, N>& check_dshape() {
@@ -383,9 +384,9 @@ public:
     for(size_t i = 0; i < N; ++i) _net_dshape[i].resize(m_shape[i], 0);
     for(const_iterator it = m_store.begin(); it != m_store.end(); ++it) {
       IVector<N> _index = index(it->first);
-      for(int i = 0; i < N; ++i) {
+      for(size_t i = 0; i < N; ++i) {
         if(_net_dshape[i][_index[i]] > 0) {
-          BTAS_THROW(_net_dshape[i][_index[i]] == it->second->shape(i), "btas::STArray::check_net_dshape: found mismatched dense-block shape");
+          BTAS_ASSERT(_net_dshape[i][_index[i]] == it->second->shape(i), "btas::STArray::check_net_dshape: found mismatched dense-block shape");
         }
         else {
           _net_dshape[i][_index[i]] = it->second->shape(i);
@@ -414,21 +415,21 @@ public:
   const_iterator upper_bound(const IVector<N>& _index) const { return m_store.upper_bound(tag(_index)); }
         iterator upper_bound(const IVector<N>& _index)       { return m_store.upper_bound(tag(_index)); }
 
-  const_iterator find(const int& _tag) const { return m_store.find(_tag); }
-        iterator find(const int& _tag)       { return m_store.find(_tag); }
+  const_iterator find(const size_t& _tag) const { return m_store.find(_tag); }
+        iterator find(const size_t& _tag)       { return m_store.find(_tag); }
 
-  const_iterator lower_bound(const int& _tag) const { return m_store.lower_bound(_tag); }
-        iterator lower_bound(const int& _tag)       { return m_store.lower_bound(_tag); }
+  const_iterator lower_bound(const size_t& _tag) const { return m_store.lower_bound(_tag); }
+        iterator lower_bound(const size_t& _tag)       { return m_store.lower_bound(_tag); }
 
-  const_iterator upper_bound(const int& _tag) const { return m_store.upper_bound(_tag); }
-        iterator upper_bound(const int& _tag)       { return m_store.upper_bound(_tag); }
+  const_iterator upper_bound(const size_t& _tag) const { return m_store.upper_bound(_tag); }
+        iterator upper_bound(const size_t& _tag)       { return m_store.upper_bound(_tag); }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Insert dense-block
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   //! return true if the requested block is non-zero, called by block tag
-  bool allowed(const int& _tag) const { return this->mf_check_allowed(index(_tag)); }
+  bool allowed(const size_t& _tag) const { return this->mf_check_allowed(index(_tag)); }
   //! return true if the requested block is non-zero, called by block index
   bool allowed(const IVector<N>& _index) const { return this->mf_check_allowed(_index); }
 
@@ -440,7 +441,7 @@ public:
    *  - allocate dense-array block and return its iterator
    *  - or, return last iterator if it's not allowed, with warning message (optional)
    */
-  iterator reserve(const int& _tag) {
+  iterator reserve(const size_t& _tag) {
     IVector<N> _index = index(_tag);
     // check if the requested block can be non-zero
     iterator it = find(_tag);
@@ -449,12 +450,12 @@ public:
         it = m_store.insert(it, std::make_pair(_tag, shared_ptr<TArray<T, N>>(new TArray<T, N>(m_dn_shape & _index))));
       }
       else {
-        BTAS_THROW((m_dn_shape & _index) == it->second->shape(), "btas::STArray::reserve: existed block has inconsistent shape");
+        BTAS_ASSERT((m_dn_shape & _index) == it->second->shape(), "btas::STArray::reserve: existed block has inconsistent shape");
       }
     }
     else {
       if(it != end()) {
-        BTAS_THROW(false, "btas::STArray::reserve: non-zero block already exists despite it must be zero");
+        BTAS_ASSERT(false, "btas::STArray::reserve: non-zero block already exists despite it must be zero");
       }
 #ifdef _PRINT_WARNINGS
       else {
@@ -467,7 +468,7 @@ public:
 
   //! reserve non-zero block and return its iterator, by block index
   iterator reserve(const IVector<N>& _index) {
-    int _tag = tag(_index);
+    size_t _tag = tag(_index);
     // check if the requested block can be non-zero
     iterator it = find(_tag);
     if(this->mf_check_allowed(_index)) {
@@ -475,12 +476,12 @@ public:
         it = m_store.insert(it, std::make_pair(_tag, shared_ptr<TArray<T, N>>(new TArray<T, N>(m_dn_shape & _index))));
       }
       else {
-        BTAS_THROW((m_dn_shape & _index) == it->second->shape(), "btas::STArray::reserve: existed block has inconsistent shape");
+        BTAS_ASSERT((m_dn_shape & _index) == it->second->shape(), "btas::STArray::reserve: existed block has inconsistent shape");
       }
     }
     else {
       if(it != end()) {
-        BTAS_THROW(false, "btas::STArray::reserve; non-zero block already exists despite it must be zero");
+        BTAS_ASSERT(false, "btas::STArray::reserve; non-zero block already exists despite it must be zero");
       }
 #ifdef _PRINT_WARNINGS
       else {
@@ -498,7 +499,7 @@ public:
    *  - insert dense-array block and return its iterator
    *  - or, return last iterator if it's not allowed, with warning message (optional)
    */
-  iterator insert(const int& _tag, const TArray<T, N>& block) {
+  iterator insert(const size_t& _tag, const TArray<T, N>& block) {
     IVector<N> _index = index(_tag);
     // check if the requested block can be non-zero
     iterator it = m_store.end();
@@ -506,7 +507,7 @@ public:
       mf_check_dshape(_index, block.shape());
       it = find(_tag);
       if(it != end())
-        it->second->add(block);
+        *it->second += block;
       else
         it = m_store.insert(it, std::make_pair(_tag, shared_ptr<TArray<T, N>>(new TArray<T, N>(block))));
     }
@@ -520,14 +521,14 @@ public:
 
   //! insert dense-array block and return its iterator, by block index
   iterator insert(const IVector<N>& _index, const TArray<T, N>& block) {
-    int _tag = tag(_index);
+    size_t _tag = tag(_index);
     // check if the requested block can be non-zero
     iterator it = m_store.end();
     if(this->mf_check_allowed(_index)) {
       mf_check_dshape(_index, block.shape());
       it = find(_tag);
       if(it != end())
-        it->second->add(block);
+        *it->second += block;
       else
         it = m_store.insert(it, std::make_pair(_tag, shared_ptr<TArray<T, N>>(new TArray<T, N>(block))));
     }
@@ -550,21 +551,21 @@ public:
    *  [i,j,k,l,m,n] -> [m,n,i,j,k,l]
    *  |1 2 3 4|5 6|    |5 6|1 2 3 4|
    */
-  STArray transposed_view(int K) const {
+  STArray transposed_view(size_t K) const {
     STArray trans;
     if(K == N) {
-      trans.reference(*this);
+      trans.ref(*this);
     }
     else {
       TVector<Dshapes, N> t_dn_shape = transpose(m_dn_shape, K);
       trans.resize(t_dn_shape, false);
 
-      int oldstr = m_stride[K-1];
-      int newstr = size() / oldstr;
+      size_t oldstr = m_stride[K-1];
+      size_t newstr = size() / oldstr;
       iterator ip = trans.m_store.begin();
       for(const_iterator it = m_store.begin(); it != m_store.end(); ++it) {
-        int oldtag = it->first;
-        int newtag = oldtag / oldstr + (oldtag % oldstr)*newstr;
+        size_t oldtag = it->first;
+        size_t newtag = oldtag / oldstr + (oldtag % oldstr)*newstr;
         ip = trans.m_store.insert(ip, std::make_pair(newtag, it->second));
       }
     }
@@ -576,14 +577,14 @@ public:
   STArray permuted_view(const IVector<N>& pindex) const {
     STArray pmute;
     if(pindex == sequence<N>(0, 1)) {
-      pmute.reference(*this);
+      pmute.ref(*this);
     }
     else {
       TVector<Dshapes, N> p_dn_shape = permute(m_dn_shape, pindex);
       pmute.resize(p_dn_shape, false);
 
       IVector<N> p_stride;
-      for(int i = 0; i < N; ++i) p_stride[pindex[i]] = pmute.m_stride[i];
+      for(size_t i = 0; i < N; ++i) p_stride[pindex[i]] = pmute.m_stride[i];
       iterator ip = pmute.m_store.begin();
       for(const_iterator it = m_store.begin(); it != m_store.end(); ++it) {
         IVector<N> _index(index(it->first));
@@ -626,14 +627,14 @@ std::ostream& operator<< (std::ostream& ost, const btas::STArray<T, N>& a) {
   // print out sparsity information
   const btas::IVector<N>& a_shape = a.shape();
   ost << "block shape = [ ";
-  for(int i = 0; i < N-1; ++i) ost << a_shape[i] << " x ";
+  for(size_t i = 0; i < N-1; ++i) ost << a_shape[i] << " x ";
   ost << a_shape[N-1] << " ] ( sparsity = " << a.nnz() << " / " << a.size() << " ) " << endl;
 
   for(typename btas::STArray<T, N>::const_iterator ib = a.begin(); ib != a.end(); ++ib) {
     ost << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     btas::IVector<N> b_index = a.index(ib->first);
     ost << "\tindex = [ ";
-    for(int i = 0; i < N-1; ++i) ost << b_index[i] << ", ";
+    for(size_t i = 0; i < N-1; ++i) ost << b_index[i] << ", ";
     ost << b_index[N-1] << " ] : " << *ib->second << endl;
   }
   return ost;

@@ -125,7 +125,7 @@ Gesvd (
             STArray<typename remove_complex<T>::type, 1>& s,
             QSTArray<T, K, Q>& u,
             QSTArray<T, N-K+2, Q>& vt,
-      const int& DMAX = 0,
+      const long& DMAX = 0,
       const typename remove_complex<T>::type& DTOL = static_cast<typename remove_complex<T>::type>(1))
 {
    typedef typename remove_complex<T>::type T_real;
@@ -140,7 +140,7 @@ Gesvd (
    TVector<Qshapes<Q>, L> a_qshape_left;
    TVector<Dshapes,    L> a_dshape_left;
 
-   for(int i = 0; i < L; ++i) {
+   for(size_t i = 0; i < L; ++i) {
       a_qshape_left [i] = a_qshape[i];
       a_dshape_left [i] = a_dshape[i];
    }
@@ -149,7 +149,7 @@ Gesvd (
    TVector<Qshapes<Q>, R> a_qshape_right;
    TVector<Dshapes,    R> a_dshape_right;
 
-   for(int i = 0; i < R; ++i) {
+   for(size_t i = 0; i < R; ++i) {
       a_qshape_right[i] = a_qshape[i+L];
       a_dshape_right[i] = a_dshape[i+L];
    }
@@ -194,12 +194,12 @@ Gesvd (
   // Truncate by singular values
   // Dicarded norm: dnorm = sum_{i > D} s_value[i]^2
   T_real dnorm = 0.0;
-  int n_sval = q_sval.size();
-  int n_cols = q_cols.size();
+  size_t n_sval = q_sval.size();
+  size_t n_cols = q_cols.size();
   // Containers of selected quantum number indices and sizes
   Qshapes<Q> q_sval_nz; q_sval_nz.reserve(n_sval);
   Dshapes    d_sval_nz; d_sval_nz.reserve(n_sval);
-  std::map<int, int> map_sval_nz;
+  std::map<size_t, size_t> map_sval_nz;
   // Collect singular values
   std::vector<T_real> s_sorted;
   for(auto its = s_value.begin(); its != s_value.end(); ++its)
@@ -213,10 +213,10 @@ Gesvd (
   if(DMAX < 0)
     cutoff = fabs(DTOL) * pow(10.0, DMAX);
   // Select singular values
-  int nnz = 0;
+  size_t nnz = 0;
   for(auto its = s_value.begin(); its != s_value.end(); ++its) {
     auto itd = its->second->begin();
-    int D_kept = 0;
+    size_t D_kept = 0;
     for(; itd != its->second->end(); ++itd) {
       if(*itd < cutoff) break;
       ++D_kept;
@@ -236,7 +236,7 @@ Gesvd (
     auto imap = map_sval_nz.find(it->first);
     if(imap != map_sval_nz.end()) {
       auto jt = s_value_nz.reserve(imap->second);
-      int Ds = d_sval_nz[imap->second];
+      size_t Ds = d_sval_nz[imap->second];
       jt->second->resize(Ds);
       *jt->second = it->second->subarray(shape(0), shape(Ds-1));
     }
@@ -246,14 +246,14 @@ Gesvd (
   // Copy selected left-singular vectors
   QSTArray<T, 2, Q> u_merge_nz(u_merge.q(), make_array( q_rows,-q_sval_nz));
   for(auto it = u_merge.begin(); it != u_merge.end(); ++it) {
-    int irow = it->first / n_sval;
-    int icol = it->first % n_sval;
+    size_t irow = it->first / n_sval;
+    size_t icol = it->first % n_sval;
     auto imap = map_sval_nz.find(icol);
     if(imap != map_sval_nz.end()) {
       auto jt = u_merge_nz.reserve(irow * nnz + imap->second);
       assert(jt != u_merge_nz.end()); // if aborted here, there's a bug in btas::QSDgesvd
-      int Ds = d_sval_nz[imap->second];
-      int Dr = it->second->shape(0);
+      size_t Ds = d_sval_nz[imap->second];
+      size_t Dr = it->second->shape(0);
       jt->second->resize(Dr, Ds);
       *jt->second = it->second->subarray(shape(0, 0), shape(Dr-1, Ds-1));
     }
@@ -263,14 +263,14 @@ Gesvd (
   // Copy selected right-singular vectors
   QSTArray<T, 2, Q> vt_merge_nz(vt_merge.q(), make_array( q_sval_nz, q_cols));
   for(auto it = vt_merge.begin(); it != vt_merge.end(); ++it) {
-    int irow = it->first / n_cols;
-    int icol = it->first % n_cols;
+    size_t irow = it->first / n_cols;
+    size_t icol = it->first % n_cols;
     auto imap = map_sval_nz.find(irow);
     if(imap != map_sval_nz.end()) {
       auto jt = vt_merge_nz.reserve(imap->second * n_cols + icol);
       assert(jt != vt_merge_nz.end()); // if aborted here, there's a bug in btas::QSDgesvd
-      int Ds = d_sval_nz[imap->second];
-      int Dc = it->second->shape(1);
+      size_t Ds = d_sval_nz[imap->second];
+      size_t Dc = it->second->shape(1);
       jt->second->resize(Ds, Dc);
       *jt->second = it->second->subarray(shape(0, 0), shape(Ds-1, Dc-1));
     }
@@ -308,7 +308,7 @@ Gesvd (
             QSTArray<T, K, Q>& u_rm,
             QSTArray<T, N-K+2, Q>& vt_nz,
             QSTArray<T, N-K+2, Q>& vt_rm,
-      const int DMAX = 0,
+      const long DMAX = 0,
       const typename remove_complex<T>::type& DTOL = static_cast<typename remove_complex<T>::type>(1))
 {
    typedef typename remove_complex<T>::type T_real;
@@ -320,14 +320,14 @@ Gesvd (
    // Calc. row (left) shapes
    TVector<Qshapes<Q>, L> a_qshape_left;
    TVector<Dshapes,    L> a_dshape_left;
-   for(int i = 0; i < L; ++i) {
+   for(size_t i = 0; i < L; ++i) {
       a_qshape_left [i] = a_qshape[i];
       a_dshape_left [i] = a_dshape[i];
    }
    // Calc. col (right) shapes
    TVector<Qshapes<Q>, R> a_qshape_right;
    TVector<Dshapes,    R> a_dshape_right;
-   for(int i = 0; i < R; ++i) {
+   for(size_t i = 0; i < R; ++i) {
       a_qshape_right[i] = a_qshape[i+L];
       a_dshape_right[i] = a_dshape[i+L];
    }
@@ -363,16 +363,16 @@ Gesvd (
    // Truncate by singular values
    // Dicarded norm: dnorm = sum_{i > D} s_value[i]^2
    T_real dnorm = 0.0;
-   int n_sval = q_sval.size();
-   int n_cols = q_cols.size();
+   size_t n_sval = q_sval.size();
+   size_t n_cols = q_cols.size();
    // Containers of selected quantum number indices and sizes
    Qshapes<Q> q_sval_nz; q_sval_nz.reserve(n_sval);
    Dshapes    d_sval_nz; d_sval_nz.reserve(n_sval);
-   std::map<int, int> map_sval_nz;
+   std::map<size_t, size_t> map_sval_nz;
    // Containers of removed quantum number indices and sizes
    Qshapes<Q> q_sval_rm; q_sval_rm.reserve(n_sval);
    Dshapes    d_sval_rm; d_sval_rm.reserve(n_sval);
-   std::map<int, int> map_sval_rm;
+   std::map<size_t, size_t> map_sval_rm;
    // Collect singular values
    std::vector<T_real> s_sorted;
    for(auto its = s_value.begin(); its != s_value.end(); ++its)
@@ -386,16 +386,16 @@ Gesvd (
    if(DMAX < 0)
       cutoff = fabs(DTOL) * pow(10.0, DMAX);
    // Select singular values
-   int nnz = 0;
-   int nrm = 0;
+   size_t nnz = 0;
+   size_t nrm = 0;
    for(auto its = s_value.begin(); its != s_value.end(); ++its) {
       auto itd = its->second->begin();
-      int D_kept = 0;
+      size_t D_kept = 0;
       for(; itd != its->second->end(); ++itd) {
          if(*itd < cutoff) break;
          ++D_kept;
       }
-      int D_remv = its->second->size()-D_kept;
+      size_t D_remv = its->second->size()-D_kept;
 
       if(D_kept > 0) {
          q_sval_nz.push_back(q_sval[its->first]);
@@ -412,7 +412,7 @@ Gesvd (
    STArray<T_real, 1> s_value_nz(shape(nnz));
    STArray<T_real, 1> s_value_rm(shape(nrm));
    for(auto it = s_value.begin(); it != s_value.end(); ++it) {
-      int Ds = 0;
+      size_t Ds = 0;
       auto imap = map_sval_nz.find(it->first);
       if(imap != map_sval_nz.end()) {
          auto jt = s_value_nz.reserve(imap->second);
@@ -423,7 +423,7 @@ Gesvd (
       auto jmap = map_sval_rm.find(it->first);
       if(jmap != map_sval_rm.end()) {
          auto jt = s_value_rm.reserve(jmap->second);
-         int Dx = d_sval_rm[jmap->second];
+         size_t Dx = d_sval_rm[jmap->second];
          jt->second->resize(Dx);
          *jt->second = it->second->subarray(shape(Ds), shape(Ds+Dx-1));
       }
@@ -435,10 +435,10 @@ Gesvd (
    QSTArray<T, 2, Q> u_merge_nz(u_merge.q(), make_array( q_rows,-q_sval_nz));
    QSTArray<T, 2, Q> u_merge_rm(u_merge.q(), make_array( q_rows,-q_sval_rm));
    for(auto it = u_merge.begin(); it != u_merge.end(); ++it) {
-      int irow = it->first / n_sval;
-      int icol = it->first % n_sval;
-      int Ds = 0;
-      int Dr = it->second->shape(0);
+      size_t irow = it->first / n_sval;
+      size_t icol = it->first % n_sval;
+      size_t Ds = 0;
+      size_t Dr = it->second->shape(0);
       auto imap = map_sval_nz.find(icol);
       if(imap != map_sval_nz.end()) {
          auto jt = u_merge_nz.reserve(irow * nnz + imap->second);
@@ -451,7 +451,7 @@ Gesvd (
       if(jmap != map_sval_rm.end()) {
          auto jt = u_merge_rm.reserve(irow * nrm + jmap->second);
          assert(jt != u_merge_rm.end()); // if aborted here, there's a bug in btas::QSDgesvd
-         int Dx = d_sval_rm[jmap->second];
+         size_t Dx = d_sval_rm[jmap->second];
          jt->second->resize(Dr, Dx);
          *jt->second = it->second->subarray(shape(0, Ds), shape(Dr-1, Ds+Dx-1));
       }
@@ -463,10 +463,10 @@ Gesvd (
    QSTArray<T, 2, Q> vt_merge_nz(vt_merge.q(), make_array( q_sval_nz, q_cols));
    QSTArray<T, 2, Q> vt_merge_rm(vt_merge.q(), make_array( q_sval_rm, q_cols));
    for(auto it = vt_merge.begin(); it != vt_merge.end(); ++it) {
-      int irow = it->first / n_cols;
-      int icol = it->first % n_cols;
-      int Ds = 0;
-      int Dc = it->second->shape(1);
+      size_t irow = it->first / n_cols;
+      size_t icol = it->first % n_cols;
+      size_t Ds = 0;
+      size_t Dc = it->second->shape(1);
       auto imap = map_sval_nz.find(irow);
       if(imap != map_sval_nz.end()) {
          auto jt = vt_merge_nz.reserve(imap->second * n_cols + icol);
@@ -479,7 +479,7 @@ Gesvd (
       if(jmap != map_sval_rm.end()) {
          auto jt = vt_merge_rm.reserve(jmap->second * n_cols + icol);
          assert(jt != vt_merge_rm.end()); // if aborted here, there's a bug in btas::QSDgesvd
-         int Dx = d_sval_rm[jmap->second];
+         size_t Dx = d_sval_rm[jmap->second];
          jt->second->resize(Dx, Dc);
          *jt->second = it->second->subarray(shape(Ds, 0), shape(Ds+Dx-1, Dc-1));
       }

@@ -153,11 +153,12 @@ int DENSE_TEST(int iprint = 0)
    return 0;
 }
 
+template<typename T>
 int QSPARSE_TEST(int iprint = 0)
 {
   using namespace btas;
 
-  const std::complex<double> ONE = std::complex<double>(1.0, 0.0);
+  const T ONE = static_cast<T>(1);
 
   Quantum qt(0);
 
@@ -171,11 +172,11 @@ int QSPARSE_TEST(int iprint = 0)
 
   TVector<Qshapes<>, 4> a_qshape = { qi,-qi, qi,-qi };
   TVector<Dshapes,   4> a_dshape = { di, di, di, di };
-  QSTArray<std::complex<double>, 4, Quantum> a(qt, a_qshape, a_dshape); a.generate(rgen<std::complex<double>>);
+  QSTArray<T, 4, Quantum> a(qt, a_qshape, a_dshape); a.generate(rgen<T>);
 
   TVector<Qshapes<Quantum>, 2> b_qshape = {-qi, qi };
   TVector<Dshapes,   2> b_dshape = { di, di };
-  QSTArray<std::complex<double>, 2, Quantum> b(qt, b_qshape, b_dshape); b.generate(rgen<std::complex<double>>);
+  QSTArray<T, 2, Quantum> b(qt, b_qshape, b_dshape); b.generate(rgen<T>);
 
   if(iprint > 0) {
     cout << "====================================================================================================" << endl;
@@ -187,21 +188,21 @@ int QSPARSE_TEST(int iprint = 0)
   if(1)
   {
     // QSDgemv
-    QSTArray<std::complex<double>, 2, Quantum> c;
+    QSTArray<T, 2, Quantum> c;
     Gemv(NoTrans, ONE, a, b, ONE, c);
     if(iprint > 0) {
       cout << "====================================================================================================" << endl;
       cout << "[QSPARSE_TEST] [QSDgemv(NoTrans, 1.0, a, b, 1.0, c)] print matrix [c]: " << c << endl;
     }
     // QSDger
-    QSTArray<std::complex<double>, 4, Quantum> d;
+    QSTArray<T, 4, Quantum> d;
     Ger(ONE, b, b, d);
     if(iprint > 0) {
       cout << "====================================================================================================" << endl;
       cout << "[QSPARSE_TEST] [QSDger(1.0, b, b, d)] print tensor [d]: " << d << endl;
     }
     // QSDgemm
-    QSTArray<std::complex<double>, 4, Quantum> e;
+    QSTArray<T, 4, Quantum> e;
     Gemm(NoTrans, NoTrans, ONE, d, a, ONE, e);
     if(iprint > 0) {
       cout << "====================================================================================================" << endl;
@@ -211,13 +212,13 @@ int QSPARSE_TEST(int iprint = 0)
 
   if(1)
   {
-    double norm = Nrm2(a);
+    typename remove_complex<T>::type norm = Nrm2(a);
     Scal(1.0/norm, a);
 
     // QSDgesvd
-     STArray<double, 1> s;
-    QSTArray<std::complex<double>, 3, Quantum> u;
-    QSTArray<std::complex<double>, 3, Quantum> v;
+     STArray<typename remove_complex<T>::type, 1> s;
+    QSTArray<T, 3, Quantum> u;
+    QSTArray<T, 3, Quantum> v;
     Gesvd(a, s, u, v, 12);
     if(iprint > 0) {
       cout << "====================================================================================================" << endl;
@@ -229,9 +230,9 @@ int QSPARSE_TEST(int iprint = 0)
     }
 
     // QSDgesvd with null space vector
-     STArray<double, 1> s_rm;
-    QSTArray<std::complex<double>, 3, Quantum> u_rm;
-    QSTArray<std::complex<double>, 3, Quantum> v_rm;
+     STArray<typename remove_complex<T>::type, 1> s_rm;
+    QSTArray<T, 3, Quantum> u_rm;
+    QSTArray<T, 3, Quantum> v_rm;
     Gesvd(a, s, s_rm, u, u_rm, v, v_rm, 12);
     if(iprint > 0) {
       cout << "====================================================================================================" << endl;
@@ -252,14 +253,14 @@ int QSPARSE_TEST(int iprint = 0)
   if(1)
   {
     // QSDcontract
-    QSTArray<std::complex<double>, 4, Quantum> c;
+    QSTArray<T, 4, Quantum> c;
     Contract(ONE, a, shape(1), b, shape(1), ONE, c);
     if(iprint > 0) {
       cout << "====================================================================================================" << endl;
       cout << "[QSPARSE_TEST] [QSDcontract(1.0, a, shape(1), b, shape(1), 1.0, c)] print matrix [c]: " << c << endl;
     }
     // QSDcontract with conjugation
-    QSTArray<std::complex<double>, 4, Quantum> d;
+    QSTArray<T, 4, Quantum> d;
     Contract(ONE, a.conjugate(), shape(2), b, shape(1), ONE, d);
     if(iprint > 0) {
       cout << "====================================================================================================" << endl;
@@ -270,7 +271,7 @@ int QSPARSE_TEST(int iprint = 0)
   if(1)
   {
     // Direct sum of arrays
-    QSTArray<std::complex<double>, 4, Quantum> x;
+    QSTArray<T, 4, Quantum> x;
     QSTdsum(a, a, x);
     if(iprint > 0) {
       cout << "====================================================================================================" << endl;
@@ -278,7 +279,7 @@ int QSPARSE_TEST(int iprint = 0)
     }
 
     // Partial direct sum of arrays
-    QSTArray<std::complex<double>, 4, Quantum> y;
+    QSTArray<T, 4, Quantum> y;
     QSTdsum(a, a, shape(1, 2), y);
     if(iprint > 0) {
       cout << "====================================================================================================" << endl;
@@ -289,7 +290,7 @@ int QSPARSE_TEST(int iprint = 0)
   if(1)
   {
     // Erasing quantum number
-    QSTArray<std::complex<double>, 4, Quantum> x = a;
+    QSTArray<T, 4, Quantum> x = a;
     x.erase(2, 1); // erasing m_q_shape[2][1]
     if(iprint > 0) {
       cout << "====================================================================================================" << endl;
@@ -311,7 +312,7 @@ int QSPARSE_TEST(int iprint = 0)
     d_4.push_back(0);
     d_4.push_back(1);
     TVector<Dshapes, 4> sub_index = make_array(d_1, d_2, d_3, d_4);
-    QSTArray<std::complex<double>, 4, Quantum> y(a.subarray(sub_index));
+    QSTArray<T, 4, Quantum> y(a.subarray(sub_index));
     if(iprint > 0) {
       cout << "====================================================================================================" << endl;
       cout << "[QSPARSE_TEST] [y(a.subarray({{1,2},{0,2},{0,1,2},{0,1}})] print matrix [y]: " << y << endl;
@@ -334,7 +335,7 @@ int QSPARSE_TEST(int iprint = 0)
     QSTmergeInfo<2> row_qinfo(qrows, drows);
     QSTmergeInfo<2> col_qinfo(qcols, dcols);
 
-    QSTArray<std::complex<double>, 2, Quantum> c;
+    QSTArray<T, 2, Quantum> c;
     QSTmerge(row_qinfo, a, col_qinfo, c);
     if(iprint > 0) {
       cout << "====================================================================================================" << endl;
@@ -362,7 +363,8 @@ int SERIALIZE_TEST(int iprint = 0)
 
   TVector<Qshapes<>, 4> a_qshape = { qi,-qi, qi,-qi };
   TVector<Dshapes,   4> a_dshape = { di, di, di, di };
-  QSTArray<std::complex<double>, 4, Quantum> a(qt, a_qshape, a_dshape); a.generate(rgen<std::complex<double>>);
+  QSTArray<double, 4, Quantum> a(qt, a_qshape, a_dshape); a.generate(rgen<double>);
+//QSTArray<std::complex<double>, 4, Quantum> a(qt, a_qshape, a_dshape); a.generate(rgen<std::complex<double>>);
 
   if(iprint > 0) {
     cout << "====================================================================================================" << endl;
@@ -419,7 +421,7 @@ int main()
 
   ts.start();
 
-  QSPARSE_TEST(0);
+  QSPARSE_TEST<double>(0);
 
   cout << "Finished QSPARSE_TEST: total elapsed time = "
        << setw(8) << setprecision(6) << fixed << ts.elapsed() << " sec. " << endl;

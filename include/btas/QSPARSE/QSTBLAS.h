@@ -1,10 +1,15 @@
+#ifndef __BTAS_QSPARSE_QSTARRAY_H
+#include <btas/QSPARSE/QSTArray.h>
+#endif
+
 #ifndef __BTAS_QSPARSE_QSTBLAS_H
 #define __BTAS_QSPARSE_QSTBLAS_H 1
 
+// Sparse BLAS
 #include <btas/SPARSE/STBLAS.h>
 
-#include <btas/QSPARSE/QSTArray.h>
-#include <btas/QSPARSE/btas_contract_qshape.h>
+// Q-Sparse
+#include <btas/QSPARSE/qshape_contract.h>
 
 namespace btas
 {
@@ -47,9 +52,9 @@ inline T Dot (const QSTArray<T, N, Q>& x, const QSTArray<T, N, Q>& y)
 template<typename T, size_t N, class Q>
 inline T Dotu (const QSTArray<T, N, Q>& x, const QSTArray<T, N, Q>& y)
 {
-   BTAS_THROW(x.q() == -y.q(), "Dotu(QSPARSE): quantum numbers of x and y must be the conjugated pair.");
+   BTAS_ASSERT(x.q() == -y.q(), "Dotu(QSPARSE): quantum numbers of x and y must be the conjugated pair.");
 
-   BTAS_THROW(x.qshape() == -y.qshape(), "Dotu(QSPARSE): quantum shapes of x and y must be the conjugated pair.");
+   BTAS_ASSERT(x.qshape() == -y.qshape(), "Dotu(QSPARSE): quantum shapes of x and y must be the conjugated pair.");
 
    return ST_Dotu_serial(x, y);
 }
@@ -58,9 +63,9 @@ inline T Dotu (const QSTArray<T, N, Q>& x, const QSTArray<T, N, Q>& y)
 template<typename T, size_t N, class Q>
 inline T Dotc (const QSTArray<T, N, Q>& x, const QSTArray<T, N, Q>& y)
 {
-   BTAS_THROW(x.q() == y.q(), "Dotc(QSPARSE): quantum numbers of x and y must be the same.");
+   BTAS_ASSERT(x.q() == y.q(), "Dotc(QSPARSE): quantum numbers of x and y must be the same.");
 
-   BTAS_THROW(x.qshape() == y.qshape(), "Dotc(QSPARSE): quantum shapes of x and y must be the same.");
+   BTAS_ASSERT(x.qshape() == y.qshape(), "Dotc(QSPARSE): quantum shapes of x and y must be the same.");
 
    return ST_Dotc_serial(x, y);
 }
@@ -73,9 +78,9 @@ void Axpy (const T& alpha, const QSTArray<T, N, Q>& x, QSTArray<T, N, Q>& y)
 {
    if(y.size() > 0)
    {
-      BTAS_THROW(x.q() == y.q(), "Axpy(QSPARSE): x and y must have the same quantum number.");
-      BTAS_THROW(x.qshape() == y.qshape(), "Axpy(QSPARSE): x and y must have the same quantum shape.");
-      BTAS_THROW(x.dshape() == y.dshape(), "Axpy(QSPARSE): x and y must have the same block shape."); /* FIXME: this is double-check */
+      BTAS_ASSERT(x.q() == y.q(), "Axpy(QSPARSE): x and y must have the same quantum number.");
+      BTAS_ASSERT(x.qshape() == y.qshape(), "Axpy(QSPARSE): x and y must have the same quantum shape.");
+      BTAS_ASSERT(x.dshape() == y.dshape(), "Axpy(QSPARSE): x and y must have the same block shape."); /* FIXME: this is double-check */
    }
    else
    {
@@ -115,16 +120,16 @@ void Gemv (
 {
    Q qY;
    TVector<Qshapes<Q>, M-N> qshapeY;
-   gemv_contract_qshape(transa, a.q(), a.qshape(), x.q(), x.qshape(), qY, qshapeY);
+   Gemv_qshape_contract(transa, a.q(), a.qshape(), x.q(), x.qshape(), qY, qshapeY);
 
    TVector<Dshapes, M-N> dshapeY;
-   gemv_contract_dshape(transa, a.dshape(), x.dshape(), dshapeY);
+   Gemv_dshape_contract(transa, a.dshape(), x.dshape(), dshapeY);
 
    if(y.size() > 0)
    {
-      BTAS_THROW(y.q() == qY, "Gemv(QSPARSE): quantum number of y must equal to a.q() + x.q().");
-      BTAS_THROW(y.qshape() == qshapeY, "Gemv(QSPARSE): y must have the same quantum shape of [ a * x ].");
-      BTAS_THROW(y.dshape() == dshapeY, "Gemv(QSPARSE): y must have the same block shape of [ a * x ].");
+      BTAS_ASSERT(y.q() == qY, "Gemv(QSPARSE): quantum number of y must equal to a.q() + x.q().");
+      BTAS_ASSERT(y.qshape() == qshapeY, "Gemv(QSPARSE): y must have the same quantum shape of [ a * x ].");
+      BTAS_ASSERT(y.dshape() == dshapeY, "Gemv(QSPARSE): y must have the same block shape of [ a * x ].");
       Scal(beta, y);
    }
    else
@@ -148,16 +153,16 @@ void Ger (
 {
    Q qA;
    TVector<Qshapes<Q>, M+N> qshapeA;
-   ger_contract_qshape(x.q(), x.qshape(), y.q(), y.qshape(), qA, qshapeA);
+   Ger_qshape_contract(x.q(), x.qshape(), y.q(), y.qshape(), qA, qshapeA);
 
    TVector<Dshapes, M+N> dshapeA;
-   ger_contract_dshape(x.dshape(), y.dshape(), dshapeA);
+   Ger_dshape_contract(x.dshape(), y.dshape(), dshapeA);
 
    if(a.size() > 0)
    {
-      BTAS_THROW(a.q() == qA, "Ger(QSPARSE): quantum number of a must equal to x.q() + y.q().");
-      BTAS_THROW(a.qshape() == qshapeA, "Ger(QSPARSE): a must have the same quantum shape of [ x ^ y ].");
-      BTAS_THROW(a.dshape() == dshapeA, "Ger(QSPARSE): a must have the same block shape of [ x ^ y ].");
+      BTAS_ASSERT(a.q() == qA, "Ger(QSPARSE): quantum number of a must equal to x.q() + y.q().");
+      BTAS_ASSERT(a.qshape() == qshapeA, "Ger(QSPARSE): a must have the same quantum shape of [ x ^ y ].");
+      BTAS_ASSERT(a.dshape() == dshapeA, "Ger(QSPARSE): a must have the same block shape of [ x ^ y ].");
    }
    else
    {
@@ -192,17 +197,19 @@ void Gemm (
    const size_t K = (L + M - N) / 2;
 
    Q qC;
+   TVector<Qshapes<Q>, K> qtraced;
    TVector<Qshapes<Q>, N> qshapeC;
-   gemm_contract_qshape(transa, transb, a.q(), a.qshape(), b.q(), b.qshape(), qC, qshapeC);
+   Gemm_qshape_contract(transa, transb, a.q(), a.qshape(), b.q(), b.qshape(), qtraced, qC, qshapeC);
 
+   TVector<Dshapes, K> dtraced;
    TVector<Dshapes, N> dshapeC;
-   gemm_contract_dshape(transa, transb, a.dshape(), b.dshape(), dshapeC);
+   Gemm_dshape_contract(transa, transb, a.dshape(), b.dshape(), dtraced, dshapeC);
 
    if(c.size() > 0)
    {
-      BTAS_THROW(c.q() == qC, "Gemm(QSPARSE): quantum number of c must equal to a.q() + b.q().");
-      BTAS_THROW(c.qshape() == qshapeC, "Gemm(QSPARSE): c must have the same quantum shape of [ a * b ].");
-      BTAS_THROW(c.dshape() == dshapeC, "Gemm(QSPARSE): c must have the same block shape of [ a * b ].");
+      BTAS_ASSERT(c.q() == qC, "Gemm(QSPARSE): quantum number of c must equal to a.q() + b.q().");
+      BTAS_ASSERT(c.qshape() == qshapeC, "Gemm(QSPARSE): c must have the same quantum shape of [ a * b ].");
+      BTAS_ASSERT(c.dshape() == dshapeC, "Gemm(QSPARSE): c must have the same block shape of [ a * b ].");
       Scal(beta, c);
    }
    else
@@ -264,7 +271,7 @@ void Orthogonalize (const QSTArray<T, N, Q>& x, QSTArray<T, N, Q>& y)
 //  ====================================================================================================
 
 /// By default, call GEMM
-template<size_t L, size_t M, size_t N, class Q, int = blas_call_type<L, M, N>::value>
+template<size_t L, size_t M, size_t N, class Q, BLAS_CALL_TYPE = blas_call_type<L, M, N>::value>
 struct __QST_BlasContract_helper
 {
    template<typename T>
@@ -283,7 +290,7 @@ struct __QST_BlasContract_helper
 
 /// Case Gemv (A * B)
 template<size_t L, size_t M, size_t N, class Q>
-struct __QST_BlasContract_helper<L, M, N, Q, 2>
+struct __QST_BlasContract_helper<L, M, N, Q, CALL_GEMV>
 {
    template<typename T>
    static void call (
@@ -301,7 +308,7 @@ struct __QST_BlasContract_helper<L, M, N, Q, 2>
 
 /// Case Gemv (B * A)
 template<size_t L, size_t M, size_t N, class Q>
-struct __QST_BlasContract_helper<L, M, N, Q, 3>
+struct __QST_BlasContract_helper<L, M, N, Q, CALL_GEMVT>
 {
    template<typename T>
    static void call (
@@ -319,7 +326,7 @@ struct __QST_BlasContract_helper<L, M, N, Q, 3>
 
 /// Case Ger
 template<size_t L, size_t M, size_t N, class Q>
-struct __QST_BlasContract_helper<L, M, N, Q, 4>
+struct __QST_BlasContract_helper<L, M, N, Q, CALL_GER>
 {
    template<typename T>
    static void call (

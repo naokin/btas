@@ -1,26 +1,19 @@
+#ifndef __BTAS_SPARSE_STARRAY_H
+#include <btas/SPARSE/STArray.h>
+#endif
+
 #ifndef __BTAS_SPARSE_STBLAS_H
 #define __BTAS_SPARSE_STBLAS_H 1
 
 // STL
 #include <vector>
-#include <algorithm>
-#include <type_traits>
-
-// Common
-#include <btas/common/btas.h>
-#include <btas/common/numeric_traits.h>
 
 // Dense BLAS
 #include <btas/DENSE/TBLAS.h>
 
-// Arguments class for SMP parallelism
+// Sparse
+#include <btas/SPARSE/dshape_contract.h>
 #include <btas/SPARSE/T_arguments.h>
-
-// Sparse Tensor
-#include <btas/SPARSE/STArray.h>
-
-// Shape contraction for Dshape
-#include <btas/SPARSE/btas_contract_dshape.h>
 
 #ifndef SERIAL_REPLICATION_LIMIT
 #define SERIAL_REPLICATION_LIMIT 10
@@ -51,7 +44,7 @@ void ST_Copy_serial (const STArray<T, N>& x, STArray<T, N>& y, const bool& UpCas
    {
       auto yi = y.reserve(xi->first);
 
-      BTAS_THROW(UpCast || yi != y.end(), "ST_Copy_serial: reservation failed; requested block must be zero.");
+      BTAS_ASSERT(UpCast || yi != y.end(), "ST_Copy_serial: reservation failed; requested block must be zero.");
 
       if(yi == y.end()) continue;
 
@@ -138,7 +131,7 @@ void ST_Axpy_serial (const T& alpha, const STArray<T, N>& x, STArray<T, N>& y)
    {
       auto yi = y.reserve(xi->first);
 
-      BTAS_THROW(yi != y.end(), "ST_Axpy_serial: reservation failed; requested block must be zero.");
+      BTAS_ASSERT(yi != y.end(), "ST_Axpy_serial: reservation failed; requested block must be zero.");
 
       Axpy(alpha, *(xi->second), *(yi->second));
   }
@@ -165,7 +158,7 @@ void ST_Copy_thread (const STArray<T, N>& x, STArray<T, N>& y, const bool& UpCas
    {
       auto yi = y.reserve(xi->first);
 
-      BTAS_THROW(UpCast || yi != y.end(), "ST_Copy_thread: reservation failed; requested block must be zero.");
+      BTAS_ASSERT(UpCast || yi != y.end(), "ST_Copy_thread: reservation failed; requested block must be zero.");
 
       if(yi == y.end()) continue;
 
@@ -201,7 +194,7 @@ void ST_Axpy_thread (const T& alpha, const STArray<T, N>& x, STArray<T, N>& y)
    {
       auto yi = y.reserve(xi->first);
 
-      BTAS_THROW(yi != y.end(), "ST_Axpy_thread: reservation failed; requested block must be zero.");
+      BTAS_ASSERT(yi != y.end(), "ST_Axpy_thread: reservation failed; requested block must be zero.");
 
       task.push_back(Axpy_arguments<T, N, N>(alpha, xi->second, yi->second));
    }
@@ -373,7 +366,7 @@ void ST_Gemm_thread (
 template<typename T, size_t N>
 void Copy (const STArray<T, N>& x, STArray<T, N>& y, bool UpCast = false)
 {
-   if(UpCast) BTAS_THROW(x.shape() == y.shape(), "Copy(SPARSE): x and y must have the same shape as long as up-casting is specified.");
+   if(UpCast) BTAS_ASSERT(x.shape() == y.shape(), "Copy(SPARSE): x and y must have the same shape as long as up-casting is specified.");
 
    y.resize(x.dshape(), false);
 
@@ -403,7 +396,7 @@ void Scal (const T& alpha, STArray<U, N>& x)
 template<typename T, size_t N>
 T Dot (const STArray<T, N>& x, const STArray<T, N>& y)
 {
-  BTAS_THROW(x.shape() == y.shape(), "Dot(SPARSE): x and y must have the same shape.");
+  BTAS_ASSERT(x.shape() == y.shape(), "Dot(SPARSE): x and y must have the same shape.");
 
   return ST_Dot_serial(x, y);
 }
@@ -411,7 +404,7 @@ T Dot (const STArray<T, N>& x, const STArray<T, N>& y)
 template<typename T, size_t N>
 T Dotu (const STArray<T, N>& x, const STArray<T, N>& y)
 {
-  BTAS_THROW(x.shape() == y.shape(), "Dotu(SPARSE): x and y must have the same shape.");
+  BTAS_ASSERT(x.shape() == y.shape(), "Dotu(SPARSE): x and y must have the same shape.");
 
   return ST_Dotu_serial(x, y);
 }
@@ -419,7 +412,7 @@ T Dotu (const STArray<T, N>& x, const STArray<T, N>& y)
 template<typename T, size_t N>
 T Dotc (const STArray<T, N>& x, const STArray<T, N>& y)
 {
-  BTAS_THROW(x.shape() == y.shape(), "Dotc(SPARSE): x and y must have the same shape.");
+  BTAS_ASSERT(x.shape() == y.shape(), "Dotc(SPARSE): x and y must have the same shape.");
 
   return ST_Dotc_serial(x, y);
 }
@@ -435,7 +428,7 @@ void Axpy (const T& alpha, const STArray<T, N>& x, STArray<T, N>& y)
 {
    if(y.size() > 0)
    {
-      BTAS_THROW(x.dshape() == y.dshape(), "Axpy(SPARSE): x and y must have the same shape."); /* FIXME: this is double-check */
+      BTAS_ASSERT(x.dshape() == y.dshape(), "Axpy(SPARSE): x and y must have the same shape."); /* FIXME: this is double-check */
    }
    else
    {
@@ -474,11 +467,11 @@ void Gemv (
             typename std::enable_if<(M > N), STArray<T, M-N>>::type& y)
 {
    TVector<Dshapes, M-N> dshapeY;
-   gemv_contract_dshape(transa, a.dshape(), x.dshape(), dshapeY);
+   Gemv_dshape_contract(transa, a.dshape(), x.dshape(), dshapeY);
 
    if(y.size() > 0)
    {
-      BTAS_THROW(y.dshape() == dshapeY, "Gemv(SPARSE): y must have the same shape as [ a * x ].");
+      BTAS_ASSERT(y.dshape() == dshapeY, "Gemv(SPARSE): y must have the same shape as [ a * x ].");
       Scal(beta, y);
    }
    else
@@ -500,11 +493,11 @@ void Ger (
             STArray<T, M+N>& a)
 {
    TVector<Dshapes, M+N> dshapeA;
-   ger_contract_dshape(x.dshape(), y.dshape(), dshapeA);
+   Ger_contract_dshape(x.dshape(), y.dshape(), dshapeA);
 
    if(a.size() > 0)
    {
-      BTAS_THROW(a.dshape() == dshapeA, "Ger(SPARSE): a must have the same shape as [ x ^ y ].");
+      BTAS_ASSERT(a.dshape() == dshapeA, "Ger(SPARSE): a must have the same shape as [ x ^ y ].");
    }
    else
    {
@@ -538,12 +531,13 @@ void Gemm (
 {
    const size_t K = (L + M - N) / 2;
 
+   TVector<Dshapes, K> dtraced;
    TVector<Dshapes, N> dshapeC;
-   gemm_contract_dshape(transa, transb, a.dshape(), b.dshape(), dshapeC);
+   Gemm_dshape_contract(transa, transb, a.dshape(), b.dshape(), dtraced, dshapeC);
 
    if(c.size() > 0)
    {
-      BTAS_THROW(c.dshape() == dshapeC, "Gemm(SPARSE): c must have the same shape as [ a * b ].");
+      BTAS_ASSERT(c.dshape() == dshapeC, "Gemm(SPARSE): c must have the same shape as [ a * b ].");
       Scal(beta, c);
    }
    else
@@ -650,7 +644,7 @@ void Orthogonalize (const STArray<T, N>& x, STArray<T, N>& y)
 //  ====================================================================================================
 
 /// By default, call GEMM
-template<size_t L, size_t M, size_t N, int = blas_call_type<L, M, N>::value>
+template<size_t L, size_t M, size_t N, BLAS_CALL_TYPE = blas_call_type<L, M, N>::value>
 struct __ST_BlasContract_helper
 {
    template<typename T>
@@ -669,7 +663,7 @@ struct __ST_BlasContract_helper
 
 /// Case Gemv (A * B)
 template<size_t L, size_t M, size_t N>
-struct __ST_BlasContract_helper<L, M, N, 2>
+struct __ST_BlasContract_helper<L, M, N, CALL_GEMV>
 {
    template<typename T>
    static void call (
@@ -687,7 +681,7 @@ struct __ST_BlasContract_helper<L, M, N, 2>
 
 /// Case Gemv (B * A)
 template<size_t L, size_t M, size_t N>
-struct __ST_BlasContract_helper<L, M, N, 3>
+struct __ST_BlasContract_helper<L, M, N, CALL_GEMVT>
 {
    template<typename T>
    static void call (
@@ -705,7 +699,7 @@ struct __ST_BlasContract_helper<L, M, N, 3>
 
 /// Case Ger
 template<size_t L, size_t M, size_t N>
-struct __ST_BlasContract_helper<L, M, N, 4>
+struct __ST_BlasContract_helper<L, M, N, CALL_GER>
 {
    template<typename T>
    static void call (

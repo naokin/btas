@@ -3,7 +3,9 @@
 
 #include <map>
 
-#include <btas/common/btas.h>
+#include <btas/common/types.h>
+#include <btas/common/btas_assert.h>
+
 #include <btas/QSPARSE/Qshapes.h>
 
 namespace btas {
@@ -27,7 +29,7 @@ namespace btas {
 
          public:
 
-            typedef typename std::multimap<int, int>::const_iterator const_iterator;
+            typedef typename std::multimap<size_t, size_t>::const_iterator const_iterator;
             typedef typename std::pair<const_iterator, const_iterator> const_range;
 
          public:
@@ -39,24 +41,24 @@ namespace btas {
             //! Reset information
             void reset(const TVector<Qshapes<Q>, N>& qshape, const TVector<Dshapes, N>& dshape) {
 
-               for(int i = 0; i < N; ++i)
+               for(size_t i = 0; i < N; ++i)
                   if(qshape[i].size() != dshape[i].size())
-                     BTAS_THROW(false, "btas::QSTmergeInfo::reset: qshape and dshape have different block size");
+                     BTAS_ASSERT(false, "btas::QSTmergeInfo::reset: qshape and dshape have different block size");
 
                // packing qshape and dshape into 1d-array
                Qshapes<Q> qshape_pkd(1, Q::zero());
                Dshapes    dshape_pkd(1, 1);
 
-               for(int i = 0; i < N; ++i) {
+               for(size_t i = 0; i < N; ++i) {
                   qshape_pkd = qshape_pkd * qshape[i];
                   dshape_pkd = dshape_pkd * dshape[i];
                }
 
                // mapping packed index to merged quantum #
-               std::map<Q, int> q_index_map;
+               std::map<Q, size_t> q_index_map;
 
-               int n = 0;
-               for(int i = 0; i < qshape_pkd.size(); ++i) {
+               size_t n = 0;
+               for(size_t i = 0; i < qshape_pkd.size(); ++i) {
                   if(q_index_map.find(qshape_pkd[i]) == q_index_map.end()) {
                      q_index_map.insert(std::make_pair(qshape_pkd[i], n++));
                   }
@@ -64,15 +66,15 @@ namespace btas {
 
                // copying merged quantum #
                Qshapes<Q> qshape_mgd(n, Q::zero());
-               for(typename std::map<Q, int>::iterator iqmap = q_index_map.begin(); iqmap != q_index_map.end(); ++iqmap) {
+               for(typename std::map<Q, size_t>::iterator iqmap = q_index_map.begin(); iqmap != q_index_map.end(); ++iqmap) {
                   qshape_mgd[iqmap->second] = iqmap->first;
                }
 
                // mapping packed index to merged index and computing merged block size
                m_index_map.clear();
                Dshapes dshape_mgd(n, 0);
-               for(int i = 0; i < qshape_pkd.size(); ++i) {
-                  int j = q_index_map.find(qshape_pkd[i])->second;
+               for(size_t i = 0; i < qshape_pkd.size(); ++i) {
+                  size_t j = q_index_map.find(qshape_pkd[i])->second;
                   m_index_map.insert(std::make_pair(j, i));
                   dshape_mgd[j] += dshape_pkd[i];
                }
@@ -86,25 +88,25 @@ namespace btas {
             }
 
             const TVector<Dshapes, N>& dshape() const { return m_dshape; }
-            const Dshapes& dshape(int i) const { return m_dshape[i]; }
+            const Dshapes& dshape(size_t i) const { return m_dshape[i]; }
 
             const Dshapes& dshape_packed() const { return m_dshape_packed; }
-            const int& dshape_packed(int i) const { return m_dshape_packed[i]; }
+            const size_t& dshape_packed(size_t i) const { return m_dshape_packed[i]; }
 
             const Dshapes& dshape_merged() const { return m_dshape_merged; }
-            const int& dshape_merged(int i) const { return m_dshape_merged[i]; }
+            const size_t& dshape_merged(size_t i) const { return m_dshape_merged[i]; }
 
             const TVector<Qshapes<Q>, N>& qshape() const { return m_qshape; }
-            const Qshapes<Q>& qshape(int i) const { return m_qshape[i]; }
+            const Qshapes<Q>& qshape(size_t i) const { return m_qshape[i]; }
 
             const Qshapes<Q>& qshape_merged() const { return m_qshape_merged; }
-            const Q& qshape_merged(int i) const { return m_qshape_merged[i]; }
+            const Q& qshape_merged(size_t i) const { return m_qshape_merged[i]; }
 
             const_iterator begin() const { return m_index_map.begin(); }
             const_iterator end() const { return m_index_map.end(); }
-            const_iterator find(int i) const { return m_index_map.find(i); }
+            const_iterator find(size_t i) const { return m_index_map.find(i); }
 
-            const_range equal_range(int i) const { return m_index_map.equal_range(i); }
+            const_range equal_range(size_t i) const { return m_index_map.equal_range(i); }
 
          private:
 
@@ -124,7 +126,7 @@ namespace btas {
             Qshapes<Q> m_qshape_merged;
 
             //! Map from merged index to packed indices
-            std::multimap<int, int> m_index_map;
+            std::multimap<size_t, size_t> m_index_map;
 
       };
 

@@ -7,8 +7,8 @@
 #ifndef _BTAS_CXX11_CONTRACT_DSHAPE_H
 #define _BTAS_CXX11_CONTRACT_DSHAPE_H 1
 
-#include <btas/common/btas.h>
-#include <btas/common/btas_contract_shape.h>
+#include <btas/common/types.h>
+//#include <btas/common/btas_contract_shape.h>
 
 namespace btas {
 

@@ -252,7 +252,7 @@ inline void QSDgesvd (
              SDArray<1>& s,
             QSDArray<K, Q>& u,
             QSDArray<N-K+2, Q>& vt,
-      const int& DMAX = 0,
+      const long& DMAX = 0,
       const double& DTOL = 1.0)
 {
    if(dir == LeftArrow)
@@ -272,7 +272,7 @@ inline void QSDgesvd (
             QSDArray<K, Q>& u_rm,
             QSDArray<N-K+2, Q>& vt,
             QSDArray<N-K+2, Q>& vt_rm,
-      const int& DMAX = 0,
+      const long& DMAX = 0,
       const double& DTOL = 1.0)
 {
    if(dir == LeftArrow)

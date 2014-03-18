@@ -1,8 +1,8 @@
 #ifndef __BTAS_SPARSE_STCONTRACT_H
 #define __BTAS_SPARSE_STCONTRACT_H 1
 
-#include <btas/common/btas.h>
-#include <btas/common/btas_contract_shape.h>
+#include <btas/common/types.h>
+#include <btas/common/contract_utils.h>
 
 #include <btas/SPARSE/STArray.h>
 #include <btas/SPARSE/STBLAS.h>
@@ -15,45 +15,28 @@ namespace btas
 template<typename T, size_t L, size_t M, size_t K>
 void Contract (
       const T& alpha,
-      const STArray<T, L>& a, const IVector<K>& contractA,
-      const STArray<T, M>& b, const IVector<K>& contractB,
+      const STArray<T, L>& A, const IVector<K>& indexA,
+      const STArray<T, M>& B, const IVector<K>& indexB,
       const T& beta,
-            STArray<T, L+M-K-K>& c)
+            STArray<T, L+M-K-K>& C)
 {
-   IVector<L> reorderA;
-   IVector<M> reorderB;
+   Get_contract_type<L, M, K> ct(A.shape(), indexA, B.shape(), indexB);
 
-   unsigned int jobs = get_contract_jobs(a.shape(), contractA, reorderA, b.shape(), contractB, reorderB);
+   STArray<T, L> refA;
 
-   STArray<T, L> a_ref;
-
-   if(jobs & JOBMASK_A_PMUTE)
-      Permute(a, reorderA, a_ref);
+   if(ct.is_reorderA)
+      Permute(A, ct.reorderA, refA);
    else
-      a_ref.reference(a);
+      refA.ref(A);
 
-   CBLAS_TRANSPOSE transa;
+   STArray<T, M> refB;
 
-   if(jobs & JOBMASK_A_TRANS)
-      transa = CblasTrans;
+   if(ct.is_reorderB)
+      Permute(B, ct.reorderB, refB);
    else
-      transa = CblasNoTrans;
+      refB.ref(B);
 
-   STArray<T, M> b_ref;
-
-   if(jobs & JOBMASK_B_PMUTE)
-      Permute(b, reorderB, b_ref);
-   else
-      b_ref.reference(b);
-
-   CBLAS_TRANSPOSE transb;
-
-   if(jobs & JOBMASK_B_TRANS)
-      transb = CblasTrans;
-   else
-      transb = CblasNoTrans;
-
-   BlasContract(transa, transb, alpha, a_ref, b_ref, beta, c);
+   BlasContract(ct.transA, ct.transB, alpha, refA, refB, beta, C);
 }
 
 /// Contract Arrays by symbols

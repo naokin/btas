@@ -18,21 +18,21 @@ template<typename T, size_t N, class Q = Quantum>
 void QSTdsum(const QSTArray<T, N, Q>& x, const QSTArray<T, N, Q>& y, QSTArray<T, N, Q>& z)
 {
   if(x.q() != y.q())
-      BTAS_THROW(false, "btas::QSTdsum: total quantum numbers mismatched");
+      BTAS_ASSERT(false, "btas::QSTdsum: total quantum numbers mismatched");
   const TVector<Qshapes<Q>, N>& x_qshape = x.qshape();
   const TVector<Qshapes<Q>, N>& y_qshape = y.qshape();
         TVector<Qshapes<Q>, N>  z_qshape;
-  for(int i = 0; i < N; ++i) z_qshape[i] = x_qshape[i] + y_qshape[i];
+  for(size_t i = 0; i < N; ++i) z_qshape[i] = x_qshape[i] + y_qshape[i];
   // Check sparse shape of z
   if(z.size() > 0) {
     if(x.q() != z.q())
-      BTAS_THROW(false, "btas::QSTdsum: total quantum number of z mismatched");
+      BTAS_ASSERT(false, "btas::QSTdsum: total quantum number of z mismatched");
     if(z.qshape() != z_qshape)
-      BTAS_THROW(false, "btas::QSTdsum: quantum number indices of z mismatched");
+      BTAS_ASSERT(false, "btas::QSTdsum: quantum number indices of z mismatched");
   }
   else {
     TVector<Dshapes, N> z_dshape = x.dshape();
-    for(int i = 0; i < N; ++i) z_dshape[i].insert(z_dshape[i].end(), y.dshape(i).begin(), y.dshape(i).end());
+    for(size_t i = 0; i < N; ++i) z_dshape[i].insert(z_dshape[i].end(), y.dshape(i).begin(), y.dshape(i).end());
     z.resize(x.q(), z_qshape, z_dshape, false);
   }
   // Call sparse-array function
@@ -51,33 +51,33 @@ template<typename T, size_t N, size_t K, class Q = Quantum>
 void QSTdsum(const QSTArray<T, N, Q>& x, const QSTArray<T, N, Q>& y, const IVector<K>& trace_index, QSTArray<T, N, Q>& z)
 {
   if(x.q() != y.q())
-      BTAS_THROW(false, "btas::QSTdsum: total quantum numbers mismatched");
+      BTAS_ASSERT(false, "btas::QSTdsum: total quantum numbers mismatched");
   const TVector<Qshapes<Q>, N>& x_qshape = x.qshape();
   const TVector<Qshapes<Q>, N>& y_qshape = y.qshape();
-  for(int k = 0; k < K; ++k) {
-    int tk = trace_index[k];
+  for(size_t k = 0; k < K; ++k) {
+    size_t tk = trace_index[k];
     if(x_qshape[tk] != y_qshape[tk])
-      BTAS_THROW(false, "btas::QSTdsum: found mismatched quantum number indices to be traced");
+      BTAS_ASSERT(false, "btas::QSTdsum: found mismatched quantum number indices to be traced");
   }
   IVector<N-K> dsum_index; // Complement of trace_index
-  int nsum = 0;
-  for(int i = 0; i < N; ++i) {
+  size_t nsum = 0;
+  for(size_t i = 0; i < N; ++i) {
     if(std::find(trace_index.begin(), trace_index.end(), i) == trace_index.end()) dsum_index[nsum++] = i;
   }
   TVector<Qshapes<Q>, N> z_qshape(x_qshape);
-  for(int i = 0; i < N-K; ++i) z_qshape[dsum_index[i]] += y_qshape[dsum_index[i]];
+  for(size_t i = 0; i < N-K; ++i) z_qshape[dsum_index[i]] += y_qshape[dsum_index[i]];
   // Check sparse shape of z
   if(z.size() > 0) {
     if(x.q() != z.q())
-      BTAS_THROW(false, "btas::QSTdsum: total quantum number of z mismatched");
+      BTAS_ASSERT(false, "btas::QSTdsum: total quantum number of z mismatched");
     if(z.qshape() != z_qshape)
-      BTAS_THROW(false, "btas::QSTdsum: array shape of z mismatched");
+      BTAS_ASSERT(false, "btas::QSTdsum: array shape of z mismatched");
   }
   else {
     const TVector<Dshapes, N>& x_dshape = x.dshape();
     const TVector<Dshapes, N>& y_dshape = y.dshape();
           TVector<Dshapes, N>  z_dshape = x_dshape;
-    for(int i = 0; i < N-K; ++i)
+    for(size_t i = 0; i < N-K; ++i)
       z_dshape[dsum_index[i]].insert(z_dshape[dsum_index[i]].end(), y_dshape[dsum_index[i]].begin(), y_dshape[dsum_index[i]].end());
     z.resize(x.q(), z_qshape, z_dshape, false);
   }

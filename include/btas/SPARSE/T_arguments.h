@@ -12,7 +12,7 @@
 #endif
 
 // Common
-#include <btas/common/btas.h>
+#include <btas/common/types.h>
 #include <btas/common/numeric_traits.h>
 
 // Dense Tensor
@@ -35,7 +35,7 @@ struct T_arguments_base
    /// default constructor
    T_arguments_base (size_t value = 0) : FLOPS_ (value) { }
 
-// /// Destructor
+   /// Destructor
 // virtual ~T_arguments_base() { } // FIXME: really needs to be virtualized?
 
    //
@@ -77,6 +77,8 @@ struct R_arguments_base
 
    R_arguments_base () { }
 
+// virtual ~R_arguments_base () { }
+
    template<class... Tp>
    R_arguments_base (const shared_ptr<T>& x, Tp... r) : arg_ (x), args_ (r...) { }
 };
@@ -90,6 +92,8 @@ struct R_arguments_base<T>
    argument_type arg_;
 
    R_arguments_base () { }
+
+// virtual ~R_arguments_base () { }
 
    R_arguments_base (const shared_ptr<T>& x) : arg_ (x) { }
 };
@@ -399,6 +403,8 @@ struct C_arguments_base
 
    C_arguments_base () { }
 
+// virtual ~C_arguments_base () { }
+
    template<class Tp>
    C_arguments_base (const Tp& x) : args_ (x) { }
 };
@@ -412,6 +418,8 @@ struct C_arguments_base<T>
    argument_type arg_;
 
    C_arguments_base () { }
+
+// virtual ~C_arguments_base () { }
 
    C_arguments_base (const shared_ptr<T>& x) : arg_ (x) { }
 };
@@ -586,11 +594,12 @@ void parallel_call(std::vector<Arguments>& task)
 {
    std::sort(task.begin(), task.end(), std::greater<Arguments>());
 
+   size_t i;
    size_t n = task.size();
 
-#pragma omp parallel default(shared)
+#pragma omp parallel default(none), shared(n,task), private(i)
 #pragma omp for schedule(guided) nowait
-   for(size_t i = 0; i < n; ++i)
+   for(i = 0; i < n; ++i)
    {
       task[i].call();
    }

@@ -1,22 +1,9 @@
 TODO lists
 
-1) Implement dense BLAS/LAPACK functions for SArray (single prec. real), CArray (single prec. complex), and ZArray (double prec. complex).
-   Currently, only for DArray (double prec. real). Just copy Dblas.h, Dlapack.h, etc. and change D*** -> S***, C***, Z***.
++ Column-major support
 
-2) Using extern template.
++ Tensor reference / const reference
++ Instead std::vector<T>, memory block reference should be implemented to reduce size of object
 
-   E.g.)
-   #ifndef _ENABLE_EXTERN_TEMPLATE
++ Implaced conj() function for TArray<std::complex<T>, N>
 
-     extern template class TArray<double, 1>;
-     extern template class TArray<double, 2>;
-     extern template class TArray<double, 3>;
-     extern template class TArray<double, 4>;
-     extern template class TArray<double, 5>;
-     ...
-
-   #else
-
-   #include<btas/DENSE/DArray.h>
-
-   #endif

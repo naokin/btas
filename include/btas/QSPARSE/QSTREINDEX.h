@@ -4,8 +4,9 @@
 #include <vector>
 #include <algorithm>
 
+#include <btas/common/btas_assert.h>
 #include <btas/common/TVector.h>
-#include <btas/common/btas_permute_shape.h>
+#include <btas/common/make_reorder.h>
 
 #include <btas/DENSE/TArray.h>
 #include <btas/DENSE/TREINDEX.h>
@@ -26,9 +27,9 @@ void Permute (const QSTArray<T, N, Q>& x, const IVector<N>& reorder, QSTArray<T,
    IVector<N> storder = reorder;
    std::sort(storder.begin(), storder.end());
 
-   BTAS_THROW(std::unique(storder.begin(), storder.end()) == storder.end(), "Permute(QSPARSE): found duplicate index.");
+   BTAS_ASSERT(std::unique(storder.begin(), storder.end()) == storder.end(), "Permute(QSPARSE): found duplicate index.");
 
-   BTAS_THROW(storder[N-1] < N, "Permute(QSPARSE): out-of-range index.");
+   BTAS_ASSERT(storder[N-1] < N, "Permute(QSPARSE): out-of-range index.");
 
    if(storder == reorder)
    {

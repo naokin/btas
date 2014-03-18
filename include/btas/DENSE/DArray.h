@@ -11,18 +11,22 @@
 
 #include <btas/common/TVector.h>
 
-#include <btas/DENSE/TSubArray.h>
+#include <btas/DENSE/TSlice.h>
 
 namespace btas
 {
 
-/// Alias to single precision real array
+/// Alias to double precision real array
 template<size_t N>
 using DArray = TArray<double, N>;
 
-/// Alias to single precision real sub-array
+/// Alias to double precision real slice array
 template<size_t N>
-using DSubArray = TSubArray<double, N>;
+using DSlice = TSlice<double, N>;
+
+/// Alias to double precision real const slice array
+template<size_t N>
+using DConstSlice = TConstSlice<double, N>;
 
 /// Copy
 template<size_t N>

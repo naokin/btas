@@ -13,20 +13,24 @@
 
 #include <btas/common/TVector.h>
 
-#include <btas/DENSE/TSubArray.h>
+#include <btas/DENSE/TSlice.h>
 
 #include <btas/DENSE/DArray.h>
 
 namespace btas
 {
 
-/// Alias to single precision real array
+/// Alias to double precision complex array
 template<size_t N>
 using ZArray = TArray<std::complex<double>, N>;
 
-/// Alias to single precision real sub-array
+/// Alias to double precision complex slice array
 template<size_t N>
-using ZSubArray = TSubArray<std::complex<double>, N>;
+using ZSlice = TSlice<std::complex<double>, N>;
+
+/// Alias to double precision complex const slice array
+template<size_t N>
+using ZConstSlice = TConstSlice<std::complex<double>, N>;
 
 /// Copy
 template<size_t N>

@@ -261,7 +261,7 @@ inline void QSZgesvd (
              SDArray<1>& s,
             QSZArray<K, Q>& u,
             QSZArray<N-K+2, Q>& vt,
-      const int& DMAX = 0,
+      const long& DMAX = 0,
       const double& DTOL = 1.0)
 {
    if(dir == LeftArrow)
@@ -281,7 +281,7 @@ inline void QSZgesvd (
             QSZArray<K, Q>& u_rm,
             QSZArray<N-K+2, Q>& vt,
             QSZArray<N-K+2, Q>& vt_rm,
-      const int& DMAX = 0,
+      const long& DMAX = 0,
       const double& DTOL = 1.0)
 {
    if(dir == LeftArrow)

@@ -7,8 +7,8 @@
 #ifndef _BTAS_CXX11_CONTRACT_QSHAPE_H
 #define _BTAS_CXX11_CONTRACT_QSHAPE_H 1
 
-#include <btas/common/btas.h>
-#include <btas/common/btas_contract_shape.h>
+#include <btas/common/types.h>
+//#include <btas/common/btas_contract_shape.h>
 
 #include <btas/QSPARSE/Qshapes.h>
 
@@ -27,21 +27,21 @@ void gemv_contract_qshape
     for(int i = 0; i < NC; ++i) c_qshape[i] =  a_qshape[i];
     for(int i = 0; i < NB; ++i)
       if(a_qshape[i+NC] != -b_qshape[i])
-        BTAS_THROW(false, "btas::gemv_contract_qshape contraction of quantum numbers failed");
+        BTAS_ASSERT(false, "btas::gemv_contract_qshape contraction of quantum numbers failed");
   }
   else if(TransA == ConjTrans) {
     c_qnum = -a_qnum * b_qnum;
     for(int i = 0; i < NC; ++i) c_qshape[i] = -a_qshape[i+NB];
     for(int i = 0; i < NB; ++i)
       if(a_qshape[i]    !=  b_qshape[i])
-        BTAS_THROW(false, "btas::gemv_contract_qshape contraction of quantum numbers failed");
+        BTAS_ASSERT(false, "btas::gemv_contract_qshape contraction of quantum numbers failed");
   }
   else {
     c_qnum =  a_qnum * b_qnum;
     for(int i = 0; i < NC; ++i) c_qshape[i] =  a_qshape[i+NB];
     for(int i = 0; i < NB; ++i)
       if(a_qshape[i]    != -b_qshape[i])
-        BTAS_THROW(false, "btas::gemv_contract_qshape contraction of quantum numbers failed");
+        BTAS_ASSERT(false, "btas::gemv_contract_qshape contraction of quantum numbers failed");
   }
 }
 
@@ -89,21 +89,21 @@ void gemm_contract_qshape
     for(int i = 0; i < NB - K; ++i) c_qshape[i+NA-K] =  b_qshape[i+K];
     for(int i = 0; i < K; ++i)
       if(k_qshape[i] != -b_qshape[i])
-        BTAS_THROW(false, "btas::gemm_contract_qshape contraction of quantum numbers failed");
+        BTAS_ASSERT(false, "btas::gemm_contract_qshape contraction of quantum numbers failed");
   }
   else if(TransB == ConjTrans) {
     c_qnum = -b_qnum * c_qnum;
     for(int i = 0; i < NB - K; ++i) c_qshape[i+NA-K] = -b_qshape[i];
     for(int i = 0; i < K; ++i)
       if(k_qshape[i] !=  b_qshape[i+NB-K])
-        BTAS_THROW(false, "btas::gemm_contract_qshape contraction of quantum numbers failed");
+        BTAS_ASSERT(false, "btas::gemm_contract_qshape contraction of quantum numbers failed");
   }
   else {
     c_qnum =  b_qnum * c_qnum;
     for(int i = 0; i < NB - K; ++i) c_qshape[i+NA-K] =  b_qshape[i];
     for(int i = 0; i < K; ++i)
       if(k_qshape[i] != -b_qshape[i+NB-K])
-        BTAS_THROW(false, "btas::gemm_contract_qshape contraction of quantum numbers failed");
+        BTAS_ASSERT(false, "btas::gemm_contract_qshape contraction of quantum numbers failed");
   }
 }
 

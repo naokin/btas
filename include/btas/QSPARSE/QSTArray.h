@@ -1,7 +1,7 @@
 #ifndef __BTAS_QSPARSE_QSTARRAY_H
 #define __BTAS_QSPARSE_QSTARRAY_H 1
 
-#include <btas/common/btas.h>
+#include <btas/common/types.h>
 
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/base_object.hpp>
@@ -109,10 +109,10 @@ public:
   /*! not complete reference, since elements in m_store are only shared.
    *  so, even if m_shape or m_stride is changed, it won't be affected.
    */
-  void reference(const QSTArray& other) {
+  void ref(const QSTArray& other) {
     m_q_total = other.m_q_total;
     m_q_shape = other.m_q_shape;
-    STArray<T, N>::reference(other);
+    STArray<T, N>::ref(other);
   }
 
   //! Make subarray reference
@@ -138,10 +138,10 @@ public:
     QSTArray _ref;
     static_cast<STArray<T, N>&>(_ref) = STArray<T, N>::subarray(_indxs);
     _ref.m_q_total = m_q_total;
-    for(int i = 0; i < N; ++i) {
-      int nz = _indxs[i].size();
+    for(size_t i = 0; i < N; ++i) {
+      size_t nz = _indxs[i].size();
       _ref.m_q_shape[i].resize(nz);
-      for(int j = 0; j < nz; ++j)
+      for(size_t j = 0; j < nz; ++j)
         _ref.m_q_shape[i][j] = m_q_shape[i].at(_indxs[i][j]);
     }
     return std::move(_ref);
@@ -155,7 +155,7 @@ public:
   void resize
   (const Q& q_total, const TVector<Qshapes<Q>, N>& q_shape) {
     IVector<N> s_shape;
-    for(int i = 0; i < N; ++i) s_shape[i] = q_shape[i].size();
+    for(size_t i = 0; i < N; ++i) s_shape[i] = q_shape[i].size();
     m_q_total = q_total;
     m_q_shape = q_shape;
     STArray<T, N>::resize(s_shape);
@@ -164,7 +164,7 @@ public:
   //! Resize from quantum number indices and their dense shapes
   void resize
   (const Q& q_total, const TVector<Qshapes<Q>, N>& q_shape, const TVector<Dshapes, N>& d_shape, bool _allocate = true) {
-    for(int i = 0; i < N; ++i) assert(q_shape[i].size() == d_shape[i].size());
+    for(size_t i = 0; i < N; ++i) assert(q_shape[i].size() == d_shape[i].size());
     m_q_total = q_total;
     m_q_shape = q_shape;
     STArray<T, N>::resize(d_shape, _allocate);
@@ -173,7 +173,7 @@ public:
   //! Resize from quantum number indices and their dense shapes and initialized by constant value
   void resize
   (const Q& q_total, const TVector<Qshapes<Q>, N>& q_shape, const TVector<Dshapes, N>& d_shape, const T& value) {
-    for(int i = 0; i < N; ++i) assert(q_shape[i].size() == d_shape[i].size());
+    for(size_t i = 0; i < N; ++i) assert(q_shape[i].size() == d_shape[i].size());
     m_q_total = q_total;
     m_q_shape = q_shape;
     STArray<T, N>::resize(d_shape, value);
@@ -183,7 +183,7 @@ public:
   template<class Generator>
   void resize
   (const Q& q_total, const TVector<Qshapes<Q>, N>& q_shape, const TVector<Dshapes, N>& d_shape, Generator gen) {
-    for(int i = 0; i < N; ++i) assert(q_shape[i].size() == d_shape[i].size());
+    for(size_t i = 0; i < N; ++i) assert(q_shape[i].size() == d_shape[i].size());
     m_q_total = q_total;
     m_q_shape = q_shape;
     STArray<T, N>::resize(d_shape, gen);
@@ -205,7 +205,7 @@ public:
   //! Deallocation
   void clear() {
     m_q_total = Q::zero();
-    for(int i = 0; i < N; ++i) m_q_shape[i].clear();
+    for(size_t i = 0; i < N; ++i) m_q_shape[i].clear();
     STArray<T, N>::clear();
   }
 
@@ -214,7 +214,7 @@ public:
    *  \param _rank  rank in which index is associated
    *  \param _index index to be removed
    */
-  void erase(int _rank, int _index) {
+  void erase(size_t _rank, size_t _index) {
     STArray<T, N>::erase(_rank, _index);
     m_q_shape[_rank].erase(m_q_shape[_rank].begin()+_index);
   }
@@ -243,7 +243,7 @@ public:
 
   const Q& q() const { return m_q_total; }
   const TVector<Qshapes<Q>, N>& qshape() const { return m_q_shape; }
-  const Qshapes<Q>& qshape(int i) const { return m_q_shape[i]; }
+  const Qshapes<Q>& qshape(size_t i) const { return m_q_shape[i]; }
 
   //! Returns quantum numbers corresponding to block-index
   TVector<Q, N> qindex(const IVector<N>& block_index) const {
@@ -257,14 +257,14 @@ public:
   //! Inplaced parity operation
   /*! For each non-zero block, if q = sum_{i} m_q_shape[p1[i]] has odd particle number, scale -1 */
   void parity(const std::vector<int>& p1) {
-    int n = p1.size();
+    size_t n = p1.size();
     for(iterator it = this->begin(); it != this->end(); ++it) {
       IVector<N> block_index = this->index(it->first);
       Q qsum = Q::zero();
-      for(int i = 0; i < n; ++i)
+      for(size_t i = 0; i < n; ++i)
         qsum = qsum * m_q_shape[p1[i]][block_index[p1[i]]];
       if(qsum.parity())
-        it->second->scale(static_cast<T>(-1));
+        *it->second *= static_cast<T>(-1);
     }
   }
 
@@ -272,15 +272,15 @@ public:
   /*! For each non-zero block,
    *  scale by sign = prod_{i} ( -1 : both m_q_shape[p1[i]] and m_q_shape[p2[i]] have odd particle number ) */
   void parity(const std::vector<int>& p1, const std::vector<int>& p2) {
-    int n = p1.size(); assert(n == p2.size());
+    size_t n = p1.size(); assert(n == p2.size());
     for(iterator it = this->begin(); it != this->end(); ++it) {
       IVector<N> block_index = this->index(it->first);
       bool is_flip_parity = false;
-      for(int i = 0; i < n; ++i)
+      for(size_t i = 0; i < n; ++i)
         is_flip_parity ^= m_q_shape[p1[i]][block_index[p1[i]]].parity()
                        && m_q_shape[p2[i]][block_index[p2[i]]].parity();
       if(is_flip_parity)
-        it->second->scale(static_cast<T>(-1));
+        *it->second *= static_cast<T>(-1);
     }
   }
 
@@ -288,9 +288,9 @@ public:
   /*! Conjugation means flipping direction of quantum indices.  */
   QSTArray conjugate() const {
     QSTArray conj_ref;
-    conj_ref.STArray<T, N>::reference(*this);
+    conj_ref.STArray<T, N>::ref(*this);
     conj_ref.m_q_total = -m_q_total;
-    for(int i = 0; i < N; ++i)
+    for(size_t i = 0; i < N; ++i)
       conj_ref.m_q_shape[i] = -m_q_shape[i];
     return std::move(conj_ref);
   }
@@ -298,7 +298,7 @@ public:
   //! Self conjugation
   void conjugate_self() {
     m_q_total = -m_q_total;
-    for(int i = 0; i < N; ++i)
+    for(size_t i = 0; i < N; ++i)
       m_q_shape[i] = -m_q_shape[i];
   }
 
@@ -330,7 +330,7 @@ std::ostream& operator<< (std::ostream& ost, const btas::QSTArray<T, N, Q>& a) {
   using std::setw;
   using std::endl;
   ost << "q[T] = " << a.q() << endl;
-  for(int i = 0; i < N; ++i)
+  for(size_t i = 0; i < N; ++i)
   ost << "\tq[" << i << "] = " << a.qshape(i) << endl;
   ost << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
   ost << static_cast<btas::STArray<T, N>>(a);

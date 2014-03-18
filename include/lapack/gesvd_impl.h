@@ -40,7 +40,7 @@ inline void gesvd (
 {
    size_t K = (M < N) ? M : N; float* superb = (float*) malloc((K-1)*sizeof(float));
    LAPACKE_sgesvd(order, jobu, jobvt, M, N, A, ldA, S, U, ldU, VT, ldVT, superb);
-   delete [] superb;
+   free(superb);
 }
 
 inline void gesvd (
@@ -59,7 +59,7 @@ inline void gesvd (
 {
    size_t K = (M < N) ? M : N; double* superb = (double*) malloc((K-1)*sizeof(double));
    LAPACKE_dgesvd(order, jobu, jobvt, M, N, A, ldA, S, U, ldU, VT, ldVT, superb);
-   delete [] superb;
+   free(superb);
 }
 
 inline void gesvd (
@@ -78,7 +78,7 @@ inline void gesvd (
 {
    size_t K = (M < N) ? M : N; float* superb = (float*) malloc((K-1)*sizeof(float));
    LAPACKE_cgesvd(order, jobu, jobvt, M, N, A, ldA, S, U, ldU, VT, ldVT, superb);
-   delete [] superb;
+   free(superb);
 }
 
 inline void gesvd (
@@ -97,7 +97,7 @@ inline void gesvd (
 {
    size_t K = (M < N) ? M : N; double* superb = (double*) malloc((K-1)*sizeof(double));
    LAPACKE_zgesvd(order, jobu, jobvt, M, N, A, ldA, S, U, ldU, VT, ldVT, superb);
-   delete [] superb;
+   free(superb);
 }
 
 } // namespace lapack

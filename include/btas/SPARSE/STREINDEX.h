@@ -4,8 +4,9 @@
 #include <vector>
 #include <algorithm>
 
+#include <btas/common/btas_assert.h>
 #include <btas/common/TVector.h>
-#include <btas/common/btas_permute_shape.h>
+#include <btas/common/make_reorder.h>
 
 #include <btas/DENSE/TArray.h>
 #include <btas/DENSE/TREINDEX.h>
@@ -53,9 +54,9 @@ void Permute (const STArray<T, N>& x, const IVector<N>& reorder, STArray<T, N>& 
    IVector<N> storder = reorder;
    std::sort(storder.begin(), storder.end());
 
-   BTAS_THROW(std::unique(storder.begin(), storder.end()) == storder.end(), "Permute(SPARSE): found duplicate index.");
+   BTAS_ASSERT(std::unique(storder.begin(), storder.end()) == storder.end(), "Permute(SPARSE): found duplicate index.");
 
-   BTAS_THROW(storder[N-1] < N, "Permute(SPARSE): out-of-range index.");
+   BTAS_ASSERT(storder[N-1] < N, "Permute(SPARSE): out-of-range index.");
 
    if(storder == reorder)
    {
@@ -118,7 +119,7 @@ void Tie (const STArray<T, N>& x, const IVector<K>& index, STArray<T, N-K+1>& y)
       }
       else
       {
-         BTAS_THROW(x.shape(index[0]) == x.shape(i), "Tie(DENSE): index to be tied must be the same.");
+         BTAS_ASSERT(x.shape(index[0]) == x.shape(i), "Tie(DENSE): index to be tied must be the same.");
       }
    }
 
@@ -140,7 +141,7 @@ void Tie (const STArray<T, N>& x, const IVector<K>& index, STArray<T, N-K+1>& y)
 
       auto yi = y.reserve(indexY);
 
-      BTAS_THROW(yi != y.end(), "Tie(SPARSE): reservation failed; requested block must be zero.");
+      BTAS_ASSERT(yi != y.end(), "Tie(SPARSE): reservation failed; requested block must be zero.");
 
       Tie(*(xi->second), index, *(yi->second));
    }

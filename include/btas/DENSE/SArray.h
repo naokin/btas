@@ -17,7 +17,7 @@
 
 #include <btas/common/TVector.h>
 
-#include <btas/DENSE/TSubArray.h>
+#include <btas/DENSE/TSlice.h>
 
 namespace btas
 {
@@ -26,9 +26,13 @@ namespace btas
 template<size_t N>
 using SArray = TArray<float, N>;
 
-/// Alias to single precision real sub-array
+/// Alias to single precision real slice array
 template<size_t N>
-using SSubArray = TSubArray<float, N>;
+using SSlice = TSlice<float, N>;
+
+/// Alias to single precision real const slice array
+template<size_t N>
+using SConstSlice = TConstSlice<float, N>;
 
 /// Copy
 template<size_t N>

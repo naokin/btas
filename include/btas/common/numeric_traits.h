@@ -4,20 +4,27 @@
 #include <complex>
 #include <type_traits>
 
+#include <boost/serialization/complex.hpp>
+
 namespace btas
 {
 
-/// get max
-template<size_t M, size_t N, bool = (M > N)> struct rank_diff;
-/// case max(M, N) == M
-template<size_t M, size_t N> struct rank_diff<M, N, true>  { static constexpr size_t value = M-N; };
-/// case max(M, N) == N
-template<size_t M, size_t N> struct rank_diff<M, N, false> { static constexpr size_t value = N-M; };
-
 /// abstract value type from complex type
 template<typename T> struct remove_complex { typedef T type; };
+
 /// abstract value type from complex type (specialized for std::complex)
 template<typename T> struct remove_complex<std::complex<T>> { typedef T type; };
+
+/// numeric traits
+template<typename T>
+struct numeric_traits
+{
+   /// return const expression of 0
+   static constexpr T zero () { return static_cast<T>(0); }
+
+   /// return const expression of 1
+   static constexpr T one  () { return static_cast<T>(1); }
+};
 
 } // namespace btas
 

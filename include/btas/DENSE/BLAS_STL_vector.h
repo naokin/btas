@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include <btas/common/btas.h> // BTAS_THROW
+#include <btas/common/btas_assert.h> // BTAS_ASSERT
 
 #include <blas/package.h>
 
@@ -29,7 +29,7 @@ void Axpy (const T& alpha, const std::vector<T>& x, std::vector<T>& y)
 {
    if(y.size() > 0)
    {
-      BTAS_THROW(x.size() == y.size(), "Axpy(std::vector): x and y must have the same size.");
+      BTAS_ASSERT(x.size() == y.size(), "Axpy(std::vector): x and y must have the same size.");
    }
    else
    {
