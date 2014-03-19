@@ -597,8 +597,10 @@ void parallel_call(std::vector<Arguments>& task)
    size_t i;
    size_t n = task.size();
 
+#ifndef _SERIAL
 #pragma omp parallel default(none), shared(n,task), private(i)
 #pragma omp for schedule(guided) nowait
+#endif
    for(i = 0; i < n; ++i)
    {
       task[i].call();
