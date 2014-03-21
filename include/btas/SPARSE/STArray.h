@@ -433,112 +433,110 @@ public:
   //! return true if the requested block is non-zero, called by block index
   bool allowed(const IVector<N>& _index) const { return this->mf_check_allowed(_index); }
 
-  //! reserve non-zero block and return its iterator, by block tag
-  /*! if the requested block already exists:
-   *  - return its iterator
-   *  - or, return error if it's not allowed
-   *  if the requested block hasn't allocated
-   *  - allocate dense-array block and return its iterator
-   *  - or, return last iterator if it's not allowed, with warning message (optional)
-   */
-  iterator reserve(const size_t& _tag) {
-    IVector<N> _index = index(_tag);
-    // check if the requested block can be non-zero
-    iterator it = find(_tag);
-    if(this->mf_check_allowed(_index)) {
-      if(it == end()) {
-        it = m_store.insert(it, std::make_pair(_tag, shared_ptr<TArray<T, N>>(new TArray<T, N>(m_dn_shape & _index))));
+   /// reserve non-zero block and return its iterator, by block tag
+   /// if the requested block already exists:
+   /// - return its iterator
+   /// - or, return error if it's not allowed
+   /// if the requested block hasn't allocated
+   /// - allocate dense-array block and return its iterator
+   /// - or, return last iterator if it's not allowed, with warning message (optional)
+   iterator reserve (const size_t& _tag)
+   {
+      IVector<N> _index = this->index(_tag);
+      // check if the requested block can be non-zero
+      iterator it = this->find(_tag);
+      if(this->mf_check_allowed(_index))
+      {
+         if(it == end())
+         {
+            it = m_store.insert(it, std::make_pair(_tag, shared_ptr<TArray<T, N>>(new TArray<T, N>(m_dn_shape & _index))));
+         }
+         else
+         {
+            BTAS_ASSERT((m_dn_shape & _index) == it->second->shape(), "STArray::reserve: Mismatched shape to the existed block");
+         }
       }
-      else {
-        BTAS_ASSERT((m_dn_shape & _index) == it->second->shape(), "btas::STArray::reserve: existed block has inconsistent shape");
-      }
-    }
-    else {
-      if(it != end()) {
-        BTAS_ASSERT(false, "btas::STArray::reserve: non-zero block already exists despite it must be zero");
-      }
-#ifdef _PRINT_WARNINGS
-      else {
-        BTAS_DEBUG("WARNING: btas::STArray::reserve: requested block must be zero, returns end()");
-      }
-#endif
-    }
-    return it;
-  }
-
-  //! reserve non-zero block and return its iterator, by block index
-  iterator reserve(const IVector<N>& _index) {
-    size_t _tag = tag(_index);
-    // check if the requested block can be non-zero
-    iterator it = find(_tag);
-    if(this->mf_check_allowed(_index)) {
-      if(it == end()) {
-        it = m_store.insert(it, std::make_pair(_tag, shared_ptr<TArray<T, N>>(new TArray<T, N>(m_dn_shape & _index))));
-      }
-      else {
-        BTAS_ASSERT((m_dn_shape & _index) == it->second->shape(), "btas::STArray::reserve: existed block has inconsistent shape");
-      }
-    }
-    else {
-      if(it != end()) {
-        BTAS_ASSERT(false, "btas::STArray::reserve; non-zero block already exists despite it must be zero");
-      }
-#ifdef _PRINT_WARNINGS
-      else {
-        BTAS_DEBUG("WARNING: btas::STArray::reserve: requested block must be zero, returns end()");
-      }
-#endif
-    }
-    return it;
-  }
-
-  //! insert dense-array block and return its iterator, by block tag
-  /*! if the requested block already exists:
-   *  - add array to it, return its iterator
-   *  if the requested block hasn't allocated
-   *  - insert dense-array block and return its iterator
-   *  - or, return last iterator if it's not allowed, with warning message (optional)
-   */
-  iterator insert(const size_t& _tag, const TArray<T, N>& block) {
-    IVector<N> _index = index(_tag);
-    // check if the requested block can be non-zero
-    iterator it = m_store.end();
-    if(this->mf_check_allowed(_index)) {
-      mf_check_dshape(_index, block.shape());
-      it = find(_tag);
-      if(it != end())
-        *it->second += block;
       else
-        it = m_store.insert(it, std::make_pair(_tag, shared_ptr<TArray<T, N>>(new TArray<T, N>(block))));
-    }
-#ifdef _PRINT_WARNINGS
-    else {
-      BTAS_DEBUG("WARNING: btas::STArray::insert: requested block must be zero, unable to be inserted");
-    }
-#endif
-    return it;
-  }
+      {
+         BTAS_ASSERT(it == this->end(), "STArray::reserve: Zero block exists at " << _index);
+         BTAS_WARNING("STArray::reserve: Requested block must be zero. Returning iterator to the end");
+      }
+      return it;
+   }
 
-  //! insert dense-array block and return its iterator, by block index
-  iterator insert(const IVector<N>& _index, const TArray<T, N>& block) {
-    size_t _tag = tag(_index);
-    // check if the requested block can be non-zero
-    iterator it = m_store.end();
-    if(this->mf_check_allowed(_index)) {
-      mf_check_dshape(_index, block.shape());
-      it = find(_tag);
-      if(it != end())
-        *it->second += block;
+   /// reserve non-zero block and return its iterator, by block index
+   iterator reserve (const IVector<N>& _index)
+   {
+      size_t _tag = this->tag(_index);
+      // check if the requested block can be non-zero
+      iterator it = this->find(_tag);
+      if(this->mf_check_allowed(_index))
+      {
+         if(it == end())
+         {
+            it = m_store.insert(it, std::make_pair(_tag, shared_ptr<TArray<T, N>>(new TArray<T, N>(m_dn_shape & _index))));
+         }
+         else
+         {
+            BTAS_ASSERT((m_dn_shape & _index) == it->second->shape(), "STArray::reserve: Mismatched shape to the existed block");
+         }
+      }
       else
-        it = m_store.insert(it, std::make_pair(_tag, shared_ptr<TArray<T, N>>(new TArray<T, N>(block))));
-    }
-#ifdef _PRINT_WARNINGS
-    else {
-      BTAS_DEBUG("WARNING: btas::STArray::insert: requested block must be zero, unable to be inserted");
-    }
-#endif
-    return it;
-  }
+      {
+         BTAS_ASSERT(it == this->end(), "STArray::reserve: Zero block exists at " << _index);
+         BTAS_WARNING("STArray::reserve: Requested block must be zero. Returning iterator to the end.");
+      }
+      return it;
+   }
+
+   /// insert dense-array block and return its iterator, by block tag
+   /// if the requested block already exists:
+   /// - add array to it, return its iterator
+   /// if the requested block hasn't allocated
+   /// - insert dense-array block and return its iterator
+   /// - or, return last iterator if it's not allowed, with warning message (optional)
+   iterator insert (const size_t& _tag, const TArray<T, N>& block)
+   {
+      IVector<N> _index = this->index(_tag);
+      // check if the requested block can be non-zero
+      iterator it = m_store.end();
+      if(this->mf_check_allowed(_index))
+      {
+         this->mf_check_dshape(_index, block.shape());
+         it = find(_tag);
+         if(it != this->end())
+            *it->second += block;
+         else
+            it = m_store.insert(it, std::make_pair(_tag, shared_ptr<TArray<T, N>>(new TArray<T, N>(block))));
+      }
+      else
+      {
+         BTAS_WARNING("STArray::insert : Requested block must be zero. Never inserted.");
+      }
+      return it;
+   }
+
+   /// insert dense-array block and return its iterator, by block index
+   iterator insert (const IVector<N>& _index, const TArray<T, N>& block)
+   {
+      size_t _tag = this->tag(_index);
+      // check if the requested block can be non-zero
+      iterator it = m_store.end();
+      if(this->mf_check_allowed(_index))
+      {
+         this->mf_check_dshape(_index, block.shape());
+         it = find(_tag);
+         if(it != end())
+            *it->second += block;
+         else
+            it = m_store.insert(it, std::make_pair(_tag, shared_ptr<TArray<T, N>>(new TArray<T, N>(block))));
+      }
+      else
+      {
+         BTAS_WARNING("STArray::insert : Requested block must be zero. Never inserted.");
+      }
+      return it;
+   }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Transposed and Permuted references

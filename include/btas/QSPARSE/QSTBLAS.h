@@ -80,7 +80,8 @@ void Axpy (const T& alpha, const QSTArray<T, N, Q>& x, QSTArray<T, N, Q>& y)
    {
       BTAS_ASSERT(x.q() == y.q(), "Axpy(QSPARSE): x and y must have the same quantum number.");
       BTAS_ASSERT(x.qshape() == y.qshape(), "Axpy(QSPARSE): x and y must have the same quantum shape.");
-      BTAS_ASSERT(x.dshape() == y.dshape(), "Axpy(QSPARSE): x and y must have the same block shape."); /* FIXME: this is double-check */
+//    BTAS_ASSERT(x.dshape() == y.dshape(), "Axpy(QSPARSE): x and y must have the same block shape."); /* FIXME: this is double-check */
+      BTAS_ASSERT(__is_allowed_dshape(x.dshape(), y.dshape()), "Axpy(QSPARSE): x and y must have the same block shape."); /* FIXME: this is double-check */
    }
    else
    {
@@ -95,6 +96,8 @@ void Axpy (const T& alpha, const QSTArray<T, N, Q>& x, QSTArray<T, N, Q>& y)
    else
       ST_Axpy_thread(alpha, x, y);
 #endif
+
+   y.check_dshape();
 }
 
 //  ====================================================================================================
@@ -129,7 +132,8 @@ void Gemv (
    {
       BTAS_ASSERT(y.q() == qY, "Gemv(QSPARSE): quantum number of y must equal to a.q() + x.q().");
       BTAS_ASSERT(y.qshape() == qshapeY, "Gemv(QSPARSE): y must have the same quantum shape of [ a * x ].");
-      BTAS_ASSERT(y.dshape() == dshapeY, "Gemv(QSPARSE): y must have the same block shape of [ a * x ].");
+//    BTAS_ASSERT(y.dshape() == dshapeY, "Gemv(QSPARSE): y must have the same block shape of [ a * x ].");
+      BTAS_ASSERT(__is_allowed_dshape(y.dshape(), dshapeY), "Gemv(QSPARSE): y must have the same block shape of [ a * x ].");
       Scal(beta, y);
    }
    else
@@ -142,6 +146,8 @@ void Gemv (
    else
       ST_Gemv_thread(transa, alpha, a.transposed_view(N), x, y);
    // NOTE: transa == ConjTrans, it's affected in the dense layer
+
+   y.check_dshape();
 }
 
 template<typename T, size_t M, size_t N, class Q>
@@ -162,7 +168,8 @@ void Ger (
    {
       BTAS_ASSERT(a.q() == qA, "Ger(QSPARSE): quantum number of a must equal to x.q() + y.q().");
       BTAS_ASSERT(a.qshape() == qshapeA, "Ger(QSPARSE): a must have the same quantum shape of [ x ^ y ].");
-      BTAS_ASSERT(a.dshape() == dshapeA, "Ger(QSPARSE): a must have the same block shape of [ x ^ y ].");
+//    BTAS_ASSERT(a.dshape() == dshapeA, "Ger(QSPARSE): a must have the same block shape of [ x ^ y ].");
+      BTAS_ASSERT(__is_allowed_dshape(a.dshape(), dshapeA), "Ger(QSPARSE): a must have the same block shape of [ x ^ y ].");
    }
    else
    {
@@ -170,6 +177,8 @@ void Ger (
    }
 
    ST_Ger_thread(alpha, x, y, a);
+
+   a.check_dshape();
 }
 
 //  ====================================================================================================
@@ -209,7 +218,8 @@ void Gemm (
    {
       BTAS_ASSERT(c.q() == qC, "Gemm(QSPARSE): quantum number of c must equal to a.q() + b.q().");
       BTAS_ASSERT(c.qshape() == qshapeC, "Gemm(QSPARSE): c must have the same quantum shape of [ a * b ].");
-      BTAS_ASSERT(c.dshape() == dshapeC, "Gemm(QSPARSE): c must have the same block shape of [ a * b ].");
+//    BTAS_ASSERT(c.dshape() == dshapeC, "Gemm(QSPARSE): c must have the same block shape of [ a * b ].");
+      BTAS_ASSERT(__is_allowed_dshape(c.dshape(), dshapeC), "Gemm(QSPARSE): c must have the same block shape of [ a * b ].");
       Scal(beta, c);
    }
    else
@@ -230,6 +240,8 @@ void Gemm (
 
    else if(transa != CblasNoTrans && transb != CblasNoTrans)
       ST_Gemm_thread(transa, transb, alpha, a.transposed_view(K), b, c);
+
+   c.check_dshape();
 }
 
 //  ====================================================================================================

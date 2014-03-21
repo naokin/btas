@@ -315,7 +315,8 @@ inline Dshapes operator* (const Dshapes& x, const Dshapes& y)
 
 /// Output stream operator for TVector
 template<typename T, size_t N>
-std::ostream& operator<< (std::ostream& ost, const btas::TVector<T, N>& x)
+//std::ostream& operator<< (std::ostream& ost, const btas::TVector<T, N>& x)
+std::ostream& operator<< (std::ostream& ost, const std::array<T, N>& x)
 {
    ost << "[ "; for(size_t i = 0; i < N-1; ++i) ost << x[i] << ", "; ost << x[N-1] << " ]";
    return ost;

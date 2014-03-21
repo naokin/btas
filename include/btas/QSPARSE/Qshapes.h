@@ -126,6 +126,14 @@ inline Q operator* (const IVector<N>& index, const TVector<Qshapes<Q>, N>& vec) 
   return prod;
 }
 
+template<size_t N, class Q>
+inline TVector<Qshapes<Q>, N> operator- (const TVector<Qshapes<Q>, N>& x)
+{
+   TVector<Qshapes<Q>, N> y;
+   for(size_t i = 0; i < N; ++i) y[i] = -x[i];
+   return y;
+}
+
 };
 
 #endif // _BTAS_CXX11_QSHAPES_H

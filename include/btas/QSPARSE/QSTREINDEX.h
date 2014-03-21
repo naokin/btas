@@ -22,6 +22,8 @@ namespace btas {
 template<typename T, size_t N, class Q>
 void Permute (const QSTArray<T, N, Q>& x, const IVector<N>& reorder, QSTArray<T, N, Q>& y)
 {
+   BTAS_DEBUG("Permute(QSPARSE) : Started : reorder = " << reorder);
+
    if(x.size() == 0) return;
 
    IVector<N> storder = reorder;
@@ -48,6 +50,8 @@ void Permute (const QSTArray<T, N, Q>& x, const IVector<N>& reorder, QSTArray<T,
          ST_Permute_thread(x, reorder, y);
 #endif
    }
+
+   BTAS_DEBUG("Permute(QSPARSE) : Finished.");
 }
 
 /// Permute sparse array by index symbols

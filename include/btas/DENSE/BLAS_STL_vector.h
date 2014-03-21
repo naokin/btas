@@ -13,8 +13,30 @@ namespace btas
 template<typename T>
 void Copy (const std::vector<T>& x, std::vector<T>& y)
 {
-   y.resize(x.size());
+   y = x;
+}
 
+inline void Copy (const std::vector<float>& x, std::vector<float>& y)
+{
+   y.resize(x.size());
+   blas::copy(x.size(), x.data(), 1, y.data(), 1);
+}
+
+inline void Copy (const std::vector<double>& x, std::vector<double>& y)
+{
+   y.resize(x.size());
+   blas::copy(x.size(), x.data(), 1, y.data(), 1);
+}
+
+inline void Copy (const std::vector<std::complex<float>>& x, std::vector<std::complex<float>>& y)
+{
+   y.resize(x.size());
+   blas::copy(x.size(), x.data(), 1, y.data(), 1);
+}
+
+inline void Copy (const std::vector<std::complex<double>>& x, std::vector<std::complex<double>>& y)
+{
+   y.resize(x.size());
    blas::copy(x.size(), x.data(), 1, y.data(), 1);
 }
 

@@ -11,7 +11,7 @@ namespace btas
 {
 
 /// Compare Dshapes ignoring 0-sized index
-inline bool __is_allowed_dshape (const Dshapes& x, const Dshapes& y)
+inline bool __is_allowed_dshape_i (const Dshapes& x, const Dshapes& y)
 {
    bool __eq = (x.size() == y.size());
    for(size_t i = 0; __eq && i < x.size(); ++i)
@@ -19,6 +19,13 @@ inline bool __is_allowed_dshape (const Dshapes& x, const Dshapes& y)
       if(x[i] > 0 && y[i] > 0) __eq &= (x[i] == y[i]);
    }
    return __eq;
+}
+
+/// Compare Dshapes for every rank
+template<size_t N>
+inline bool __is_allowed_dshape (const TVector<Dshapes, N>& x, const TVector<Dshapes, N>& y)
+{
+   return std::equal(x.begin(), x.end(), y.begin(), __is_allowed_dshape_i);
 }
 
 template<size_t L, size_t M, size_t N>
@@ -32,12 +39,12 @@ void Gemv_dshape_contract (
 
    if(transA == CblasNoTrans)
    {
-      BTAS_ASSERT(std::equal(dshapeA.begin()+N, dshapeA.end(), dshapeX.begin(), __is_allowed_dshape), "Gemv_dshape_contract: dshape mismatched.");
+      BTAS_ASSERT(std::equal(dshapeA.begin()+N, dshapeA.end(), dshapeX.begin(), __is_allowed_dshape_i), "Gemv_dshape_contract: dshape mismatched.");
       for(size_t i = 0; i < N; ++i) dshapeY[i] = dshapeA[i];
    }
    else
    {
-      BTAS_ASSERT(std::equal(dshapeA.begin(), dshapeA.begin()+N, dshapeX.begin(), __is_allowed_dshape), "Gemv_dshape_contract: dshape mismatched.");
+      BTAS_ASSERT(std::equal(dshapeA.begin(), dshapeA.begin()+N, dshapeX.begin(), __is_allowed_dshape_i), "Gemv_dshape_contract: dshape mismatched.");
       for(size_t i = 0; i < N; ++i) dshapeY[i] = dshapeA[i+M];
    }
 }
@@ -78,12 +85,12 @@ void Gemm_dshape_contract (
 
    if(transB == CblasNoTrans)
    {
-      BTAS_ASSERT(std::equal(dtraced.begin(), dtraced.end(), dshapeB.begin(), __is_allowed_dshape), "Gemm_dshape_contract: dshape mismatched.");
+      BTAS_ASSERT(std::equal(dtraced.begin(), dtraced.end(), dshapeB.begin(), __is_allowed_dshape_i), "Gemm_dshape_contract: dshape mismatched.");
       for(size_t i = 0; i < M-K; ++i) dshapeC[i+L-K] = dshapeB[i+K];
    }
    else
    {
-      BTAS_ASSERT(std::equal(dtraced.begin(), dtraced.end(), dshapeB.begin()+M-K, __is_allowed_dshape), "Gemm_dshape_contract: dshape mismatched.");
+      BTAS_ASSERT(std::equal(dtraced.begin(), dtraced.end(), dshapeB.begin()+M-K, __is_allowed_dshape_i), "Gemm_dshape_contract: dshape mismatched.");
       for(size_t i = 0; i < M-K; ++i) dshapeC[i+L-K] = dshapeB[i];
    }
 }

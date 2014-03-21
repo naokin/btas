@@ -78,7 +78,7 @@ T ST_Dotu_serial (const STArray<T, N>& x, const STArray<T, N>& y)
    {
       auto yi = y.find(xi->first);
 
-      if(yi != y.end) value += Dotu(*(xi->second), *(yi->second));
+      if(yi != y.end()) value += Dotu(*(xi->second), *(yi->second));
    }
 
    return value;
@@ -378,6 +378,8 @@ void Copy (const STArray<T, N>& x, STArray<T, N>& y, bool UpCast = false)
    else
       ST_Copy_thread(x, y, UpCast);
 #endif
+
+   if(UpCast) y.check_dshape();
 }
 
 template<typename T, typename U, size_t N>
@@ -428,7 +430,8 @@ void Axpy (const T& alpha, const STArray<T, N>& x, STArray<T, N>& y)
 {
    if(y.size() > 0)
    {
-      BTAS_ASSERT(x.dshape() == y.dshape(), "Axpy(SPARSE): x and y must have the same shape."); /* FIXME: this is double-check */
+//    BTAS_ASSERT(x.dshape() == y.dshape(), "Axpy(SPARSE): x and y must have the same shape."); /* FIXME: this is double-check */
+      BTAS_ASSERT(__is_allowed_dshape(x.dshape(), y.dshape()), "Axpy(SPARSE): x and y must have the same shape."); /* FIXME: this is double-check */
    }
    else
    {
@@ -443,6 +446,8 @@ void Axpy (const T& alpha, const STArray<T, N>& x, STArray<T, N>& y)
    else
       ST_Axpy_thread(alpha, x, y);
 #endif
+
+   y.check_dshape();
 }
 
 //  ====================================================================================================
@@ -471,7 +476,8 @@ void Gemv (
 
    if(y.size() > 0)
    {
-      BTAS_ASSERT(y.dshape() == dshapeY, "Gemv(SPARSE): y must have the same shape as [ a * x ].");
+//    BTAS_ASSERT(y.dshape() == dshapeY, "Gemv(SPARSE): y must have the same shape as [ a * x ].");
+      BTAS_ASSERT(__is_allowed_dshape(y.dshape(), dshapeY), "Gemv(SPARSE): y must have the same shape as [ a * x ].");
       Scal(beta, y);
    }
    else
@@ -483,6 +489,8 @@ void Gemv (
       ST_Gemv_thread(transa, alpha, a, x, y);
    else
       ST_Gemv_thread(transa, alpha, a.transposed_view(N), x, y);
+
+   y.check_dshape();
 }
 
 template<typename T, size_t M, size_t N>
@@ -493,11 +501,12 @@ void Ger (
             STArray<T, M+N>& a)
 {
    TVector<Dshapes, M+N> dshapeA;
-   Ger_contract_dshape(x.dshape(), y.dshape(), dshapeA);
+   Ger_dshape_contract(x.dshape(), y.dshape(), dshapeA);
 
    if(a.size() > 0)
    {
-      BTAS_ASSERT(a.dshape() == dshapeA, "Ger(SPARSE): a must have the same shape as [ x ^ y ].");
+//    BTAS_ASSERT(a.dshape() == dshapeA, "Ger(SPARSE): a must have the same shape as [ x ^ y ].");
+      BTAS_ASSERT(__is_allowed_dshape(a.dshape(), dshapeA), "Ger(SPARSE): a must have the same shape as [ x ^ y ].");
    }
    else
    {
@@ -505,6 +514,8 @@ void Ger (
    }
 
    ST_Ger_thread(alpha, x, y, a);
+
+   a.check_dshape();
 }
 
 //  ====================================================================================================
@@ -537,7 +548,8 @@ void Gemm (
 
    if(c.size() > 0)
    {
-      BTAS_ASSERT(c.dshape() == dshapeC, "Gemm(SPARSE): c must have the same shape as [ a * b ].");
+//    BTAS_ASSERT(c.dshape() == dshapeC, "Gemm(SPARSE): c must have the same shape as [ a * b ].");
+      BTAS_ASSERT(__is_allowed_dshape(c.dshape(), dshapeC), "Gemm(SPARSE): c must have the same shape as [ a * b ].");
       Scal(beta, c);
    }
    else
@@ -558,6 +570,8 @@ void Gemm (
 
    else if(transa != CblasNoTrans && transb != CblasNoTrans)
       ST_Gemm_thread(transa, transb, alpha, a.transposed_view(K), b, c);
+
+   c.check_dshape();
 }
 
 //  ====================================================================================================
@@ -711,7 +725,8 @@ struct __ST_BlasContract_helper<L, M, N, CALL_GER>
       const T& beta,
             STArray<T, N>& c)
    {
-      Scal(beta, c); Ger(alpha, a, b, c);
+      Scal(beta, c);
+      Ger(alpha, a, b, c);
    }
 };
 

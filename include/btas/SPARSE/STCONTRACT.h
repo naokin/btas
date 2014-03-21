@@ -20,6 +20,8 @@ void Contract (
       const T& beta,
             STArray<T, L+M-K-K>& C)
 {
+   BTAS_DEBUG("Contract(SPARSE) : Started.");
+
    Get_contract_type<L, M, K> ct(A.shape(), indexA, B.shape(), indexB);
 
    STArray<T, L> refA;
@@ -37,6 +39,8 @@ void Contract (
       refB.ref(B);
 
    BlasContract(ct.transA, ct.transB, alpha, refA, refB, beta, C);
+
+   BTAS_DEBUG("Contract(SPARSE) : Finished.");
 }
 
 /// Contract Arrays by symbols
@@ -48,6 +52,8 @@ void Contract (
       const T& beta,
             STArray<T, N>& c, const IVector<N>& symbolC)
 {
+   BTAS_DEBUG("Contract(SPARSE, indexed) : Started.");
+
    const size_t K = (L + M - N) / 2;
 
    IVector<K> contractA;
@@ -69,6 +75,8 @@ void Contract (
 
       Permute(axb, symbolAxB, c, symbolC);
    }
+
+   BTAS_DEBUG("Contract(SPARSE, indexed) : Finished.");
 }
 
 } // namespace btas
