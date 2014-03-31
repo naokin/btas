@@ -16,7 +16,7 @@
 
 namespace btas {
 
-template<size_t N, class Q = Quantum>
+template<size_t N, class Q>
 void QSDpermute
 (const QSDArray<N, Q>& x, const IVector<N>& pindex, QSDArray<N, Q>& y)
 {
@@ -37,7 +37,7 @@ void QSDpermute
   }
 }
 
-template<size_t N, class Q = Quantum>
+template<size_t N, class Q>
 void QSDindexed_permute
 (const QSDArray<N, Q>& x, const IVector<N>& x_symbols,
        QSDArray<N, Q>& y, const IVector<N>& y_symbols)

@@ -14,7 +14,7 @@
 
 namespace btas {
 
-template<size_t NA, size_t NB, size_t NC, class Q = Quantum>
+template<size_t NA, size_t NB, size_t NC, class Q>
 void gemv_contract_qshape
 (const BTAS_TRANSPOSE& TransA,
  const Q& a_qnum, const TVector<Qshapes<Q>, NA>& a_qshape,
@@ -45,7 +45,7 @@ void gemv_contract_qshape
   }
 }
 
-template<size_t NA, size_t NB, size_t NC, class Q = Quantum>
+template<size_t NA, size_t NB, size_t NC, class Q>
 void ger_contract_qshape
 (const Q& a_qnum, const TVector<Qshapes<Q>, NA>& a_qshape,
  const Q& b_qnum, const TVector<Qshapes<Q>, NB>& b_qshape,
@@ -56,7 +56,7 @@ void ger_contract_qshape
   for(int i = 0; i < NB; ++i) c_qshape[i+NA] = b_qshape[i];
 }
 
-template<size_t NA, size_t NB, size_t NC, class Q = Quantum>
+template<size_t NA, size_t NB, size_t NC, class Q>
 void gemm_contract_qshape
 (const BTAS_TRANSPOSE& TransA, const BTAS_TRANSPOSE& TransB,
  const Q& a_qnum, const TVector<Qshapes<Q>, NA>& a_qshape,
@@ -112,7 +112,7 @@ void gemm_contract_qshape
 //####################################################################################################
 
 //! Wrapper function to return Clebsch-Gordan coefficient depends on block index
-template<typename T, size_t NA, size_t NB, size_t NC, class Q = Quantum>
+template<typename T, size_t NA, size_t NB, size_t NC, class Q>
 double f_indexbase_scale
 (const function<T(const TVector<Q, NA>&,
                   const TVector<Q, NB>&,

@@ -1,8 +1,9 @@
 CXX=g++ -std=c++11
+CXXFLAGS=-g -fopenmp -D_HAS_CBLAS -D_HAS_LAPACKE
 #CXXFLAGS=-g -fopenmp -D_HAS_CBLAS -D_HAS_INTEL_MKL
-CXXFLAGS=-g -fopenmp -D_HAS_CBLAS -D_HAS_INTEL_MKL -D_ENABLE_DEFAULT_QUANTUM
+#CXXFLAGS=-g -fopenmp -D_HAS_CBLAS -D_HAS_INTEL_MKL -D_ENABLE_DEFAULT_QUANTUM
 
-BLASLIB=-lmkl_intel_lp64 -lmkl_sequential -lmkl_core
+BLASLIB=-llapack -lblas
 
 BOOSTLIB=-lboost_serialization
 

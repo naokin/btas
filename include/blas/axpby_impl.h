@@ -1,6 +1,8 @@
 #ifndef __BTAS_BLAS_AXPBY_IMPL_H
 #define __BTAS_BLAS_AXPBY_IMPL_H 1
 
+#ifdef _HAS_INTEL_MKL //because these function don't exist in the regular cblas, apparently
+
 #include <blas/types.h>
 
 namespace btas {
@@ -72,4 +74,5 @@ inline void axpby (
 
 } // namespace btas
 
+#endif //_HAS_INTEL_MKL
 #endif // __BTAS_BLAS_AXPBY_IMPL_H

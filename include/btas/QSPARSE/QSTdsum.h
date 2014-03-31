@@ -14,7 +14,7 @@ namespace btas {
  *  | x x | (+)           = | x x 0 0 0 |
  *              | y y y |   | 0 0 y y y |
  */
-template<typename T, size_t N, class Q = Quantum>
+template<typename T, size_t N, class Q>
 void QSTdsum(const QSTArray<T, N, Q>& x, const QSTArray<T, N, Q>& y, QSTArray<T, N, Q>& z)
 {
   if(x.q() != y.q())
@@ -47,7 +47,7 @@ void QSTdsum(const QSTArray<T, N, Q>& x, const QSTArray<T, N, Q>& y, QSTArray<T,
  *
  *  Note that sizes of trace indices must be the same between two arrays
  */
-template<typename T, size_t N, size_t K, class Q = Quantum>
+template<typename T, size_t N, size_t K, class Q>
 void QSTdsum(const QSTArray<T, N, Q>& x, const QSTArray<T, N, Q>& y, const IVector<K>& trace_index, QSTArray<T, N, Q>& z)
 {
   if(x.q() != y.q())

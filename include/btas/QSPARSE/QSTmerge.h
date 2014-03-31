@@ -28,7 +28,7 @@ namespace btas {
 
    //! Merging row ranks
    /*! Row-merge: { Rows-info(i,j <-> r), A(i,j,k,l) } -> B(r,k,l) */
-   template<typename T, size_t MR, size_t N, class Q = Quantum>
+   template<typename T, size_t MR, size_t N, class Q>
       void QSTmerge
       (const QSTmergeInfo<MR, Q>& rows_info, const QSTArray<T, N, Q>& a, QSTArray<T, 1+N-MR, Q>& b)
       {
@@ -89,7 +89,7 @@ namespace btas {
 
    //! Merging col ranks
    /*! Column-merge: { A(i,j,k,l), Cols-info(k,l <-> c) } -> B(i,j,c) */
-   template<typename T, size_t N, size_t MC, class Q = Quantum>
+   template<typename T, size_t N, size_t MC, class Q>
       void QSTmerge
       (const QSTArray<T, N, Q>& a, const QSTmergeInfo<MC, Q>& cols_info, QSTArray<T, N-MC+1, Q>& b)
       {
@@ -150,7 +150,7 @@ namespace btas {
 
    //! Merging row and col ranks to form matrix
    /*! Row/Column-merge: { Rows-info(i,j <-> r), A(i,j,k,l), Cols-info(k,l -> c) } -> B(r,c) */
-   template<typename T, size_t MR, size_t MC, class Q = Quantum>
+   template<typename T, size_t MR, size_t MC, class Q>
       void QSTmerge
       (const QSTmergeInfo<MR, Q>& rows_info, const QSTArray<T, MR+MC, Q>& a, const QSTmergeInfo<MC, Q>& cols_info, QSTArray<T, 2, Q>& b)
       {
@@ -214,7 +214,7 @@ namespace btas {
 
    //! Expanding row ranks
    /*! Row-expand: { Rows-info(i,j <-> r), A(r,k,l) } -> B(i,j,k,l) */
-   template<typename T, size_t MR, size_t N, class Q = Quantum>
+   template<typename T, size_t MR, size_t N, class Q>
       void QSTexpand
       (const QSTmergeInfo<MR, Q>& rows_info, const QSTArray<T, 1+N-MR, Q>& a, QSTArray<T, N, Q>& b)
       {
@@ -293,7 +293,7 @@ namespace btas {
 
    //! Expanding col ranks
    /*! Column-expand: { A(i,j,c), Cols-info(k,l <-> c) } -> B(i,j,k,l) */
-   template<typename T, size_t N, size_t MC, class Q = Quantum>
+   template<typename T, size_t N, size_t MC, class Q>
       void QSTexpand
       (const QSTArray<T, N-MC+1, Q>& a, const QSTmergeInfo<MC, Q>& cols_info, QSTArray<T, N, Q>& b)
       {
@@ -370,7 +370,7 @@ namespace btas {
 
    //! Expanding row and col of matrix
    /*! Row/Column-expand: { Rows-info(i,j <-> r), A(r,c), Cols-info(k,l <-> c) } -> B(i,j,k,l) */
-   template<typename T, size_t MR, size_t MC, class Q = Quantum>
+   template<typename T, size_t MR, size_t MC, class Q>
       void QSTexpand
       (const QSTmergeInfo<MR, Q>& rows_info, const QSTArray<T, 2, Q>& a, const QSTmergeInfo<MC, Q>& cols_info, QSTArray<T, MR+MC, Q>& b)
       {
