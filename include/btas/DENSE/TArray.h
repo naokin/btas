@@ -107,6 +107,14 @@ public:
     return std::move(_cpy);
   }
 
+  //!move data from TArray<M> to different TArray<N>
+  template<size_t M>
+  void move(TArray<T,M> &a){
+
+     std::cout << a.m_store << std::endl;
+
+  }
+
   //! Copy from sub-array to array
   template<size_t M>
   void copy(const TSubArray<T, M>& a) {
@@ -355,6 +363,23 @@ public:
     // allocate memory
     m_store->resize(stride);
     return;
+  }
+
+  /**
+   * reshape the dimensions, but don't allocate or resize the storage!
+   */
+  void reshape(const IVector<N>& _shape) {
+
+    m_shape = _shape;
+
+    // calculate stride
+    size_t stride = 1;
+
+    for(int i = N-1; i >= 0; --i) {
+      m_stride[i] = stride;
+      stride *= m_shape[i];
+    }
+
   }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -706,7 +731,8 @@ public:
   const T* data() const { return m_store->data(); }
 
   //! returns the first pointer of array elements
-        T* data()       { return m_store->data(); }
+  T* data()       { return m_store->data(); }
+
 
   //! fills elements by constant value
   void fill(const T& val) {
