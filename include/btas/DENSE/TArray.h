@@ -163,13 +163,27 @@ public:
 
   //! move constructor
   explicit TArray(TArray&& other)
-  : m_shape(other.m_shape), m_stride(other.m_stride), m_store(other.m_store) { }
+  : m_shape(std::move(other.m_shape)), m_stride(std::move(other.m_stride)), m_store(std::move(other.m_store) ) {
+     
+    //make sure the other still point to something, else it will give errors when going out of scope.
+    other.m_store = shared_ptr< std::vector<T> >(new std::vector<T>());
+    other.m_shape = uniform<int, N>(0);
+    other.m_stride = uniform<int, N>(0);
+
+  }
 
   //! move assignment
   TArray& operator= (TArray&& other) {
+
     m_shape  = std::move(other.m_shape);
     m_stride = std::move(other.m_stride);
     m_store  = std::move(other.m_store);
+
+    //make sure the other still point to something, else it will give errors when going out of scope.
+    other.m_store = shared_ptr< std::vector<T> >(new std::vector<T>());
+    other.m_shape = uniform<int, N>(0);
+    other.m_stride = uniform<int, N>(0);
+
     return *this;
   }
 
