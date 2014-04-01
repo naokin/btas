@@ -123,20 +123,23 @@ void Gesvd (
    lapack::gesvd(CblasRowMajor, jobu, jobvt, rowsA, colsA, acp.data(), ldA, s.data(), u.data(), ldU, vt.data(), ldVt);
 }
 
-//do a qr decomposition
+/** perform a QR decomposition
+ * @param A input tensor of order M, will contain the 'unitary' matrix on output
+ * @param R tensor of order N, empty on input, will contain the 'R' matrix on output such that A_in = A_out * R
+ */
 template<typename T, size_t M, size_t N>
 void Geqrf (
-      TArray<T, M>& a,
-      TArray<T, N>& r)
+      TArray<T, M>& A,
+      TArray<T, N>& R)
 {
 
-   if(a.size() == 0)
+   if(A.size() == 0)
       return;
 
    size_t K = M - N/2;//number of row legs
    size_t L = N/2;//number of col leg
    
-   const IVector<M>& shapeA = a.shape();
+   const IVector<M>& shapeA = A.shape();
 
    size_t rowsA = std::accumulate(shapeA.begin(), shapeA.begin()+K, 1ul, std::multiplies<size_t>());
    size_t colsA = std::accumulate(shapeA.begin()+K, shapeA.end(), 1ul, std::multiplies<size_t>());
@@ -149,23 +152,74 @@ void Geqrf (
    for(size_t i = L; i < N; ++i)
       shapeR[i] = shapeR[i - L];
 
-   r.resize(shapeR);
+   R.resize(shapeR);
 
-   r = (T) 0.0;
+   R = (T) 0.0;
 
    int tau_size = std::min(rowsA,colsA);
 
    T* tau = new T [tau_size];
 
-   lapack::geqrf(CblasRowMajor, rowsA, colsA, a.data(), colsA, tau);
+   lapack::geqrf(CblasRowMajor, rowsA, colsA, A.data(), colsA, tau);
 
    //r is the upper diagonal part of a on exit of geqrf:
    for(int i = 0;i < colsA;++i)
       for(int j = i;j < colsA;++j)
-         r.data()[i*colsA + j] = a.data()[i*colsA + j];
+         R.data()[i*colsA + j] = A.data()[i*colsA + j];
 
    //now get the Q matrix out
-   lapack::orgqr(CblasRowMajor, rowsA, colsA, tau_size,a.data(), colsA, tau);
+   lapack::orgqr(CblasRowMajor, rowsA, colsA, tau_size,A.data(), colsA, tau);
+
+   delete [] tau;
+
+}
+
+/** perform a LQ decomposition
+ * @param L tensor of order M, empty on input, will contain the 'L' matrix on output such that A_in = L * A_out
+ * @param A input tensor of order N, will contain the 'unitary' matrix on output
+ */
+template<typename T, size_t M, size_t N>
+void Gelqf (
+      TArray<T, M>& L,
+      TArray<T, N>& A)
+{
+
+   if(A.size() == 0)
+      return;
+
+   size_t I = M/2;//number of row leg
+   size_t J = N - M/2;//number of col legs
+   
+   const IVector<N>& shapeA = A.shape();
+
+   size_t rowsA = std::accumulate(shapeA.begin(), shapeA.begin()+I, 1ul, std::multiplies<size_t>());
+   size_t colsA = std::accumulate(shapeA.begin()+I, shapeA.end(), 1ul, std::multiplies<size_t>());
+
+   IVector<M> shapeL;
+
+   for(size_t i = 0; i < I; ++i)
+      shapeL[i] = shapeA[i];
+
+   for(size_t i = I; i < M; ++i)
+      shapeL[i] = shapeL[i - I];
+
+   L.resize(shapeL);
+
+   L = (T) 0.0;
+
+   int tau_size = std::min(rowsA,colsA);
+
+   T* tau = new T [tau_size];
+
+   lapack::gelqf(CblasRowMajor, rowsA, colsA, A.data(), colsA, tau);
+
+   //L is the lower diagonal part of A on exit of gelqf:
+   for(int i = 0;i < rowsA;++i)
+      for(int j = 0;j <= i;++j)
+         L.data()[i*rowsA + j] = A.data()[i*colsA + j];
+
+   //now get the Q matrix out
+   lapack::orglq(CblasRowMajor, rowsA, colsA, tau_size,A.data(), colsA, tau);
 
    delete [] tau;
 
