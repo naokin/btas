@@ -123,6 +123,54 @@ void Gesvd (
    lapack::gesvd(CblasRowMajor, jobu, jobvt, rowsA, colsA, acp.data(), ldA, s.data(), u.data(), ldU, vt.data(), ldVt);
 }
 
+//do a qr decomposition
+template<typename T, size_t M, size_t N>
+void Geqrf (
+      TArray<T, M>& a,
+      TArray<T, N>& r)
+{
+
+   if(a.size() == 0)
+      return;
+
+   size_t K = M - N/2;//number of row legs
+   size_t L = N/2;//number of col leg
+   
+   const IVector<M>& shapeA = a.shape();
+
+   size_t rowsA = std::accumulate(shapeA.begin(), shapeA.begin()+K, 1ul, std::multiplies<size_t>());
+   size_t colsA = std::accumulate(shapeA.begin()+K, shapeA.end(), 1ul, std::multiplies<size_t>());
+
+   IVector<N> shapeR;
+
+   for(size_t i = 0; i < L; ++i)
+      shapeR[i] = shapeA[K + i];
+
+   for(size_t i = L; i < N; ++i)
+      shapeR[i] = shapeR[i - L];
+
+   r.resize(shapeR);
+
+   r = (T) 0.0;
+
+   int tau_size = std::min(rowsA,colsA);
+
+   T* tau = new T [tau_size];
+
+   lapack::geqrf(CblasRowMajor, rowsA, colsA, a.data(), colsA, tau);
+
+   //r is the upper diagonal part of a on exit of geqrf:
+   for(int i = 0;i < colsA;++i)
+      for(int j = i;j < colsA;++j)
+         r.data()[i*colsA + j] = a.data()[i*colsA + j];
+
+   //now get the Q matrix out
+   lapack::orgqr(CblasRowMajor, rowsA, colsA, tau_size,a.data(), colsA, tau);
+
+   delete [] tau;
+
+}
+
 } // namespace btas
 
 #endif // __BTAS_DENSE_TLAPACK_H

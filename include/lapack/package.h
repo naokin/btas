@@ -2,6 +2,8 @@
 #define __BTAS_LAPACK_PACKAGE_H 1
 
 #include <lapack/gesvd_impl.h>
+#include <lapack/geqrf_impl.h>
+#include <lapack/orgqr_impl.h>
 #include <lapack/syev_impl.h>
 #include <lapack/heev_impl.h>
 
