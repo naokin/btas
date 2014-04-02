@@ -38,7 +38,8 @@ inline void gesvd (
          float* VT,
    const size_t& ldVT)
 {
-   size_t K = (M < N) ? M : N; float* superb = (float*) malloc((K-1)*sizeof(float));
+   size_t K = (M < N) ? M : N;
+   float* superb = new float [K - 1];
    LAPACKE_sgesvd(order, jobu, jobvt, M, N, A, ldA, S, U, ldU, VT, ldVT, superb);
    delete [] superb;
 }
@@ -57,7 +58,8 @@ inline void gesvd (
          double* VT,
    const size_t& ldVT)
 {
-   size_t K = (M < N) ? M : N; double* superb = (double*) malloc((K-1)*sizeof(double));
+   size_t K = (M < N) ? M : N;
+   double *superb = new double [K - 1];
    LAPACKE_dgesvd(order, jobu, jobvt, M, N, A, ldA, S, U, ldU, VT, ldVT, superb);
    delete [] superb;
 }
@@ -76,7 +78,8 @@ inline void gesvd (
          std::complex<float>* VT,
    const size_t& ldVT)
 {
-   size_t K = (M < N) ? M : N; float* superb = (float*) malloc((K-1)*sizeof(float));
+   size_t K = (M < N) ? M : N;
+   float* superb = new float [K - 1];
    LAPACKE_cgesvd(order, jobu, jobvt, M, N, A, ldA, S, U, ldU, VT, ldVT, superb);
    delete [] superb;
 }
@@ -95,7 +98,8 @@ inline void gesvd (
          std::complex<double>* VT,
    const size_t& ldVT)
 {
-   size_t K = (M < N) ? M : N; double* superb = (double*) malloc((K-1)*sizeof(double));
+   size_t K = (M < N) ? M : N;
+   double *superb = new double [K - 1];
    LAPACKE_zgesvd(order, jobu, jobvt, M, N, A, ldA, S, U, ldU, VT, ldVT, superb);
    delete [] superb;
 }

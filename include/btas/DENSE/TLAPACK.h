@@ -123,11 +123,125 @@ void Gesvd (
    lapack::gesvd(CblasRowMajor, jobu, jobvt, rowsA, colsA, acp.data(), ldA, s.data(), u.data(), ldU, vt.data(), ldVt);
 }
 
+/// Solve singular value decomposition (SVD): compressing
+template<typename T, size_t M, size_t N>
+void Gesvd (
+      const char& jobu,
+      const char& jobvt,
+      const TArray<T, M>& a,
+            TArray<typename remove_complex<T>::type, 1>& s,
+            TArray<T, N>& u,
+            TArray<T, M-N+2>& vt,int D)
+{
+
+   if(a.size() == 0)
+      return;
+
+   const IVector<M>& shapeA = a.shape();
+
+   size_t rowsA = std::accumulate(shapeA.begin(), shapeA.begin()+N-1, 1ul, std::multiplies<size_t>());
+   size_t colsA = std::accumulate(shapeA.begin()+N-1, shapeA.end(), 1ul, std::multiplies<size_t>());
+
+   size_t ldA = colsA;
+
+   size_t nSingular = std::min(rowsA, colsA);
+
+   size_t colsU = (jobu == 'A') ? rowsA : nSingular;
+
+   size_t ldU = colsU;
+
+   IVector<N> shapeU;
+   for(size_t i = 0; i < N-1; ++i) shapeU[i] = shapeA[i];
+   shapeU[N-1] = colsU;
+
+   size_t rowsVt = (jobvt == 'A') ? colsA : nSingular;
+
+   size_t ldVt = colsA;
+
+   IVector<M-N+2> shapeVt;
+   shapeVt[0] = rowsVt;
+
+   for(size_t i = 1; i < M-N+2; ++i)
+      shapeVt[i] = shapeA[i+N-2];
+
+   s.resize(nSingular);
+
+   u.resize(shapeU);
+
+   vt.resize(shapeVt);
+
+   TArray<T, M> acp(a);
+   lapack::gesvd(CblasRowMajor, jobu, jobvt, rowsA, colsA, acp.data(), ldA, s.data(), u.data(), ldU, vt.data(), ldVt);
+
+   //see what the cutoff dimension is:
+   double cutoff = 1.0e-15;
+
+   if(D < 0)
+      cutoff = pow(10.0,(double)D);
+
+   int cnt = 0;
+
+   while( cnt < nSingular && s(cnt) > cutoff)
+      cnt++;
+
+   if(D < 0)
+      D = cnt;
+   else
+      if(cnt < D)
+         D = cnt;
+
+   bool discard = true;
+
+   if(D == 0)
+      discard = false;
+   else if(D >= nSingular)
+      discard = false;
+
+   if(discard){
+
+      //now discard the lowest singular values
+      TArray<typename remove_complex<T>::type,1> s_cut(D);
+      s_cut = s.subarray(shape(0),shape(D-1));
+
+      s = std::move(s_cut);
+
+      //discard the columns of U
+      shapeU[N-1] = D;
+      TArray<T,N> u_cut(shapeU);
+
+      //cut out
+      IVector<N> u_lower_bound = uniform<int, N>(0);
+
+      for(int i = 0;i < N;++i)
+         shapeU[i]--;
+
+      u_cut = u.subarray(u_lower_bound,shapeU);
+
+      u = std::move(u_cut);
+
+      //discard the rows of V
+      shapeVt[0] = D;
+      TArray<T,M-N+2> vt_cut(shapeVt);
+
+      //cut out
+      IVector<M-N+2> vt_lower_bound = uniform<int,M-N+2>(0);
+
+      for(int i = 0;i < M-N+2;++i)
+         shapeVt[i]--;
+
+      vt_cut = vt.subarray(vt_lower_bound,shapeVt);
+
+      vt = std::move(vt_cut);
+
+   }
+
+}
+
 /** perform a QR decomposition
  * @param A input tensor of order M, will contain the 'unitary' matrix on output
  * @param R tensor of order N, empty on input, will contain the 'R' matrix on output such that A_in = A_out * R
  */
-template<typename T, size_t M, size_t N>
+   template<typename T, size_t M, size_t N>
 void Geqrf (
       TArray<T, M>& A,
       TArray<T, N>& R)
@@ -138,7 +252,7 @@ void Geqrf (
 
    size_t K = M - N/2;//number of row legs
    size_t L = N/2;//number of col leg
-   
+
    const IVector<M>& shapeA = A.shape();
 
    size_t rowsA = std::accumulate(shapeA.begin(), shapeA.begin()+K, 1ul, std::multiplies<size_t>());
@@ -178,7 +292,7 @@ void Geqrf (
  * @param L tensor of order M, empty on input, will contain the 'L' matrix on output such that A_in = L * A_out
  * @param A input tensor of order N, will contain the 'unitary' matrix on output
  */
-template<typename T, size_t M, size_t N>
+   template<typename T, size_t M, size_t N>
 void Gelqf (
       TArray<T, M>& L,
       TArray<T, N>& A)
@@ -189,7 +303,7 @@ void Gelqf (
 
    size_t I = M/2;//number of row leg
    size_t J = N - M/2;//number of col legs
-   
+
    const IVector<N>& shapeA = A.shape();
 
    size_t rowsA = std::accumulate(shapeA.begin(), shapeA.begin()+I, 1ul, std::multiplies<size_t>());
