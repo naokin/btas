@@ -107,126 +107,130 @@ public:
     return std::move(_cpy);
   }
 
-  //!move data from TArray<M> to different TArray<N>
+  //!move data from  this object TArray<N> , to different TArray<M>
   template<size_t M>
   void move(TArray<T,M> &a){
 
-     std::cout << a.m_store << std::endl;
+     a.gshptr() = std::move(m_store);
+
+     m_store = shared_ptr< std::vector<T> >(new std::vector<T>());
+     m_shape = uniform<int, N>(0);
+     m_stride = uniform<int, N>(0);
 
   }
 
   //! Copy from sub-array to array
   template<size_t M>
-  void copy(const TSubArray<T, M>& a) {
-    // Calc. sub-array shape
-    IVector<M> a_shape;
-    for(int i = 0; i < M; ++i) a_shape[i] = a.m_upper_bound[i]-a.m_lower_bound[i]+1;
-    int a_size = std::accumulate(a_shape.begin(), a_shape.end(), 1, std::multiplies<int>());
-    assert(m_store->size() == a_size);
-    // If 0-dim. array
-    if(a_size == 0) return;
-    // Striding
-    const IVector<M>& a_stride = a.stride();
-    int ldt = a_shape[M-1];
-    // Get bare pointers
-          T* t_ptr = m_store->data();
-    const T* a_ptr = a.data();
-    // Copying elements
-    IVector<M> index(a.m_lower_bound);
-    int nrows = a_size / ldt;
-    for(int j = 0; j < nrows; ++j, t_ptr += ldt) {
-      int offset = dot(a_stride, index);
-      blas::copy(ldt, a_ptr+offset, 1, t_ptr, 1);
-      for(int i = static_cast<int>(M)-2; i >= 0; --i) {
-        if(++index[i] <= a.m_upper_bound[i]) break;
-        index[i] = a.m_lower_bound[i];
-      }
-    }
-  }
+     void copy(const TSubArray<T, M>& a) {
+        // Calc. sub-array shape
+        IVector<M> a_shape;
+        for(int i = 0; i < M; ++i) a_shape[i] = a.m_upper_bound[i]-a.m_lower_bound[i]+1;
+        int a_size = std::accumulate(a_shape.begin(), a_shape.end(), 1, std::multiplies<int>());
+        assert(m_store->size() == a_size);
+        // If 0-dim. array
+        if(a_size == 0) return;
+        // Striding
+        const IVector<M>& a_stride = a.stride();
+        int ldt = a_shape[M-1];
+        // Get bare pointers
+        T* t_ptr = m_store->data();
+        const T* a_ptr = a.data();
+        // Copying elements
+        IVector<M> index(a.m_lower_bound);
+        int nrows = a_size / ldt;
+        for(int j = 0; j < nrows; ++j, t_ptr += ldt) {
+           int offset = dot(a_stride, index);
+           blas::copy(ldt, a_ptr+offset, 1, t_ptr, 1);
+           for(int i = static_cast<int>(M)-2; i >= 0; --i) {
+              if(++index[i] <= a.m_upper_bound[i]) break;
+              index[i] = a.m_lower_bound[i];
+           }
+        }
+     }
 
   //! scale by const value
   void scale(const T& alpha) {
-    Scal(alpha, *m_store);
+     Scal(alpha, *m_store);
   }
 
   //! adding  from other to this
   void add (const TArray& other) {
-    assert(m_shape  == other.m_shape);
-    assert(m_stride == other.m_stride);
-    Axpy(static_cast<T>(1), *other.m_store, *m_store);
+     assert(m_shape  == other.m_shape);
+     assert(m_stride == other.m_stride);
+     Axpy(static_cast<T>(1), *other.m_store, *m_store);
   }
 
   //! copy constructor from sub-array
   template<size_t M>
-  explicit TArray(const TSubArray<T, M>& sub) {
-    copy(sub);
-  }
+     explicit TArray(const TSubArray<T, M>& sub) {
+        copy(sub);
+     }
 
   //! copy assignment from sub-array
   template<size_t M>
-  TArray& operator= (const TSubArray<T, M>& sub) {
-    copy(sub);
-    return *this;
-  }
+     TArray& operator= (const TSubArray<T, M>& sub) {
+        copy(sub);
+        return *this;
+     }
 
   //! move constructor
   explicit TArray(TArray&& other)
-  : m_shape(std::move(other.m_shape)), m_stride(std::move(other.m_stride)), m_store(std::move(other.m_store) ) {
-     
-    //make sure the other still point to something, else it will give errors when going out of scope.
-    other.m_store = shared_ptr< std::vector<T> >(new std::vector<T>());
-    other.m_shape = uniform<int, N>(0);
-    other.m_stride = uniform<int, N>(0);
+     : m_shape(std::move(other.m_shape)), m_stride(std::move(other.m_stride)), m_store(std::move(other.m_store) ) {
 
-  }
+        //make sure the other still point to something, else it will give errors when going out of scope.
+        other.m_store = shared_ptr< std::vector<T> >(new std::vector<T>());
+        other.m_shape = uniform<int, N>(0);
+        other.m_stride = uniform<int, N>(0);
+
+     }
 
   //! move assignment
   TArray& operator= (TArray&& other) {
 
-    m_shape  = std::move(other.m_shape);
-    m_stride = std::move(other.m_stride);
-    m_store  = std::move(other.m_store);
+     m_shape  = std::move(other.m_shape);
+     m_stride = std::move(other.m_stride);
+     m_store  = std::move(other.m_store);
 
-    //make sure the other still point to something, else it will give errors when going out of scope.
-    other.m_store = shared_ptr< std::vector<T> >(new std::vector<T>());
-    other.m_shape = uniform<int, N>(0);
-    other.m_stride = uniform<int, N>(0);
+     //make sure the other still point to something, else it will give errors when going out of scope.
+     other.m_store = shared_ptr< std::vector<T> >(new std::vector<T>());
+     other.m_shape = uniform<int, N>(0);
+     other.m_stride = uniform<int, N>(0);
 
-    return *this;
+     return *this;
   }
 
   //! take data reference from other
   void reference(const TArray& other) {
-    m_shape  = other.m_shape;
-    m_stride = other.m_stride;
-    m_store  = other.m_store;
+     m_shape  = other.m_shape;
+     m_stride = other.m_stride;
+     m_store  = other.m_store;
   }
 
   //! return data reference of this
   TArray reference() const {
-    TArray _ref;
-    _ref.reference(*this);
-    return std::move(_ref);
+     TArray _ref;
+     _ref.reference(*this);
+     return std::move(_ref);
   }
 
   //! convenient constructor with array shape, for N = 1
   explicit TArray(int n01) : m_store(new std::vector<T>()) {
-    resize(n01);
+     resize(n01);
   }
 
   //! convenient constructor with array shape, for N = 2
   TArray(int n01, int n02) : m_store(new std::vector<T>()) {
-    resize(n01, n02);
+     resize(n01, n02);
   }
 
   //! convenient constructor with array shape, for N = 3
   TArray(int n01, int n02, int n03) : m_store(new std::vector<T>()) {
-    resize(n01, n02, n03);
+     resize(n01, n02, n03);
   }
 
   //! convenient constructor with array shape, for N = 4
   TArray(int n01, int n02, int n03, int n04) : m_store(new std::vector<T>()) {
-    resize(n01, n02, n03, n04);
+     resize(n01, n02, n03, n04);
   }
 
   //! convenient constructor with array shape, for N = 5
@@ -758,6 +762,20 @@ public:
     m_shape = uniform<int, N>(0);
     m_stride = uniform<int, N>(0);
     m_store->clear();
+  }
+
+  //access to the shared pointer
+  shared_ptr<std::vector<T>> &gshptr(){
+
+     return m_store;
+
+  }
+
+  //access to the shared pointer: const version
+  const shared_ptr<std::vector<T>> &gshptr() const{
+
+     return m_store;
+
   }
 
 private:
