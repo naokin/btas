@@ -75,4 +75,5 @@ inline void axpby (
 } // namespace btas
 
 #endif //_HAS_INTEL_MKL
+
 #endif // __BTAS_BLAS_AXPBY_IMPL_H

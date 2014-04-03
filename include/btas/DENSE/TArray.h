@@ -107,17 +107,17 @@ public:
     return std::move(_cpy);
   }
 
-  //!move data from  this object TArray<N> , to different TArray<M>
-  template<size_t M>
-  void move(TArray<T,M> &a){
+////!move data from  this object TArray<N> , to different TArray<M>
+//template<size_t M>
+//void move(TArray<T,M> &a){
 
-     a.gshptr() = std::move(m_store);
+//   a.gshptr() = std::move(m_store);
 
-     m_store = shared_ptr< std::vector<T> >(new std::vector<T>());
-     m_shape = uniform<int, N>(0);
-     m_stride = uniform<int, N>(0);
+//   m_store = shared_ptr< std::vector<T> >(new std::vector<T>());
+//   m_shape = uniform<int, N>(0);
+//   m_stride = uniform<int, N>(0);
 
-  }
+//}
 
   //! Copy from sub-array to array
   template<size_t M>
@@ -177,26 +177,32 @@ public:
 
   //! move constructor
   explicit TArray(TArray&& other)
-     : m_shape(std::move(other.m_shape)), m_stride(std::move(other.m_stride)), m_store(std::move(other.m_store) ) {
+//   : m_shape(std::move(other.m_shape)), m_stride(std::move(other.m_stride)), m_store(std::move(other.m_store) )
+   {
 
         //make sure the other still point to something, else it will give errors when going out of scope.
-        other.m_store = shared_ptr< std::vector<T> >(new std::vector<T>());
-        other.m_shape = uniform<int, N>(0);
-        other.m_stride = uniform<int, N>(0);
+ //     other.m_store = shared_ptr< std::vector<T> >(new std::vector<T>());
+ //     other.m_shape = uniform<int, N>(0);
+ //     other.m_stride = uniform<int, N>(0);
 
-     }
+      // FIXME: Does this work?
+      this->swap(other);
+   }
 
   //! move assignment
   TArray& operator= (TArray&& other) {
 
-     m_shape  = std::move(other.m_shape);
-     m_stride = std::move(other.m_stride);
-     m_store  = std::move(other.m_store);
+//   m_shape  = std::move(other.m_shape);
+//   m_stride = std::move(other.m_stride);
+//   m_store  = std::move(other.m_store);
 
      //make sure the other still point to something, else it will give errors when going out of scope.
-     other.m_store = shared_ptr< std::vector<T> >(new std::vector<T>());
-     other.m_shape = uniform<int, N>(0);
-     other.m_stride = uniform<int, N>(0);
+//   other.m_store = shared_ptr< std::vector<T> >(new std::vector<T>());
+//   other.m_shape = uniform<int, N>(0);
+//   other.m_stride = uniform<int, N>(0);
+
+      // FIXME: Does this work?
+      this->swap(other);
 
      return *this;
   }
@@ -374,19 +380,46 @@ public:
   /**
    * reshape the dimensions, but don't allocate or resize the storage!
    */
-  void reshape(const IVector<N>& _shape) {
+//void reshape(const IVector<N>& _shape) {
 
-    m_shape = _shape;
+//  m_shape = _shape;
 
-    // calculate stride
-    size_t stride = 1;
+//  // calculate stride
+//  size_t stride = 1;
 
-    for(int i = N-1; i >= 0; --i) {
-      m_stride[i] = stride;
-      stride *= m_shape[i];
-    }
+//  for(int i = N-1; i >= 0; --i) {
+//    m_stride[i] = stride;
+//    stride *= m_shape[i];
+//  }
 
-  }
+//}
+   /// return shared reference reshaped
+   /// implaced reshape can be done as
+   /// `y.swap(x.reshape(shape(n1,n2,...)));`
+   template<size_t M>
+   TArray<T, M> reshape (const IVector<M>& shape_)
+   {
+      TArray<T, M> x(shape_);
+
+      assert(x.size() == this->size());
+
+      x.m_store = this->m_store; // shallow copy
+
+      return x;
+   }
+
+   /// return deep copy reshaped
+   template<size_t M>
+   TArray<T, M> reshape (const IVector<M>& shape_) const
+   {
+      TArray<T, M> x(shape_);
+
+      assert(x.size() == this->size());
+
+      Copy(*this->m_store, *x.m_store); // deep copy
+
+      return x;
+   }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Data Accessing
@@ -766,19 +799,27 @@ public:
     m_store->clear();
   }
 
-  //access to the shared pointer
-  shared_ptr<std::vector<T>> &gshptr(){
+   /// swap object
+   void swap (TArray& x)
+   {
+      std::swap(this->m_shape,  x.m_shape);
+      std::swap(this->m_stride, x.m_stride);
+      this->m_store.swap(x.m_store);
+   }
 
-     return m_store;
+////access to the shared pointer
+//shared_ptr<std::vector<T>> &gshptr(){
 
-  }
+//   return m_store;
 
-  //access to the shared pointer: const version
-  const shared_ptr<std::vector<T>> &gshptr() const{
+//}
 
-     return m_store;
+////access to the shared pointer: const version
+//const shared_ptr<std::vector<T>> &gshptr() const{
 
-  }
+//   return m_store;
+
+//}
 
 private:
 
