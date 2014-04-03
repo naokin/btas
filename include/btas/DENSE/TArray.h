@@ -49,6 +49,10 @@ private:
   template<typename U, size_t M>
   friend class TSubArray;
 
+  //! Any TArray classes being friend of TArray<T, N>
+  template<typename U, size_t M>
+  friend class TArray;
+
   //! Enables to use boost serialization
   template<class Archive>
   void serialize(Archive& ar, const unsigned int version) { ar & m_shape & m_stride & m_store; }
@@ -106,18 +110,6 @@ public:
     _cpy.copy(*this);
     return std::move(_cpy);
   }
-
-////!move data from  this object TArray<N> , to different TArray<M>
-//template<size_t M>
-//void move(TArray<T,M> &a){
-
-//   a.gshptr() = std::move(m_store);
-
-//   m_store = shared_ptr< std::vector<T> >(new std::vector<T>());
-//   m_shape = uniform<int, N>(0);
-//   m_stride = uniform<int, N>(0);
-
-//}
 
   //! Copy from sub-array to array
   template<size_t M>
@@ -177,31 +169,19 @@ public:
 
   //! move constructor
   explicit TArray(TArray&& other)
-//   : m_shape(std::move(other.m_shape)), m_stride(std::move(other.m_stride)), m_store(std::move(other.m_store) )
+   : m_shape(std::move(other.m_shape)), m_stride(std::move(other.m_stride)), m_store(std::move(other.m_store) )
    {
 
-        //make sure the other still point to something, else it will give errors when going out of scope.
- //     other.m_store = shared_ptr< std::vector<T> >(new std::vector<T>());
- //     other.m_shape = uniform<int, N>(0);
- //     other.m_stride = uniform<int, N>(0);
+      //make sure the other still point to something, else it will give errors when going out of scope.
+      other.m_store = shared_ptr< std::vector<T> >(new std::vector<T>());
+      other.m_shape = uniform<int, N>(0);
+      other.m_stride = uniform<int, N>(0);
 
-      // FIXME: Does this work?
-      this->swap(other);
    }
 
   //! move assignment
   TArray& operator= (TArray&& other) {
 
-//   m_shape  = std::move(other.m_shape);
-//   m_stride = std::move(other.m_stride);
-//   m_store  = std::move(other.m_store);
-
-     //make sure the other still point to something, else it will give errors when going out of scope.
-//   other.m_store = shared_ptr< std::vector<T> >(new std::vector<T>());
-//   other.m_shape = uniform<int, N>(0);
-//   other.m_stride = uniform<int, N>(0);
-
-      // FIXME: Does this work?
       this->swap(other);
 
      return *this;
@@ -377,427 +357,439 @@ public:
     return;
   }
 
-  /**
-   * reshape the dimensions, but don't allocate or resize the storage!
-   */
-//void reshape(const IVector<N>& _shape) {
+   /// return reference reshaped: this object is cleared
+   template<size_t M>
+   TArray<T, M> reshape_clear(const IVector<M>& shape_)
+   {
+      TArray<T, M> x; 
 
-//  m_shape = _shape;
+      x.m_shape = shape_;
 
-//  // calculate stride
-//  size_t stride = 1;
+      // calculate stride
+      size_t stride = 1;
 
-//  for(int i = N-1; i >= 0; --i) {
-//    m_stride[i] = stride;
-//    stride *= m_shape[i];
-//  }
+      for(int i = M-1; i >= 0; --i) {
+         x.m_stride[i] = stride;
+         stride *= x.m_shape[i];
+      }
 
-//}
+      assert(stride == this->size());
+
+      x.m_store = std::move(this->m_store);
+
+      this->m_store = shared_ptr< std::vector<T> >(new std::vector<T>());
+      this->m_shape = uniform<int, N>(0);
+      this->m_stride = uniform<int, N>(0);
+
+      return x;
+
+   }
+
    /// return shared reference reshaped
    /// implaced reshape can be done as
    /// `y.swap(x.reshape(shape(n1,n2,...)));`
    template<size_t M>
-   TArray<T, M> reshape (const IVector<M>& shape_)
-   {
-      TArray<T, M> x(shape_);
+      TArray<T, M> reshape (const IVector<M>& shape_)
+      {
+         TArray<T, M> x(shape_);
 
-      assert(x.size() == this->size());
+         assert(x.size() == this->size());
 
-      x.m_store = this->m_store; // shallow copy
+         x.m_store = this->m_store; // shallow copy
 
-      return x;
-   }
+         return x;
+      }
 
    /// return deep copy reshaped
    template<size_t M>
-   TArray<T, M> reshape (const IVector<M>& shape_) const
-   {
-      TArray<T, M> x(shape_);
+      TArray<T, M> reshape (const IVector<M>& shape_) const
+      {
+         TArray<T, M> x(shape_);
 
-      assert(x.size() == this->size());
+         assert(x.size() == this->size());
 
-      Copy(*this->m_store, *x.m_store); // deep copy
+         Copy(*this->m_store, *x.m_store); // deep copy
 
-      return x;
+         return x;
+      }
+
+   //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   // Data Accessing
+   //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+   //! returns first iterator position (const)
+   const_iterator begin() const { return m_store->begin(); }
+
+   //! returns first iterator position
+   iterator begin()       { return m_store->begin(); }
+
+   //! returns last iterator position (const)
+   const_iterator end() const { return m_store->end(); }
+
+   //! returns last iterator position
+   iterator end()       { return m_store->end(); }
+
+   //! returns array shape
+   const IVector<N>& shape() const { return m_shape; }
+
+   //! returns array shape for rank i
+   int shape(int i) const { return m_shape[i]; }
+
+   //! returns array stride
+   const IVector<N>& stride() const { return m_stride; }
+
+   //! returns array stride for rank i
+   int stride(int i) const { return m_stride[i]; }
+
+   //! returns allocated size
+   size_t size() const { return m_store->size(); }
+
+   //! returns array element (N = 1) without range check
+   const T& operator() (int i01) const {
+      IVector< 1> _index = { i01 };
+      return operator()(_index);
    }
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// Data Accessing
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-  //! returns first iterator position (const)
-  const_iterator begin() const { return m_store->begin(); }
-
-  //! returns first iterator position
-        iterator begin()       { return m_store->begin(); }
-
-  //! returns last iterator position (const)
-  const_iterator end() const { return m_store->end(); }
-
-  //! returns last iterator position
-        iterator end()       { return m_store->end(); }
-
-  //! returns array shape
-  const IVector<N>& shape() const { return m_shape; }
-
-  //! returns array shape for rank i
-  int shape(int i) const { return m_shape[i]; }
-
-  //! returns array stride
-  const IVector<N>& stride() const { return m_stride; }
-
-  //! returns array stride for rank i
-  int stride(int i) const { return m_stride[i]; }
-
-  //! returns allocated size
-  size_t size() const { return m_store->size(); }
-
-  //! returns array element (N = 1) without range check
-  const T& operator() (int i01) const {
-    IVector< 1> _index = { i01 };
-    return operator()(_index);
-  }
-
-  //! returns array element (N = 2) without range check
-  const T& operator() (int i01, int i02) const {
-    IVector< 2> _index = { i01, i02 };
-    return operator()(_index);
-  }
-
-  //! returns array element (N = 3) without range check
-  const T& operator() (int i01, int i02, int i03) const {
-    IVector< 3> _index = { i01, i02, i03 };
-    return operator()(_index);
-  }
-
-  //! returns array element (N = 4) without range check
-  const T& operator() (int i01, int i02, int i03, int i04) const {
-    IVector< 4> _index = { i01, i02, i03, i04 };
-    return operator()(_index);
-  }
-
-  //! returns array element (N = 5) without range check
-  const T& operator() (int i01, int i02, int i03, int i04, int i05) const {
-    IVector< 5> _index = { i01, i02, i03, i04, i05 };
-    return operator()(_index);
-  }
-
-  //! returns array element (N = 6) without range check
-  const T& operator() (int i01, int i02, int i03, int i04, int i05, int i06) const {
-    IVector< 6> _index = { i01, i02, i03, i04, i05, i06 };
-    return operator()(_index);
-  }
-
-  //! returns array element (N = 7) without range check
-  const T& operator() (int i01, int i02, int i03, int i04, int i05, int i06, int i07) const {
-    IVector< 7> _index = { i01, i02, i03, i04, i05, i06, i07 };
-    return operator()(_index);
-  }
-
-  //! returns array element (N = 8) without range check
-  const T& operator() (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08) const {
-    IVector< 8> _index = { i01, i02, i03, i04, i05, i06, i07, i08 };
-    return operator()(_index);
-  }
-
-  //! returns array element (N = 9) without range check
-  const T& operator() (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09) const {
-    IVector< 9> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09 };
-    return operator()(_index);
-  }
-
-  //! returns array element (N = 10) without range check
-  const T& operator() (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10) const {
-    IVector<10> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09, i10 };
-    return operator()(_index);
-  }
-
-  //! returns array element (N = 11) without range check
-  const T& operator() (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10, int i11) const {
-    IVector<11> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09, i10, i11 };
-    return operator()(_index);
-  }
-
-  //! returns array element (N = 12) without range check
-  const T& operator() (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10, int i11, int i12) const {
-    IVector<12> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09, i10, i11, i12 };
-    return operator()(_index);
-  }
-
-  //! returns array element (arbitrary N) without range check
-  const T& operator() (const IVector<N>& _index) const {
-    return (*m_store)[dot(_index, m_stride)];
-  }
-
-  //! returns array element (N = 1) without range check
-  T& operator() (int i01) {
-    IVector< 1> _index = { i01 };
-    return operator()(_index);
-  }
-
-  //! returns array element (N = 2) without range check
-  T& operator() (int i01, int i02) {
-    IVector< 2> _index = { i01, i02 };
-    return operator()(_index);
-  }
-
-  //! returns array element (N = 3) without range check
-  T& operator() (int i01, int i02, int i03) {
-    IVector< 3> _index = { i01, i02, i03 };
-    return operator()(_index);
-  }
-
-  //! returns array element (N = 4) without range check
-  T& operator() (int i01, int i02, int i03, int i04) {
-    IVector< 4> _index = { i01, i02, i03, i04 };
-    return operator()(_index);
-  }
-
-  //! returns array element (N = 5) without range check
-  T& operator() (int i01, int i02, int i03, int i04, int i05) {
-    IVector< 5> _index = { i01, i02, i03, i04, i05 };
-    return operator()(_index);
-  }
-
-  //! returns array element (N = 6) without range check
-  T& operator() (int i01, int i02, int i03, int i04, int i05, int i06) {
-    IVector< 6> _index = { i01, i02, i03, i04, i05, i06 };
-    return operator()(_index);
-  }
-
-  //! returns array element (N = 7) without range check
-  T& operator() (int i01, int i02, int i03, int i04, int i05, int i06, int i07) {
-    IVector< 7> _index = { i01, i02, i03, i04, i05, i06, i07 };
-    return operator()(_index);
-  }
-
-  //! returns array element (N = 8) without range check
-  T& operator() (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08) {
-    IVector< 8> _index = { i01, i02, i03, i04, i05, i06, i07, i08 };
-    return operator()(_index);
-  }
-
-  //! returns array element (N = 9) without range check
-  T& operator() (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09) {
-    IVector< 9> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09 };
-    return operator()(_index);
-  }
-
-  //! returns array element (N = 10) without range check
-  T& operator() (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10) {
-    IVector<10> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09, i10 };
-    return operator()(_index);
-  }
-
-  //! returns array element (N = 11) without range check
-  T& operator() (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10, int i11) {
-    IVector<11> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09, i10, i11 };
-    return operator()(_index);
-  }
-
-  //! returns array element (N = 12) without range check
-  T& operator() (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10, int i11, int i12) {
-    IVector<12> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09, i10, i11, i12 };
-    return operator()(_index);
-  }
-
-  //! returns array element (arbitrary N) without range check
-  T& operator() (const IVector<N>& _index) {
-    return (*m_store)[dot(_index, m_stride)];
-  }
-
-  //! returns array element (N = 1) with range check
-  const T& at(int i01) const {
-    IVector< 1> _index = { i01 };
-    return at(_index);
-  }
-
-  //! returns array element (N = 2) with range check
-  const T& at(int i01, int i02) const {
-    IVector< 2> _index = { i01, i02 };
-    return at(_index);
-  }
-
-  //! returns array element (N = 3) with range check
-  const T& at(int i01, int i02, int i03) const {
-    IVector< 3> _index = { i01, i02, i03 };
-    return at(_index);
-  }
-
-  //! returns array element (N = 4) with range check
-  const T& at(int i01, int i02, int i03, int i04) const {
-    IVector< 4> _index = { i01, i02, i03, i04 };
-    return at(_index);
-  }
-
-  //! returns array element (N = 5) with range check
-  const T& at(int i01, int i02, int i03, int i04, int i05) const {
-    IVector< 5> _index = { i01, i02, i03, i04, i05 };
-    return at(_index);
-  }
-
-  //! returns array element (N = 6) with range check
-  const T& at(int i01, int i02, int i03, int i04, int i05, int i06) const {
-    IVector< 6> _index = { i01, i02, i03, i04, i05, i06 };
-    return at(_index);
-  }
-
-  //! returns array element (N = 7) with range check
-  const T& at(int i01, int i02, int i03, int i04, int i05, int i06, int i07) const {
-    IVector< 7> _index = { i01, i02, i03, i04, i05, i06, i07 };
-    return at(_index);
-  }
-
-  //! returns array element (N = 8) with range check
-  const T& at(int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08) const {
-    IVector< 8> _index = { i01, i02, i03, i04, i05, i06, i07, i08 };
-    return at(_index);
-  }
-
-  //! returns array element (N = 9) with range check
-  const T& at(int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09) const {
-    IVector< 9> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09 };
-    return at(_index);
-  }
-
-  //! returns array element (N = 10) with range check
-  const T& at(int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10) const {
-    IVector<10> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09, i10 };
-    return at(_index);
-  }
-
-  //! returns array element (N = 11) with range check
-  const T& at(int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10, int i11) const {
-    IVector<11> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09, i10, i11 };
-    return at(_index);
-  }
-
-  //! returns array element (N = 12) with range check
-  const T& at(int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10, int i11, int i12) const {
-    IVector<12> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09, i10, i11, i12 };
-    return at(_index);
-  }
-
-  //! returns array element (arbitrary N) with range check
-  const T& at(const IVector<N>& _index) const {
-    return m_store->at(dot(_index, m_stride));
-  }
-
-  //! returns array element (N = 1) with range check
-  T& at(int i01) {
-    IVector< 1> _index = { i01 };
-    return at(_index);
-  }
-
-  //! returns array element (N = 2) with range check
-  T& at(int i01, int i02) {
-    IVector< 2> _index = { i01, i02 };
-    return at(_index);
-  }
-
-  //! returns array element (N = 3) with range check
-  T& at(int i01, int i02, int i03) {
-    IVector< 3> _index = { i01, i02, i03 };
-    return at(_index);
-  }
-
-  //! returns array element (N = 4) with range check
-  T& at(int i01, int i02, int i03, int i04) {
-    IVector< 4> _index = { i01, i02, i03, i04 };
-    return at(_index);
-  }
-
-  //! returns array element (N = 5) with range check
-  T& at(int i01, int i02, int i03, int i04, int i05) {
-    IVector< 5> _index = { i01, i02, i03, i04, i05 };
-    return at(_index);
-  }
-
-  //! returns array element (N = 6) with range check
-  T& at(int i01, int i02, int i03, int i04, int i05, int i06) {
-    IVector< 6> _index = { i01, i02, i03, i04, i05, i06 };
-    return at(_index);
-  }
-
-  //! returns array element (N = 7) with range check
-  T& at(int i01, int i02, int i03, int i04, int i05, int i06, int i07) {
-    IVector< 7> _index = { i01, i02, i03, i04, i05, i06, i07 };
-    return at(_index);
-  }
-
-  //! returns array element (N = 8) with range check
-  T& at(int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08) {
-    IVector< 8> _index = { i01, i02, i03, i04, i05, i06, i07, i08 };
-    return at(_index);
-  }
-
-  //! returns array element (N = 9) with range check
-  T& at(int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09) {
-    IVector< 9> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09 };
-    return at(_index);
-  }
-
-  //! returns array element (N = 10) with range check
-  T& at(int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10) {
-    IVector<10> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09, i10 };
-    return at(_index);
-  }
-
-  //! returns array element (N = 11) with range check
-  T& at(int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10, int i11) {
-    IVector<11> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09, i10, i11 };
-    return at(_index);
-  }
-
-  //! returns array element (N = 12) with range check
-  T& at(int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10, int i11, int i12) {
-    IVector<12> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09, i10, i11, i12 };
-    return at(_index);
-  }
-
-  //! returns array element (arbitrary N) with range check
-  T& at(const IVector<N>& _index) {
-    return m_store->at(dot(_index, m_stride));
-  }
-
-  //! slice array to return sub-array object
-  /*! sub-array is constructed from array elements [lbound[0]:ubound[0], lbound[1]:ubound[1], ...] */
-  TSubArray<T, N> subarray(const IVector<N>& lbound, const IVector<N>& ubound) const {
-    return TSubArray<T, N>(*this, lbound, ubound);
-  }
-
-  //! returns the first pointer of array elements
-  const T* data() const { return m_store->data(); }
-
-  //! returns the first pointer of array elements
-  T* data()       { return m_store->data(); }
-
-
-  //! fills elements by constant value
-  void fill(const T& val) {
-    std::fill(m_store->begin(), m_store->end(), val);
-  }
-
-  //! fills elements by constant value
-  void operator= (const T& val) { fill(val); }
-
-  //! generates array elements by function gen
-  /*! Generator is either default constructible class or function pointer, which can be called by gen() */
-  template<class Generator>
-  void generate(Generator gen) {
-    std::generate(m_store->begin(), m_store->end(), gen);
-  }
-
-////! generates array elements by function gen
-//template<class Generator>
-//void operator= (Generator gen) { generate(gen); }
-
-  //! deallocate storage
-  void clear() {
-    m_shape = uniform<int, N>(0);
-    m_stride = uniform<int, N>(0);
-    m_store->clear();
-  }
+   //! returns array element (N = 2) without range check
+   const T& operator() (int i01, int i02) const {
+      IVector< 2> _index = { i01, i02 };
+      return operator()(_index);
+   }
+
+   //! returns array element (N = 3) without range check
+   const T& operator() (int i01, int i02, int i03) const {
+      IVector< 3> _index = { i01, i02, i03 };
+      return operator()(_index);
+   }
+
+   //! returns array element (N = 4) without range check
+   const T& operator() (int i01, int i02, int i03, int i04) const {
+      IVector< 4> _index = { i01, i02, i03, i04 };
+      return operator()(_index);
+   }
+
+   //! returns array element (N = 5) without range check
+   const T& operator() (int i01, int i02, int i03, int i04, int i05) const {
+      IVector< 5> _index = { i01, i02, i03, i04, i05 };
+      return operator()(_index);
+   }
+
+   //! returns array element (N = 6) without range check
+   const T& operator() (int i01, int i02, int i03, int i04, int i05, int i06) const {
+      IVector< 6> _index = { i01, i02, i03, i04, i05, i06 };
+      return operator()(_index);
+   }
+
+   //! returns array element (N = 7) without range check
+   const T& operator() (int i01, int i02, int i03, int i04, int i05, int i06, int i07) const {
+      IVector< 7> _index = { i01, i02, i03, i04, i05, i06, i07 };
+      return operator()(_index);
+   }
+
+   //! returns array element (N = 8) without range check
+   const T& operator() (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08) const {
+      IVector< 8> _index = { i01, i02, i03, i04, i05, i06, i07, i08 };
+      return operator()(_index);
+   }
+
+   //! returns array element (N = 9) without range check
+   const T& operator() (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09) const {
+      IVector< 9> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09 };
+      return operator()(_index);
+   }
+
+   //! returns array element (N = 10) without range check
+   const T& operator() (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10) const {
+      IVector<10> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09, i10 };
+      return operator()(_index);
+   }
+
+   //! returns array element (N = 11) without range check
+   const T& operator() (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10, int i11) const {
+      IVector<11> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09, i10, i11 };
+      return operator()(_index);
+   }
+
+   //! returns array element (N = 12) without range check
+   const T& operator() (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10, int i11, int i12) const {
+      IVector<12> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09, i10, i11, i12 };
+      return operator()(_index);
+   }
+
+   //! returns array element (arbitrary N) without range check
+   const T& operator() (const IVector<N>& _index) const {
+      return (*m_store)[dot(_index, m_stride)];
+   }
+
+   //! returns array element (N = 1) without range check
+   T& operator() (int i01) {
+      IVector< 1> _index = { i01 };
+      return operator()(_index);
+   }
+
+   //! returns array element (N = 2) without range check
+   T& operator() (int i01, int i02) {
+      IVector< 2> _index = { i01, i02 };
+      return operator()(_index);
+   }
+
+   //! returns array element (N = 3) without range check
+   T& operator() (int i01, int i02, int i03) {
+      IVector< 3> _index = { i01, i02, i03 };
+      return operator()(_index);
+   }
+
+   //! returns array element (N = 4) without range check
+   T& operator() (int i01, int i02, int i03, int i04) {
+      IVector< 4> _index = { i01, i02, i03, i04 };
+      return operator()(_index);
+   }
+
+   //! returns array element (N = 5) without range check
+   T& operator() (int i01, int i02, int i03, int i04, int i05) {
+      IVector< 5> _index = { i01, i02, i03, i04, i05 };
+      return operator()(_index);
+   }
+
+   //! returns array element (N = 6) without range check
+   T& operator() (int i01, int i02, int i03, int i04, int i05, int i06) {
+      IVector< 6> _index = { i01, i02, i03, i04, i05, i06 };
+      return operator()(_index);
+   }
+
+   //! returns array element (N = 7) without range check
+   T& operator() (int i01, int i02, int i03, int i04, int i05, int i06, int i07) {
+      IVector< 7> _index = { i01, i02, i03, i04, i05, i06, i07 };
+      return operator()(_index);
+   }
+
+   //! returns array element (N = 8) without range check
+   T& operator() (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08) {
+      IVector< 8> _index = { i01, i02, i03, i04, i05, i06, i07, i08 };
+      return operator()(_index);
+   }
+
+   //! returns array element (N = 9) without range check
+   T& operator() (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09) {
+      IVector< 9> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09 };
+      return operator()(_index);
+   }
+
+   //! returns array element (N = 10) without range check
+   T& operator() (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10) {
+      IVector<10> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09, i10 };
+      return operator()(_index);
+   }
+
+   //! returns array element (N = 11) without range check
+   T& operator() (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10, int i11) {
+      IVector<11> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09, i10, i11 };
+      return operator()(_index);
+   }
+
+   //! returns array element (N = 12) without range check
+   T& operator() (int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10, int i11, int i12) {
+      IVector<12> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09, i10, i11, i12 };
+      return operator()(_index);
+   }
+
+   //! returns array element (arbitrary N) without range check
+   T& operator() (const IVector<N>& _index) {
+      return (*m_store)[dot(_index, m_stride)];
+   }
+
+   //! returns array element (N = 1) with range check
+   const T& at(int i01) const {
+      IVector< 1> _index = { i01 };
+      return at(_index);
+   }
+
+   //! returns array element (N = 2) with range check
+   const T& at(int i01, int i02) const {
+      IVector< 2> _index = { i01, i02 };
+      return at(_index);
+   }
+
+   //! returns array element (N = 3) with range check
+   const T& at(int i01, int i02, int i03) const {
+      IVector< 3> _index = { i01, i02, i03 };
+      return at(_index);
+   }
+
+   //! returns array element (N = 4) with range check
+   const T& at(int i01, int i02, int i03, int i04) const {
+      IVector< 4> _index = { i01, i02, i03, i04 };
+      return at(_index);
+   }
+
+   //! returns array element (N = 5) with range check
+   const T& at(int i01, int i02, int i03, int i04, int i05) const {
+      IVector< 5> _index = { i01, i02, i03, i04, i05 };
+      return at(_index);
+   }
+
+   //! returns array element (N = 6) with range check
+   const T& at(int i01, int i02, int i03, int i04, int i05, int i06) const {
+      IVector< 6> _index = { i01, i02, i03, i04, i05, i06 };
+      return at(_index);
+   }
+
+   //! returns array element (N = 7) with range check
+   const T& at(int i01, int i02, int i03, int i04, int i05, int i06, int i07) const {
+      IVector< 7> _index = { i01, i02, i03, i04, i05, i06, i07 };
+      return at(_index);
+   }
+
+   //! returns array element (N = 8) with range check
+   const T& at(int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08) const {
+      IVector< 8> _index = { i01, i02, i03, i04, i05, i06, i07, i08 };
+      return at(_index);
+   }
+
+   //! returns array element (N = 9) with range check
+   const T& at(int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09) const {
+      IVector< 9> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09 };
+      return at(_index);
+   }
+
+   //! returns array element (N = 10) with range check
+   const T& at(int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10) const {
+      IVector<10> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09, i10 };
+      return at(_index);
+   }
+
+   //! returns array element (N = 11) with range check
+   const T& at(int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10, int i11) const {
+      IVector<11> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09, i10, i11 };
+      return at(_index);
+   }
+
+   //! returns array element (N = 12) with range check
+   const T& at(int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10, int i11, int i12) const {
+      IVector<12> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09, i10, i11, i12 };
+      return at(_index);
+   }
+
+   //! returns array element (arbitrary N) with range check
+   const T& at(const IVector<N>& _index) const {
+      return m_store->at(dot(_index, m_stride));
+   }
+
+   //! returns array element (N = 1) with range check
+   T& at(int i01) {
+      IVector< 1> _index = { i01 };
+      return at(_index);
+   }
+
+   //! returns array element (N = 2) with range check
+   T& at(int i01, int i02) {
+      IVector< 2> _index = { i01, i02 };
+      return at(_index);
+   }
+
+   //! returns array element (N = 3) with range check
+   T& at(int i01, int i02, int i03) {
+      IVector< 3> _index = { i01, i02, i03 };
+      return at(_index);
+   }
+
+   //! returns array element (N = 4) with range check
+   T& at(int i01, int i02, int i03, int i04) {
+      IVector< 4> _index = { i01, i02, i03, i04 };
+      return at(_index);
+   }
+
+   //! returns array element (N = 5) with range check
+   T& at(int i01, int i02, int i03, int i04, int i05) {
+      IVector< 5> _index = { i01, i02, i03, i04, i05 };
+      return at(_index);
+   }
+
+   //! returns array element (N = 6) with range check
+   T& at(int i01, int i02, int i03, int i04, int i05, int i06) {
+      IVector< 6> _index = { i01, i02, i03, i04, i05, i06 };
+      return at(_index);
+   }
+
+   //! returns array element (N = 7) with range check
+   T& at(int i01, int i02, int i03, int i04, int i05, int i06, int i07) {
+      IVector< 7> _index = { i01, i02, i03, i04, i05, i06, i07 };
+      return at(_index);
+   }
+
+   //! returns array element (N = 8) with range check
+   T& at(int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08) {
+      IVector< 8> _index = { i01, i02, i03, i04, i05, i06, i07, i08 };
+      return at(_index);
+   }
+
+   //! returns array element (N = 9) with range check
+   T& at(int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09) {
+      IVector< 9> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09 };
+      return at(_index);
+   }
+
+   //! returns array element (N = 10) with range check
+   T& at(int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10) {
+      IVector<10> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09, i10 };
+      return at(_index);
+   }
+
+   //! returns array element (N = 11) with range check
+   T& at(int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10, int i11) {
+      IVector<11> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09, i10, i11 };
+      return at(_index);
+   }
+
+   //! returns array element (N = 12) with range check
+   T& at(int i01, int i02, int i03, int i04, int i05, int i06, int i07, int i08, int i09, int i10, int i11, int i12) {
+      IVector<12> _index = { i01, i02, i03, i04, i05, i06, i07, i08, i09, i10, i11, i12 };
+      return at(_index);
+   }
+
+   //! returns array element (arbitrary N) with range check
+   T& at(const IVector<N>& _index) {
+      return m_store->at(dot(_index, m_stride));
+   }
+
+   //! slice array to return sub-array object
+   /*! sub-array is constructed from array elements [lbound[0]:ubound[0], lbound[1]:ubound[1], ...] */
+   TSubArray<T, N> subarray(const IVector<N>& lbound, const IVector<N>& ubound) const {
+      return TSubArray<T, N>(*this, lbound, ubound);
+   }
+
+   //! returns the first pointer of array elements
+   const T* data() const { return m_store->data(); }
+
+   //! returns the first pointer of array elements
+   T* data()       { return m_store->data(); }
+
+
+   //! fills elements by constant value
+   void fill(const T& val) {
+      std::fill(m_store->begin(), m_store->end(), val);
+   }
+
+   //! fills elements by constant value
+   void operator= (const T& val) { fill(val); }
+
+   //! generates array elements by function gen
+   /*! Generator is either default constructible class or function pointer, which can be called by gen() */
+   template<class Generator>
+      void generate(Generator gen) {
+         std::generate(m_store->begin(), m_store->end(), gen);
+      }
+
+   ////! generates array elements by function gen
+   //template<class Generator>
+   //void operator= (Generator gen) { generate(gen); }
+
+   //! deallocate storage
+   void clear() {
+      m_shape = uniform<int, N>(0);
+      m_stride = uniform<int, N>(0);
+      m_store->clear();
+   }
 
    /// swap object
    void swap (TArray& x)
@@ -807,37 +799,29 @@ public:
       this->m_store.swap(x.m_store);
    }
 
-////access to the shared pointer
-//shared_ptr<std::vector<T>> &gshptr(){
+   int use_count(){
 
-//   return m_store;
+      return m_store.use_count();
 
-//}
+   }
 
-////access to the shared pointer: const version
-//const shared_ptr<std::vector<T>> &gshptr() const{
+   private:
 
-//   return m_store;
+   //####################################################################################################
+   // Member Variables
+   //####################################################################################################
 
-//}
+   //! array shape
+   IVector<N>
+      m_shape;
 
-private:
+   //! array stride
+   IVector<N>
+      m_stride;
 
-//####################################################################################################
-// Member Variables
-//####################################################################################################
-
-  //! array shape
-  IVector<N>
-    m_shape;
-
-  //! array stride
-  IVector<N>
-    m_stride;
-
-  //! array storage
-  shared_ptr<std::vector<T>>
-    m_store;
+   //! array storage
+   shared_ptr<std::vector<T>>
+      m_store;
 
 }; // class TArray
 
