@@ -22,7 +22,11 @@ namespace btas {
     *  Multi-map m_index_map provides map from {q11, q12, q22} to {q1*q1, {q1*q2, q2*q1}, q2*q2}
     *
     */
-   template<size_t N, class Q>
+#ifdef _ENABLE_DEFAULT_QUANTUM
+template<size_t N, class Q = Quantum>
+#else
+template<size_t N, class Q>
+#endif
       class QSTmergeInfo {
 
          public:
