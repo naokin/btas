@@ -242,6 +242,7 @@ void Gemm (
    size_t ldB = (transb == CblasNoTrans) ? colsB : colsA;
 
    blas::gemm(CblasRowMajor, transa, transb, rowsA, colsB, colsA, alpha, a.data(), ldA, b.data(), ldB, beta, c.data(), colsB);
+
 }
 
 //  ====================================================================================================

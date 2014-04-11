@@ -6,8 +6,10 @@ CXXFLAGS=-g -fopenmp -D_HAS_CBLAS -D_HAS_LAPACKE
 BLASLIB=-llapack -lblas
 
 BOOSTLIB=-lboost_serialization
+#BOOSTLIB=-L/usr/local/lib/lboost_serialization.a
+#BOOSTINC=-I/usr/local/lib/boost
 
-INCLUDEFLAGS=-I. -I../include 
+INCLUDEFLAGS=-I. -I../include $(BOOSTINC)
 LIBRARYFLAGS=                 $(BLASLIB) $(BOOSTLIB)
 
 #SRC_LIBBTAS = Dreindex.C clapack.C libbtas.C

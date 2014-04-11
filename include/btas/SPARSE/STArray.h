@@ -201,13 +201,18 @@ public:
 
   //! Resize by dense-block shapes using this->mf_check_allowed(index)
   void resize(const TVector<Dshapes, N>& _dn_shape, bool _allocate = true) {
+
     // calc. sparse-block shape
     IVector<N> _shape;
-    for(int i = 0; i < N; ++i) _shape[i] = _dn_shape[i].size();
+    for(int i = 0; i < N; ++i)
+       _shape[i] = _dn_shape[i].size();
+
     resize(_shape);
     m_dn_shape = _dn_shape;
 
-    if(_allocate) allocate();
+    if(_allocate)
+       allocate();
+
   }
 
   //! Allocate all allowed blocks (existed blocks are collapsed)

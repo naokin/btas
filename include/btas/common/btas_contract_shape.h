@@ -28,8 +28,10 @@ inline void gemv_contract_shape
     for(int i = 0; i < NC; ++i) c_shape[i] = a_shape[i];
   }
   else {
-    if(!std::equal(a_shape.begin(), a_shape.begin()+NC, b_shape.begin()))
+
+    if(!std::equal(a_shape.begin(), a_shape.begin()+NB, b_shape.begin()))
       BTAS_THROW(false, "btas::gemv_contract_shape: array shape mismatched");
+
     for(int i = 0; i < NC; ++i) c_shape[i] = a_shape[i+NB];
   }
 }
