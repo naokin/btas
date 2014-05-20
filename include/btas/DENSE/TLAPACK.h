@@ -173,23 +173,6 @@ namespace btas
          TArray<T, M> acp(a);
          lapack::gesvd(CblasRowMajor, jobu, jobvt, rowsA, colsA, acp.data(), ldA, s.data(), u.data(), ldU, vt.data(), ldVt);
 
-         //see what the cutoff dimension is:
-         double cutoff = 1.0e-15;
-
-         if(D < 0)
-            cutoff = pow(10.0,(double)D);
-
-         int cnt = 0;
-
-         while( cnt < nSingular && s(cnt) > cutoff)
-            cnt++;
-
-         if(D < 0)
-            D = cnt;
-         else
-            if(cnt < D)
-               D = cnt;
-
          bool discard = true;
 
          if(D == 0)
