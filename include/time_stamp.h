@@ -1,5 +1,5 @@
-#ifndef _BTAS_CXX11_TIME_STAMP_H
-#define _BTAS_CXX11_TIME_STAMP_H 1
+#ifndef __BTAS_TIME_STAMP_H
+#define __BTAS_TIME_STAMP_H
 
 #include <chrono> // C++11 clock classes
 
@@ -37,4 +37,4 @@ public:
   }
 };
 
-#endif // _BTAS_CXX11_TIME_STAMP_H
+#endif // __BTAS_TIME_STAMP_H

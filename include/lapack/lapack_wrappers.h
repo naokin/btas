@@ -1,5 +1,5 @@
-#ifndef __BTAS_LAPACK_PACKAGE_H
-#define __BTAS_LAPACK_PACKAGE_H 1
+#ifndef __BTAS_LAPACK_WRAPPERS_H
+#define __BTAS_LAPACK_WRAPPERS_H 1
 
 #include <lapack/gesvd_impl.h>
 #include <lapack/geqrf_impl.h>
@@ -11,4 +11,4 @@
 #include <lapack/getrf_impl.h>
 #include <lapack/getri_impl.h>
 
-#endif // __BTAS_LAPACK_PACKAGE_H
+#endif // __BTAS_LAPACK_WRAPPERS_H

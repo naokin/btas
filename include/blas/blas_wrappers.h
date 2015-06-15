@@ -1,5 +1,5 @@
-#ifndef __BTAS_BLAS_PACKAGE_H
-#define __BTAS_BLAS_PACKAGE_H 1
+#ifndef __BTAS_BLAS_WRAPPERS_H
+#define __BTAS_BLAS_WRAPPERS_H 1
 
 #include <blas/axpby_impl.h>
 #include <blas/axpy_impl.h>
@@ -13,4 +13,4 @@
 #include <blas/gemm_impl.h>
 #include <blas/scal_impl.h>
 
-#endif // __BTAS_BLAS_PACKAGE_H
+#endif // __BTAS_BLAS_WRAPPERS_H
