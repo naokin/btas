@@ -1,7 +1,7 @@
 #ifndef __BTAS_HEADER_INCLUDED
 #define __BTAS_HEADER_INCLUDED
 
-#include <BTAS/Tensor.hpp>
-//#include <BTAS/SpTensor.hpp>
+#include <btas/Tensor.hpp>
+#include <btas/SpTensor.hpp>
 
 #endif // __BTAS_HEADER_INCLUDED
