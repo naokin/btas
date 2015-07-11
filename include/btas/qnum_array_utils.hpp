@@ -29,11 +29,20 @@ std::vector<Q> conj (const std::vector<Q>& x)
 }
 
 template<class Q>
-bool is_contractible (const std::vector<Q>& x, const std::vector<Q>& y)
+bool is_equal (const std::vector<Q>& x, const std::vector<Q>& y)
 {
   bool success = (x.size() == y.size());
   for(size_t i = 0; i < x.size() && success; ++i)
     success = (x[i] == y[i]);
+  return success;
+}
+
+template<class Q>
+bool is_conj_equal (const std::vector<Q>& x, const std::vector<Q>& y)
+{
+  bool success = (x.size() == y.size());
+  for(size_t i = 0; i < x.size() && success; ++i)
+    success = (x[i] == y[i].conj());
   return success;
 }
 

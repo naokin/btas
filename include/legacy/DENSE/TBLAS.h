@@ -46,7 +46,7 @@ void Copy (const TArray<T, N>& x, TArray<T, N>& y)
    {
       y.resize(x.shape());
 
-      blas::copy(x.size(), x.data(), 1, y.data(), 1);
+      copy(x.size(), x.data(), 1, y.data(), 1);
    }
 }
 
@@ -56,7 +56,7 @@ void CopyR (const TArray<T, M>& x, TArray<T, N>& y)
 {
    BTAS_THROW(x.size() == y.size(), "CopyR: x and y must have the same size.");
 
-   blas::copy(x.size(), x.data(), 1, y.data(), 1);
+   copy(x.size(), x.data(), 1, y.data(), 1);
 }
 
 /// Scale x by alpha
@@ -65,7 +65,7 @@ void Scal (const T& alpha, TArray<U, N>& x)
 {
    if(x.size() == 0) return;
 
-   blas::scal(x.size(), alpha, x.data(), 1);
+   scal(x.size(), alpha, x.data(), 1);
 }
 
 /// Axpy: y := alpha * x + y
@@ -84,7 +84,7 @@ void Axpy (const T& alpha, const TArray<T, N>& x, TArray<T, N>& y)
       y = static_cast<T>(0);
    }
 
-   blas::axpy(x.size(), alpha, x.data(), 1, y.data(), 1);
+   axpy(x.size(), alpha, x.data(), 1, y.data(), 1);
 }
 
 /// Dot product of x and y
@@ -93,7 +93,7 @@ T Dot (const TArray<T, N>& x, const TArray<T, N>& y)
 {
    BTAS_THROW(x.shape() == y.shape(), "Dot(DENSE): x and y must have the same shape.");
 
-   return blas::dot(x.size(), x.data(), 1, y.data(), 1);
+   return dot(x.size(), x.data(), 1, y.data(), 1);
 }
 
 /// Dotu: the same as Dot
@@ -102,7 +102,7 @@ T Dotu (const TArray<T, N>& x, const TArray<T, N>& y)
 {
    BTAS_THROW(x.shape() == y.shape(), "Dotu(DENSE): x and y must have the same shape.");
 
-   return blas::dotu(x.size(), x.data(), 1, y.data(), 1);
+   return dotu(x.size(), x.data(), 1, y.data(), 1);
 }
 
 /// Dotc: Dot product with conjugation, i.e. x^H * y
@@ -111,14 +111,14 @@ T Dotc (const TArray<T, N>& x, const TArray<T, N>& y)
 {
    BTAS_THROW(x.shape() == y.shape(), "Dotc(DENSE): x and y must have the same shape.");
 
-   return blas::dotc(x.size(), x.data(), 1, y.data(), 1);
+   return dotc(x.size(), x.data(), 1, y.data(), 1);
 }
 
 /// Euclidian norm of x
 template<typename T, size_t N>
 typename remove_complex<T>::type Nrm2 (const TArray<T, N>& x)
 {
-   return blas::nrm2(x.size(), x.data(), 1);
+   return nrm2(x.size(), x.data(), 1);
 }
 
 //  ====================================================================================================
@@ -163,7 +163,7 @@ void Gemv (
 
    if(transa != CblasNoTrans) std::swap(rowsA, colsA);
 
-   blas::gemv(CblasRowMajor, transa, rowsA, colsA, alpha, a.data(), colsA, x.data(), 1, beta, y.data(), 1);
+   gemv(CblasRowMajor, transa, rowsA, colsA, alpha, a.data(), colsA, x.data(), 1, beta, y.data(), 1);
 }
 
 /// Ger: Rank-update, i.e. direct product of x and y, a := alpha * x ^ y + a
@@ -191,7 +191,7 @@ void Ger (
 
    size_t rowsA = x.size();
    size_t colsA = y.size();
-   blas::ger(CblasRowMajor, rowsA, colsA, alpha, x.data(), 1, y.data(), 1, a.data(), colsA);
+   ger(CblasRowMajor, rowsA, colsA, alpha, x.data(), 1, y.data(), 1, a.data(), colsA);
 }
 
 //  ====================================================================================================
@@ -241,7 +241,7 @@ void Gemm (
    size_t ldA = (transa == CblasNoTrans) ? colsA : rowsA;
    size_t ldB = (transb == CblasNoTrans) ? colsB : colsA;
 
-   blas::gemm(CblasRowMajor, transa, transb, rowsA, colsB, colsA, alpha, a.data(), ldA, b.data(), ldB, beta, c.data(), colsB);
+   gemm(CblasRowMajor, transa, transb, rowsA, colsB, colsA, alpha, a.data(), ldA, b.data(), ldB, beta, c.data(), colsB);
 
 }
 
@@ -303,7 +303,7 @@ struct __T_dimm_helper<M, N, false> /* (diagonal matrix) x (general matrix) */
             U* ptrB = b.data();
       for(size_t i = 0; i < rowsB; ++i, ++ptrA, ptrB += colsB)
       {
-         blas::scal(colsB, *ptrA, ptrB, 1);
+         scal(colsB, *ptrA, ptrB, 1);
       }
    }
 };

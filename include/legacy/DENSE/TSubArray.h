@@ -65,7 +65,7 @@ public:
     int nrows = t_size / lda;
     for(int j = 0; j < nrows; ++j, a_ptr += lda) {
       int offset = dot(t_stride, index);
-      blas::copy(lda, a_ptr, 1, t_ptr+offset, 1);
+      btas::copy(lda, a_ptr, 1, t_ptr+offset, 1);
       for(int i = static_cast<int>(N)-2; i >= 0; --i) {
         if(++index[i] <= m_upper_bound[i]) break;
         index[i] = m_lower_bound[i];

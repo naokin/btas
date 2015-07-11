@@ -14,12 +14,12 @@ void __conj (size_t n, T* x) { }
 
 inline void __conj (size_t n, std::complex<float>* x)
 {
-   blas::scal(n, -1.0f, static_cast<float*>(static_cast<void*>(x))+1, 2);
+   scal(n, -1.0f, static_cast<float*>(static_cast<void*>(x))+1, 2);
 }
 
 inline void __conj (size_t n, std::complex<double>* x)
 {
-   blas::scal(n, -1.0, static_cast<double*>(static_cast<void*>(x))+1, 2);
+   scal(n, -1.0, static_cast<double*>(static_cast<void*>(x))+1, 2);
 }
 
 /// take implaced conjugation

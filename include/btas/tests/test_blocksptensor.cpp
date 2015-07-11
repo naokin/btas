@@ -28,19 +28,37 @@ int main (int argc, char* argv[])
   qa.push_back(fermion(0, 0));
   qa.push_back(fermion(1, 1));
   qa.push_back(fermion(1,-1));
+//qa.push_back(fermion(2, 2));
   qa.push_back(fermion(2, 0));
+//qa.push_back(fermion(2,-2));
+//qa.push_back(fermion(3, 3));
+//qa.push_back(fermion(3, 1));
+//qa.push_back(fermion(3,-1));
+//qa.push_back(fermion(3,-3));
+//qa.push_back(fermion(4, 4));
+//qa.push_back(fermion(4, 2));
+//qa.push_back(fermion(4, 0));
+//qa.push_back(fermion(4,-2));
+//qa.push_back(fermion(4,-4));
+//qa.push_back(fermion(5, 5));
+//qa.push_back(fermion(5, 3));
+//qa.push_back(fermion(5, 1));
+//qa.push_back(fermion(5,-1));
+//qa.push_back(fermion(5,-3));
+//qa.push_back(fermion(5,-5));
 
   qshape_t qs = make_array(qa,qa,conj(qa),conj(qa));
 
-  narray_t na(qa.size(),2);
+  narray_t na(qa.size(),100);
   nshape_t ns = make_array(na,na,na,na);
 
   tensor_t A(fermion(0,0),qs,ns);
 
   size_t iproc = world.rank();
-  double value = 0.1*iproc;
+  double value = 0.1;
   A.fill(value);
 
+/*
   for(size_t i = 0; i < A.size(); ++i) {
     if(A.has(i)) {
       // send to proc# 0
@@ -53,6 +71,14 @@ int main (int argc, char* argv[])
         std::cout << std::endl;
       }
     }
+  }
+*/
+
+  double dotA = dotc(A,A);
+  size_t nnzA = A.nnz();
+  if(world.rank() == 0) {
+    std::cout << "nnz = " << nnzA << std::endl;
+    std::cout << "    = " << dotA << std::endl;
   }
 
   return 0;

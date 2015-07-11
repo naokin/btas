@@ -408,7 +408,7 @@ public:
     for(size_t i = 0; i < shape_.size(); ++i)
       if(lcmap_[i] != __HAS_NO_DATA__ && shape_[i] != iproc) lcmap_[i] = __HAS_NO_DATA__;
     // deallocate cache storage
-    cache_.swap(store_type());
+    store_type().swap(cache_);
 #endif
   }
 
@@ -476,5 +476,9 @@ template<typename T, size_t N, CBLAS_ORDER Order>
 class SpTensor<T,N,NoSymmetry_,Order> { }; // class SpTensor w/o quantum number
 
 } // namespace btas
+
+#ifndef __BTAS_SPARSE_TENSOR_CORE_HPP
+#include <btas/SpTensorCore.hpp>
+#endif
 
 #endif // __BTAS_SPARSE_TENSOR_HPP

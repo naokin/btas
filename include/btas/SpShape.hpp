@@ -44,6 +44,17 @@ protected:
   : qnum_(q0), qnum_shape_(qs)
   { }
 
+  SpShape (const SpShape& x)
+  : qnum_(x.qnum_), qnum_shape_(x.qnum_shape_)
+  { }
+
+  SpShape& operator= (const SpShape& x)
+  {
+    qnum_ = x.qnum_;
+    qnum_shape_ = x.qnum_shape_;
+    return *this;
+  }
+
   void reset (const qnum_type& q0, const qnum_shape_type& qs)
   {
     qnum_ = q0;

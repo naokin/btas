@@ -44,7 +44,7 @@ namespace btas
 
          d.resize(colsA);
 
-         lapack::syev(CblasRowMajor, jobz, uplo, colsA, z.data(), colsA, d.data());
+         syev(CblasRowMajor, jobz, uplo, colsA, z.data(), colsA, d.data());
       }
 
    /// Solve hermitian eigenvalue problem (HEP)
@@ -73,7 +73,7 @@ namespace btas
 
          d.resize(colsA);
 
-         lapack::heev(CblasRowMajor, jobz, uplo, colsA, z.data(), colsA, d.data());
+         heev(CblasRowMajor, jobz, uplo, colsA, z.data(), colsA, d.data());
       }
 
    /// Solve singular value decomposition (SVD)
@@ -120,7 +120,7 @@ namespace btas
          vt.resize(shapeVt);
 
          TArray<T, M> acp(a);
-         lapack::gesvd(CblasRowMajor, jobu, jobvt, rowsA, colsA, acp.data(), ldA, s.data(), u.data(), ldU, vt.data(), ldVt);
+         gesvd(CblasRowMajor, jobu, jobvt, rowsA, colsA, acp.data(), ldA, s.data(), u.data(), ldU, vt.data(), ldVt);
       }
 
    /// Solve singular value decomposition (SVD): compressing
@@ -171,7 +171,7 @@ namespace btas
          vt.resize(shapeVt);
 
          TArray<T, M> acp(a);
-         lapack::gesvd(CblasRowMajor, jobu, jobvt, rowsA, colsA, acp.data(), ldA, s.data(), u.data(), ldU, vt.data(), ldVt);
+         gesvd(CblasRowMajor, jobu, jobvt, rowsA, colsA, acp.data(), ldA, s.data(), u.data(), ldU, vt.data(), ldVt);
 
          bool discard = true;
 
@@ -257,7 +257,7 @@ namespace btas
 
          T* tau = new T [tau_size];
 
-         lapack::geqrf(CblasRowMajor, rowsA, colsA, A.data(), colsA, tau);
+         geqrf(CblasRowMajor, rowsA, colsA, A.data(), colsA, tau);
 
          //r is the upper diagonal part of a on exit of geqrf:
          for(int i = 0;i < colsA;++i)
@@ -265,7 +265,7 @@ namespace btas
                R.data()[i*colsA + j] = A.data()[i*colsA + j];
 
          //now get the Q matrix out
-         lapack::orgqr(CblasRowMajor, rowsA, colsA, tau_size,A.data(), colsA, tau);
+         orgqr(CblasRowMajor, rowsA, colsA, tau_size,A.data(), colsA, tau);
 
          delete [] tau;
 
@@ -308,7 +308,7 @@ namespace btas
 
          T* tau = new T [tau_size];
 
-         lapack::gelqf(CblasRowMajor, rowsA, colsA, A.data(), colsA, tau);
+         gelqf(CblasRowMajor, rowsA, colsA, A.data(), colsA, tau);
 
          //L is the lower diagonal part of A on exit of gelqf:
          for(int i = 0;i < rowsA;++i)
@@ -316,7 +316,7 @@ namespace btas
                L.data()[i*rowsA + j] = A.data()[i*colsA + j];
 
          //now get the Q matrix out
-         lapack::orglq(CblasRowMajor, rowsA, colsA, tau_size,A.data(), colsA, tau);
+         orglq(CblasRowMajor, rowsA, colsA, tau_size,A.data(), colsA, tau);
 
          delete [] tau;
 
