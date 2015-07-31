@@ -1,7 +1,7 @@
 #ifndef _PROTOTYPE_DRIVER_H
 #define _PROTOTYPE_DRIVER_H 1
 
-#include <btas/QSPARSE/QSDArray.h>
+#include <legacy/QSPARSE/QSDArray.h>
 
 namespace prototype
 {

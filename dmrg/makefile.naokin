@@ -1,11 +1,11 @@
-CXX=g++ -std=c++0x
-CXXFLAGS=-g -O3 -fopenmp -D_HAS_CBLAS -D_HAS_INTEL_MKL -D_ENABLE_DEFAULT_QUANTUM
+CXX=/homec/naokin/gnu/gcc/4.8.4/bin/g++
+CXXFLAGS=-g -std=c++11 -O3 -D_HAS_CBLAS -D_HAS_INTEL_MKL -D_ENABLE_DEFAULT_QUANTUM
 
-BLASDIR=/opt/intel/mkl
+BLASDIR=/home100/opt/intel/mkl
 BLASINC=-I$(BLASDIR)/include
 BLASLIB=-L$(BLASDIR)/lib/intel64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core
 
-BOOSTDIR=/usr/local
+BOOSTDIR=/homec/naokin/boost/1.54.0
 BOOSTINC=-I$(BOOSTDIR)/include
 BOOSTLIB=-L$(BOOSTDIR)/lib -lboost_serialization
 
@@ -16,7 +16,6 @@ BTASLIB=  $(BTASDIR)/lib
 INCLUDEFLAGS=-I. $(BLASINC) $(BOOSTINC) $(BTASINC)
 LIBRARYFLAGS=    $(BLASLIB) $(BOOSTLIB)
 
-#SRC_SAMPLE = main.C dmrg.C driver.C btas_template_specialize.C
 SRC_SAMPLE = main.C dmrg.C driver.C
 
 OBJ_SAMPLE = $(SRC_SAMPLE:.C=.o)

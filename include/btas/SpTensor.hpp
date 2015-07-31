@@ -414,17 +414,17 @@ public:
 
 protected:
 
-  void make_shape_ (size_t& ord_, size_t& nnz_, const index_type& idx_)
+  void make_shape_ (size_t* ord_, size_t* nnz_, const index_type& idx_)
   {
     if(is_allowed(idx_)) {
 #ifndef _SERIAL
-      shape_[ord_] = nnz_%world_.size();
+      shape_[(*ord_)] = (*nnz_)%world_.size();
 #else
-      shape_[ord_] = nnz_;
+      shape_[(*ord_)] = (*nnz_);
 #endif
-      ++nnz_;
+      ++(*nnz_);
     }
-    ++ord_;
+    ++(*ord_);
   }
 
   void build_ (const extent_type& exts)
@@ -434,7 +434,7 @@ protected:
     size_t ord_ = 0;
     size_t nnz_ = 0;
     index_type index_;
-    IndexedFor<1,N,Order>::loop(exts,index_,boost::bind(&SpTensor::make_shape_,boost::ref(*this),boost::ref(ord_),boost::ref(nnz_),_1));
+    IndexedFor<1,N,Order>::loop(exts,index_,boost::bind(&SpTensor::make_shape_,boost::ref(*this),&ord_,&nnz_,_1));
 
 #ifndef _SERIAL
     lcmap_.resize(shape_.extent(),__HAS_NO_DATA__);

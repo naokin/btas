@@ -24,8 +24,8 @@ int main()
 
   fout << "#ifndef _BTAS_DENSE_TEMPLATE_SPECIALIZE"   << endl;
   fout << "#define _BTAS_DENSE_TEMPLATE_SPECIALIZE 1" << endl;
-//fout << "#include <btas/DENSE/DArray.h>"            << endl;
-  fout << "#include <btas/DENSE/Dblas.h>"             << endl;
+//fout << "#include <legacy/DENSE/DArray.h>"            << endl;
+  fout << "#include <legacy/DENSE/Dblas.h>"             << endl;
   fout << "namespace btas" << endl;
   fout << "{" << endl << endl;
 
@@ -67,8 +67,8 @@ int main()
 
   fout << "#ifndef _BTAS_SPARSE_TEMPLATE_SPECIALIZE"   << endl;
   fout << "#define _BTAS_SPARSE_TEMPLATE_SPECIALIZE 1" << endl;
-//fout << "#include <btas/SPARSE/SDArray.h>"           << endl;
-  fout << "#include <btas/SPARSE/SDblas.h>"            << endl;
+//fout << "#include <legacy/SPARSE/SDArray.h>"           << endl;
+  fout << "#include <legacy/SPARSE/SDblas.h>"            << endl;
   fout << "namespace btas" << endl;
   fout << "{" << endl << endl;
 
@@ -110,8 +110,8 @@ int main()
 
   fout << "#ifndef _BTAS_QSPARSE_TEMPLATE_SPECIALIZE"   << endl;
   fout << "#define _BTAS_QSPARSE_TEMPLATE_SPECIALIZE 1" << endl;
-//fout << "#include <btas/QSPARSE/QSDArray.h>"          << endl;
-  fout << "#include <btas/QSPARSE/QSDblas.h>"           << endl;
+//fout << "#include <legacy/QSPARSE/QSDArray.h>"          << endl;
+  fout << "#include <legacy/QSPARSE/QSDblas.h>"           << endl;
   fout << "namespace btas" << endl;
   fout << "{" << endl << endl;
 
@@ -163,12 +163,12 @@ int main()
   fout << "#include \"FermiQuantum.h\"" << endl;
   fout << "namespace btas { typedef FermiQuantum Quantum; }" << endl;
   fout << endl;
-//fout << "#include <btas/DENSE/DArray.h>" << endl;
-  fout << "#include <btas/DENSE/Dblas.h>" << endl;
-//fout << "#include <btas/SPARSE/SDArray.h>" << endl;
-  fout << "#include <btas/SPARSE/SDblas.h>" << endl;
-//fout << "#include <btas/QSPARSE/QSDArray.h>" << endl;
-  fout << "#include <btas/QSPARSE/QSDblas.h>" << endl;
+//fout << "#include <legacy/DENSE/DArray.h>" << endl;
+  fout << "#include <legacy/DENSE/Dblas.h>" << endl;
+//fout << "#include <legacy/SPARSE/SDArray.h>" << endl;
+  fout << "#include <legacy/SPARSE/SDblas.h>" << endl;
+//fout << "#include <legacy/QSPARSE/QSDArray.h>" << endl;
+  fout << "#include <legacy/QSPARSE/QSDblas.h>" << endl;
   fout << "namespace btas" << endl;
   fout << "{" << endl << endl;
 

@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include <btas/QSPARSE/QSDArray.h>
+#include <legacy/QSPARSE/QSDArray.h>
 
 namespace prototype {
 

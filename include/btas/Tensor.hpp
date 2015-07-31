@@ -41,7 +41,7 @@ public:
 
   /// allocate
   explicit
-  Tensor (const extent_type& ns) : base_(ns) { }
+  Tensor (const extent_type& ext) : base_(ext) { }
 
   /// initializer
   Tensor (const extent_type& ns, const value_type& value) : base_(ns,value) { }
@@ -94,7 +94,7 @@ public:
 
   /// allocate
   explicit
-  Tensor (const extent_type& ns) : base_(ns) { }
+  Tensor (const extent_type& ext) : base_(ext) { }
 
   /// allocate 1
   explicit
@@ -174,7 +174,7 @@ public:
 
   /// allocate
   explicit
-  Tensor (const extent_type& ns) : base_(ns) { }
+  Tensor (const extent_type& ext) : base_(ext) { }
 
   /// allocate 2
   explicit
@@ -260,7 +260,7 @@ public:
 
   /// allocate
   explicit
-  Tensor (const extent_type& ns) : base_(ns) { }
+  Tensor (const extent_type& ext) : base_(ext) { }
 
   /// allocate 3
   explicit
@@ -346,7 +346,7 @@ public:
 
   /// allocate
   explicit
-  Tensor (const extent_type& ns) : base_(ns) { }
+  Tensor (const extent_type& ext) : base_(ext) { }
 
   /// allocate 4
   explicit
@@ -432,7 +432,7 @@ public:
 
   /// allocate
   explicit
-  Tensor (const extent_type& ns) : base_(ns) { }
+  Tensor (const extent_type& ext) : base_(ext) { }
 
   /// allocate 5
   explicit
@@ -518,7 +518,7 @@ public:
 
   /// allocate
   explicit
-  Tensor (const extent_type& ns) : base_(ns) { }
+  Tensor (const extent_type& ext) : base_(ext) { }
 
   /// allocate 6
   explicit

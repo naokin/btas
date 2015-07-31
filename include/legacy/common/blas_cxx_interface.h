@@ -21,21 +21,21 @@ typedef CBLAS_UPLO      BTAS_UPLO;
 typedef CBLAS_DIAG      BTAS_DIAG;
 typedef CBLAS_SIDE      BTAS_SIDE;
 
-extern const BTAS_TRANSPOSE Trans    ; // = CblasTrans;
-extern const BTAS_TRANSPOSE NoTrans  ; // = CblasNoTrans;
-extern const BTAS_TRANSPOSE ConjTrans; // = CblasConjTrans;
+const BTAS_TRANSPOSE Trans     = CblasTrans;
+const BTAS_TRANSPOSE NoTrans   = CblasNoTrans;
+const BTAS_TRANSPOSE ConjTrans = CblasConjTrans;
 
-extern const BTAS_ORDER     RowMajor ; // = CblasRowMajor;
-extern const BTAS_ORDER     ColMajor ; // = CblasColMajor;
+const BTAS_ORDER     RowMajor  = CblasRowMajor;
+const BTAS_ORDER     ColMajor  = CblasColMajor;
 
-extern const BTAS_UPLO      Upper    ; // = CblasUpper;
-extern const BTAS_UPLO      Lower    ; // = CblasLower;
+const BTAS_UPLO      Upper     = CblasUpper;
+const BTAS_UPLO      Lower     = CblasLower;
 
-extern const BTAS_DIAG      NonUnit  ; // = CblasNonUnit;
-extern const BTAS_DIAG      Unit     ; // = CblasUnit;
+const BTAS_DIAG      NonUnit   = CblasNonUnit;
+const BTAS_DIAG      Unit      = CblasUnit;
 
-extern const BTAS_SIDE      Left     ; // = CblasLeft;
-extern const BTAS_SIDE      Right    ; // = CblasRight;
+const BTAS_SIDE      Left      = CblasLeft;
+const BTAS_SIDE      Right     = CblasRight;
 
 };
 

@@ -47,7 +47,7 @@ public:
   {
     size_t ord_ = 0;
     index_type idx_;
-    IndexedFor<1,N,Order>::loop(base_::extent(),idx_,boost::bind(&BlockSpTensor::make_tile_,boost::ref(*this),boost::ref(ord_),_1));
+    IndexedFor<1,N,Order>::loop(base_::extent(),idx_,boost::bind(&BlockSpTensor::make_tile_,boost::ref(*this),&ord_,_1));
   }
 
   BlockSpTensor(const BlockSpTensor& x)
@@ -68,7 +68,7 @@ public:
 
     size_t ord_ = 0;
     index_type idx_;
-    IndexedFor<1,N,Order>::loop(base_::extent(),idx_,boost::bind(&BlockSpTensor::make_tile_,boost::ref(*this),boost::ref(ord_),_1));
+    IndexedFor<1,N,Order>::loop(base_::extent(),idx_,boost::bind(&BlockSpTensor::make_tile_,boost::ref(*this),&ord_,_1));
   }
 
   const size_shape_type& size_shape () const
@@ -98,14 +98,14 @@ public:
 
 private:
 
-  void make_tile_ (size_t& ord_, const index_type& idx_)
+  void make_tile_ (size_t* ord_, const index_type& idx_)
   {
-    if(base_::is_local(ord_)) {
+    if(base_::is_local((*ord_))) {
       typename tile_type::extent_type exts;
       for(size_t i = 0; i < N; ++i) exts[i] = size_shape_[i][idx_[i]];
-      (*this)[ord_].resize(exts);
+      (*this)[(*ord_)].resize(exts);
     }
-    ++ord_;
+    ++(*ord_);
   }
 
   // member variable

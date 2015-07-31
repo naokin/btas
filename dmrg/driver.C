@@ -5,7 +5,7 @@ using namespace std;
 #include "FermiQuantum.h"
 namespace btas { typedef FermiQuantum Quantum; }; // Define FermiQuantum as default quantum class
 
-#include <btas/QSPARSE/QSDArray.h>
+#include <legacy/QSPARSE/QSDArray.h>
 //#include "btas_template_specialize.h"
 
 #include "driver.h"

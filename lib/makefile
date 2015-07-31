@@ -1,7 +1,5 @@
 CXX=/homec/naokin/gnu/gcc/4.8.2/bin/g++ -std=c++11
 CXXFLAGS=-g -fopenmp -D_HAS_CBLAS -D_HAS_LAPACKE
-#CXXFLAGS=-g -fopenmp -D_HAS_CBLAS -D_HAS_INTEL_MKL
-#CXXFLAGS=-g -fopenmp -D_HAS_CBLAS -D_HAS_INTEL_MKL -D_ENABLE_DEFAULT_QUANTUM
 
 BLASLIB=-llapack -lblas
 

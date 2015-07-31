@@ -5,6 +5,7 @@
 #include <btas/TensorBase.hpp>
 
 #include <btas/IndexedFor.hpp>
+#include <btas/TensorStride.hpp>
 
 namespace btas {
 
@@ -38,7 +39,7 @@ public:
   : ref_(&x), ref_stride_(x.stride()), lower_(lb), upper_(ub), offset_(dot(lower_,x.stride()))
   {
     for(size_t i = 0; i < N; ++i) extent_[i] = upper_[i]-lower_[i]+1;
-    detail::TensorStride_<N,Order>::set(extent_,stride_);
+    TensorStride<N,Order>::set(extent_,stride_);
   }
 
   /// shallow copy
@@ -79,7 +80,7 @@ public:
   // size
 
   /// return number of sliced elements
-  size_t size () const { return detail::TensorStride_<N,Order>::size(extent_,stride_); }
+  size_t size () const { return TensorStride<N,Order>::size(extent_,stride_); }
 
   /// return extent object
   const extent_type& extent () const { return extent_; }
@@ -172,7 +173,7 @@ public:
   : ref_(&x), ref_stride_(x.stride()), lower_(lb), upper_(ub), offset_(dot(lower_,x.stride()))
   {
     for(size_t i = 0; i < N; ++i) extent_[i] = upper_[i]-lower_[i]+1;
-    detail::TensorStride_<N,Order>::set(extent_,stride_);
+    TensorStride<N,Order>::set(extent_,stride_);
   }
 
   /// shallow copy
@@ -224,7 +225,7 @@ public:
   // size
 
   /// return number of sliced elements
-  size_t size () const { return detail::TensorStride_<N,Order>::size(extent_,stride_); }
+  size_t size () const { return TensorStride<N,Order>::size(extent_,stride_); }
 
   /// return extent object
   const extent_type& extent () const { return extent_; }
@@ -299,6 +300,16 @@ slice<T,N,Order> make_slice (
 
 template<typename T, size_t N, CBLAS_ORDER Order>
 const_slice<T,N,Order> make_slice (
+  const TensorBase<T,N,Order>& x,
+  const typename const_slice<T,N,Order>::index_type& lower,
+  const typename const_slice<T,N,Order>::index_type& upper)
+{
+  return const_slice<T,N,Order>(x,lower,upper);
+}
+
+/// force to make const_slice
+template<typename T, size_t N, CBLAS_ORDER Order>
+const_slice<T,N,Order> make_cslice (
   const TensorBase<T,N,Order>& x,
   const typename const_slice<T,N,Order>::index_type& lower,
   const typename const_slice<T,N,Order>::index_type& upper)

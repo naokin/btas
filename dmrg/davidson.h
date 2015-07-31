@@ -9,7 +9,7 @@
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
 
-#include <btas/QSPARSE/QSDArray.h>
+#include <legacy/QSPARSE/QSDArray.h>
 
 //#include "btas_template_specialize.h"
 
