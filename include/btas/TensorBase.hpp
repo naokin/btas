@@ -132,6 +132,14 @@ public:
 
   // const expression
 
+  // for C++98 compatiblity
+
+  static const size_t RANK = N;
+
+  static const CBLAS_ORDER ORDER = Order;
+
+  // as a function call
+
   static size_t rank () { return N; }
 
   static CBLAS_ORDER order () { return Order; }

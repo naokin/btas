@@ -8,9 +8,11 @@
 
 namespace btas {
 
-/// Tensor object wrapping a pointer to an array
+template<class Iterator, size_t N, CBLAS_ORDER Order> class TensorWrapper;
+
+/// A class wrapping a pointer to an array to provide a tensor view of the array
 template<typename T, size_t N, CBLAS_ORDER Order>
-class TensorWrapper {
+class TensorWrapper<T*,N,Order> {
 
   typedef TensorStride<N,Order> Stride;
 
@@ -18,13 +20,13 @@ public:
 
   typedef T value_type;
 
-  typedef T& reference;
-
-  typedef const T& const_reference;
-
   typedef T* pointer;
 
   typedef const T* const_pointer;
+
+  typedef T& reference;
+
+  typedef const T& const_reference;
 
   typedef typename Stride::extent_type extent_type;
 
@@ -44,8 +46,8 @@ public:
   { }
 
   /// Constructor (user accessible)
-  TensorWrapper (pointer p, const extent_type& ext)
-  : start_(p), stride_holder_(ext)
+  TensorWrapper (pointer first, const extent_type& ext)
+  : start_(first), stride_holder_(ext)
   { finish_ = start_+stride_holder_.size(); }
 
   /// Shallow copy
@@ -95,14 +97,22 @@ public:
   // reset
 
   /// reset the pointer
-  void reset (pointer p, const extent_type& ext)
+  void reset (pointer first, const extent_type& ext)
   {
     stride_holder_.set(ext);
-    start_  = p;
+    start_  = first;
     finish_ = start_+stride_holder_.size();
   }
 
   // const expression
+
+  // for C++98 compatiblity
+
+  static const size_t RANK = N;
+
+  static const CBLAS_ORDER ORDER = Order;
+
+  // as a function call
 
   static size_t rank () { return N; }
 
@@ -210,11 +220,11 @@ private:
 
   pointer finish_;
 
-}; // class TensorWrapper
+}; // class TensorWrapper<T*,N,Order>
 
 /// Tensor object wrapping a const pointer to an array
 template<typename T, size_t N, CBLAS_ORDER Order>
-class ConstTensorWrapper {
+class TensorWrapper<const T*,N,Order> {
 
   typedef TensorStride<N,Order> Stride;
 
@@ -222,11 +232,11 @@ public:
 
   typedef T value_type;
 
-  typedef T& reference;
+  typedef const T& reference;
 
   typedef const T& const_reference;
 
-  typedef T* pointer;
+  typedef const T* pointer;
 
   typedef const T* const_pointer;
 
@@ -238,42 +248,42 @@ public:
 
   typedef typename Stride::ordinal_type ordinal_type;
 
-  typedef T* iterator;
+  typedef const T* iterator;
 
   typedef const T* const_iterator;
 
   // Constructors
 
-  ConstTensorWrapper () : start_(NULL), finish_(NULL)
+  TensorWrapper () : start_(NULL), finish_(NULL)
   { }
 
   /// Constructor (user accessible)
-  ConstTensorWrapper (const_pointer p, const extent_type& ext)
-  : start_(p), stride_holder_(ext)
+  TensorWrapper (const_pointer first, const extent_type& ext)
+  : start_(first), stride_holder_(ext)
   { finish_ = start_+stride_holder_.size(); }
 
   /// Shallow copy
   explicit
-  ConstTensorWrapper (const ConstTensorWrapper& x)
+  TensorWrapper (const TensorWrapper& x)
   : start_(x.start_), finish_(x.finish_), stride_holder_(x.stride_holder_)
   { }
 
   /// Shallow copy from non-const TensorWrapper
   explicit
-  ConstTensorWrapper (const TensorWrapper& x)
+  TensorWrapper (const TensorWrapper<T*,N,Order>& x)
   : start_(x.start_), finish_(x.finish_), stride_holder_(x.stride_holder_)
   { }
 
   /// destructor
- ~ConstTensorWrapper () { }
+ ~TensorWrapper () { }
 
   // reset
 
   /// reset the pointer
-  void reset (const_pointer p, const extent_type& ext)
+  void reset (const_pointer first, const extent_type& ext)
   {
     stride_holder_.set(ext);
-    start_  = p;
+    start_  = first;
     finish_ = start_+stride_holder_.size();
   }
 
@@ -331,7 +341,7 @@ public:
   const_reference at (const index_type& idx) const
   {
     ordinal_type ord = this->ordinal(idx);
-    BTAS_ASSERT(ord < this->size(),"ConstTensorWrapper::at, out of range access detected.");
+    BTAS_ASSERT(ord < this->size(),"TensorWrapper::at, out of range access detected.");
     return start_[ord];
   }
 
@@ -344,7 +354,7 @@ public:
   // others
 
   /// swap objects
-  void swap (ConstTensorWrapper& x)
+  void swap (TensorWrapper& x)
   {
     std::swap(start_, x.start_);
     std::swap(finish_,x.finish_);
@@ -359,7 +369,7 @@ private:
 
   const_pointer finish_;
 
-}; // class ConstTensorWrapper
+}; // class TensorWrapper<const T*,N,Order>
 
 } // namespace btas
 

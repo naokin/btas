@@ -1,5 +1,20 @@
 Environmental variables used in compilation:
+
 _HAS_CBLAS
 _HAS_INTEL_MKL
 _DEFAULT_QUANTUM
 _SERIAL
+
+
+TensorBase : Base tensor class implemented in terms of STL vector as strage.
+
+Tensor : Derived from TensorBase with convenient constructors and access operators.
+
+TensorView : A class wrapping a pointer to the first of an array to provide a tensor view.
+
+TensorIterator : Iterator in terms of tensor index.
+
+TensorWrapper : A class wrapping a tensor object as a TensorIterator.
+
+ConstTensorWrapper : A class wrapping a const tensor object as a TensorIterator to the constant.
+
