@@ -100,6 +100,9 @@ private:
 
   void make_tile_ (size_t* ord_, const index_type& idx_)
   {
+    // For OpenMP, ord_ with private attribute
+    if(*ord_ == 0) *ord_ = shape_.ordinal(idx_);
+
     if(base_::is_local((*ord_))) {
       typename tile_type::extent_type exts;
       for(size_t i = 0; i < N; ++i) exts[i] = size_shape_[i][idx_[i]];

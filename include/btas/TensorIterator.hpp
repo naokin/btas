@@ -1,13 +1,19 @@
 #ifndef __BTAS_TENSOR_ITERATOR_HPP
 #define __BTAS_TENSOR_ITERATOR_HPP
 
+#include <vector>
 #include <algorithm>
 #include <iterator>
+
+#include <boost/type_traits.hpp>
 
 #include <btas/TensorBase.hpp>
 #include <btas/TensorStride.hpp>
 
 namespace btas {
+
+/// Fwd. decl.
+template<class Iterator, size_t N, CBLAS_ORDER Order = CblasRowMajor> class TensorIterator;
 
 namespace detail {
 
@@ -24,7 +30,7 @@ struct TensorIterator_helper<Iterator,N,CblasRowMajor> {
   typedef typename Stride::index_type index_type;
   typedef typename Stride::ordinal_type ordinal_type;
 
-  typedef std::iterator_traits<Iterator>::difference_type difference_type;
+  typedef typename std::iterator_traits<Iterator>::difference_type difference_type;
 
   /// increment tensor index and return iterator offset
   static difference_type increment (index_type& idx, const extent_type& ext, const stride_type& str)
@@ -36,7 +42,7 @@ struct TensorIterator_helper<Iterator,N,CblasRowMajor> {
       // increment the leading rank
       ++idx[N-1];
       // calculate offset
-      difference_type n = str[N-1];
+      n = str[N-1];
       // increment
       for(size_t i = N-1; i > 0; --i) {
         // check index range and stair up to the next
@@ -91,7 +97,7 @@ struct TensorIterator_helper<Iterator,N,CblasColMajor> {
   typedef typename Stride::index_type index_type;
   typedef typename Stride::ordinal_type ordinal_type;
 
-  typedef std::iterator_traits<Iterator>::difference_type difference_type;
+  typedef typename std::iterator_traits<Iterator>::difference_type difference_type;
 
   /// increment tensor index and return iterator offset
   static difference_type increment (index_type& idx, const extent_type& ext, const stride_type& str)
@@ -103,7 +109,7 @@ struct TensorIterator_helper<Iterator,N,CblasColMajor> {
       // increment the leading rank
       ++idx[0];
       // calculate offset
-      difference_type n = str[0];
+      n = str[0];
       // increment
       for(size_t i = 0; i < N-1; ++i) {
         // check index range and stair up to the next
@@ -147,6 +153,82 @@ struct TensorIterator_helper<Iterator,N,CblasColMajor> {
   }
 };
 
+/// Get const_iterator type
+template<class Iter> struct __TensorIteratorConst;
+
+/// Specialized for a pointer type
+template<typename T> struct __TensorIteratorConst<T*>
+{ typedef const T* type; };
+
+/// Specialized for a pointer type
+template<typename T> struct __TensorIteratorConst<const T*>
+{ typedef const T* type; };
+
+///// Specialized for a std::vector<T>::iterator
+//template<typename T, class Alloc>
+//struct __TensorIteratorConst<typename std::vector<T,Alloc>::iterator>
+//{ typedef typename std::vector<T,Alloc>::const_iterator type; };
+
+///// Specialized for a std::vector<T>::iterator
+//template<typename T, class Alloc>
+//struct __TensorIteratorConst<typename std::vector<T>::const_iterator>
+//{ typedef typename std::vector<T,Alloc>::const_iterator type; };
+
+/// __gnu_cxx::__normal_iterator<T*,Container>
+template<typename T, class Container>
+struct __TensorIteratorConst< __gnu_cxx::__normal_iterator<T*,Container> >
+{ typedef __gnu_cxx::__normal_iterator<const T*,Container> type; };
+
+/// __gnu_cxx::__normal_iterator<const T*,Container>
+template<typename T, class Container>
+struct __TensorIteratorConst< __gnu_cxx::__normal_iterator<const T*,Container> >
+{ typedef __gnu_cxx::__normal_iterator<const T*,Container> type; };
+
+/// Specialized for a TensorIterator, to instantiate __TensorIteratorConst recursively
+template<class Iter, size_t N, CBLAS_ORDER Order>
+struct __TensorIteratorConst< TensorIterator<Iter,N,Order> >
+{
+  typedef TensorIterator<typename __TensorIteratorConst<Iter>::type,N,Order> type;
+};
+
+/// Get iterator type
+template<class Iter> struct __TensorIteratorRemoveConst;
+
+/// Specialized for a pointer type
+template<typename T> struct __TensorIteratorRemoveConst<T*>
+{ typedef T* type; };
+
+/// Specialized for a pointer type
+template<typename T> struct __TensorIteratorRemoveConst<const T*>
+{ typedef T* type; };
+
+///// Specialized for a std::vector<T>::iterator
+//template<typename T, class Alloc>
+//struct __TensorIteratorRemoveConst<typename std::vector<T,Alloc>::iterator>
+//{ typedef typename std::vector<T,Alloc>::iterator type; };
+
+///// Specialized for a std::vector<T>::iterator
+//template<typename T, class Alloc>
+//struct __TensorIteratorRemoveConst<typename std::vector<T,Alloc>::const_iterator>
+//{ typedef typename std::vector<T,Alloc>::iterator type; };
+
+/// __gnu_cxx::__normal_iterator<T*,Container>
+template<typename T, class Container>
+struct __TensorIteratorRemoveConst< __gnu_cxx::__normal_iterator<T*,Container> >
+{ typedef __gnu_cxx::__normal_iterator<T*,Container> type; };
+
+/// __gnu_cxx::__normal_iterator<const T*,Container>
+template<typename T, class Container>
+struct __TensorIteratorRemoveConst< __gnu_cxx::__normal_iterator<const T*,Container> >
+{ typedef __gnu_cxx::__normal_iterator<T*,Container> type; };
+
+/// Specialized for a TensorIterator, to instantiate __TensorIteratorRemoveConst recursively
+template<class Iter, size_t N, CBLAS_ORDER Order>
+struct __TensorIteratorRemoveConst< TensorIterator<Iter,N,Order> >
+{
+  typedef TensorIterator<typename __TensorIteratorRemoveConst<Iter>::type,N,Order> type;
+};
+
 } // namespace detail
 
 /// A tensor wrapper of iterator to provide a multi-dimensional iterator (similar to nditer in NumPy)
@@ -154,29 +236,24 @@ struct TensorIterator_helper<Iterator,N,CblasColMajor> {
 /// \tparam N rank of tensor
 /// \tparam Order storage ordering, which affects increment/decrement operations
 template<class Iterator, size_t N, CBLAS_ORDER Order>
-class TensorIterator : public std::iterator<
-      typename std::iterator_traits<Iterator>::iterator_category,
-      typename std::iterator_traits<Iterator>::value_type>
-{
+class TensorIterator {
 
-  typedef std::iterator<
-      typename std::iterator_traits<Iterator>::iterator_category,
-      typename std::iterator_traits<Iterator>::value_type> Base;
+  typedef std::iterator_traits<Iterator> Traits;
 
   typedef TensorStride<N,Order> Stride;
 
   typedef detail::TensorIterator_helper<Iterator,N,Order> Helper;
 
-  // enable conversion from Arbitral to Iterator if it's possible.
-  template<class Arbitral> friend class TensorIterator<Arbitral,N,Order>;
+  // enable conversion from iterator to const_iterator
+  friend class TensorIterator<typename detail::__TensorIteratorConst<Iterator>::type,N,Order>;
 
 public:
 
-  using Base::iterator_category;
-  using Base::value_type;
-  using Base::difference_type;
-  using Base::reference;
-  using Base::pointer;
+  typedef typename Traits::iterator_category iterator_category;
+  typedef typename Traits::value_type value_type;
+  typedef typename Traits::difference_type difference_type;
+  typedef typename Traits::reference reference;
+  typedef typename Traits::pointer pointer;
 
   typedef typename Stride::extent_type extent_type;
   typedef typename Stride::stride_type stride_type;
@@ -212,7 +289,7 @@ public:
 
   /// Default constructor
   TensorIterator ()
-  : start_(Iterator()), current_(Iterator()), status_(END_)
+  : start_(Iterator()), current_(Iterator())
   { }
 
   /// Destructor
@@ -235,9 +312,13 @@ public:
   }
 
   /// Copy constructor
-  /// NOTE: this could give an error at compile time if Arbitral is unable to convert to Iterator
+  /// NOTE: this could give an error at compile time if Tensor<Arbitral,N,Order> is either this type or friend (i.e. non-const iterator).
   template<class Arbitral>
   TensorIterator (const TensorIterator<Arbitral,N,Order>& x)
+  : start_(x.start_), current_(x.current_), index_(x.index_), stride_holder_(x.stride_holder_), stride_hack_(x.stride_hack_)
+  { }
+
+  TensorIterator (const TensorIterator& x)
   : start_(x.start_), current_(x.current_), index_(x.index_), stride_holder_(x.stride_holder_), stride_hack_(x.stride_hack_)
   { }
 
@@ -346,7 +427,7 @@ public:
   /// access to the reference specified by a relative offset
   reference operator[] (const difference_type& n) const
   {
-    this->get_address(stride_holder_.index(this->ordinal()+n));
+    return *(this->get_address(stride_holder_.index(this->ordinal()+n)));
   }
 
   TensorIterator& operator+= (const difference_type& n)
@@ -368,12 +449,6 @@ public:
   }
 
   difference_type operator- (const TensorIterator& x) const
-  {
-    assert(start_ == x.start_);
-    return (this->ordinal()-x.ordinal());
-  }
-
-  difference_type operator- (const ConstTensorIterator& x) const
   {
     assert(start_ == x.start_);
     return (this->ordinal()-x.ordinal());
@@ -417,48 +492,6 @@ private:
   void decrement () { current_ += Helper::decrement(index_,this->extent(),stride_hack_); }
 
 };
-
-namespace detail {
-
-/// Get const_iterator type
-template<class Iter, size_t N, CBLAS_ORDER Order> struct __ConstTensorIterator;
-
-/// Specialized for a pointer type
-template<typename T, size_t N, CBLAS_ORDER Order>
-struct __ConstTensorIterator<T*,N,Order>
-{
-  typedef TensorIterator<const T*,N,Order> type;
-};
-
-/// Specialized for a pointer type
-template<typename T, size_t N, CBLAS_ORDER Order>
-struct __ConstTensorIterator<const T*,N,Order>
-{
-  typedef TensorIterator<const T*,N,Order> type;
-};
-
-/// Specialized for a std::vector<T>::iterator
-template<typename T, size_t N, CBLAS_ORDER Order>
-struct __ConstTensorIterator<typename std::vector<T>::iterator,N,Order>
-{
-  typedef TensorIterator<typename std::vector<T>::const_iterator,N,Order> type;
-};
-
-/// Specialized for a std::vector<T>::iterator
-template<typename T, size_t N, CBLAS_ORDER Order>
-struct __ConstTensorIterator<typename std::vector<T>::const_iterator,N,Order>
-{
-  typedef TensorIterator<typename std::vector<T>::const_iterator,N,Order> type;
-};
-
-/// Specialized for a TensorIterator, to instantiate __ConstTensorIterator recursively
-template<class Iter, size_t BaseN, CBLAS_ORDER BaseOrder, size_t N, CBLAS_ORDER Order>
-__ConstTensorIterator<TensorIterator<Iter,BaseN,BaseOrder>,N,Order>
-{
-  typedef TensorIterator<typename __ConstTensorIterator<Iter,BaseN,BaseOrder>::type,N,Order> type;
-};
-
-} // namespace detail
 
 } // namespace btas
 

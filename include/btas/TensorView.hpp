@@ -10,7 +10,7 @@
 namespace btas {
 
 /// Tensor object wrapping TensorIterator
-template<class Iterator, size_t N, CBLAS_ORDER Order>
+template<class Iterator, size_t N, CBLAS_ORDER Order = CblasRowMajor>
 class TensorView {
 
   typedef TensorStride<N,Order> Stride;
@@ -23,11 +23,11 @@ public:
 
   typedef typename Traits::reference reference;
 
-  typedef typename const reference const_reference;
+  typedef const reference const_reference;
 
   typedef typename Traits::pointer pointer;
 
-  typedef typename const pointer const_pointer;
+  typedef const pointer const_pointer;
 
   typedef typename Stride::extent_type extent_type;
 
@@ -39,7 +39,7 @@ public:
 
   typedef TensorIterator<Iterator,N,Order> iterator;
 
-  typedef typename detail::__ConstTensorIterator<Iterator,N,Order>::type const_iterator;
+  typedef TensorIterator<typename detail::__TensorIteratorConst<Iterator>::type,N,Order> const_iterator;
 
   // Constructors
 
@@ -48,12 +48,12 @@ public:
 
   /// Construct from iterator to the first and extent
   TensorView (Iterator first, const extent_type& ext)
-  { this->rest(first,ext); }
+  { this->reset(first,ext); }
 
   /// Construct from specific extent and stride.
   /// To make permute, slice, tie, etc...
   TensorView (Iterator first, const extent_type& ext, const stride_type& str)
-  { this->rest(first,ext,str); }
+  { this->reset(first,ext,str); }
 
   /// Shallow copy
   explicit

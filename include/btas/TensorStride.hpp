@@ -27,6 +27,12 @@ public:
 
   typedef typename index_type::value_type ordinal_type;
 
+  TensorStride ()
+  {
+    for(size_t i = 0; i < N; ++i) extent_[i] = 0;
+    for(size_t i = 0; i < N; ++i) stride_[i] = 0;
+  }
+
   TensorStride (const extent_type& ext)
   : extent_(ext)
   {
@@ -134,6 +140,12 @@ public:
   typedef boost::array<T_idx,N> index_type;
 
   typedef typename index_type::value_type ordinal_type;
+
+  TensorStride ()
+  {
+    for(size_t i = 0; i < N; ++i) extent_[i] = 0;
+    for(size_t i = 0; i < N; ++i) stride_[i] = 0;
+  }
 
   TensorStride (const extent_type& ext)
   : extent_(ext)

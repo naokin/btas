@@ -22,6 +22,19 @@ struct IndexedFor<I, N, CblasRowMajor> {
 };
 
 template<size_t N>
+struct IndexedFor<1, N, CblasRowMajor> {
+  /// loop and examine op(index)
+  template<class Ext_, class Idx_, class Op_>
+  static void loop (const Ext_& extent, Idx_& index, Op_ op)
+  {
+#pragma omp parallel default(private) shared(extent)
+#pragma omp for schedule(static) nowait
+    for(index[0] = 0; index[0] < extent[0]; ++index[0])
+      IndexedFor<2,N,CblasRowMajor>::loop(extent,index,op);
+  }
+};
+
+template<size_t N>
 struct IndexedFor<N, N, CblasRowMajor> {
   /// loop and examine op(index)
   template<class Ext_, class Idx_, class Op_>
@@ -39,6 +52,19 @@ struct IndexedFor<I, N, CblasColMajor> {
   {
     for(index[N-I] = 0; index[N-I] < extent[N-I]; ++index[N-I])
       IndexedFor<I+1,N,CblasColMajor>::loop(extent,index,op);
+  }
+};
+
+template<size_t N>
+struct IndexedFor<1, N, CblasColMajor> {
+  /// loop and examine op(index)
+  template<class Ext_, class Idx_, class Op_>
+  static void loop (const Ext_& extent, Idx_& index, Op_ op)
+  {
+#pragma omp parallel default(private) shared(extent)
+#pragma omp for schedule(static) nowait
+    for(index[N-1] = 0; index[N-1] < extent[N-1]; ++index[N-1])
+      IndexedFor<2,N,CblasColMajor>::loop(extent,index,op);
   }
 };
 

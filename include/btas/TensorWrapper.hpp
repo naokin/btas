@@ -8,7 +8,7 @@
 
 namespace btas {
 
-template<class Iterator, size_t N, CBLAS_ORDER Order> class TensorWrapper;
+template<class Iterator, size_t N, CBLAS_ORDER Order = CblasRowMajor> class TensorWrapper;
 
 /// A class wrapping a pointer to an array to provide a tensor view of the array
 template<typename T, size_t N, CBLAS_ORDER Order>

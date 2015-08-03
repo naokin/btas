@@ -64,7 +64,7 @@ protected:
   explicit
   TensorBase (const extent_type& ext)
   : stride_holder_(ext)
-  { }
+  { store_.resize(stride_holder_.size()); }
 
   /// initializer
   TensorBase (const extent_type& ext, const value_type& value)

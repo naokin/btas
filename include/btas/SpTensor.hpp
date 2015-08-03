@@ -62,6 +62,7 @@ public:
   typedef typename shape_type::extent_type extent_type;
   typedef typename shape_type::stride_type stride_type;
   typedef typename shape_type::index_type index_type;
+  typedef typename shape_type::ordinal_type ordinal_type;
 
   typedef typename store_type::iterator iterator;
   typedef typename store_type::const_iterator const_iterator;
@@ -182,6 +183,12 @@ public:
 
   // ****************************************************************************************************
   // sparsity
+
+  /// convert tensor index to ordinal index
+  ordinal_type ordinal (const index_type& idx) const { return shape_.ordinal(idx); }
+
+  /// convert ordinal index to tensor index
+  index_type index (const ordinal_type& ord) const { return shape_.index(ord); }
 
   /// whether data specified by ordinal index i exists somewhere (faster than Sparsity::has(...))
   bool has (size_t i) const { return (shape_[i] != __HAS_NO_DATA__); }
@@ -424,6 +431,9 @@ protected:
 
   void make_shape_ (size_t* ord_, size_t* nnz_, const index_type& idx_)
   {
+    // For OpenMP, ord_ with private attribute
+    if(*ord_ == 0) *ord_ = shape_.ordinal(idx_);
+
     if(is_allowed(idx_)) {
 #ifndef _SERIAL
       shape_[(*ord_)] = (*nnz_)%world_.size();
