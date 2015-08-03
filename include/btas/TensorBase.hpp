@@ -261,8 +261,4 @@ private:
 
 } // namespace btas
 
-#ifndef __BTAS_SLICE_HPP
-#include <btas/slice.hpp>
-#endif
-
 #endif // __BTAS_TENSOR_BASE_HPP

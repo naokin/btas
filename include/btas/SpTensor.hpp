@@ -28,6 +28,12 @@ class NoSymmetry_ { };
 template<typename T, size_t N, class Q = NoSymmetry_, CBLAS_ORDER Order = CblasRowMajor>
 class SpTensor : public SpShape<N,Q> {
 
+#ifndef _SERIAL
+#define _LOCALMAP_TYPE_ lcmap_
+#else
+#define _LOCALMAP_TYPE_ shape_
+#endif
+
 private:
 
   typedef SpShape<N,Q> base_;
@@ -67,9 +73,9 @@ public:
   typedef typename store_type::iterator iterator;
   typedef typename store_type::const_iterator const_iterator;
 
-  using typename base_::qnum_type;
-  using typename base_::qnum_array_type;
-  using typename base_::qnum_shape_type;
+  typedef typename base_::qnum_type qnum_type;
+  typedef typename base_::qnum_array_type qnum_array_type;
+  typedef typename base_::qnum_shape_type qnum_shape_type;
   using base_::is_allowed;
 
   // ****************************************************************************************************
@@ -236,8 +242,8 @@ public:
   /// search obj. from local storage
   iterator find (size_t i)
   {
-    if(lcmap_[i] != __HAS_NO_DATA__)
-      return iterator(store_.data()+lcmap_[i]);
+    if(_LOCALMAP_TYPE_[i] != __HAS_NO_DATA__)
+      return iterator(store_.data()+_LOCALMAP_TYPE_[i]);
     else
       return store_.end();
   }
@@ -255,8 +261,8 @@ public:
   /// search obj. from local storage
   const_iterator find (size_t i) const
   {
-    if(lcmap_[i] != __HAS_NO_DATA__)
-      return iterator(store_.data()+lcmap_[i]);
+    if(_LOCALMAP_TYPE_[i] != __HAS_NO_DATA__)
+      return iterator(store_.data()+_LOCALMAP_TYPE_[i]);
     else
       return store_.end();
   }
@@ -271,7 +277,7 @@ public:
   {
     // never return reference of data if it's not local
     BTAS_ASSERT(this->is_local(i), "operaotr[] can only access to local element.");
-    return store_[lcmap_[i]];
+    return store_[_LOCALMAP_TYPE_[i]];
   }
 
   const_reference operator() (const index_type& idx_) const
@@ -281,7 +287,7 @@ public:
   {
     // never return reference of data if it's not local
     BTAS_ASSERT(this->is_local(i), "operaotr[] can only access to local element.");
-    return store_[lcmap_[i]];
+    return store_[_LOCALMAP_TYPE_[i]];
   }
 
   reference operator() (const index_type& idx_)
@@ -315,7 +321,7 @@ public:
     }
 #else
     // data must be found in SERIAL compt.
-    it = const_iterator(store_.data()+lcmap_[i]);
+    it = const_iterator(store_.data()+shape_[i]);
 #endif
     return it;
   }
@@ -330,10 +336,10 @@ public:
     // data not found
     if(!this->has(i)) return store_.end();
 
-    size_t me = world_.rank();
     // iterator of store_ or cache_
     const_iterator it;
 #ifndef _SERIAL
+    size_t me = world_.rank();
     if(this->where(i) == me) { // = is_local(i)
       it = const_iterator(store_.data()+lcmap_[i]);
       if(this->where(i) != to_) {
@@ -372,7 +378,7 @@ public:
     }
 #else
     // data must be found in SERIAL compt.
-    it = const_iterator(store_.data()+lcmap_[i]);
+    it = const_iterator(store_.data()+shape_[i]);
 #endif
     return it;
   }
@@ -412,7 +418,14 @@ public:
   // expert functions
 
   /// cache size
-  size_t cache_size () const { return cache_.size(); }
+  size_t cache_size () const
+  {
+#ifndef _SERIAL
+    return cache_.size();
+#else
+    return 0;
+#endif
+  }
 
   /// cache clear
   void cache_clear () const

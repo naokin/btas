@@ -56,7 +56,7 @@ public:
   { this->reset(first,ext,str); }
 
   /// Shallow copy
-  explicit
+//explicit
   TensorView (const TensorView& x)
   : start_(x.start_), stride_holder_(x.stride_holder_), stride_hack_(x.stride_hack_)
   { }

@@ -2,7 +2,9 @@
 #define __BTAS_SPARSE_DOTC_IMPL_HPP
 
 #include <functional>
+#ifndef _SERIAL
 #include <boost/mpi.hpp>
+#endif
 
 #include <btas/btas_assert.h>
 #include <btas/TensorBlas.hpp>

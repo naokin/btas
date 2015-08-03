@@ -3,6 +3,8 @@
 
 #include <blas/types.h>
 
+// FIXME: Need to implement OpenMP version of IndexFor
+
 namespace btas {
 
 // helper class to perform multiple loop
@@ -27,8 +29,6 @@ struct IndexedFor<1, N, CblasRowMajor> {
   template<class Ext_, class Idx_, class Op_>
   static void loop (const Ext_& extent, Idx_& index, Op_ op)
   {
-#pragma omp parallel default(private) shared(extent)
-#pragma omp for schedule(static) nowait
     for(index[0] = 0; index[0] < extent[0]; ++index[0])
       IndexedFor<2,N,CblasRowMajor>::loop(extent,index,op);
   }
@@ -61,8 +61,6 @@ struct IndexedFor<1, N, CblasColMajor> {
   template<class Ext_, class Idx_, class Op_>
   static void loop (const Ext_& extent, Idx_& index, Op_ op)
   {
-#pragma omp parallel default(private) shared(extent)
-#pragma omp for schedule(static) nowait
     for(index[N-1] = 0; index[N-1] < extent[N-1]; ++index[N-1])
       IndexedFor<2,N,CblasColMajor>::loop(extent,index,op);
   }

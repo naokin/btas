@@ -300,7 +300,7 @@ public:
   TensorIterator (Iterator p, const index_type& idx, const extent_type& ext)
   : start_(p), index_(idx), stride_holder_(ext)
   {
-    strider_hack_ = stride_holder_.stride();
+    stride_hack_ = stride_holder_.stride();
     current_ = this->get_address(index_);
   }
 
