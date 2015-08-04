@@ -53,7 +53,7 @@ int main ()
   for(size_t i = 0; i < C.extent(0); ++i) {
     std::cout << "\t";
     for(size_t j = 0; j < C.extent(1); ++j) {
-      std::cout << std::setw(6) << C(shape(i,j));
+      std::cout << std::setw(6) << C(i,j);
     }
     std::cout << std::endl;
   }
@@ -67,7 +67,7 @@ int main ()
   for(size_t i = 0; i < C.extent(0); ++i) {
     std::cout << "\t";
     for(size_t j = 0; j < C.extent(1); ++j) {
-      std::cout << std::setw(6) << C(shape(i,j));
+      std::cout << std::setw(6) << C(i,j);
     }
     std::cout << std::endl;
   }

@@ -60,7 +60,7 @@ int main ()
     std::cout << "\t";
     for(size_t j = 0; j < B.extent(1); ++j) {
       for(size_t k = 0; k < B.extent(2); ++k) {
-        std::cout << std::fixed << std::setw(4) << B(shape(i,j,k));
+        std::cout << std::fixed << std::setw(4) << B(i,j,k);
       }
       std::cout << " | ";
     }

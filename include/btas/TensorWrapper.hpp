@@ -185,12 +185,12 @@ public:
   /// access by tensor index
   template<typename... Args>
   reference operator() (const Args&... args)
-  { return store_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
+  { return start_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
 
   /// access by tensor index with const-qualifier
   template<typename... Args>
   const_reference operator() (const Args&... args) const
-  { return store_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
+  { return start_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
 
   /// access by tensor index with range check
   reference at (const index_type& idx)
@@ -380,7 +380,7 @@ public:
   /// access by tensor index with const-qualifier
   template<typename... Args>
   const_reference operator() (const Args&... args) const
-  { return store_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
+  { return start_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
 
   /// access by tensor index with range check having const-qualifier
   const_reference at (const index_type& idx) const

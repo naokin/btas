@@ -196,11 +196,37 @@ public:
   /// convert ordinal index to tensor index
   index_type index (const ordinal_type& ord) const { return shape_.index(ord); }
 
+  /// whether data specified by tensor index exists somewhere (faster than Sparsity::has(...))
+  template<typename... Args>
+  bool has (const Args&... args) const { return (shape_(args...) != __HAS_NO_DATA__); }
+
+// TODO: if variadic template ver. works, remove follow
+///// whether data specified by tensor index idx_ exists somewhere (faster than Sparsity::has(...))
+//bool has (const index_type& idx_) const { return (shape_(idx_) != __HAS_NO_DATA__); }
+
   /// whether data specified by ordinal index i exists somewhere (faster than Sparsity::has(...))
   bool has (size_t i) const { return (shape_[i] != __HAS_NO_DATA__); }
 
-  /// whether data specified by tensor index idx_ exists somewhere (faster than Sparsity::has(...))
-  bool has (const index_type& idx_) const { return (shape_(idx_) != __HAS_NO_DATA__); }
+  /// whether data specified by tensor index idx_ exists in this process
+  template<typename... Args>
+  bool is_local (const Args&... args) const
+  {
+#ifndef _SERIAL
+    return (shape_(args...) == world_.rank());
+#else
+    return this->has(args...);
+#endif
+  }
+
+//  /// whether data specified by tensor index idx_ exists in this process
+//  bool is_local (const index_type& idx_) const
+//  {
+//#ifndef _SERIAL
+//    return (shape_(idx_) == world_.rank());
+//#else
+//    return this->has(idx_);
+//#endif
+//  }
 
   /// whether data specified by ordinal index i exists in this process
   bool is_local (size_t i) const
@@ -212,21 +238,15 @@ public:
 #endif
   }
 
-  /// whether data specified by tensor index idx_ exists in this process
-  bool is_local (const index_type& idx_) const
-  {
-#ifndef _SERIAL
-    return (shape_(idx_) == world_.rank());
-#else
-    return this->has(idx_);
-#endif
-  }
+  /// return process number where data specified by tensor index idx_ exists
+  template<typename... Args>
+  const uint_type& where (const Args&... args) const { return shape_(args...); }
+
+///// return process number where data specified by tensor index idx_ exists
+//const uint_type& where (const index_type& idx_) const { return shape_(idx_); }
 
   /// return process number where data specified by ordinal index i exists
   const uint_type& where (size_t i) const { return shape_[i]; }
-
-  /// return process number where data specified by tensor index idx_ exists
-  const uint_type& where (const index_type& idx_) const { return shape_(idx_); }
 
   // ****************************************************************************************************
   // access to element via iterator
@@ -249,6 +269,11 @@ public:
   }
 
   /// search obj. from local storage
+  template<typename... Args>
+  iterator find (const Args&... args)
+  { return this->find(shape_.ordinal(make_array<typename index_type::value_type>(args...))); }
+
+  /// search obj. from local storage
   iterator find (const index_type& idx_)
   { return this->find(shape_.ordinal(idx_)); }
 
@@ -268,6 +293,11 @@ public:
   }
 
   /// search obj. from local storage
+  template<typename... Args>
+  const_iterator find (const Args&... args) const
+  { return this->find(shape_.ordinal(make_array<typename index_type::value_type>(args...))); }
+
+  /// search obj. from local storage
   const_iterator find (const index_type& idx_) const
   { return this->find(shape_.ordinal(idx_)); }
 
@@ -280,6 +310,10 @@ public:
     return store_[_LOCALMAP_TYPE_[i]];
   }
 
+  template<typename... Args>
+  const_reference operator() (const Args&... args) const
+  { return (*this)[shape_.ordinal(make_array<typename index_type::value_type>(args...))]; }
+
   const_reference operator() (const index_type& idx_) const
   { return (*this)[shape_.ordinal(idx_)]; }
 
@@ -289,6 +323,10 @@ public:
     BTAS_ASSERT(this->is_local(i), "operaotr[] can only access to local element.");
     return store_[_LOCALMAP_TYPE_[i]];
   }
+
+  template<typename... Args>
+  reference operator() (const Args&... args)
+  { return (*this)[shape_.ordinal(make_array<typename index_type::value_type>(args...))]; }
 
   reference operator() (const index_type& idx_)
   { return (*this)[shape_.ordinal(idx_)]; }
