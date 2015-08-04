@@ -10,7 +10,7 @@
 
 #include <btas/btas_assert.h>
 #include <btas/Tensor.hpp>
-#include <btas/array_utils.hpp>
+#include <btas/make_array.hpp>
 #include <btas/qnum_array_utils.hpp>
 #include <btas/SpShape.hpp>
 

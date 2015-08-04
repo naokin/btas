@@ -3,7 +3,7 @@
 
 #include <algorithm>
 
-#include <btas/TensorBase.hpp>
+#include <btas/Tensor.hpp>
 #include <btas/TensorStride.hpp>
 
 namespace btas {
@@ -56,6 +56,12 @@ public:
   : start_(x.start_), finish_(x.finish_), stride_holder_(x.stride_holder_)
   { }
 
+  /// Shallow copy from Tensor object
+  explicit
+  TensorWrapper (Tensor<T,N,Order>& x)
+  : start_(x.data()), finish_(x.data()+x.size()), stride_holder_(x.extent())
+  { }
+
   /// destructor
  ~TensorWrapper () { }
 
@@ -74,8 +80,8 @@ public:
     return *this;
   }
 
-  /// Deep copy assign from TensorBase (tuned)
-  TensorWrapper& operator= (const TensorBase<T,N,Order>& x)
+  /// Deep copy assign from Tensor (tuned)
+  TensorWrapper& operator= (const Tensor<T,N,Order>& x)
   {
     BTAS_ASSERT(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorWrapper::assign, extent must be the same.");
 
@@ -176,6 +182,16 @@ public:
   const_reference operator() (const index_type& idx) const
   { return start_[this->ordinal(idx)]; }
 
+  /// access by tensor index
+  template<typename... Args>
+  reference operator() (const Args&... args)
+  { return store_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
+
+  /// access by tensor index with const-qualifier
+  template<typename... Args>
+  const_reference operator() (const Args&... args) const
+  { return store_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
+
   /// access by tensor index with range check
   reference at (const index_type& idx)
   {
@@ -188,6 +204,24 @@ public:
   const_reference at (const index_type& idx) const
   {
     ordinal_type ord = this->ordinal(idx);
+    BTAS_ASSERT(ord < this->size(),"TensorWrapper::at, out of range access detected.");
+    return start_[ord];
+  }
+
+  /// access by tensor index with range check
+  template<typename... Args>
+  reference at (const Args&... args)
+  {
+    ordinal_type ord = this->ordinal(make_array<typename index_type::value_type>(args...));
+    BTAS_ASSERT(ord < this->size(),"TensorWrapper::at, out of range access detected.");
+    return start_[ord];
+  }
+
+  /// access by tensor index with range check having const-qualifier
+  template<typename... Args>
+  const_reference at (const Args&... args) const
+  {
+    ordinal_type ord = this->ordinal(make_array<typename index_type::value_type>(args...));
     BTAS_ASSERT(ord < this->size(),"TensorWrapper::at, out of range access detected.");
     return start_[ord];
   }
@@ -274,6 +308,12 @@ public:
   : start_(x.start_), finish_(x.finish_), stride_holder_(x.stride_holder_)
   { }
 
+  /// Shallow copy from Tensor object
+  explicit
+  TensorWrapper (const Tensor<T,N,Order>& x)
+  : start_(x.data()), finish_(x.data()+x.size()), stride_holder_(x.extent())
+  { }
+
   /// destructor
  ~TensorWrapper () { }
 
@@ -337,6 +377,11 @@ public:
   const_reference operator() (const index_type& idx) const
   { return start_[this->ordinal(idx)]; }
 
+  /// access by tensor index with const-qualifier
+  template<typename... Args>
+  const_reference operator() (const Args&... args) const
+  { return store_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
+
   /// access by tensor index with range check having const-qualifier
   const_reference at (const index_type& idx) const
   {
@@ -345,6 +390,16 @@ public:
     return start_[ord];
   }
 
+  /// access by tensor index with range check having const-qualifier
+  template<typename... Args>
+  const_reference at (const Args&... args) const
+  {
+    ordinal_type ord = this->ordinal(make_array<typename index_type::value_type>(args...));
+    BTAS_ASSERT(ord < this->size(),"TensorWrapper::at, out of range access detected.");
+    return start_[ord];
+  }
+
+  // pointer
   // pointer
 
   /// return const pointer to data

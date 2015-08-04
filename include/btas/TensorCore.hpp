@@ -7,8 +7,8 @@
 #include <btas/TensorBlas.hpp>
 #include <btas/TensorLapack.hpp>
 
-#include <btas/permute.hpp>
-#include <btas/tie.hpp>
+#include <btas/make_permute.hpp>
 #include <btas/make_slice.hpp>
+#include <btas/tie.hpp>
 
 #endif // __BTAS_TENSOR_CORE_HPP

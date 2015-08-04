@@ -3,7 +3,7 @@
 
 #include <algorithm>
 
-#include <btas/TensorBase.hpp>
+#include <btas/Tensor.hpp>
 #include <btas/TensorStride.hpp>
 #include <btas/TensorIterator.hpp>
 
@@ -179,6 +179,16 @@ public:
   const_reference operator() (const index_type& idx) const
   { return start_[this->ordinal(idx)]; }
 
+  /// access by tensor index
+  template<typename... Args>
+  reference operator() (const Args&... args)
+  { return store_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
+
+  /// access by tensor index with const-qualifier
+  template<typename... Args>
+  const_reference operator() (const Args&... args) const
+  { return store_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
+
   /// access by tensor index with range check
   reference at (const index_type& idx)
   {
@@ -191,6 +201,24 @@ public:
   const_reference at (const index_type& idx) const
   {
     ordinal_type ord = this->ordinal(idx);
+    BTAS_ASSERT(ord < this->size(),"TensorView::at, out of range access detected.");
+    return start_[ord];
+  }
+
+  /// access by tensor index with range check
+  template<typename... Args>
+  reference at (const Args&... args)
+  {
+    ordinal_type ord = this->ordinal(make_array<typename index_type::value_type>(args...));
+    BTAS_ASSERT(ord < this->size(),"TensorView::at, out of range access detected.");
+    return start_[ord];
+  }
+
+  /// access by tensor index with range check having const-qualifier
+  template<typename... Args>
+  const_reference at (const Args&... args) const
+  {
+    ordinal_type ord = this->ordinal(make_array<typename index_type::value_type>(args...));
     BTAS_ASSERT(ord < this->size(),"TensorView::at, out of range access detected.");
     return start_[ord];
   }

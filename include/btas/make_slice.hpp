@@ -1,7 +1,7 @@
 #ifndef __BTAS_MAKE_SLICE_HPP
 #define __BTAS_MAKE_SLICE_HPP
 
-#include <btas/TensorBase.hpp>
+#include <btas/Tensor.hpp>
 #include <btas/TensorWrapper.hpp>
 #include <btas/TensorView.hpp>
 
@@ -50,13 +50,13 @@ make_cslice (
   return return_type(x.begin()+x.ordinal(lower),ext,x.stride());
 }
 
-// For TensorBase
+// For Tensor
 
 template<typename T, size_t N, CBLAS_ORDER Order>
 TensorView<T*,N,Order> make_slice (
-        TensorBase<T,N,Order>& x,
-  const typename TensorBase<T,N,Order>::index_type& lower,
-  const typename TensorBase<T,N,Order>::index_type& upper)
+        Tensor<T,N,Order>& x,
+  const typename Tensor<T,N,Order>::index_type& lower,
+  const typename Tensor<T,N,Order>::index_type& upper)
 {
   typename TensorView<T*,N,Order>::extent_type ext;
   for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;
@@ -65,9 +65,9 @@ TensorView<T*,N,Order> make_slice (
 
 template<typename T, size_t N, CBLAS_ORDER Order>
 TensorView<const T*,N,Order> make_slice (
-  const TensorBase<T,N,Order>& x,
-  const typename TensorBase<T,N,Order>::index_type& lower,
-  const typename TensorBase<T,N,Order>::index_type& upper)
+  const Tensor<T,N,Order>& x,
+  const typename Tensor<T,N,Order>::index_type& lower,
+  const typename Tensor<T,N,Order>::index_type& upper)
 {
   typename TensorView<const T*,N,Order>::extent_type ext;
   for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;
@@ -77,9 +77,9 @@ TensorView<const T*,N,Order> make_slice (
 /// force to make const_slice
 template<typename T, size_t N, CBLAS_ORDER Order>
 TensorView<const T*,N,Order> make_cslice (
-  const TensorBase<T,N,Order>& x,
-  const typename TensorBase<T,N,Order>::index_type& lower,
-  const typename TensorBase<T,N,Order>::index_type& upper)
+  const Tensor<T,N,Order>& x,
+  const typename Tensor<T,N,Order>::index_type& lower,
+  const typename Tensor<T,N,Order>::index_type& upper)
 {
   typename TensorView<const T*,N,Order>::extent_type ext;
   for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;

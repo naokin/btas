@@ -7,7 +7,6 @@
 
 #include <boost/type_traits.hpp>
 
-#include <btas/TensorBase.hpp>
 #include <btas/TensorStride.hpp>
 
 namespace btas {
