@@ -7,7 +7,7 @@ namespace btas {
 
 template<typename T> struct remove_complex { typedef T type; };
 
-template<typename T> struct remove_complex<std::complex<T> > { typedef T type; };
+template<typename T> struct remove_complex<std::complex<T>> { typedef T type; };
 
 } // namespace btas
 

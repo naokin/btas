@@ -18,11 +18,11 @@ public:
 
   typedef T value_type;
 
-  typedef Tensor<T,N,Order> tile_type;
+  typedef Tensor<T,N,Order> block_type;
 
 private:
 
-  typedef SpTensor<tile_type,N,Q,Order> base_;
+  typedef SpTensor<block_type,N,Q,Order> base_;
 
 public:
 
@@ -47,7 +47,7 @@ public:
   {
     size_t ord_ = 0;
     index_type idx_;
-    IndexedFor<1,N,Order>::loop(base_::extent(),idx_,boost::bind(&BlockSpTensor::make_tile_,boost::ref(*this),&ord_,_1));
+    IndexedFor<1,N,Order>::loop(base_::extent(),idx_,boost::bind(&BlockSpTensor::make_block_,boost::ref(*this),&ord_,_1));
   }
 
   BlockSpTensor(const BlockSpTensor& x)
@@ -68,7 +68,7 @@ public:
 
     size_t ord_ = 0;
     index_type idx_;
-    IndexedFor<1,N,Order>::loop(base_::extent(),idx_,boost::bind(&BlockSpTensor::make_tile_,boost::ref(*this),&ord_,_1));
+    IndexedFor<1,N,Order>::loop(base_::extent(),idx_,boost::bind(&BlockSpTensor::make_block_,boost::ref(*this),&ord_,_1));
   }
 
   const size_shape_type& size_shape () const
@@ -98,13 +98,13 @@ public:
 
 private:
 
-  void make_tile_ (size_t* ord_, const index_type& idx_)
+  void make_block_ (size_t* ord_, const index_type& idx_)
   {
     // For OpenMP, ord_ with private attribute
     if(*ord_ == 0) *ord_ = shape_.ordinal(idx_);
 
     if(base_::is_local((*ord_))) {
-      typename tile_type::extent_type exts;
+      typename block_type::extent_type exts;
       for(size_t i = 0; i < N; ++i) exts[i] = size_shape_[i][idx_[i]];
       (*this)[(*ord_)].resize(exts);
     }

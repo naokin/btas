@@ -5,8 +5,6 @@
 #include <algorithm>
 #include <iterator>
 
-#include <boost/type_traits.hpp>
-
 #include <btas/TensorStride.hpp>
 
 namespace btas {
@@ -175,17 +173,17 @@ template<typename T> struct __TensorIteratorConst<const T*>
 
 /// __gnu_cxx::__normal_iterator<T*,Container>
 template<typename T, class Container>
-struct __TensorIteratorConst< __gnu_cxx::__normal_iterator<T*,Container> >
+struct __TensorIteratorConst<__gnu_cxx::__normal_iterator<T*,Container>>
 { typedef __gnu_cxx::__normal_iterator<const T*,Container> type; };
 
 /// __gnu_cxx::__normal_iterator<const T*,Container>
 template<typename T, class Container>
-struct __TensorIteratorConst< __gnu_cxx::__normal_iterator<const T*,Container> >
+struct __TensorIteratorConst<__gnu_cxx::__normal_iterator<const T*,Container>>
 { typedef __gnu_cxx::__normal_iterator<const T*,Container> type; };
 
 /// Specialized for a TensorIterator, to instantiate __TensorIteratorConst recursively
 template<class Iter, size_t N, CBLAS_ORDER Order>
-struct __TensorIteratorConst< TensorIterator<Iter,N,Order> >
+struct __TensorIteratorConst<TensorIterator<Iter,N,Order>>
 {
   typedef TensorIterator<typename __TensorIteratorConst<Iter>::type,N,Order> type;
 };
@@ -213,17 +211,17 @@ template<typename T> struct __TensorIteratorRemoveConst<const T*>
 
 /// __gnu_cxx::__normal_iterator<T*,Container>
 template<typename T, class Container>
-struct __TensorIteratorRemoveConst< __gnu_cxx::__normal_iterator<T*,Container> >
+struct __TensorIteratorRemoveConst<__gnu_cxx::__normal_iterator<T*,Container>>
 { typedef __gnu_cxx::__normal_iterator<T*,Container> type; };
 
 /// __gnu_cxx::__normal_iterator<const T*,Container>
 template<typename T, class Container>
-struct __TensorIteratorRemoveConst< __gnu_cxx::__normal_iterator<const T*,Container> >
+struct __TensorIteratorRemoveConst<__gnu_cxx::__normal_iterator<const T*,Container>>
 { typedef __gnu_cxx::__normal_iterator<T*,Container> type; };
 
 /// Specialized for a TensorIterator, to instantiate __TensorIteratorRemoveConst recursively
 template<class Iter, size_t N, CBLAS_ORDER Order>
-struct __TensorIteratorRemoveConst< TensorIterator<Iter,N,Order> >
+struct __TensorIteratorRemoveConst<TensorIterator<Iter,N,Order>>
 {
   typedef TensorIterator<typename __TensorIteratorRemoveConst<Iter>::type,N,Order> type;
 };

@@ -1,42 +1,51 @@
 #ifndef __BTAS_SPARSE_DOTC_IMPL_HPP
 #define __BTAS_SPARSE_DOTC_IMPL_HPP
 
+#include <type_traits>
 #include <functional>
 #ifndef _SERIAL
 #include <boost/mpi.hpp>
 #endif
 
-#include <btas/btas_assert.h>
+#include <btas/BTAS_ASSERT.h>
 #include <btas/TensorBlas.hpp>
 #ifndef __BTAS_SPARSE_TENSOR_HPP
 #include <btas/SpTensor.hpp>
 #endif
 
 namespace btas {
-namespace detail {
 
 /// BLAS lv.1 : dotc
 
-template<typename Tp>
+/// Recursive call for dense dotc
+template<class Tn, bool = std::is_scalar<Tn>::value>
 struct Sp_dotc_exec {
-  typedef Tp return_type;
-  Tp operator() (const Tp& x, const Tp& y) const { return x*y; }
+  /// Recursively determine a return type, which should be a scalar type
+  typedef typename Sp_dotc_exec<typename Tn::value_type>::return_type return_type;
+  /// Execute
+  return_type operator() (const Tn& x, const Tn& y) const { return dotc(x,y); }
 };
 
-template<typename Tp, size_t N, CBLAS_ORDER Order>
-struct Sp_dotc_exec< Tensor<Tp,N,Order> > {
+/// Specialized for a scalar type
+template<typename Tp>
+struct Sp_dotc_exec<Tp,true> {
+  /// Return type
   typedef Tp return_type;
-  Tp operator() (const Tensor<Tp,N,Order>& x, const Tensor<Tp,N,Order>& y) const { return dotc(x,y); }
+  /// Execute
+  Tp operator() (const Tp& x, const Tp& y) const { return x*y; }
 };
 
 template<typename Tp, size_t N, class Q, CBLAS_ORDER Order>
 struct Sp_dotc_impl {
-  static typename Sp_dotc_exec<Tp>::return_type
-  compute (const SpTensor<Tp,N,Q,Order>& x, const SpTensor<Tp,N,Q,Order>& y)
+
+  typedef typename Sp_dotc_exec<Tp>::return_type return_type;
+
+  static return_type compute (const SpTensor<Tp,N,Q,Order>& x, const SpTensor<Tp,N,Q,Order>& y)
   {
     typedef typename Sp_dotc_exec<Tp>::return_type value_t;
     typedef typename SpTensor<Tp,N,Q,Order>::const_iterator citer_t;
 
+    // here's only different from dotu
     for(size_t i = 0; i < N; ++i)
       BTAS_ASSERT(is_equal(x.qnum_array(i),y.qnum_array(i)),"Sp_dotc_impl::compute(...) failed.");
 
@@ -68,7 +77,6 @@ struct Sp_dotc_impl<Tp,N,NoSymmetry_,Order> {
   { BTAS_ASSERT(false,"hasn't yet been implemented."); }
 };
 
-} // namespace detail
 } // namespace btas
 
 #endif // __BTAS_SPARSE_DOTC_IMPL_HPP

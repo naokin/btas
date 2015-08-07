@@ -3,7 +3,7 @@
 
 #include <cassert>
 
-#include <btas/btas_assert.h>
+#include <btas/BTAS_ASSERT.h>
 #include <btas/Tensor.hpp>
 #include <btas/reindex.hpp>
 

@@ -7,7 +7,7 @@
 
 #include <complex>
 
-#include <btas/btas_assert.h>
+#include <btas/BTAS_ASSERT.h>
 
 #define lapack_complex_float  std::complex<float>
 #define lapack_complex_double std::complex<double>

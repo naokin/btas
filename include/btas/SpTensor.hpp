@@ -8,7 +8,7 @@
 #include <boost/mpi.hpp>
 #endif
 
-#include <btas/btas_assert.h>
+#include <btas/BTAS_ASSERT.h>
 #include <btas/Tensor.hpp>
 #include <btas/make_array.hpp>
 #include <btas/qnum_array_utils.hpp>
@@ -262,7 +262,7 @@ public:
   /// search obj. from local storage
   iterator find (size_t i)
   {
-    if(_LOCALMAP_TYPE_[i] != __HAS_NO_DATA__)
+    if(this->is_local(i))
       return iterator(store_.data()+_LOCALMAP_TYPE_[i]);
     else
       return store_.end();
@@ -286,8 +286,8 @@ public:
   /// search obj. from local storage
   const_iterator find (size_t i) const
   {
-    if(_LOCALMAP_TYPE_[i] != __HAS_NO_DATA__)
-      return iterator(store_.data()+_LOCALMAP_TYPE_[i]);
+    if(this->is_local(i))
+      return const_iterator(store_.data()+_LOCALMAP_TYPE_[i]);
     else
       return store_.end();
   }

@@ -5,7 +5,7 @@
 //  BLAS types
 //
 
-#include <btas/btas_assert.h>
+#include <btas/BTAS_ASSERT.h>
 
 #ifdef __cplusplus
 extern "C" {

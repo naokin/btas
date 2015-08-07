@@ -64,7 +64,7 @@ int main (int argc, char* argv[])
       // send to proc# 0
       tensor_t::const_iterator it = A.get(i,0);
       if(world.rank() == 0) {
-        const tensor_t::tile_type& a = *it;
+        const tensor_t::block_type& a = *it;
         std::cout << std::setw(3) << i << " at p" << A.where(i) << " :: ";
         for(size_t j = 0; j < a.size(); ++j)
           std::cout << std::setw(4) << a[j];

@@ -4,7 +4,7 @@
 #include <vector>
 #include <algorithm>
 
-#include <btas/btas_assert.h>
+#include <btas/BTAS_ASSERT.h>
 #include <btas/remove_complex.h>
 
 #include <lapack/wrappers.h>

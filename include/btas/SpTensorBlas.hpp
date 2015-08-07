@@ -2,7 +2,7 @@
 #define __BTAS_SPARSE_TENSOR_BLAS_HPP
 
 #include <btas/SpTensor.hpp>
-#include <btas/detail/Sp_dotc_impl.hpp>
+#include <btas/Sp/Sp_dotc_impl.hpp>
 
 namespace btas {
 
@@ -14,9 +14,9 @@ namespace btas {
 
 /// BLAS lv.1 : dotc
 template<typename T, size_t N, class Q, CBLAS_ORDER Order>
-typename detail::Sp_dotc_exec<T>::return_type
+typename Sp_dotc_exec<T>::return_type
 dotc (const SpTensor<T,N,Q,Order>& x, const SpTensor<T,N,Q,Order>& y)
-{ return detail::Sp_dotc_impl<T,N,Q,Order>::compute(x,y); }
+{ return Sp_dotc_impl<T,N,Q,Order>::compute(x,y); }
 
 } // namespace btas
 

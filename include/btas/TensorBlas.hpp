@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <numeric>
 
-#include <btas/btas_assert.h>
+#include <btas/BTAS_ASSERT.h>
 #include <btas/remove_complex.h>
 
 #include <blas/wrappers.h>

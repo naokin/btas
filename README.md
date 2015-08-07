@@ -1,47 +1,32 @@
 
-Basic Tensor Algebra Subroutines in C/C++ (BTAS)
-================================================
+Basic Tensor Algebra Subprograms (BTAS)
+====
 
-This is C++11 version of BTAS
-Dependency to BLITZ++ library has been removed.
-
-T: value type
-N: rank of array
-Q: quantum number class
+A domain-agnostic and expressive tensor library, containing dense and block-sparse tensor classes and functions.
 
 ###FEATURES
 
-1. Provided generic type array classes, TArray<T, N>, STArray<T, N>, and QSTArray<T, N, Q = Quantum>
+1. Provides a dense tensor class of a generic value-type (T) with a statically fixed rank (N); Tensor<T, N>.
 
-2. Defined DArray<N> as the alias to TArray<double, N> (using template alias in C++11). SDArray<N> and QSDArray<N, Q> as well
+2. Provides BLAS/LAPACK lappers directly called by dense tensor objects.
 
-3. Provided LAPACK interfaces written in C
+3. Provides tensor slice, permutations, etc. in terms of tensor iterator such like nditer in NumPy.
 
-4. Provided BLAS/LAPACK-like interfaces called with DArray<N>, STArray<N>, and QSTArray<N, Q>
-
-5. Provided expressive contraction, permutation, and decomposition functions
+4. Provides a sparse and a block-sparse tensor classes distributed via Boost.MPI wrapper.
 
 ###COMPILATION
 
 1. Compiler and Library Dependencies
 
-GNU GCC 4.7.0 or later
+GNU GCC 4.4.6 or later
 Intel C/C++ Compiler 13.0 or later
 
 BOOST library (<http://www.boost.org/>)
 CBLAS & LAPACK library or Intel MKL library
 
-2. Build libbtas.a
+2. Since all classes and functions are implemented in terms of template and/or inline fashion, you can build your code by just including source files such as,
 
-    cd $BTAS_ROOT/lib/
-    make
+    g++ -std=c++0x -O3 -I$BTAS_ROOT/include sample.cpp -lboost_serialization -lmkl_core -lmkl_intel_lp64 -lmkl_sequential
 
-3. Build your code with BTAS library (GCC with MKL library)
-
-    g++ -std=c++0x -O3 -fopnemp -I$BTAS_ROOT/include $BTAS_ROOT/lib/libbtas.a -lboost_serialization -lmkl_core -lmkl_intel_lp64 -lmkl_sequential
-
-For coding, `$BTAS_ROOT/lib/tests.C` and `$BTAS_ROOT/dmrg/` involves helpful example to use BTAS
-
-If '-D_PRINT_WARNINGS' is specified, warning that SDArray::reserve or SDArray::insert is called with prohibited (quantum number) block is printed.
-It gives verbose output, but helps to check undesirable behavior upon reservation and insertion.
+Please look at `$BTAS_ROOT/dmrg/` which involves helpful examples of BTAS usages.
 

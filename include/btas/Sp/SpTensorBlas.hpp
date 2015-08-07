@@ -2,6 +2,15 @@
 #define __BTAS_SPARSE_TENSOR_BLAS_HPP
 
 #include <btas/SpTensor.hpp>
+#include <btas/Sp/Sp_dotc_impl.hpp>
+#include <btas/Sp/Sp_dotu_impl.hpp>
+#include <btas/Sp/Sp_scal_impl.hpp>
+#include <btas/Sp/Sp_copy_impl.hpp>
+#include <btas/Sp/Sp_nrm2_impl.hpp>
+#include <btas/Sp/Sp_gerc_impl.hpp>
+#include <btas/Sp/Sp_geru_impl.hpp>
+#include <btas/Sp/Sp_gemv_impl.hpp>
+#include <btas/Sp/Sp_gemm_impl.hpp>
 
 namespace btas {
 
@@ -12,50 +21,29 @@ namespace btas {
 // ====================================================================================================
 
 /// BLAS lv.1 : dotc
-template<typename T, size_t N, CBLAS_ORDER Order>
-typename T dotc (const BlockSpTensor<T,N,Q,Order>& x, const BlockSpTensor<T,N,Q,Order>& y)
+template<typename Tp, size_t N, class Q, CBLAS_ORDER Order>
+typename Sp_dotc_impl<Tp,N,Q,Order>::return_type
+dotc (const SpTensor<T,N,Q,Order>& x, const SpTensor<T,N,Q,Order>& y)
 {
-  typedef typename BlockSpTensor<T,N,Q,Order>::const_iterator citer_t;
-  typedef typename T::value_type value_t;
+  return Sp_dotc_impl<Tp,N,Q,Order>::compute(x,y);
+}
 
-#ifndef _SERIAL
-  boost::mpi::communicator world;
-#endif
-
-  BTAS_ASSERT(std::equal(x.extent().begin(),x.extent().end(),y.extent().begin()), "shape must be the same.");
-
-  value_t tmp_ = static_cast<value_t>(0);
-
-  for(size_t i = 0; i < x.size(); ++i)
-    if(x.has(i) && y.has(i)) {
-      size_t me = y.where(i);
-      citer_t ix = x.get(i,me); // send obj. to me
-      citer_t iy = y.get(i,me); // get local obj. @ me
-      // compute @ me
-      if(y.is_local(i)) tmp_ += dotc(*ix,*iy);
-    }
-
-  y.cache_clear();
-
-#ifndef _SERIAL
-  value_t sum_;
-  boost::mpi::all_reduce(world,tmp_,sum_,std::pluas<size_t>());
-  return sum_;
-#else
-  return tmp_;
-#endif
+/// BLAS lv.1 : dotu
+template<typename Tp, size_t N, class Q, CBLAS_ORDER Order>
+typename Sp_dotu_impl<Tp,N,Q,Order>::return_type
+dotu (const SpTensor<T,N,Q,Order>& x, const SpTensor<T,N,Q,Order>& y)
+{
+  return Sp_dotu_impl<Tp,N,Q,Order>::compute(x,y);
 }
 
 /// BLAS lv.1 : scal
-template<typename T, size_t N, CBLAS_ORDER Order>
-void scal (
-  const typename T::value_type& alpha,
-        BlockSpTensor<T,N,Order>& x)
+template<typename Sc, typename Tp, size_t N, class Q, CBLAS_ORDER Order>
+void scal (Sc alpha, SpTensor<Tp,N,Q,Order>& x)
 {
-  typedef typename BlockSpTensor<T,N,Order>::iterator iter_t;
-
-  for(iter_t ix = x.begin(); ix != x.end(); ++ix) scal(alpha, *ix);
+  typedef typename Sp_scal_impl<Tp,N,Q,Order>::scalar_type scalar_type;
+  Sp_scal_impl<Tp,N,Q,Order>::compute(static_cast<scalar_type>(alpha),x);
 }
+
 
 /// BLAS lv.1 : axpy
 template<typename T, size_t N, CBLAS_ORDER Order>
