@@ -1,4 +1,4 @@
-CXX=/homec/naokin/gnu/gcc/4.8.2/bin/g++ -std=c++11
+CXX=g++48 -std=c++11
 CXXFLAGS=-g -fopenmp -D_HAS_CBLAS -D_HAS_LAPACKE
 
 BLASLIB=-llapack -lblas

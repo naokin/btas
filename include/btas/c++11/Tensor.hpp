@@ -64,26 +64,26 @@ public:
   /// Construct
   explicit
   Tensor (const extent_type& ext)
-  : stride_holder_(ext)
-  { store_.resize(stride_holder_.size()); }
+  : tensor_stride_(ext)
+  { store_.resize(tensor_stride_.size()); }
 
   /// Construct from variadic arguments list
   template<typename... Args>
   Tensor (const Args&... args)
-  : stride_holder_(make_array<typename extent_type::value_type>(args...))
-  { store_.resize(stride_holder_.size()); }
+  : tensor_stride_(make_array<typename extent_type::value_type>(args...))
+  { store_.resize(tensor_stride_.size()); }
 
   /// Initializer
   Tensor (const extent_type& ext, const value_type& value)
-  : stride_holder_(ext)
-  { store_.resize(stride_holder_.size(),value); }
+  : tensor_stride_(ext)
+  { store_.resize(tensor_stride_.size(),value); }
 
   /// Deep copy from arbitral tensor object
   template<class Arbitral>
   Tensor (const Arbitral& x)
-  : stride_holder_(x.extent())
+  : tensor_stride_(x.extent())
   {
-    store_.resize(stride_holder_.size());
+    store_.resize(tensor_stride_.size());
     index_type index_;
     IndexedFor<1,N,Order>::loop(this->extent(),index_,boost::bind(
       detail::AssignTensor_<index_type,Arbitral,Tensor>,_1,boost::cref(x),boost::ref(*this)));
@@ -91,17 +91,17 @@ public:
 
   /// deep copy : FIXME using std::vector<T>'s copy constructor gave better performance rather than BLAS copy etc...
   Tensor (const Tensor& x)
-  : stride_holder_(x.stride_holder_), store_(x.store_)
+  : tensor_stride_(x.tensor_stride_), store_(x.store_)
   { }
 
   /// Deep copy from TensorWrapper
   Tensor (const TensorWrapper<T*,N,Order>& x)
-  : stride_holder_(x.stride_holder_), store_(x.size())
+  : tensor_stride_(x.tensor_stride_), store_(x.size())
   { copy(x.size(),x.data(),1,store_.data(),1);  }
 
   /// Deep copy from TensorWrapper
   Tensor (const TensorWrapper<const T*,N,Order>& x)
-  : stride_holder_(x.stride_holder_), store_(x.size())
+  : tensor_stride_(x.tensor_stride_), store_(x.size())
   { copy(x.size(),x.data(),1,store_.data(),1);  }
 
   /// destructor
@@ -113,8 +113,8 @@ public:
   template<class Arbitral>
   Tensor& operator= (const Arbitral& x)
   {
-    stride_holder_.set(x.extent());
-    store_.resize(stride_holder_.size());
+    tensor_stride_.set(x.extent());
+    store_.resize(tensor_stride_.size());
     index_type index_;
     IndexedFor<1,N,Order>::loop(this->extent(),index_,boost::bind(
       detail::AssignTensor_<index_type,Arbitral,Tensor>,_1,boost::cref(x),boost::ref(*this)));
@@ -124,7 +124,7 @@ public:
   /// copy assign
   Tensor& operator= (const Tensor& x)
   {
-    stride_holder_ = x.stride_holder_;
+    tensor_stride_ = x.tensor_stride_;
     store_ = x.store_;
     return *this;
   }
@@ -132,7 +132,7 @@ public:
   /// copy assign from TensorWrapper
   Tensor& operator= (const TensorWrapper<T*,N,Order>& x)
   {
-    stride_holder_.set(x.extent());
+    tensor_stride_.set(x.extent());
     store_.resize(x.size());
     copy(x.size(),x.data(),1,store_.data(),1);
     return *this;
@@ -141,7 +141,7 @@ public:
   /// copy assign from TensorWrapper
   Tensor& operator= (const TensorWrapper<const T*,N,Order>& x)
   {
-    stride_holder_.set(x.extent());
+    tensor_stride_.set(x.extent());
     store_.resize(x.size());
     copy(x.size(),x.data(),1,store_.data(),1);
     return *this;
@@ -152,23 +152,23 @@ public:
   /// resize by extent
   void resize (const extent_type& ext)
   {
-    stride_holder_.set(ext);
-    store_.resize(stride_holder_.size());
+    tensor_stride_.set(ext);
+    store_.resize(tensor_stride_.size());
   }
 
   /// resize by variadic arguments list
   template<typename... Args>
   void resize (const Args&... args)
   {
-    stride_holder_.set(make_array<typename extent_type::value_type>(args...));
-    store_.resize(stride_holder_.size());
+    tensor_stride_.set(make_array<typename extent_type::value_type>(args...));
+    store_.resize(tensor_stride_.size());
   }
 
   /// resize by extent and initialize with constant value
   void resize (const extent_type& ext, const value_type& value)
   {
-    stride_holder_.set(ext);
-    store_.resize(stride_holder_.size(),value);
+    tensor_stride_.set(ext);
+    store_.resize(tensor_stride_.size(),value);
   }
 
   // const expression
@@ -194,16 +194,16 @@ public:
   size_t size () const { return store_.size(); }
 
   /// return extent object
-  const extent_type& extent () const { return stride_holder_.extent(); }
+  const extent_type& extent () const { return tensor_stride_.extent(); }
 
   /// return extent for rank i
-  const typename extent_type::value_type& extent (size_t i) const { return stride_holder_.extent(i); }
+  const typename extent_type::value_type& extent (size_t i) const { return tensor_stride_.extent(i); }
 
   /// return stride object
-  const stride_type& stride () const { return stride_holder_.stride(); }
+  const stride_type& stride () const { return tensor_stride_.stride(); }
 
   /// return stride for rank i
-  const typename stride_type::value_type& stride (size_t i) const { return stride_holder_.stride(i); }
+  const typename stride_type::value_type& stride (size_t i) const { return tensor_stride_.stride(i); }
 
   // iterator
 
@@ -222,10 +222,10 @@ public:
   // access
 
   /// convert tensor index to ordinal index
-  ordinal_type ordinal (const index_type& idx) const { return stride_holder_.ordinal(idx); }
+  ordinal_type ordinal (const index_type& idx) const { return tensor_stride_.ordinal(idx); }
 
   /// convert ordinal index to tensor index
-  index_type index (const ordinal_type& ord) const { return stride_holder_.index(ord); }
+  index_type index (const ordinal_type& ord) const { return tensor_stride_.index(ord); }
 
   /// access by ordinal index
   reference operator[] (size_t i)
@@ -271,6 +271,20 @@ public:
   const_reference at (const Args&... args) const
   { return store_.at(this->ordinal(make_array<typename index_type::value_type>(args...))); }
 
+  // reshape
+
+  template<typename... Args>
+  TensorWrapper<T*,sizeof...(Args),Order> reshape (const Args&... args)
+  {
+    return TensorWrapper<T*,sizeof...(Args),Order>(this->data(),tensor_stride_.reshape(args).extent(),args);
+  }
+
+  template<typename... Args>
+  TensorWrapper<const T*,sizeof...(Args),Order> reshape (const Args&... args) const
+  {
+    return TensorWrapper<const T*,sizeof...(Args),Order>(this->data(),tensor_stride_.reshape(args).extent());
+  }
+
   // pointer
 
   /// return pointer to data
@@ -286,14 +300,14 @@ public:
   /// swap objects
   void swap (Tensor& x)
   {
-    stride_holder_.swap(x.stride_holder_);
+    tensor_stride_.swap(x.tensor_stride_);
     store_.swap(x.store_);
   }
 
   /// clear
   void clear ()
   {
-    stride_holder_.clear();
+    tensor_stride_.clear();
     store_.clear();
   }
 
@@ -310,11 +324,11 @@ private:
 
   /// Boost serialization
   template<class Archive>
-  void serialize (Archive& ar, const unsigned int version) { ar & stride_holder_ & store_; }
+  void serialize (Archive& ar, const unsigned int version) { ar & tensor_stride_ & store_; }
 
   // members
 
-  Stride stride_holder_; ///< capsule class holds extent and stride
+  Stride tensor_stride_; ///< capsule class holds extent and stride
 
   std::vector<value_type> store_; /// 1D array of stored elements
 
@@ -360,26 +374,26 @@ public:
   /// Construct
   explicit
   Tensor (const extent_type& ext)
-  : stride_holder_(ext)
-  { store_.resize(stride_holder_.size()); }
+  : tensor_stride_(ext)
+  { store_.resize(tensor_stride_.size()); }
 
   /// Construct from variadic arguments list
   template<typename... Args>
   Tensor (const Args&... args)
-  : stride_holder_(make_array<typename extent_type::value_type>(args...))
-  { store_.resize(stride_holder_.size()); }
+  : tensor_stride_(make_array<typename extent_type::value_type>(args...))
+  { store_.resize(tensor_stride_.size()); }
 
   /// Initializer
   Tensor (const extent_type& ext, const value_type& value)
-  : stride_holder_(ext)
-  { store_.resize(stride_holder_.size(),value); }
+  : tensor_stride_(ext)
+  { store_.resize(tensor_stride_.size(),value); }
 
   /// Deep copy from arbitral tensor object
   template<class Arbitral>
   Tensor (const Arbitral& x)
-  : stride_holder_(x.extent())
+  : tensor_stride_(x.extent())
   {
-    store_.resize(stride_holder_.size());
+    store_.resize(tensor_stride_.size());
     index_type index_;
     IndexedFor<1,N,Order>::loop(this->extent(),index_,boost::bind(
       detail::AssignTensor_<index_type,Arbitral,Tensor>,_1,boost::cref(x),boost::ref(*this)));
@@ -387,17 +401,17 @@ public:
 
   /// deep copy : FIXME using std::vector<T>'s copy constructor gave better performance rather than BLAS copy etc...
   Tensor (const Tensor& x)
-  : stride_holder_(x.stride_holder_), store_(x.store_)
+  : tensor_stride_(x.tensor_stride_), store_(x.store_)
   { }
 
   /// Deep copy from TensorWrapper
   Tensor (const TensorWrapper<T*,N,Order>& x)
-  : stride_holder_(x.stride_holder_), store_(x.size())
+  : tensor_stride_(x.tensor_stride_), store_(x.size())
   { copy(x.size(),x.data(),1,store_.data(),1);  }
 
   /// Deep copy from TensorWrapper
   Tensor (const TensorWrapper<const T*,N,Order>& x)
-  : stride_holder_(x.stride_holder_), store_(x.size())
+  : tensor_stride_(x.tensor_stride_), store_(x.size())
   { copy(x.size(),x.data(),1,store_.data(),1);  }
 
   /// destructor
@@ -409,8 +423,8 @@ public:
   template<class Arbitral>
   Tensor& operator= (const Arbitral& x)
   {
-    stride_holder_.set(x.extent());
-    store_.resize(stride_holder_.size());
+    tensor_stride_.set(x.extent());
+    store_.resize(tensor_stride_.size());
     index_type index_;
     IndexedFor<1,N,Order>::loop(this->extent(),index_,boost::bind(
       detail::AssignTensor_<index_type,Arbitral,Tensor>,_1,boost::cref(x),boost::ref(*this)));
@@ -420,7 +434,7 @@ public:
   /// copy assign
   Tensor& operator= (const Tensor& x)
   {
-    stride_holder_ = x.stride_holder_;
+    tensor_stride_ = x.tensor_stride_;
     store_ = x.store_;
     return *this;
   }
@@ -428,7 +442,7 @@ public:
   /// copy assign from TensorWrapper
   Tensor& operator= (const TensorWrapper<T*,N,Order>& x)
   {
-    stride_holder_.set(x.extent());
+    tensor_stride_.set(x.extent());
     store_.resize(x.size());
     copy(x.size(),x.data(),1,store_.data(),1);
     return *this;
@@ -437,7 +451,7 @@ public:
   /// copy assign from TensorWrapper
   Tensor& operator= (const TensorWrapper<const T*,N,Order>& x)
   {
-    stride_holder_.set(x.extent());
+    tensor_stride_.set(x.extent());
     store_.resize(x.size());
     copy(x.size(),x.data(),1,store_.data(),1);
     return *this;
@@ -448,23 +462,23 @@ public:
   /// resize by extent
   void resize (const extent_type& ext)
   {
-    stride_holder_.set(ext);
-    store_.resize(stride_holder_.size());
+    tensor_stride_.set(ext);
+    store_.resize(tensor_stride_.size());
   }
 
   /// resize by variadic arguments list
   template<typename... Args>
   void resize (const Args&... args)
   {
-    stride_holder_.set(make_array<typename extent_type::value_type>(args...));
-    store_.resize(stride_holder_.size());
+    tensor_stride_.set(make_array<typename extent_type::value_type>(args...));
+    store_.resize(tensor_stride_.size());
   }
 
   /// resize by extent and initialize with constant value
   void resize (const extent_type& ext, const value_type& value)
   {
-    stride_holder_.set(ext);
-    store_.resize(stride_holder_.size(),value);
+    tensor_stride_.set(ext);
+    store_.resize(tensor_stride_.size(),value);
   }
 
   // const expression
@@ -490,16 +504,16 @@ public:
   size_t size () const { return store_.size(); }
 
   /// return extent object
-  const extent_type& extent () const { return stride_holder_.extent(); }
+  const extent_type& extent () const { return tensor_stride_.extent(); }
 
   /// return extent for rank i
-  const typename extent_type::value_type& extent (size_t i) const { return stride_holder_.extent(i); }
+  const typename extent_type::value_type& extent (size_t i) const { return tensor_stride_.extent(i); }
 
   /// return stride object
-  const stride_type& stride () const { return stride_holder_.stride(); }
+  const stride_type& stride () const { return tensor_stride_.stride(); }
 
   /// return stride for rank i
-  const typename stride_type::value_type& stride (size_t i) const { return stride_holder_.stride(i); }
+  const typename stride_type::value_type& stride (size_t i) const { return tensor_stride_.stride(i); }
 
   // iterator
 
@@ -518,10 +532,10 @@ public:
   // access
 
   /// convert tensor index to ordinal index
-  ordinal_type ordinal (const index_type& idx) const { return stride_holder_.ordinal(idx); }
+  ordinal_type ordinal (const index_type& idx) const { return tensor_stride_.ordinal(idx); }
 
   /// convert ordinal index to tensor index
-  index_type index (const ordinal_type& ord) const { return stride_holder_.index(ord); }
+  index_type index (const ordinal_type& ord) const { return tensor_stride_.index(ord); }
 
   /// access by ordinal index
   reference operator[] (size_t i)
@@ -582,14 +596,14 @@ public:
   /// swap objects
   void swap (Tensor& x)
   {
-    stride_holder_.swap(x.stride_holder_);
+    tensor_stride_.swap(x.tensor_stride_);
     store_.swap(x.store_);
   }
 
   /// clear
   void clear ()
   {
-    stride_holder_.clear();
+    tensor_stride_.clear();
     store_.clear();
   }
 
@@ -606,11 +620,11 @@ private:
 
   /// Boost serialization
   template<class Archive>
-  void serialize (Archive& ar, const unsigned int version) { ar & stride_holder_ & store_; }
+  void serialize (Archive& ar, const unsigned int version) { ar & tensor_stride_ & store_; }
 
   // members
 
-  Stride stride_holder_; ///< capsule class holds extent and stride
+  Stride tensor_stride_; ///< capsule class holds extent and stride
 
   std::vector<value_type> store_; /// 1D array of stored elements
 
@@ -618,8 +632,6 @@ private:
 
 } // namespace btas
 
-#ifndef __BTAS_TENSOR_WRAPPER_HPP
 #include <btas/TensorCore.hpp>
-#endif // __BTAS_TENSOR_CORE_HPP
 
 #endif // __BTAS_TENSOR_HPP

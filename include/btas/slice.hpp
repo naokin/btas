@@ -1,5 +1,5 @@
-#ifndef __BTAS_MAKE_SLICE_HPP
-#define __BTAS_MAKE_SLICE_HPP
+#ifndef __BTAS_SLICE_HPP
+#define __BTAS_SLICE_HPP
 
 #include <btas/Tensor.hpp>
 #include <btas/TensorWrapper.hpp>
@@ -136,4 +136,4 @@ TensorView<const T*,N,Order> make_cslice (
 
 } // namespace btas
 
-#endif // __BTAS_MAKE_SLICE_HPP
+#endif // __BTAS_SLICE_HPP

@@ -47,6 +47,42 @@ namespace btas
          syev(CblasRowMajor, jobz, uplo, colsA, z.data(), colsA, d.data());
       }
 
+   /// Solve real-symmetric generalized eigenvalue problem (SGEP)
+   /// NOTE: if called with complex array, gives an error
+   template<typename T, size_t N>
+      void Sygv (
+            const int& itype,
+            const char& jobz,
+            const char& uplo,
+            const TArray<T, 2*N-2>& a,
+            const TArray<T, 2*N-2>& b,
+            TArray<T, 1>& d,
+            TArray<T, N>& z)
+      {
+         if(a.size() == 0) return;
+
+         const size_t K = N-1;
+         BTAS_THROW(std::equal(a.shape().begin(), a.shape().begin()+K, a.shape().begin()+K), "Syev(DENSE): shape of a must be symmetric.");
+         BTAS_THROW(std::equal(b.shape().begin(), b.shape().begin()+K, b.shape().begin()+K), "Syev(DENSE): shape of b must be symmetric.");
+         BTAS_THROW(std::equal(a.shape().begin(), a.shape().end(), b.shape().begin()), "Syev(DENSE): shapes of a and b must be the same.");
+
+         size_t colsA = std::accumulate(a.shape().begin()+K, a.shape().end(), 1ul, std::multiplies<size_t>());
+         size_t colsB = std::accumulate(b.shape().begin()+K, b.shape().end(), 1ul, std::multiplies<size_t>());
+
+         IVector<N> shapeZ;
+         for(size_t i = 0; i < N-1; ++i) shapeZ[i] = a.shape(i);
+         shapeZ[N-1] = colsA;
+
+         z.resize(shapeZ);
+         CopyR(a, z);
+
+         TArray<T, 2*N-2> x(b);
+
+         d.resize(colsA);
+
+         sygv(CblasRowMajor, itype, jobz, uplo, colsA, z.data(), colsA, x.data(), colsB, d.data());
+      }
+
    /// Solve hermitian eigenvalue problem (HEP)
    /// NOTE: if called with real array, redirect to Syev
    template<typename T, size_t N>

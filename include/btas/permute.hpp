@@ -1,5 +1,5 @@
-#ifndef __BTAS_MAKE_PERMUTE_HPP
-#define __BTAS_MAKE_PERMUTE_HPP
+#ifndef __BTAS_PERMUTE_HPP
+#define __BTAS_PERMUTE_HPP
 
 #include <btas/Tensor.hpp>
 #include <btas/TensorWrapper.hpp>
@@ -76,4 +76,4 @@ void permute (TensorWrapper<T*,N,Order>& x, const Index& idx)
 
 } // namespace btas
 
-#endif // __BTAS_MAKE_PERMUTE_HPP
+#endif // __BTAS_PERMUTE_HPP

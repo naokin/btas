@@ -75,7 +75,7 @@ void Axpy (const T& alpha, const QSTArray<T, N, Q>& x, QSTArray<T, N, Q>& y)
    {
       BTAS_THROW(x.q() == y.q(), "Axpy(QSPARSE): x and y must have the same quantum number.");
       BTAS_THROW(x.qshape() == y.qshape(), "Axpy(QSPARSE): x and y must have the same quantum shape.");
-      BTAS_THROW(x.dshape() == y.dshape(), "Axpy(QSPARSE): x and y must have the same block shape."); /* FIXME: this is double-check */
+//    BTAS_THROW(x.dshape() == y.dshape(), "Axpy(QSPARSE): x and y must have the same block shape."); /* FIXME: this is double-check */
    }
    else
    {
@@ -124,7 +124,7 @@ void Gemv (
    {
       BTAS_THROW(y.q() == qY, "Gemv(QSPARSE): quantum number of y must equal to a.q() + x.q().");
       BTAS_THROW(y.qshape() == qshapeY, "Gemv(QSPARSE): y must have the same quantum shape of [ a * x ].");
-      BTAS_THROW(y.dshape() == dshapeY, "Gemv(QSPARSE): y must have the same block shape of [ a * x ].");
+//    BTAS_THROW(y.dshape() == dshapeY, "Gemv(QSPARSE): y must have the same block shape of [ a * x ].");
       Scal(beta, y);
    }
    else
@@ -157,7 +157,7 @@ void Ger (
    {
       BTAS_THROW(a.q() == qA, "Ger(QSPARSE): quantum number of a must equal to x.q() + y.q().");
       BTAS_THROW(a.qshape() == qshapeA, "Ger(QSPARSE): a must have the same quantum shape of [ x ^ y ].");
-      BTAS_THROW(a.dshape() == dshapeA, "Ger(QSPARSE): a must have the same block shape of [ x ^ y ].");
+//    BTAS_THROW(a.dshape() == dshapeA, "Ger(QSPARSE): a must have the same block shape of [ x ^ y ].");
    }
    else
    {
@@ -202,7 +202,7 @@ void Gemm (
    {
       BTAS_THROW(c.q() == qC, "Gemm(QSPARSE): quantum number of c must equal to a.q() + b.q().");
       BTAS_THROW(c.qshape() == qshapeC, "Gemm(QSPARSE): c must have the same quantum shape of [ a * b ].");
-      BTAS_THROW(c.dshape() == dshapeC, "Gemm(QSPARSE): c must have the same block shape of [ a * b ].");
+//    BTAS_THROW(c.dshape() == dshapeC, "Gemm(QSPARSE): c must have the same block shape of [ a * b ].");
       Scal(beta, c);
    }
    else
