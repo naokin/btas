@@ -1,0 +1,326 @@
+\hypertarget{classbtas_1_1_tensor}{
+\section{btas::Tensor$<$ T, N, Order $>$ Class Template Reference}
+\label{classbtas_1_1_tensor}\index{btas::Tensor@{btas::Tensor}}
+}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classbtas_1_1_tensor_aff4171f00a81c4bfa95fb39474af424b}{
+typedef T {\bfseries value\_\-type}}
+\label{classbtas_1_1_tensor_aff4171f00a81c4bfa95fb39474af424b}
+
+\item 
+\hypertarget{classbtas_1_1_tensor_a614333eb849048658b05730a750fe4b7}{
+typedef T \& {\bfseries reference}}
+\label{classbtas_1_1_tensor_a614333eb849048658b05730a750fe4b7}
+
+\item 
+\hypertarget{classbtas_1_1_tensor_a2234ce38908bf25d0e683b806f0a465d}{
+typedef const T \& {\bfseries const\_\-reference}}
+\label{classbtas_1_1_tensor_a2234ce38908bf25d0e683b806f0a465d}
+
+\item 
+\hypertarget{classbtas_1_1_tensor_a207a2f619f71bb3b406d70c1a3a62e59}{
+typedef T $\ast$ {\bfseries pointer}}
+\label{classbtas_1_1_tensor_a207a2f619f71bb3b406d70c1a3a62e59}
+
+\item 
+\hypertarget{classbtas_1_1_tensor_a9b70f8c1579a71af4250a5629fcee8c5}{
+typedef const T $\ast$ {\bfseries const\_\-pointer}}
+\label{classbtas_1_1_tensor_a9b70f8c1579a71af4250a5629fcee8c5}
+
+\item 
+\hypertarget{classbtas_1_1_tensor_a961300ceb1c9d10bfff2e5b3d3965c8c}{
+typedef Stride::extent\_\-type {\bfseries extent\_\-type}}
+\label{classbtas_1_1_tensor_a961300ceb1c9d10bfff2e5b3d3965c8c}
+
+\item 
+\hypertarget{classbtas_1_1_tensor_a53f25386bd077a43e62c2435d89bd2d2}{
+typedef Stride::stride\_\-type {\bfseries stride\_\-type}}
+\label{classbtas_1_1_tensor_a53f25386bd077a43e62c2435d89bd2d2}
+
+\item 
+\hypertarget{classbtas_1_1_tensor_a4e293acd0aa7481702c3b9a6da11b71f}{
+typedef Stride::index\_\-type {\bfseries index\_\-type}}
+\label{classbtas_1_1_tensor_a4e293acd0aa7481702c3b9a6da11b71f}
+
+\item 
+\hypertarget{classbtas_1_1_tensor_a05a07e6d179c284576f15fbe851b9915}{
+typedef Stride::ordinal\_\-type {\bfseries ordinal\_\-type}}
+\label{classbtas_1_1_tensor_a05a07e6d179c284576f15fbe851b9915}
+
+\item 
+\hypertarget{classbtas_1_1_tensor_ac99e3dfd86bd5b85248369a1939e1ce7}{
+typedef std::vector$<$ value\_\-type $>$::iterator {\bfseries iterator}}
+\label{classbtas_1_1_tensor_ac99e3dfd86bd5b85248369a1939e1ce7}
+
+\item 
+\hypertarget{classbtas_1_1_tensor_a13f2d53a05ee8bc8014135669aba8f5f}{
+typedef std::vector$<$ value\_\-type $>$::const\_\-iterator {\bfseries const\_\-iterator}}
+\label{classbtas_1_1_tensor_a13f2d53a05ee8bc8014135669aba8f5f}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classbtas_1_1_tensor_aca1ee2c3077f557ed5e1fd278aa6201a}{
+\hyperlink{classbtas_1_1_tensor_aca1ee2c3077f557ed5e1fd278aa6201a}{Tensor} ()}
+\label{classbtas_1_1_tensor_aca1ee2c3077f557ed5e1fd278aa6201a}
+
+\begin{DoxyCompactList}\small\item\em Default. \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_aba3aa7dacc6bbd1df66e97f08196ccca}{
+\hyperlink{classbtas_1_1_tensor_aba3aa7dacc6bbd1df66e97f08196ccca}{Tensor} (const extent\_\-type \&ext)}
+\label{classbtas_1_1_tensor_aba3aa7dacc6bbd1df66e97f08196ccca}
+
+\begin{DoxyCompactList}\small\item\em Construct. \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_a70fa70f7c17aea7da56c4e61c7a52365}{
+{\footnotesize template$<$typename... Args$>$ }\\\hyperlink{classbtas_1_1_tensor_a70fa70f7c17aea7da56c4e61c7a52365}{Tensor} (const Args \&...args)}
+\label{classbtas_1_1_tensor_a70fa70f7c17aea7da56c4e61c7a52365}
+
+\begin{DoxyCompactList}\small\item\em Construct from variadic arguments list. \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_a13e4efffe4a8cf7e1dc801f9e2d82703}{
+\hyperlink{classbtas_1_1_tensor_a13e4efffe4a8cf7e1dc801f9e2d82703}{Tensor} (const extent\_\-type \&ext, const value\_\-type \&value)}
+\label{classbtas_1_1_tensor_a13e4efffe4a8cf7e1dc801f9e2d82703}
+
+\begin{DoxyCompactList}\small\item\em Initializer. \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_a49539e81d4156afe74428ce3aa69bfe3}{
+{\footnotesize template$<$class Arbitral $>$ }\\\hyperlink{classbtas_1_1_tensor_a49539e81d4156afe74428ce3aa69bfe3}{Tensor} (const Arbitral \&x)}
+\label{classbtas_1_1_tensor_a49539e81d4156afe74428ce3aa69bfe3}
+
+\begin{DoxyCompactList}\small\item\em Deep copy from arbitral tensor object. \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_ac8fb6af11f3cf5af78a459f491ea6b33}{
+\hyperlink{classbtas_1_1_tensor_ac8fb6af11f3cf5af78a459f491ea6b33}{Tensor} (const \hyperlink{classbtas_1_1_tensor}{Tensor} \&x)}
+\label{classbtas_1_1_tensor_ac8fb6af11f3cf5af78a459f491ea6b33}
+
+\begin{DoxyCompactList}\small\item\em deep copy : FIXME using std::vector$<$T$>$'s copy constructor gave better performance rather than BLAS copy etc... \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_a686571f7ac77e20e9afc08156ef32e3f}{
+\hyperlink{classbtas_1_1_tensor_a686571f7ac77e20e9afc08156ef32e3f}{Tensor} (const TensorWrapper$<$ T $\ast$, N, Order $>$ \&x)}
+\label{classbtas_1_1_tensor_a686571f7ac77e20e9afc08156ef32e3f}
+
+\begin{DoxyCompactList}\small\item\em Deep copy from TensorWrapper. \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_aac9bc483223f21fb9f4887b6c2c9e884}{
+\hyperlink{classbtas_1_1_tensor_aac9bc483223f21fb9f4887b6c2c9e884}{Tensor} (const TensorWrapper$<$ const T $\ast$, N, Order $>$ \&x)}
+\label{classbtas_1_1_tensor_aac9bc483223f21fb9f4887b6c2c9e884}
+
+\begin{DoxyCompactList}\small\item\em Deep copy from TensorWrapper. \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_a7d1834c70ab9f6c66f1e466cbccc6dc5}{
+\hyperlink{classbtas_1_1_tensor_a7d1834c70ab9f6c66f1e466cbccc6dc5}{$\sim$Tensor} ()}
+\label{classbtas_1_1_tensor_a7d1834c70ab9f6c66f1e466cbccc6dc5}
+
+\begin{DoxyCompactList}\small\item\em destructor \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_a2ae10439307e95a9ed67700d1d9a9ab0}{
+{\footnotesize template$<$class Arbitral $>$ }\\\hyperlink{classbtas_1_1_tensor}{Tensor} \& \hyperlink{classbtas_1_1_tensor_a2ae10439307e95a9ed67700d1d9a9ab0}{operator=} (const Arbitral \&x)}
+\label{classbtas_1_1_tensor_a2ae10439307e95a9ed67700d1d9a9ab0}
+
+\begin{DoxyCompactList}\small\item\em copy assign from arbitral tensor object \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_a8a448dee7c514e1cdd4e03c0e2067843}{
+\hyperlink{classbtas_1_1_tensor}{Tensor} \& \hyperlink{classbtas_1_1_tensor_a8a448dee7c514e1cdd4e03c0e2067843}{operator=} (const \hyperlink{classbtas_1_1_tensor}{Tensor} \&x)}
+\label{classbtas_1_1_tensor_a8a448dee7c514e1cdd4e03c0e2067843}
+
+\begin{DoxyCompactList}\small\item\em copy assign \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_a0dd1b8767274a6a401bbd07b6972eed7}{
+\hyperlink{classbtas_1_1_tensor}{Tensor} \& \hyperlink{classbtas_1_1_tensor_a0dd1b8767274a6a401bbd07b6972eed7}{operator=} (const TensorWrapper$<$ T $\ast$, N, Order $>$ \&x)}
+\label{classbtas_1_1_tensor_a0dd1b8767274a6a401bbd07b6972eed7}
+
+\begin{DoxyCompactList}\small\item\em copy assign from TensorWrapper \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_a362421a23b01856e56262c9ac0a0b342}{
+\hyperlink{classbtas_1_1_tensor}{Tensor} \& \hyperlink{classbtas_1_1_tensor_a362421a23b01856e56262c9ac0a0b342}{operator=} (const TensorWrapper$<$ const T $\ast$, N, Order $>$ \&x)}
+\label{classbtas_1_1_tensor_a362421a23b01856e56262c9ac0a0b342}
+
+\begin{DoxyCompactList}\small\item\em copy assign from TensorWrapper \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_a7427ad01419cb58d554bfac1a70ceb0d}{
+void \hyperlink{classbtas_1_1_tensor_a7427ad01419cb58d554bfac1a70ceb0d}{resize} (const extent\_\-type \&ext)}
+\label{classbtas_1_1_tensor_a7427ad01419cb58d554bfac1a70ceb0d}
+
+\begin{DoxyCompactList}\small\item\em resize by extent \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_a52a81b63178a9a412554698ef88ab932}{
+{\footnotesize template$<$typename... Args$>$ }\\void \hyperlink{classbtas_1_1_tensor_a52a81b63178a9a412554698ef88ab932}{resize} (const Args \&...args)}
+\label{classbtas_1_1_tensor_a52a81b63178a9a412554698ef88ab932}
+
+\begin{DoxyCompactList}\small\item\em resize by variadic arguments list \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_aa3e3e24a23f4821eb986d76c0963b2fe}{
+void \hyperlink{classbtas_1_1_tensor_aa3e3e24a23f4821eb986d76c0963b2fe}{resize} (const extent\_\-type \&ext, const value\_\-type \&value)}
+\label{classbtas_1_1_tensor_aa3e3e24a23f4821eb986d76c0963b2fe}
+
+\begin{DoxyCompactList}\small\item\em resize by extent and initialize with constant value \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_ae71081875506bf4b50c802b3f27f9362}{
+bool \hyperlink{classbtas_1_1_tensor_ae71081875506bf4b50c802b3f27f9362}{empty} () const }
+\label{classbtas_1_1_tensor_ae71081875506bf4b50c802b3f27f9362}
+
+\begin{DoxyCompactList}\small\item\em vector$<$T$>$::empty() \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_af6a335f589a0e9f777ddc63127b92405}{
+size\_\-t \hyperlink{classbtas_1_1_tensor_af6a335f589a0e9f777ddc63127b92405}{size} () const }
+\label{classbtas_1_1_tensor_af6a335f589a0e9f777ddc63127b92405}
+
+\begin{DoxyCompactList}\small\item\em vector$<$T$>$::size() \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_a112b037bcb8f37cea861aa080c153343}{
+const extent\_\-type \& \hyperlink{classbtas_1_1_tensor_a112b037bcb8f37cea861aa080c153343}{extent} () const }
+\label{classbtas_1_1_tensor_a112b037bcb8f37cea861aa080c153343}
+
+\begin{DoxyCompactList}\small\item\em return extent object \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_a639fcef0df02c70d34d91d65e4b4e9b4}{
+const extent\_\-type::value\_\-type \& \hyperlink{classbtas_1_1_tensor_a639fcef0df02c70d34d91d65e4b4e9b4}{extent} (size\_\-t i) const }
+\label{classbtas_1_1_tensor_a639fcef0df02c70d34d91d65e4b4e9b4}
+
+\begin{DoxyCompactList}\small\item\em return extent for rank i \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_aca1ac7375a59306f6c041b434d57d475}{
+const stride\_\-type \& \hyperlink{classbtas_1_1_tensor_aca1ac7375a59306f6c041b434d57d475}{stride} () const }
+\label{classbtas_1_1_tensor_aca1ac7375a59306f6c041b434d57d475}
+
+\begin{DoxyCompactList}\small\item\em return stride object \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_afb651fd8112140d194fb1ad86a988ea9}{
+const stride\_\-type::value\_\-type \& \hyperlink{classbtas_1_1_tensor_afb651fd8112140d194fb1ad86a988ea9}{stride} (size\_\-t i) const }
+\label{classbtas_1_1_tensor_afb651fd8112140d194fb1ad86a988ea9}
+
+\begin{DoxyCompactList}\small\item\em return stride for rank i \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_a733736cd31f88f0aaadf2eed08c9060b}{
+iterator \hyperlink{classbtas_1_1_tensor_a733736cd31f88f0aaadf2eed08c9060b}{begin} ()}
+\label{classbtas_1_1_tensor_a733736cd31f88f0aaadf2eed08c9060b}
+
+\begin{DoxyCompactList}\small\item\em iterator to begin \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_aa49c1307bb67e1dd0c72e0ad0c692d75}{
+iterator \hyperlink{classbtas_1_1_tensor_aa49c1307bb67e1dd0c72e0ad0c692d75}{end} ()}
+\label{classbtas_1_1_tensor_aa49c1307bb67e1dd0c72e0ad0c692d75}
+
+\begin{DoxyCompactList}\small\item\em iterator to end \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_a571bf3d5c6df260e342f596bf42bb722}{
+const\_\-iterator \hyperlink{classbtas_1_1_tensor_a571bf3d5c6df260e342f596bf42bb722}{begin} () const }
+\label{classbtas_1_1_tensor_a571bf3d5c6df260e342f596bf42bb722}
+
+\begin{DoxyCompactList}\small\item\em iterator to begin with const-\/qualifier \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_aad9139a8d91fc000d30e639732423ae7}{
+const\_\-iterator \hyperlink{classbtas_1_1_tensor_aad9139a8d91fc000d30e639732423ae7}{end} () const }
+\label{classbtas_1_1_tensor_aad9139a8d91fc000d30e639732423ae7}
+
+\begin{DoxyCompactList}\small\item\em iterator to end with const-\/qualifier \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_aabaaa960eb00445859c03484aab25d90}{
+ordinal\_\-type \hyperlink{classbtas_1_1_tensor_aabaaa960eb00445859c03484aab25d90}{ordinal} (const index\_\-type \&idx) const }
+\label{classbtas_1_1_tensor_aabaaa960eb00445859c03484aab25d90}
+
+\begin{DoxyCompactList}\small\item\em convert tensor index to ordinal index \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_aabbaadbdfb1c4835d793adc1d9f1dea1}{
+index\_\-type \hyperlink{classbtas_1_1_tensor_aabbaadbdfb1c4835d793adc1d9f1dea1}{index} (const ordinal\_\-type \&ord) const }
+\label{classbtas_1_1_tensor_aabbaadbdfb1c4835d793adc1d9f1dea1}
+
+\begin{DoxyCompactList}\small\item\em convert ordinal index to tensor index \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_ac34187f462cd1105ded134e96f9adaee}{
+reference \hyperlink{classbtas_1_1_tensor_ac34187f462cd1105ded134e96f9adaee}{operator\mbox{[}$\,$\mbox{]}} (size\_\-t i)}
+\label{classbtas_1_1_tensor_ac34187f462cd1105ded134e96f9adaee}
+
+\begin{DoxyCompactList}\small\item\em access by ordinal index \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_acefca765f735462ff9e1ae912119c38b}{
+const\_\-reference \hyperlink{classbtas_1_1_tensor_acefca765f735462ff9e1ae912119c38b}{operator\mbox{[}$\,$\mbox{]}} (size\_\-t i) const }
+\label{classbtas_1_1_tensor_acefca765f735462ff9e1ae912119c38b}
+
+\begin{DoxyCompactList}\small\item\em access by ordinal index with const-\/qualifier \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_aa5c4f12e59edcac76a97a4b7ff9254d1}{
+reference \hyperlink{classbtas_1_1_tensor_aa5c4f12e59edcac76a97a4b7ff9254d1}{operator()} (const index\_\-type \&idx)}
+\label{classbtas_1_1_tensor_aa5c4f12e59edcac76a97a4b7ff9254d1}
+
+\begin{DoxyCompactList}\small\item\em access by tensor index \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_a665b87c4e3ff172cd78ae48fa13c1b10}{
+const\_\-reference \hyperlink{classbtas_1_1_tensor_a665b87c4e3ff172cd78ae48fa13c1b10}{operator()} (const index\_\-type \&idx) const }
+\label{classbtas_1_1_tensor_a665b87c4e3ff172cd78ae48fa13c1b10}
+
+\begin{DoxyCompactList}\small\item\em access by tensor index with const-\/qualifier \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_a221a293c47f89523354c5ed6bddbbe93}{
+{\footnotesize template$<$typename... Args$>$ }\\reference \hyperlink{classbtas_1_1_tensor_a221a293c47f89523354c5ed6bddbbe93}{operator()} (const Args \&...args)}
+\label{classbtas_1_1_tensor_a221a293c47f89523354c5ed6bddbbe93}
+
+\begin{DoxyCompactList}\small\item\em access by tensor index \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_ae438e78d82a95622865bed2af7ab5523}{
+{\footnotesize template$<$typename... Args$>$ }\\const\_\-reference \hyperlink{classbtas_1_1_tensor_ae438e78d82a95622865bed2af7ab5523}{operator()} (const Args \&...args) const }
+\label{classbtas_1_1_tensor_ae438e78d82a95622865bed2af7ab5523}
+
+\begin{DoxyCompactList}\small\item\em access by tensor index with const-\/qualifier \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_a7a6a005917b830d744986b80fab8e93b}{
+reference \hyperlink{classbtas_1_1_tensor_a7a6a005917b830d744986b80fab8e93b}{at} (const index\_\-type \&idx)}
+\label{classbtas_1_1_tensor_a7a6a005917b830d744986b80fab8e93b}
+
+\begin{DoxyCompactList}\small\item\em access by tensor index with range check \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_a061b027680ac3b82aff520c0affc7b77}{
+const\_\-reference \hyperlink{classbtas_1_1_tensor_a061b027680ac3b82aff520c0affc7b77}{at} (const index\_\-type \&idx) const }
+\label{classbtas_1_1_tensor_a061b027680ac3b82aff520c0affc7b77}
+
+\begin{DoxyCompactList}\small\item\em access by tensor index with range check having const-\/qualifier \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_a16f72a734145aeb179ac8939df8c8f28}{
+{\footnotesize template$<$typename... Args$>$ }\\reference \hyperlink{classbtas_1_1_tensor_a16f72a734145aeb179ac8939df8c8f28}{at} (const Args \&...args)}
+\label{classbtas_1_1_tensor_a16f72a734145aeb179ac8939df8c8f28}
+
+\begin{DoxyCompactList}\small\item\em access by tensor index with range check \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_ab049d38027d058c3226ef5279c35d253}{
+{\footnotesize template$<$typename... Args$>$ }\\const\_\-reference \hyperlink{classbtas_1_1_tensor_ab049d38027d058c3226ef5279c35d253}{at} (const Args \&...args) const }
+\label{classbtas_1_1_tensor_ab049d38027d058c3226ef5279c35d253}
+
+\begin{DoxyCompactList}\small\item\em access by tensor index with range check having const-\/qualifier \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_ad6ac08b5dc758fdeba157bd8d1f45bf6}{
+pointer \hyperlink{classbtas_1_1_tensor_ad6ac08b5dc758fdeba157bd8d1f45bf6}{data} ()}
+\label{classbtas_1_1_tensor_ad6ac08b5dc758fdeba157bd8d1f45bf6}
+
+\begin{DoxyCompactList}\small\item\em return pointer to data \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_abc551d05b2abecebb19b0b7b7e0f2c38}{
+const\_\-pointer \hyperlink{classbtas_1_1_tensor_abc551d05b2abecebb19b0b7b7e0f2c38}{data} () const }
+\label{classbtas_1_1_tensor_abc551d05b2abecebb19b0b7b7e0f2c38}
+
+\begin{DoxyCompactList}\small\item\em return const pointer to data \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_a3f3361e8a3586a33ac57b1f7830260d7}{
+void \hyperlink{classbtas_1_1_tensor_a3f3361e8a3586a33ac57b1f7830260d7}{swap} (\hyperlink{classbtas_1_1_tensor}{Tensor} \&x)}
+\label{classbtas_1_1_tensor_a3f3361e8a3586a33ac57b1f7830260d7}
+
+\begin{DoxyCompactList}\small\item\em swap objects \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_ac4f95ac4546e6fbf98dbb50208499e33}{
+void \hyperlink{classbtas_1_1_tensor_ac4f95ac4546e6fbf98dbb50208499e33}{clear} ()}
+\label{classbtas_1_1_tensor_ac4f95ac4546e6fbf98dbb50208499e33}
+
+\begin{DoxyCompactList}\small\item\em clear \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_a467dd38e5b53b8f02311ca4429ba72fd}{
+void \hyperlink{classbtas_1_1_tensor_a467dd38e5b53b8f02311ca4429ba72fd}{fill} (const value\_\-type \&value)}
+\label{classbtas_1_1_tensor_a467dd38e5b53b8f02311ca4429ba72fd}
+
+\begin{DoxyCompactList}\small\item\em fill all the elements with a constant value \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_ae7ca1d2cb1784782c186a0672d0ac066}{
+{\footnotesize template$<$class Generator $>$ }\\void \hyperlink{classbtas_1_1_tensor_ae7ca1d2cb1784782c186a0672d0ac066}{generate} (Generator gen)}
+\label{classbtas_1_1_tensor_ae7ca1d2cb1784782c186a0672d0ac066}
+
+\begin{DoxyCompactList}\small\item\em generate elements by Generator 'T gen()' \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classbtas_1_1_tensor_a0fcec1a57766cc215ee0f2f10002f55f}{
+static size\_\-t {\bfseries rank} ()}
+\label{classbtas_1_1_tensor_a0fcec1a57766cc215ee0f2f10002f55f}
+
+\item 
+\hypertarget{classbtas_1_1_tensor_a87af5916939f6e36a761d4cdce8992f0}{
+static CBLAS\_\-ORDER {\bfseries order} ()}
+\label{classbtas_1_1_tensor_a87af5916939f6e36a761d4cdce8992f0}
+
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classbtas_1_1_tensor_a26bfe9073464479c7811f41f2888258d}{
+static const size\_\-t {\bfseries RANK} = N}
+\label{classbtas_1_1_tensor_a26bfe9073464479c7811f41f2888258d}
+
+\item 
+\hypertarget{classbtas_1_1_tensor_a3e79c525f8de1712bf8086a63fe0dbae}{
+static const CBLAS\_\-ORDER {\bfseries ORDER} = Order}
+\label{classbtas_1_1_tensor_a3e79c525f8de1712bf8086a63fe0dbae}
+
+\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classbtas_1_1_tensor_ac98d07dd8f7b70e16ccb9a01abf56b9c}{
+class {\bfseries boost::serialization::access}}
+\label{classbtas_1_1_tensor_ac98d07dd8f7b70e16ccb9a01abf56b9c}
+
+\end{DoxyCompactItemize}
+\subsubsection*{template$<$typename T, size\_\-t N, CBLAS\_\-ORDER Order = CblasRowMajor$>$ class btas::Tensor$<$ T, N, Order $>$}
+
+
+
+The documentation for this class was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+Tensor.hpp\end{DoxyCompactItemize}

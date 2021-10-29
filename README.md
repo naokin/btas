@@ -20,13 +20,12 @@ A domain-agnostic and expressive tensor library, containing dense and block-spar
 
 GNU GCC 4.4.6 or later
 Intel C/C++ Compiler 13.0 or later
+Intel MKL
 
 BOOST library (<http://www.boost.org/>)
 CBLAS & LAPACK library or Intel MKL library
 
 2. Since all classes and functions are implemented in terms of template and/or inline fashion, you can build your code by just including source files such as,
 
-    g++ -std=c++0x -O3 -I$BTAS_ROOT/include sample.cpp -lboost_serialization -lmkl_core -lmkl_intel_lp64 -lmkl_sequential
-
-Please look at `$BTAS_ROOT/dmrg/` which involves helpful examples of BTAS usages.
+    g++ -std=c++11 -O3 -mkl -I$BTAS_ROOT/include sample.cpp -lboost_serialization
 

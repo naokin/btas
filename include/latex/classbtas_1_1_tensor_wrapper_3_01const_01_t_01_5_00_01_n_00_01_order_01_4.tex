@@ -1,0 +1,208 @@
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4}{
+\section{btas::TensorWrapper$<$ const T $\ast$, N, Order $>$ Class Template Reference}
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4}\index{btas::TensorWrapper$<$ const T $\ast$, N, Order $>$@{btas::TensorWrapper$<$ const T $\ast$, N, Order $>$}}
+}
+
+
+\hyperlink{classbtas_1_1_tensor}{Tensor} object wrapping a const pointer to an array.  
+
+
+{\ttfamily \#include $<$TensorWrapper.hpp$>$}\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_acfe2e8f21cf205d633f8960fee64566d}{
+typedef T {\bfseries value\_\-type}}
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_acfe2e8f21cf205d633f8960fee64566d}
+
+\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_aea89927cb3d1d2c2f6dfa22bee6759a5}{
+typedef const T \& {\bfseries reference}}
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_aea89927cb3d1d2c2f6dfa22bee6759a5}
+
+\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_ac5b38a8102cccbd7f1235285364567f3}{
+typedef const T \& {\bfseries const\_\-reference}}
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_ac5b38a8102cccbd7f1235285364567f3}
+
+\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a61e4fa591ba0aca4f3c191715d77a42a}{
+typedef const T $\ast$ {\bfseries pointer}}
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a61e4fa591ba0aca4f3c191715d77a42a}
+
+\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_acad854a05df4f11425c1ec932646f29c}{
+typedef const T $\ast$ {\bfseries const\_\-pointer}}
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_acad854a05df4f11425c1ec932646f29c}
+
+\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_aaa10f59a5f57b6a3fe69351f310dcda9}{
+typedef Stride::extent\_\-type {\bfseries extent\_\-type}}
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_aaa10f59a5f57b6a3fe69351f310dcda9}
+
+\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_ad883c07790f5a968b9eee89dbefb7792}{
+typedef Stride::stride\_\-type {\bfseries stride\_\-type}}
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_ad883c07790f5a968b9eee89dbefb7792}
+
+\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a02d439533d4549f64a99fb945cbf4999}{
+typedef Stride::index\_\-type {\bfseries index\_\-type}}
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a02d439533d4549f64a99fb945cbf4999}
+
+\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a708d8e7631bd923472713147ae646964}{
+typedef Stride::ordinal\_\-type {\bfseries ordinal\_\-type}}
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a708d8e7631bd923472713147ae646964}
+
+\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a4f7f0b7382ae7e8fecd1bd5cba164872}{
+typedef const T $\ast$ {\bfseries iterator}}
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a4f7f0b7382ae7e8fecd1bd5cba164872}
+
+\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a11b36f7e28de05a5e68764b434365c47}{
+typedef const T $\ast$ {\bfseries const\_\-iterator}}
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a11b36f7e28de05a5e68764b434365c47}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a5f4ccf42e69b2481463fc33a0eeeb284}{
+\hyperlink{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a5f4ccf42e69b2481463fc33a0eeeb284}{TensorWrapper} (const\_\-pointer first, const extent\_\-type \&ext)}
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a5f4ccf42e69b2481463fc33a0eeeb284}
+
+\begin{DoxyCompactList}\small\item\em Constructor (user accessible). \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a38a7fd6d379ec2514d2317e8e6494313}{
+\hyperlink{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a38a7fd6d379ec2514d2317e8e6494313}{TensorWrapper} (const TensorWrapper \&x)}
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a38a7fd6d379ec2514d2317e8e6494313}
+
+\begin{DoxyCompactList}\small\item\em Shallow copy. \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_ae0c6918e9a004b55813f477f13b9a629}{
+\hyperlink{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_ae0c6918e9a004b55813f477f13b9a629}{TensorWrapper} (const TensorWrapper$<$ T $\ast$, N, Order $>$ \&x)}
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_ae0c6918e9a004b55813f477f13b9a629}
+
+\begin{DoxyCompactList}\small\item\em Shallow copy from non-\/const TensorWrapper. \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_abc6709fec3955de2dafeabb2a8cf8e18}{
+\hyperlink{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_abc6709fec3955de2dafeabb2a8cf8e18}{TensorWrapper} (const \hyperlink{classbtas_1_1_tensor}{Tensor}$<$ T, N, Order $>$ \&x)}
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_abc6709fec3955de2dafeabb2a8cf8e18}
+
+\begin{DoxyCompactList}\small\item\em Shallow copy from \hyperlink{classbtas_1_1_tensor}{Tensor} object. \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_ab774f74dfe6020fac9fad59bb3f96c47}{
+\hyperlink{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_ab774f74dfe6020fac9fad59bb3f96c47}{$\sim$TensorWrapper} ()}
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_ab774f74dfe6020fac9fad59bb3f96c47}
+
+\begin{DoxyCompactList}\small\item\em destructor \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a7c7c8686dc896c9b50db954ba8cbb03d}{
+void \hyperlink{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a7c7c8686dc896c9b50db954ba8cbb03d}{reset} (const\_\-pointer first, const extent\_\-type \&ext)}
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a7c7c8686dc896c9b50db954ba8cbb03d}
+
+\begin{DoxyCompactList}\small\item\em reset the pointer \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a00648b6d5f3e6a4b0e43395cdfe5c832}{
+bool \hyperlink{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a00648b6d5f3e6a4b0e43395cdfe5c832}{empty} () const }
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a00648b6d5f3e6a4b0e43395cdfe5c832}
+
+\begin{DoxyCompactList}\small\item\em vector$<$T$>$::empty() \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_ae1416d4f5e602a2520b8539ca78d1494}{
+size\_\-t \hyperlink{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_ae1416d4f5e602a2520b8539ca78d1494}{size} () const }
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_ae1416d4f5e602a2520b8539ca78d1494}
+
+\begin{DoxyCompactList}\small\item\em vector$<$T$>$::size() \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_ae373bcb59008102537a284795066af5e}{
+const extent\_\-type \& \hyperlink{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_ae373bcb59008102537a284795066af5e}{extent} () const }
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_ae373bcb59008102537a284795066af5e}
+
+\begin{DoxyCompactList}\small\item\em return extent object \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_adfde0ef8d6ca12bcd4ae3aa30849d809}{
+const extent\_\-type::value\_\-type \& \hyperlink{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_adfde0ef8d6ca12bcd4ae3aa30849d809}{extent} (size\_\-t i) const }
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_adfde0ef8d6ca12bcd4ae3aa30849d809}
+
+\begin{DoxyCompactList}\small\item\em return extent for rank i \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a7e93d08c0de05ac3d63fe581f47a93ad}{
+const stride\_\-type \& \hyperlink{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a7e93d08c0de05ac3d63fe581f47a93ad}{stride} () const }
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a7e93d08c0de05ac3d63fe581f47a93ad}
+
+\begin{DoxyCompactList}\small\item\em return stride object \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_aacd22ca0d976e8d2b98f9304f180a92e}{
+const stride\_\-type::value\_\-type \& \hyperlink{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_aacd22ca0d976e8d2b98f9304f180a92e}{stride} (size\_\-t i) const }
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_aacd22ca0d976e8d2b98f9304f180a92e}
+
+\begin{DoxyCompactList}\small\item\em return stride for rank i \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a27f413b7093c969b06cd0759dba80328}{
+const\_\-iterator \hyperlink{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a27f413b7093c969b06cd0759dba80328}{begin} () const }
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a27f413b7093c969b06cd0759dba80328}
+
+\begin{DoxyCompactList}\small\item\em iterator to begin with const-\/qualifier \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_aa2b7c69f7aa52ed3db0ebff0cbfb3910}{
+const\_\-iterator \hyperlink{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_aa2b7c69f7aa52ed3db0ebff0cbfb3910}{end} () const }
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_aa2b7c69f7aa52ed3db0ebff0cbfb3910}
+
+\begin{DoxyCompactList}\small\item\em iterator to end with const-\/qualifier \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a154ea89430a0b334025a39ca76f694ee}{
+ordinal\_\-type \hyperlink{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a154ea89430a0b334025a39ca76f694ee}{ordinal} (const index\_\-type \&idx) const }
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a154ea89430a0b334025a39ca76f694ee}
+
+\begin{DoxyCompactList}\small\item\em convert tensor index to ordinal index \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a0d70d0a32be5912bb37c963cb1ac0cec}{
+index\_\-type \hyperlink{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a0d70d0a32be5912bb37c963cb1ac0cec}{index} (const ordinal\_\-type \&ord) const }
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a0d70d0a32be5912bb37c963cb1ac0cec}
+
+\begin{DoxyCompactList}\small\item\em convert ordinal index to tensor index \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a669e4d2206dc824a8b4e591b27cd49a1}{
+const\_\-reference \hyperlink{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a669e4d2206dc824a8b4e591b27cd49a1}{operator\mbox{[}$\,$\mbox{]}} (size\_\-t i) const }
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a669e4d2206dc824a8b4e591b27cd49a1}
+
+\begin{DoxyCompactList}\small\item\em access by ordinal index with const-\/qualifier \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a5b0c7968f0be7d61ec9a329eb6c8bcd5}{
+const\_\-reference \hyperlink{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a5b0c7968f0be7d61ec9a329eb6c8bcd5}{operator()} (const index\_\-type \&idx) const }
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a5b0c7968f0be7d61ec9a329eb6c8bcd5}
+
+\begin{DoxyCompactList}\small\item\em access by tensor index with const-\/qualifier \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_ac937821d9950cc1656116ee89a47a8d8}{
+{\footnotesize template$<$typename... Args$>$ }\\const\_\-reference \hyperlink{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_ac937821d9950cc1656116ee89a47a8d8}{operator()} (const Args \&...args) const }
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_ac937821d9950cc1656116ee89a47a8d8}
+
+\begin{DoxyCompactList}\small\item\em access by tensor index with const-\/qualifier \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a1f83984684c9b943d1043333824907bd}{
+const\_\-reference \hyperlink{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a1f83984684c9b943d1043333824907bd}{at} (const index\_\-type \&idx) const }
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a1f83984684c9b943d1043333824907bd}
+
+\begin{DoxyCompactList}\small\item\em access by tensor index with range check having const-\/qualifier \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_ae7009dffac53dfba42b7be70dc8b52ac}{
+{\footnotesize template$<$typename... Args$>$ }\\const\_\-reference \hyperlink{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_ae7009dffac53dfba42b7be70dc8b52ac}{at} (const Args \&...args) const }
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_ae7009dffac53dfba42b7be70dc8b52ac}
+
+\begin{DoxyCompactList}\small\item\em access by tensor index with range check having const-\/qualifier \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a0424470fc02cc1ee73c3aba5f64b17e6}{
+const\_\-pointer \hyperlink{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a0424470fc02cc1ee73c3aba5f64b17e6}{data} () const }
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a0424470fc02cc1ee73c3aba5f64b17e6}
+
+\begin{DoxyCompactList}\small\item\em return const pointer to data \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a1221c30ad4444beb080c69ff2c5e1cab}{
+void \hyperlink{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a1221c30ad4444beb080c69ff2c5e1cab}{swap} (TensorWrapper \&x)}
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a1221c30ad4444beb080c69ff2c5e1cab}
+
+\begin{DoxyCompactList}\small\item\em swap objects \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a011fb28c4f9b7f6696a91c7556f06111}{
+static size\_\-t {\bfseries rank} ()}
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a011fb28c4f9b7f6696a91c7556f06111}
+
+\item 
+\hypertarget{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a36e60e706037923b27a87ee05711c039}{
+static CBLAS\_\-ORDER {\bfseries order} ()}
+\label{classbtas_1_1_tensor_wrapper_3_01const_01_t_01_5_00_01_n_00_01_order_01_4_a36e60e706037923b27a87ee05711c039}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename T, size\_\-t N, CBLAS\_\-ORDER Order$>$ class btas::TensorWrapper$<$ const T $\ast$, N, Order $>$}
+
+\hyperlink{classbtas_1_1_tensor}{Tensor} object wrapping a const pointer to an array. 
+
+The documentation for this class was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+TensorWrapper.hpp\end{DoxyCompactItemize}

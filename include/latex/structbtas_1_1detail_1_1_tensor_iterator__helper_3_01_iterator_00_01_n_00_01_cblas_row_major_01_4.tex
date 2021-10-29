@@ -1,0 +1,65 @@
+\hypertarget{structbtas_1_1detail_1_1_tensor_iterator__helper_3_01_iterator_00_01_n_00_01_cblas_row_major_01_4}{
+\section{btas::detail::TensorIterator\_\-helper$<$ Iterator, N, CblasRowMajor $>$ Struct Template Reference}
+\label{structbtas_1_1detail_1_1_tensor_iterator__helper_3_01_iterator_00_01_n_00_01_cblas_row_major_01_4}\index{btas::detail::TensorIterator\_\-helper$<$ Iterator, N, CblasRowMajor $>$@{btas::detail::TensorIterator\_\-helper$<$ Iterator, N, CblasRowMajor $>$}}
+}
+
+
+For Row-\/Major stride.  
+
+
+{\ttfamily \#include $<$TensorIterator.hpp$>$}\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{structbtas_1_1detail_1_1_tensor_iterator__helper_3_01_iterator_00_01_n_00_01_cblas_row_major_01_4_a1186c43381e074a9d2dbdb33e1368796}{
+typedef TensorStride$<$ N, CblasRowMajor $>$ {\bfseries Stride}}
+\label{structbtas_1_1detail_1_1_tensor_iterator__helper_3_01_iterator_00_01_n_00_01_cblas_row_major_01_4_a1186c43381e074a9d2dbdb33e1368796}
+
+\item 
+\hypertarget{structbtas_1_1detail_1_1_tensor_iterator__helper_3_01_iterator_00_01_n_00_01_cblas_row_major_01_4_a39ec1d864be3f57f9c7ddeb7c18284a0}{
+typedef Stride::extent\_\-type {\bfseries extent\_\-type}}
+\label{structbtas_1_1detail_1_1_tensor_iterator__helper_3_01_iterator_00_01_n_00_01_cblas_row_major_01_4_a39ec1d864be3f57f9c7ddeb7c18284a0}
+
+\item 
+\hypertarget{structbtas_1_1detail_1_1_tensor_iterator__helper_3_01_iterator_00_01_n_00_01_cblas_row_major_01_4_ac2236564a5f56919ec0f9787107bc344}{
+typedef Stride::stride\_\-type {\bfseries stride\_\-type}}
+\label{structbtas_1_1detail_1_1_tensor_iterator__helper_3_01_iterator_00_01_n_00_01_cblas_row_major_01_4_ac2236564a5f56919ec0f9787107bc344}
+
+\item 
+\hypertarget{structbtas_1_1detail_1_1_tensor_iterator__helper_3_01_iterator_00_01_n_00_01_cblas_row_major_01_4_a1f9c75809aeb40f1a952a3ec55532b05}{
+typedef Stride::index\_\-type {\bfseries index\_\-type}}
+\label{structbtas_1_1detail_1_1_tensor_iterator__helper_3_01_iterator_00_01_n_00_01_cblas_row_major_01_4_a1f9c75809aeb40f1a952a3ec55532b05}
+
+\item 
+\hypertarget{structbtas_1_1detail_1_1_tensor_iterator__helper_3_01_iterator_00_01_n_00_01_cblas_row_major_01_4_a55a579b95317ff143bcc01ee75570519}{
+typedef Stride::ordinal\_\-type {\bfseries ordinal\_\-type}}
+\label{structbtas_1_1detail_1_1_tensor_iterator__helper_3_01_iterator_00_01_n_00_01_cblas_row_major_01_4_a55a579b95317ff143bcc01ee75570519}
+
+\item 
+\hypertarget{structbtas_1_1detail_1_1_tensor_iterator__helper_3_01_iterator_00_01_n_00_01_cblas_row_major_01_4_a91db2edca0dbe0916bc09797bdd84560}{
+typedef std::iterator\_\-traits$<$ Iterator $>$::difference\_\-type {\bfseries difference\_\-type}}
+\label{structbtas_1_1detail_1_1_tensor_iterator__helper_3_01_iterator_00_01_n_00_01_cblas_row_major_01_4_a91db2edca0dbe0916bc09797bdd84560}
+
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{structbtas_1_1detail_1_1_tensor_iterator__helper_3_01_iterator_00_01_n_00_01_cblas_row_major_01_4_a4292adcea6067709c986cc3baf28eb84}{
+static difference\_\-type \hyperlink{structbtas_1_1detail_1_1_tensor_iterator__helper_3_01_iterator_00_01_n_00_01_cblas_row_major_01_4_a4292adcea6067709c986cc3baf28eb84}{increment} (index\_\-type \&idx, const extent\_\-type \&ext, const stride\_\-type \&str)}
+\label{structbtas_1_1detail_1_1_tensor_iterator__helper_3_01_iterator_00_01_n_00_01_cblas_row_major_01_4_a4292adcea6067709c986cc3baf28eb84}
+
+\begin{DoxyCompactList}\small\item\em increment tensor index and return iterator offset \item\end{DoxyCompactList}\item 
+\hypertarget{structbtas_1_1detail_1_1_tensor_iterator__helper_3_01_iterator_00_01_n_00_01_cblas_row_major_01_4_a35b664ea08d182c6963057c82f70bfc1}{
+static difference\_\-type \hyperlink{structbtas_1_1detail_1_1_tensor_iterator__helper_3_01_iterator_00_01_n_00_01_cblas_row_major_01_4_a35b664ea08d182c6963057c82f70bfc1}{decrement} (index\_\-type \&idx, const extent\_\-type \&ext, const stride\_\-type \&str)}
+\label{structbtas_1_1detail_1_1_tensor_iterator__helper_3_01_iterator_00_01_n_00_01_cblas_row_major_01_4_a35b664ea08d182c6963057c82f70bfc1}
+
+\begin{DoxyCompactList}\small\item\em decrement tensor index and return iterator offset \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class Iterator, size\_\-t N$>$ struct btas::detail::TensorIterator\_\-helper$<$ Iterator, N, CblasRowMajor $>$}
+
+For Row-\/Major stride. 
+
+The documentation for this struct was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+TensorIterator.hpp\end{DoxyCompactItemize}

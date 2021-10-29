@@ -1,0 +1,52 @@
+\hypertarget{classbtas_1_1contract__helper}{
+\section{btas::contract\_\-helper$<$ TensorA, TensorB, Index $>$ Class Template Reference}
+\label{classbtas_1_1contract__helper}\index{btas::contract\_\-helper@{btas::contract\_\-helper}}
+}
+
+
+helper class to determine flags to call contract function  
+
+
+{\ttfamily \#include $<$contract\_\-helper.hpp$>$}\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classbtas_1_1contract__helper_ac98eb37594c1b24be2c663bc3ca5d6ec}{
+CBLAS\_\-TRANSPOSE \hyperlink{classbtas_1_1contract__helper_ac98eb37594c1b24be2c663bc3ca5d6ec}{transa} () const }
+\label{classbtas_1_1contract__helper_ac98eb37594c1b24be2c663bc3ca5d6ec}
+
+\begin{DoxyCompactList}\small\item\em return whether or not tensor 'a' should be transposed \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1contract__helper_a616222e676a688b0c6f162b6de7f59f1}{
+CBLAS\_\-TRANSPOSE \hyperlink{classbtas_1_1contract__helper_a616222e676a688b0c6f162b6de7f59f1}{transb} () const }
+\label{classbtas_1_1contract__helper_a616222e676a688b0c6f162b6de7f59f1}
+
+\begin{DoxyCompactList}\small\item\em return whether or not tensor 'b' should be transposed \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1contract__helper_a7d3ef84cc81832d8f1b57b8bfea1e6eb}{
+const TensorA \& \hyperlink{classbtas_1_1contract__helper_a7d3ef84cc81832d8f1b57b8bfea1e6eb}{get\_\-a} () const }
+\label{classbtas_1_1contract__helper_a7d3ef84cc81832d8f1b57b8bfea1e6eb}
+
+\begin{DoxyCompactList}\small\item\em release the reference to tensor 'a' \item\end{DoxyCompactList}\item 
+\hypertarget{classbtas_1_1contract__helper_ad3a459c47ffd3ef3d68ad12746c69e77}{
+const TensorB \& \hyperlink{classbtas_1_1contract__helper_ad3a459c47ffd3ef3d68ad12746c69e77}{get\_\-b} () const }
+\label{classbtas_1_1contract__helper_ad3a459c47ffd3ef3d68ad12746c69e77}
+
+\begin{DoxyCompactList}\small\item\em release the reference to tensor 'b' \item\end{DoxyCompactList}\item 
+\hyperlink{classbtas_1_1contract__helper_ac261dea905460f76b6bcfb46598df784}{contract\_\-helper} (const TensorA \&a, const Index \&idxa, const TensorB \&b, const Index \&idxb)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class TensorA, class TensorB, class Index$>$ class btas::contract\_\-helper$<$ TensorA, TensorB, Index $>$}
+
+helper class to determine flags to call contract function 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classbtas_1_1contract__helper_ac261dea905460f76b6bcfb46598df784}{
+\index{btas::contract\_\-helper@{btas::contract\_\-helper}!contract\_\-helper@{contract\_\-helper}}
+\index{contract\_\-helper@{contract\_\-helper}!btas::contract_helper@{btas::contract\_\-helper}}
+\subsubsection[{contract\_\-helper}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class TensorA , class TensorB , class Index $>$ {\bf btas::contract\_\-helper}$<$ TensorA, TensorB, Index $>$::{\bf contract\_\-helper} (const TensorA \& {\em a}, \/  const Index \& {\em idxa}, \/  const TensorB \& {\em b}, \/  const Index \& {\em idxb})\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{classbtas_1_1contract__helper_ac261dea905460f76b6bcfb46598df784}
+constructor tuning a contraction job to determine trans flags and/or permute tensors upon construction 
+
+The documentation for this class was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+contract\_\-helper.hpp\end{DoxyCompactItemize}

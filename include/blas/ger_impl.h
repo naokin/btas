@@ -1,7 +1,7 @@
 #ifndef __BTAS_BLAS_GER_IMPL_H
 #define __BTAS_BLAS_GER_IMPL_H
 
-#include <blas/types.h>
+#include <BTAS_ASSERT.h>
 
 namespace btas {
 

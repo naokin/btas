@@ -1,7 +1,17 @@
 #ifndef __BTAS_HEADER_INCLUDED
 #define __BTAS_HEADER_INCLUDED
 
-#include <btas/Tensor.hpp>
-#include <btas/SpTensor.hpp>
+#include <complex>
+
+#define lapack_complex_float  std::complex<float>
+#define lapack_complex_double std::complex<double>
+
+#include <mkl.h>
+
+// Dense tensor class
+#include <Tensor.hpp>
+
+// Sparse tensor class
+#include <SpTensor.hpp>
 
 #endif // __BTAS_HEADER_INCLUDED

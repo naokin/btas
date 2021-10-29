@@ -1,7 +1,7 @@
 #ifndef __BTAS_LAPACK_GELQF_IMPL_H
 #define __BTAS_LAPACK_GELQF_IMPL_H
 
-#include <lapack/types.h>
+#include <BTAS_ASSERT.h>
 
 namespace btas {
 
