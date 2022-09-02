@@ -286,7 +286,7 @@ void orthogonalize (const Tensor<T,N,Order>& x, Tensor<T,N,Order>& y)
 
 /// gemm
 template<size_t M, size_t N, size_t K>
-struct BlasContractWrapper_ {
+struct blasWrapper_ {
   template<typename T, CBLAS_ORDER Order>
   static void call (
     const CBLAS_TRANSPOSE& transa,
@@ -303,7 +303,7 @@ struct BlasContractWrapper_ {
 
 /// gemv
 template<size_t M, size_t N>
-struct BlasContractWrapper_<M,N,N> {
+struct blasWrapper_<M,N,N> {
   template<typename T, CBLAS_ORDER Order>
   static void call (
     const CBLAS_TRANSPOSE& transa,
@@ -320,7 +320,7 @@ struct BlasContractWrapper_<M,N,N> {
 
 /// gemv
 template<size_t M, size_t N>
-struct BlasContractWrapper_<M,N,M> {
+struct blasWrapper_<M,N,M> {
   template<typename T, CBLAS_ORDER Order>
   static void call (
     const CBLAS_TRANSPOSE& transa,
@@ -337,7 +337,7 @@ struct BlasContractWrapper_<M,N,M> {
 
 /// ger
 template<size_t M, size_t N>
-struct BlasContractWrapper_<M,N,0> {
+struct blasWrapper_<M,N,0> {
   template<typename T, CBLAS_ORDER Order>
   static void call (
     const CBLAS_TRANSPOSE& transa,
@@ -354,7 +354,7 @@ struct BlasContractWrapper_<M,N,0> {
 
 /// Wrapper function for BLAS contractions
 template<typename T, size_t L, size_t M, size_t N, CBLAS_ORDER Order>
-void BlasContractWrapper (
+void blasCall (
       const CBLAS_TRANSPOSE& transa,
       const CBLAS_TRANSPOSE& transb,
       const T& alpha,
@@ -363,7 +363,7 @@ void BlasContractWrapper (
       const T& beta,
             Tensor<T,N,Order>& c)
 {
-  BlasContractWrapper_<L,M,(L+M-N)/2>::call(transa,transb,alpha,a,b,beta,c);
+  blasWrapper_<L,M,(L+M-N)/2>::call(transa,transb,alpha,a,b,beta,c);
 }
 
 } // namespace btas

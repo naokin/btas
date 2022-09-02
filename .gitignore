@@ -3,10 +3,9 @@
 *.so
 *.a
 *~
-*.della
-*.tiger
 *.tmp
 *log
+*.out
 .*.swp
 docs
 trash/

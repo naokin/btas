@@ -1,3 +1,8 @@
+/*
+  Loop with index counting
+  ------------------------
+  Loop over all elements ranging by "extent" as incrementing "index".
+*/
 #ifndef __BTAS_INDEX_FOR_HPP
 #define __BTAS_INDEX_FOR_HPP
 

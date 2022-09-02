@@ -4,8 +4,8 @@
 #include <algorithm>
 
 #include <Tensor.hpp>
-#include <TensorStride.hpp>
 #include <TensorIterator.hpp>
+#include <BTAS_ASSERT.h>
 
 namespace btas {
 

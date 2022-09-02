@@ -11,7 +11,4 @@
 // Dense tensor class
 #include <Tensor.hpp>
 
-// Sparse tensor class
-#include <SpTensor.hpp>
-
 #endif // __BTAS_HEADER_INCLUDED

@@ -3,8 +3,7 @@
 
 #include <boost/bind.hpp>
 #include <btas.h>
-
-#include <btas/TensorRef.hpp>
+#include <TensorView.hpp>
 
 template<size_t N>
 void foo (const typename btas::Tensor<double,N>::index_type& index, btas::Tensor<double,N>& x)
@@ -43,10 +42,10 @@ int main ()
       std::cout << std::endl;
     }
 
-  TensorRef<double,2> A_ref(A.data(),shape(16,4));
+  TensorView<double*,2> A_ref(A.data(),shape(16,4));
 
   std::cout << "A_ref" << std::endl;
-  for(size_t i = 0; i < A_ref.extent(0); ++i)
+  for(size_t i = 0; i < A_ref.extent(0); ++i) {
     for(size_t j = 0; j < A_ref.extent(1); ++j) {
       std::cout << i << "," << j << " :: " << std::setw(7) << A[i*A_ref.extent(1)+j] << "  ";
     }

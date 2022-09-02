@@ -4,9 +4,9 @@
 #include <boost/bind.hpp>
 #include <btas.h>
 
-#include <btas/TensorIterator.hpp>
-#include <btas/TensorWrapper.hpp>
-#include <btas/TensorView.hpp>
+//#include <TensorIterator.hpp>
+//#include <TensorWrapper.hpp>
+//#include <TensorView.hpp>
 
 int main ()
 {

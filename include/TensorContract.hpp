@@ -18,7 +18,7 @@ void contract (
         Tensor<T,N,Order>& c)
 {
   contract_helper<Tensor<T,L,Order>,Tensor<T,M,Order>,Index> helper(a,idxa,b,idxb);
-  BlasContractWrapper(helper.transa(),helper.transb(),alpha,helper.get_a(),helper.get_b(),beta,c);
+  blasCall(helper.transa(),helper.transb(),alpha,helper.get_a(),helper.get_b(),beta,c);
 }
 
 /// tensor trance function called with index symbols of tensors

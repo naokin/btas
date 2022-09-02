@@ -24,9 +24,11 @@ int main ()
 
   B.generate(boost::bind(dist,rGen));
 
-  Tensor<double,3> C(4,2,2,0.0);
+  Tensor<double,3> C(4,2,2);
 
-  BlasContractWrapper(CblasNoTrans,CblasNoTrans,1.0,A,B,1.0,C);
+  C.fill(0.0);
+
+  blasCall(CblasNoTrans,CblasNoTrans,1.0,A,B,1.0,C);
 
   std::cout << "BLAS result :: " << std::endl;
 
