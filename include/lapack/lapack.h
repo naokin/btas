@@ -1,5 +1,5 @@
-#ifndef __BTAS_LAPACK_WRAPPERS_H
-#define __BTAS_LAPACK_WRAPPERS_H
+#ifndef __BTAS_LAPACK_HEADER_INCLUDED
+#define __BTAS_LAPACK_HEADER_INCLUDED
 
 #include <lapack/gesvd_impl.h>
 #include <lapack/geqrf_impl.h>
@@ -13,4 +13,4 @@
 #include <lapack/getri_impl.h>
 #include <lapack/sytrs_impl.h>
 
-#endif // __BTAS_LAPACK_WRAPPERS_H
+#endif // __BTAS_LAPACK_HEADER_INCLUDED

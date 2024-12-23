@@ -1,14 +1,15 @@
-/*
-  Loop with index counting
-  ------------------------
-  Loop over all elements ranging by "extent" as incrementing "index".
-*/
+// ==================================================================================================== 
+// Loop with index counting
+// ---------------------------------------------------------------------------------------------------- 
+// Loop over all elements ranging by "extent" as incrementing "index".
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+
 #ifndef __BTAS_INDEX_FOR_HPP
 #define __BTAS_INDEX_FOR_HPP
 
 #include <mkl.h>
 
-// FIXME: Need to implement OpenMP version of IndexFor
+// TODO: To implement OpenMP version of IndexFor
 
 namespace btas {
 

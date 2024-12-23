@@ -1,11 +1,13 @@
 #ifndef __BTAS_TENSOR_STRIDE_HPP
 #define __BTAS_TENSOR_STRIDE_HPP
 
+#include <array>
 #include <algorithm>
 
-#include <boost/array.hpp>
+#ifdef _ENABLE_BOOST_SERIALIZE
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/array.hpp>
+#endif
 
 namespace btas {
 
@@ -19,11 +21,11 @@ class TensorStride<N, CblasRowMajor, T_ext, T_str, T_idx> {
 
 public:
 
-  typedef boost::array<T_ext,N> extent_type;
+  typedef std::array<T_ext,N> extent_type;
 
-  typedef boost::array<T_str,N> stride_type;
+  typedef std::array<T_str,N> stride_type;
 
-  typedef boost::array<T_idx,N> index_type;
+  typedef std::array<T_idx,N> index_type;
 
   typedef typename index_type::value_type ordinal_type;
 
@@ -114,11 +116,12 @@ public:
 
 private:
 
+#ifdef _ENABLE_BOOST_SERIALIZE
   friend class boost::serialization::access;
-
   /// Boost serialization
   template<class Archive>
   void serialize (Archive& ar, const unsigned int version) { ar & extent_ & stride_; }
+#endif
 
   //  Members
 
@@ -133,11 +136,11 @@ class TensorStride<N, CblasColMajor, T_ext, T_str, T_idx> {
 
 public:
 
-  typedef boost::array<T_ext,N> extent_type;
+  typedef std::array<T_ext,N> extent_type;
 
-  typedef boost::array<T_str,N> stride_type;
+  typedef std::array<T_str,N> stride_type;
 
-  typedef boost::array<T_idx,N> index_type;
+  typedef std::array<T_idx,N> index_type;
 
   typedef typename index_type::value_type ordinal_type;
 
@@ -228,11 +231,12 @@ public:
 
 private:
 
+#ifdef _ENABLE_BOOST_SERIALIZE
   friend class boost::serialization::access;
-
   /// Boost serialization
   template<class Archive>
   void serialize (Archive& ar, const unsigned int version) { ar & extent_ & stride_; }
+#endif
 
   //  Members
 

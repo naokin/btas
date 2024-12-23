@@ -161,25 +161,25 @@ template<typename T> struct __TensorIteratorConst<T*>
 template<typename T> struct __TensorIteratorConst<const T*>
 { typedef const T* type; };
 
-///// Specialized for a std::vector<T>::iterator
-//template<typename T, class Alloc>
-//struct __TensorIteratorConst<typename std::vector<T,Alloc>::iterator>
-//{ typedef typename std::vector<T,Alloc>::const_iterator type; };
+/// Specialized for a std::vector<T>::iterator
+template<typename T, class Alloc>
+struct __TensorIteratorConst<typename std::vector<T,Alloc>::iterator>
+{ typedef typename std::vector<T,Alloc>::const_iterator type; };
 
-///// Specialized for a std::vector<T>::iterator
-//template<typename T, class Alloc>
-//struct __TensorIteratorConst<typename std::vector<T>::const_iterator>
-//{ typedef typename std::vector<T,Alloc>::const_iterator type; };
+/// Specialized for a std::vector<T>::iterator
+template<typename T, class Alloc>
+struct __TensorIteratorConst<typename std::vector<T>::const_iterator>
+{ typedef typename std::vector<T,Alloc>::const_iterator type; };
 
-/// __gnu_cxx::__normal_iterator<T*,Container>
-template<typename T, class Container>
-struct __TensorIteratorConst<__gnu_cxx::__normal_iterator<T*,Container>>
-{ typedef __gnu_cxx::__normal_iterator<const T*,Container> type; };
+///// __gnu_cxx::__normal_iterator<T*,Container>
+//template<typename T, class Container>
+//struct __TensorIteratorConst<__gnu_cxx::__normal_iterator<T*,Container>>
+//{ typedef __gnu_cxx::__normal_iterator<const T*,Container> type; };
 
-/// __gnu_cxx::__normal_iterator<const T*,Container>
-template<typename T, class Container>
-struct __TensorIteratorConst<__gnu_cxx::__normal_iterator<const T*,Container>>
-{ typedef __gnu_cxx::__normal_iterator<const T*,Container> type; };
+///// __gnu_cxx::__normal_iterator<const T*,Container>
+//template<typename T, class Container>
+//struct __TensorIteratorConst<__gnu_cxx::__normal_iterator<const T*,Container>>
+//{ typedef __gnu_cxx::__normal_iterator<const T*,Container> type; };
 
 /// Specialized for a TensorIterator, to instantiate __TensorIteratorConst recursively
 template<class Iter, size_t N, CBLAS_ORDER Order>
@@ -199,25 +199,25 @@ template<typename T> struct __TensorIteratorRemoveConst<T*>
 template<typename T> struct __TensorIteratorRemoveConst<const T*>
 { typedef T* type; };
 
-///// Specialized for a std::vector<T>::iterator
-//template<typename T, class Alloc>
-//struct __TensorIteratorRemoveConst<typename std::vector<T,Alloc>::iterator>
-//{ typedef typename std::vector<T,Alloc>::iterator type; };
+/// Specialized for a std::vector<T>::iterator
+template<typename T, class Alloc>
+struct __TensorIteratorRemoveConst<typename std::vector<T,Alloc>::iterator>
+{ typedef typename std::vector<T,Alloc>::iterator type; };
 
-///// Specialized for a std::vector<T>::iterator
-//template<typename T, class Alloc>
-//struct __TensorIteratorRemoveConst<typename std::vector<T,Alloc>::const_iterator>
-//{ typedef typename std::vector<T,Alloc>::iterator type; };
+/// Specialized for a std::vector<T>::iterator
+template<typename T, class Alloc>
+struct __TensorIteratorRemoveConst<typename std::vector<T,Alloc>::const_iterator>
+{ typedef typename std::vector<T,Alloc>::iterator type; };
 
-/// __gnu_cxx::__normal_iterator<T*,Container>
-template<typename T, class Container>
-struct __TensorIteratorRemoveConst<__gnu_cxx::__normal_iterator<T*,Container>>
-{ typedef __gnu_cxx::__normal_iterator<T*,Container> type; };
+///// __gnu_cxx::__normal_iterator<T*,Container>
+//template<typename T, class Container>
+//struct __TensorIteratorRemoveConst<__gnu_cxx::__normal_iterator<T*,Container>>
+//{ typedef __gnu_cxx::__normal_iterator<T*,Container> type; };
 
-/// __gnu_cxx::__normal_iterator<const T*,Container>
-template<typename T, class Container>
-struct __TensorIteratorRemoveConst<__gnu_cxx::__normal_iterator<const T*,Container>>
-{ typedef __gnu_cxx::__normal_iterator<T*,Container> type; };
+///// __gnu_cxx::__normal_iterator<const T*,Container>
+//template<typename T, class Container>
+//struct __TensorIteratorRemoveConst<__gnu_cxx::__normal_iterator<const T*,Container>>
+//{ typedef __gnu_cxx::__normal_iterator<T*,Container> type; };
 
 /// Specialized for a TensorIterator, to instantiate __TensorIteratorRemoveConst recursively
 template<class Iter, size_t N, CBLAS_ORDER Order>

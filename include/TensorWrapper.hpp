@@ -2,6 +2,7 @@
 #define __BTAS_TENSOR_WRAPPER_HPP
 
 #include <algorithm>
+#include <functional>
 
 #include <Tensor.hpp>
 #include <TensorStride.hpp>
@@ -10,7 +11,8 @@ namespace btas {
 
 template<class Iterator, size_t N, CBLAS_ORDER Order = CblasRowMajor> class TensorWrapper;
 
-/// A class wrapping a pointer to an array to provide a tensor view of the array
+/// Specialized TensorView class wrapping a pointer to "consecutive" data
+/// In principle, this class provides a faster data access than the original TensorView class
 template<typename T, size_t N, CBLAS_ORDER Order>
 class TensorWrapper<T*,N,Order> {
 
@@ -73,9 +75,10 @@ public:
   {
     BTAS_ASSERT(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorWrapper::assign, extent must be the same.");
 
+    using namespace std::placeholders;
     index_type index_;
-    IndexedFor<1,N,Order>::loop(this->extent(),index_,boost::bind(
-      detail::AssignTensor_<index_type,Arbitral,TensorWrapper>,_1,boost::cref(x),boost::ref(*this)));
+    IndexedFor<1,N,Order>::loop(this->extent(),index_,std::bind(
+      detail::AssignTensor_<index_type,Arbitral,TensorWrapper>,_1,std::cref(x),std::ref(*this)));
 
     return *this;
   }

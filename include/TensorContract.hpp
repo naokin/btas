@@ -1,6 +1,8 @@
 #ifndef __BTAS_TENSOR_CONTRACT_HPP
 #define __BTAS_TENSOR_CONTRACT_HPP
 
+#include <array>
+
 #include <Tensor.hpp>
 #include <TensorPermute.hpp>
 
@@ -21,7 +23,7 @@ void contract (
   blasCall(helper.transa(),helper.transb(),alpha,helper.get_a(),helper.get_b(),beta,c);
 }
 
-/// tensor trance function called with index symbols of tensors
+/// tensor trace function called with index symbols of tensors
 template<typename T, size_t L, size_t M, size_t N, CBLAS_ORDER Order, class SymbolA, class SymbolB, class SymbolC>
 void contract (
   const T& alpha,
@@ -32,8 +34,8 @@ void contract (
 {
   const size_t K = (L+M-N)/2;
 
-  boost::array<size_t,K> idxa;
-  boost::array<size_t,K> idxb;
+  std::array<size_t,K> idxa;
+  std::array<size_t,K> idxb;
   SymbolC symbaxb;
 
   parse_contract_symbols(symba,symbb,idxa,idxb,symbaxb);

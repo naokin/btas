@@ -2,15 +2,16 @@
 #define __BTAS_TENSOR_HPP
 
 #include <vector>
-
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
-#include <boost/serialization/serialization.hpp>
-#include <boost/serialization/vector.hpp>
+#include <functional>
 
 #include <make_array.hpp>
 #include <IndexedFor.hpp>
 #include <TensorStride.hpp>
+
+#ifdef _ENABLE_BOOST_SERIALIZE
+#include <boost/serialization/serialization.hpp>
+#include <boost/serialization/vector.hpp>
+#endif
 
 namespace btas {
 
@@ -19,7 +20,7 @@ template<typename T, size_t N, CBLAS_ORDER Order> class TensorWrapper;
 namespace detail {
 
 /// assign y(index) as x(index) via IndexFor
-/// NOTE: if using boost::bind, 2nd & 3rd arguments should be passed via boost::cref & boost::ref
+/// NOTE: if using std::bind, 2nd & 3rd arguments should be passed via std::cref & std::ref
 ///       otherwise, because the copy constructor is called, assignment cannot be done correctly.
 template<class Idx_, class T1, class T2>
 void AssignTensor_ (const Idx_& index, const T1& x, T2& y) { y(index) = x(index); }
@@ -82,10 +83,11 @@ public:
   Tensor (const Arbitral& x)
   : stride_holder_(x.extent())
   {
+    using namespace std::placeholders;
     store_.resize(stride_holder_.size());
     index_type index_;
-    IndexedFor<1,N,Order>::loop(this->extent(),index_,boost::bind(
-      detail::AssignTensor_<index_type,Arbitral,Tensor>,_1,boost::cref(x),boost::ref(*this)));
+    IndexedFor<1,N,Order>::loop(this->extent(),index_,std::bind(
+      detail::AssignTensor_<index_type,Arbitral,Tensor>,_1,std::cref(x),std::ref(*this)));
   }
 
   /// deep copy : FIXME using std::vector<T>'s copy constructor gave better performance rather than BLAS copy etc...
@@ -112,11 +114,12 @@ public:
   template<class Arbitral>
   Tensor& operator= (const Arbitral& x)
   {
+    using namespace std::placeholders;
     stride_holder_.set(x.extent());
     store_.resize(stride_holder_.size());
     index_type index_;
-    IndexedFor<1,N,Order>::loop(this->extent(),index_,boost::bind(
-      detail::AssignTensor_<index_type,Arbitral,Tensor>,_1,boost::cref(x),boost::ref(*this)));
+    IndexedFor<1,N,Order>::loop(this->extent(),index_,std::bind(
+      detail::AssignTensor_<index_type,Arbitral,Tensor>,_1,std::cref(x),std::ref(*this)));
     return *this;
   }
 
@@ -305,11 +308,12 @@ public:
 
 private:
 
+#ifdef _ENABLE_BOOST_SERIALIZE
   friend class boost::serialization::access;
-
   /// Boost serialization
   template<class Archive>
   void serialize (Archive& ar, const unsigned int version) { ar & stride_holder_ & store_; }
+#endif
 
   // members
 
@@ -378,10 +382,11 @@ public:
   Tensor (const Arbitral& x)
   : stride_holder_(x.extent())
   {
+    using namespace std::placeholders;
     store_.resize(stride_holder_.size());
     index_type index_;
-    IndexedFor<1,0ul,Order>::loop(this->extent(),index_,boost::bind(
-      detail::AssignTensor_<index_type,Arbitral,Tensor>,_1,boost::cref(x),boost::ref(*this)));
+    IndexedFor<1,0ul,Order>::loop(this->extent(),index_,std::bind(
+      detail::AssignTensor_<index_type,Arbitral,Tensor>,_1,std::cref(x),std::ref(*this)));
   }
 
   /// deep copy : FIXME using std::vector<T>'s copy constructor gave better performance rather than BLAS copy etc...
@@ -408,11 +413,12 @@ public:
   template<class Arbitral>
   Tensor& operator= (const Arbitral& x)
   {
+    using namespace std::placeholders;
     stride_holder_.set(x.extent());
     store_.resize(stride_holder_.size());
     index_type index_;
-    IndexedFor<1,0ul,Order>::loop(this->extent(),index_,boost::bind(
-      detail::AssignTensor_<index_type,Arbitral,Tensor>,_1,boost::cref(x),boost::ref(*this)));
+    IndexedFor<1,0ul,Order>::loop(this->extent(),index_,std::bind(
+      detail::AssignTensor_<index_type,Arbitral,Tensor>,_1,std::cref(x),std::ref(*this)));
     return *this;
   }
 
@@ -601,11 +607,12 @@ public:
 
 private:
 
+#ifdef _ENABLE_BOOST_SERIALIZE
   friend class boost::serialization::access;
-
   /// Boost serialization
   template<class Archive>
   void serialize (Archive& ar, const unsigned int version) { ar & stride_holder_ & store_; }
+#endif
 
   // members
 

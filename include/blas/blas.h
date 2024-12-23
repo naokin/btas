@@ -1,5 +1,5 @@
-#ifndef __BTAS_BLAS_WRAPPERS_H
-#define __BTAS_BLAS_WRAPPERS_H
+#ifndef __BTAS_BLAS_HEADER_INCLUDED
+#define __BTAS_BLAS_HEADER_INCLUDED
 
 #include <blas/axpby_impl.h>
 #include <blas/axpy_impl.h>
@@ -11,4 +11,4 @@
 #include <blas/gemm_impl.h>
 #include <blas/scal_impl.h>
 
-#endif // __BTAS_BLAS_WRAPPERS_H
+#endif // __BTAS_BLAS_HEADER_INCLUDED

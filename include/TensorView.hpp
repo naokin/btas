@@ -2,9 +2,11 @@
 #define __BTAS_TENSOR_VIEW_HPP
 
 #include <algorithm>
+#include <functional>
 
 #include <Tensor.hpp>
 #include <TensorIterator.hpp>
+
 #include <BTAS_ASSERT.h>
 
 namespace btas {
@@ -72,9 +74,10 @@ public:
   {
     BTAS_ASSERT(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorView::assign, extent must be the same.");
 
+    using namespace std::placeholders;
     index_type index_;
-    IndexedFor<1,N,Order>::loop(this->extent(),index_,boost::bind(
-      detail::AssignTensor_<index_type,Arbitral,TensorView>,_1,boost::cref(x),boost::ref(*this)));
+    IndexedFor<1,N,Order>::loop(this->extent(),index_,std::bind(
+      detail::AssignTensor_<index_type,Arbitral,TensorView>,_1,std::cref(x),std::ref(*this)));
 
     return *this;
   }
@@ -90,7 +93,7 @@ public:
     start_ = iterator(first,idx,stride_holder_.extent(),stride_hack_);
   }
 
-  /// reset the iterator
+  /// reset the iterator with stride hack
   void reset (Iterator first, const extent_type& ext, const stride_type& str)
   {
     stride_holder_.set(ext);
