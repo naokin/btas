@@ -68,10 +68,9 @@ void permute (Tensor<T,N,Order>& x, const Index& idx)
 template<typename T, size_t N, CBLAS_ORDER Order, class Index>
 void permute (TensorWrapper<T*,N,Order>& x, const Index& idx)
 {
-  std::vector<T> tmp(x.size());
-  TensorWrapper<T*,N,Order> y(tmp.data(),make_permute(x.extent(),idx));
+  Tensor<T,N,Order> y(make_permute(x.extent(),idx));
   reindex<T,N,Order>(x.data(),y.data(),make_permute(x.stride(),idx),y.extent());
-  x.swap(y);
+  x = y;
 }
 
 } // namespace btas

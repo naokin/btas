@@ -8,6 +8,8 @@
 #include <IndexedFor.hpp>
 #include <TensorStride.hpp>
 
+#include <blas/blas.h>
+
 #ifdef _ENABLE_BOOST_SERIALIZE
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/vector.hpp>
@@ -83,11 +85,10 @@ public:
   Tensor (const Arbitral& x)
   : stride_holder_(x.extent())
   {
-    using namespace std::placeholders;
     store_.resize(stride_holder_.size());
     index_type index_;
     IndexedFor<1,N,Order>::loop(this->extent(),index_,std::bind(
-      detail::AssignTensor_<index_type,Arbitral,Tensor>,_1,std::cref(x),std::ref(*this)));
+      detail::AssignTensor_<index_type,Arbitral,Tensor>,std::placeholders::_1,std::cref(x),std::ref(*this)));
   }
 
   /// deep copy : FIXME using std::vector<T>'s copy constructor gave better performance rather than BLAS copy etc...
@@ -114,12 +115,11 @@ public:
   template<class Arbitral>
   Tensor& operator= (const Arbitral& x)
   {
-    using namespace std::placeholders;
     stride_holder_.set(x.extent());
     store_.resize(stride_holder_.size());
     index_type index_;
     IndexedFor<1,N,Order>::loop(this->extent(),index_,std::bind(
-      detail::AssignTensor_<index_type,Arbitral,Tensor>,_1,std::cref(x),std::ref(*this)));
+      detail::AssignTensor_<index_type,Arbitral,Tensor>,std::placeholders::_1,std::cref(x),std::ref(*this)));
     return *this;
   }
 
@@ -382,11 +382,10 @@ public:
   Tensor (const Arbitral& x)
   : stride_holder_(x.extent())
   {
-    using namespace std::placeholders;
     store_.resize(stride_holder_.size());
     index_type index_;
     IndexedFor<1,0ul,Order>::loop(this->extent(),index_,std::bind(
-      detail::AssignTensor_<index_type,Arbitral,Tensor>,_1,std::cref(x),std::ref(*this)));
+      detail::AssignTensor_<index_type,Arbitral,Tensor>,std::placeholders::_1,std::cref(x),std::ref(*this)));
   }
 
   /// deep copy : FIXME using std::vector<T>'s copy constructor gave better performance rather than BLAS copy etc...
@@ -413,12 +412,11 @@ public:
   template<class Arbitral>
   Tensor& operator= (const Arbitral& x)
   {
-    using namespace std::placeholders;
     stride_holder_.set(x.extent());
     store_.resize(stride_holder_.size());
     index_type index_;
     IndexedFor<1,0ul,Order>::loop(this->extent(),index_,std::bind(
-      detail::AssignTensor_<index_type,Arbitral,Tensor>,_1,std::cref(x),std::ref(*this)));
+      detail::AssignTensor_<index_type,Arbitral,Tensor>,std::placeholders::_1,std::cref(x),std::ref(*this)));
     return *this;
   }
 

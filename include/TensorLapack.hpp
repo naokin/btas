@@ -7,7 +7,7 @@
 #include <BTAS_ASSERT.h>
 #include <remove_complex.h>
 
-#include <lapack/wrappers.h>
+#include <lapack/lapack.h>
 
 #ifndef __BTAS_TENSOR_HPP
 #include <Tensor.hpp>

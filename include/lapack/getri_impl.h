@@ -11,7 +11,7 @@ void getri (
   const size_t& N,
         T* A,
   const size_t& ldA,
-        int* ipiv)
+        lapack_int* ipiv)
 {
   BTAS_ASSERT(false, "getri is not implemented.");
 }
@@ -21,7 +21,7 @@ inline void getri (
   const size_t& N,
         float* A,
   const size_t& ldA,
-        int* ipiv)
+        lapack_int* ipiv)
 {
   LAPACKE_sgetri(order, N, A, ldA, ipiv);
 }
@@ -31,7 +31,7 @@ inline void getri (
   const size_t& N,
         double* A,
   const size_t& ldA,
-        int* ipiv)
+        lapack_int* ipiv)
 {
   LAPACKE_dgetri(order, N, A, ldA, ipiv);
 }
@@ -41,7 +41,7 @@ inline void getri (
   const size_t& N,
         std::complex<float>* A,
   const size_t& ldA,
-        int* ipiv)
+        lapack_int* ipiv)
 {
   LAPACKE_cgetri(order, N, A, ldA, ipiv);
 }
@@ -51,7 +51,7 @@ inline void getri (
   const size_t& N,
         std::complex<double>* A,
   const size_t& ldA,
-        int* ipiv)
+        lapack_int* ipiv)
 {
   LAPACKE_zgetri(order, N, A, ldA, ipiv);
 }

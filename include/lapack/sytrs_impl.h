@@ -12,7 +12,7 @@ void sytrs (
   const size_t& N,
         T* A,
   const size_t& ldA,
-        int* ipiv)
+        lapack_int* ipiv)
 {
   BTAS_ASSERT(false, "sytrs is not implemented.");
 }
@@ -24,7 +24,7 @@ inline void sytrs (
   const size_t& NRHS,
         float* A,
   const size_t& ldA,
-        int* ipiv,
+        lapack_int* ipiv,
         float* B,
   const size_t& ldB)
 {
@@ -38,7 +38,7 @@ inline void sytrs (
   const size_t& NRHS,
         double* A,
   const size_t& ldA,
-        int* ipiv,
+        lapack_int* ipiv,
         double* B,
   const size_t& ldB)
 {

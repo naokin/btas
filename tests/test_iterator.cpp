@@ -1,12 +1,7 @@
 #include <iostream>
 #include <iomanip>
 
-#include <boost/bind.hpp>
 #include <btas.h>
-
-//#include <TensorIterator.hpp>
-//#include <TensorWrapper.hpp>
-//#include <TensorView.hpp>
 
 int main ()
 {
@@ -48,7 +43,8 @@ int main ()
 
   // TensorWrapper from std::vector<double>
 
-  std::vector<double> v(64,1.0);
+  std::vector<double> v(64,0.0);
+  for(size_t i = 0; i < 64; ++i) v[i] = i*0.1;
 
   TensorWrapper<const double*,3> B(v.data(),shape(4,4,4));
 

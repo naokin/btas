@@ -1,8 +1,8 @@
 #include <iostream>
 #include <iomanip>
 
-#include <boost/random.hpp>
-#include <boost/bind.hpp>
+#include <random>
+#include <functional>
 
 #include <btas.h>
 
@@ -10,19 +10,19 @@ int main ()
 {
   using namespace btas;
 
-  boost::mt19937 rGen;
-  boost::random::uniform_real_distribution<double> dist(-1.0,1.0);
+  std::mt19937 rGen;
+  std::uniform_real_distribution<double> dist(-1.0,1.0);
 
   std::cout.setf(std::ios::fixed,std::ios::floatfield);
   std::cout.precision(3);
 
   Tensor<double,4> A(4,3,4,5);
 
-  A.generate(boost::bind(dist,rGen));
+  A.generate(std::bind(dist,rGen));
 
   Tensor<double,5> B(3,4,5,2,2);
 
-  B.generate(boost::bind(dist,rGen));
+  B.generate(std::bind(dist,rGen));
 
   Tensor<double,3> C(4,2,2);
 

@@ -8,8 +8,6 @@
 #include <BTAS_ASSERT.h>
 #include <remove_complex.h>
 
-#include <blas/wrappers.h>
-
 #ifndef __BTAS_TENSOR_HPP
 #include <Tensor.hpp>
 #endif

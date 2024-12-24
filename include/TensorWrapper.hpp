@@ -75,10 +75,9 @@ public:
   {
     BTAS_ASSERT(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorWrapper::assign, extent must be the same.");
 
-    using namespace std::placeholders;
     index_type index_;
     IndexedFor<1,N,Order>::loop(this->extent(),index_,std::bind(
-      detail::AssignTensor_<index_type,Arbitral,TensorWrapper>,_1,std::cref(x),std::ref(*this)));
+      detail::AssignTensor_<index_type,Arbitral,TensorWrapper>,std::placeholders::_1,std::cref(x),std::ref(*this)));
 
     return *this;
   }
