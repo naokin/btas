@@ -22,11 +22,11 @@ Intel MKL library
 
 2. Since all classes and functions are implemented in terms of template and/or inline fashion, you can build your code by just including source files such as,
 
-    icpx -std=c++11 -O3 -I$BTAS_ROOT/include sample.cpp $LIBMKL
+    `icpx -std=c++11 -O3 -I$BTAS_ROOT/include sample.cpp $LIBMKL`
 
 3. To enable Boost's serialization, you can specify `_ENABLE_BOOST_SERIALIZE` as,
 
-    icpx -std=c++11 -O3 -I$BTAS_ROOT/include sample.cpp $LIBMKL -lboost_serialization
+    `icpx -D_ENABLE_BOOST_SERIALIZE -std=c++11 -O3 -I$BTAS_ROOT/include sample.cpp $LIBMKL -lboost_serialization`
 
 ###SAMPLE CODE
 
