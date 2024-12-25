@@ -1,7 +1,7 @@
 #ifndef __BTAS_LAPACK_GETRF_IMPL_H
 #define __BTAS_LAPACK_GETRF_IMPL_H
 
-#include <BTAS_ASSERT.h>
+#include <BTAS_assert.h>
 
 namespace btas {
 
@@ -14,7 +14,7 @@ void sytrs (
   const size_t& ldA,
         lapack_int* ipiv)
 {
-  BTAS_ASSERT(false, "sytrs is not implemented.");
+  BTAS_assert(false, "sytrs is not implemented.");
 }
 
 inline void sytrs (

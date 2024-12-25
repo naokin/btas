@@ -1,12 +1,41 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
 *.o
-*.x
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
 *.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
 *.a
-*~
-*.tmp
-*log
+*.lib
+
+# Executables
+*.exe
 *.out
-.*.swp
-docs
-trash/
+*.app
+*.x
+
+# Back-up files
+*~
+*.swp
+log
+
+# Work dir
 work/

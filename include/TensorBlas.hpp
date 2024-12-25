@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <numeric>
 
-#include <BTAS_ASSERT.h>
+#include <BTAS_assert.h>
 #include <remove_complex.h>
 
 #ifndef __BTAS_TENSOR_HPP
@@ -22,106 +22,82 @@ namespace btas {
 
 //  COPY  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+/// deep copy
 template<typename T, size_t M, size_t N, CBLAS_ORDER Order>
-struct copy_helper_ {
-  static void call (const Tensor<T,M,Order>& x, Tensor<T,N,Order>& y, bool kept_)
-  {
-    BTAS_ASSERT(x.size() == y.size(), "x and y must have the same size.");
-    copy(x.size(),x.data(),1,y.data(),1);
-  }
-};
-
-template<typename T, size_t N, CBLAS_ORDER Order>
-struct copy_helper_<T,N,N,Order> {
-  static void call (const Tensor<T,N,Order>& x, Tensor<T,N,Order>& y, bool kept_)
-  {
-    if(y.empty() || !kept_)
-      y.resize(x.extent());
-    else
-      BTAS_ASSERT(x.size() == y.size(), "x and y must have the same size.");
-
-    copy(x.size(),x.data(),1,y.data(),1);
-  }
-};
-
-/// copy
-/// if kept_ == true, a reshaped copy is enabled
-/// where y must be allocated, and may have different extent but have the same data size
-template<typename T, size_t M, size_t N, CBLAS_ORDER Order>
-void copy (const Tensor<T,M,Order>& x, Tensor<T,N,Order>& y, bool kept_ = false)
+void copy (const TensorWrapper<const T*,M,Order>& x, TensorWrapper<T*,N,Order>& y)
 {
-  copy_helper_<T,M,N,Order>::call(x,y,kept_);
+  BTAS_assert(x.size() == y.size(), "x and y must have the same size.");
+  copy(x.size(),x.data(),1,y.data(),1);
+}
+
+/// deep copy with initializing y
+template<typename T, size_t N, CBLAS_ORDER Order>
+void copy (const TensorWrapper<const T*,N,Order>& x, Tensor<T,N,Order>& y)
+{
+  y.resize(x.extent());
+  copy(x.size(),x.data(),1,y.data(),1);
 }
 
 //  SCAL  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 /// scal
 template<typename Scalar, typename T, size_t N, CBLAS_ORDER Order>
-void scal (const Scalar& alpha, Tensor<T,N,Order>& x)
+void scal (const Scalar& alpha, TensorWrapper<T*,N,Order>& x)
 {
   scal(x.size(),alpha,x.data(),1);
 }
 
 //  AXPY  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-template<typename Scalar, typename T, size_t M, size_t N, CBLAS_ORDER Order>
-struct axpy_helper_ {
-  static void call (const Tensor<T,M,Order>& x, Tensor<T,N,Order>& y)
-  {
-    BTAS_ASSERT(x.size() == y.size(), "x and y must have the same size.");
-    axpy(x.size(),x.data(),1,y.data(),1);
-  }
-};
-
-template<typename Scalar, typename T, size_t N, CBLAS_ORDER Order>
-struct axpy_helper_<Scalar,T,N,N,Order> {
-  static void call (const Tensor<T,N,Order>& x, Tensor<T,N,Order>& y)
-  {
-    if(y.empty())
-      y.resize(x.extent());
-    else
-      BTAS_ASSERT(x.size() == y.size(), "x and y must have the same size.");
-
-    axpy(x.size(),x.data(),1,y.data(),1);
-  }
-};
-
 /// axpy
 template<typename Scalar, typename T, size_t M, size_t N, CBLAS_ORDER Order>
-void axpy (const Scalar& alpha, const Tensor<T,M,Order>& x, Tensor<T,N,Order>& y)
+void axpy (const Scalar& alpha, const TensorWrapper<const T*,M,Order>& x, TensorWrapper<T*,N,Order>& y)
 {
-  axpy_helper_<Scalar,T,M,N,Order>::call(alpha,x,y);
+  BTAS_assert(x.size() == y.size(), "x and y must have the same size.");
+  axpy(x.size(),x.data(),1,y.data(),1);
+}
+
+/// axpy with initializing y if necessary
+template<typename Scalar, typename T, size_t N, CBLAS_ORDER Order>
+void axpy (const Scalar& alpha, const TensorWrapper<const T*,N,Order>& x, Tensor<T,N,Order>& y)
+{
+  if(y.empty())
+    y.resize(x.extent(),T(0));
+  else
+    BTAS_assert(x.size() == y.size(), "x and y must have the same size.");
+  //
+  axpy(x.size(),x.data(),1,y.data(),1);
 }
 
 //  DOT  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 /// dot (= dotu)
 template<typename T, size_t N, CBLAS_ORDER Order>
-T dot (const Tensor<T,N,Order>& x, const Tensor<T,N,Order>& y)
+T dot (const TensorWrapper<const T*,N,Order>& x, const TensorWrapper<const T*,N,Order>& y)
 {
-  BTAS_ASSERT(std::equal(x.extent().begin(),x.extent().end(),y.extent().begin()),"x and y must have the same extent.");
+  BTAS_assert(std::equal(x.extent().begin(),x.extent().end(),y.extent().begin()),"x and y must have the same extent.");
   return dot(x.size(),x.data(),1,y.data(),1);
 }
 
 /// dotu
 template<typename T, size_t N, CBLAS_ORDER Order>
-T dotu (const Tensor<T,N,Order>& x, const Tensor<T,N,Order>& y)
+T dotu (const TensorWrapper<const T*,N,Order>& x, const TensorWrapper<const T*,N,Order>& y)
 {
-  BTAS_ASSERT(std::equal(x.extent().begin(),x.extent().end(),y.extent().begin()),"x and y must have the same extent.");
+  BTAS_assert(std::equal(x.extent().begin(),x.extent().end(),y.extent().begin()),"x and y must have the same extent.");
   return dotu(x.size(),x.data(),1,y.data(),1);
 }
 
 /// dotc
 template<typename T, size_t N, CBLAS_ORDER Order>
-T dotc (const Tensor<T,N,Order>& x, const Tensor<T,N,Order>& y)
+T dotc (const TensorWrapper<const T*,N,Order>& x, const TensorWrapper<const T*,N,Order>& y)
 {
-  BTAS_ASSERT(std::equal(x.extent().begin(),x.extent().end(),y.extent().begin()),"x and y must have the same extent.");
+  BTAS_assert(std::equal(x.extent().begin(),x.extent().end(),y.extent().begin()),"x and y must have the same extent.");
   return dotc(x.size(),x.data(),1,y.data(),1);
 }
 
 /// nrm2 : Euclidian norm
 template<typename T, size_t N, CBLAS_ORDER Order>
-typename remove_complex<T>::type nrm2 (const Tensor<T,N,Order>& x)
+typename remove_complex<T>::type nrm2 (const TensorWrapper<const T*,N,Order>& x)
 {
    return nrm2(x.size(),x.data(),1);
 }
@@ -139,37 +115,75 @@ template<typename T, size_t M, size_t N, CBLAS_ORDER Order>
 void gemv (
   const CBLAS_TRANSPOSE& transa,
   const T& alpha,
-  const Tensor<T,M,Order>& a,
-  const Tensor<T,N,Order>& x,
+  const TensorWrapper<const T*,M+N,Order>& a,
+  const TensorWrapper<const T*,N,Order>& x,
   const T& beta,
-        Tensor<T,M-N,Order>& y)
+        TensorWrapper<T*,M,Order>& y)
 {
-  typename Tensor<T,  N,Order>::extent_type xExtChk;
-  typename Tensor<T,M-N,Order>::extent_type yExtChk;
+  const auto& ext_a = a.extent();
+  const auto& ext_x = x.extent();
+  const auto& ext_y = y.extent();
 
   if(transa == CblasNoTrans) {
-    for(size_t i = 0; i < M-N; ++i) yExtChk[i] = a.extent(i);
-    for(size_t i = 0; i <   N; ++i) xExtChk[i] = a.extent(i+M-N);
+    BTAS_assert(std::equal(ext_y.begin(),ext_y.end(),ext_a.begin()),  "failed by inconsistent extents (y).");
+    BTAS_assert(std::equal(ext_x.begin(),ext_x.end(),ext_a.begin()+M),"failed by inconsistent extents (x).");
   }
   else {
-    for(size_t i = 0; i <   N; ++i) xExtChk[i] = a.extent(i);
-    for(size_t i = 0; i < M-N; ++i) yExtChk[i] = a.extent(i+N);
+    BTAS_assert(std::equal(ext_y.begin(),ext_y.end(),ext_a.begin()+N),"failed by inconsistent extents (y).");
+    BTAS_assert(std::equal(ext_x.begin(),ext_x.end(),ext_a.begin()),  "failed by inconsistent extents (x).");
   }
 
-  BTAS_ASSERT(std::equal(xExtChk.begin(),xExtChk.end(),x.extent().begin()),"failed by inconsistent extents (x).");
+  size_t rows = y.size();
+  size_t cols = x.size();
+  if(transa != CblasNoTrans) std::swap(rows,cols);
 
-  if(y.empty())
-    y.resize(yExtChk,static_cast<T>(0));
-  else
-    BTAS_ASSERT(std::equal(yExtChk.begin(),yExtChk.end(),y.extent().begin()),"failed by inconsistent extents (y).");
+  size_t lda = (Order == CblasRowMajor) ? cols : rows;
+  gemv(Order,transa,rows,cols,alpha,a.data(),lda,x.data(),1,beta,y.data(),1);
+}
 
-  size_t aCols = std::accumulate(xExtChk.begin(),xExtChk.end(),1ul,std::multiplies<size_t>());
-  size_t aRows = a.size()/aCols;
-  if(transa != CblasNoTrans) std::swap(aCols,aRows);
+/// gemv with initializing y if necessary
+template<typename T, size_t M, size_t N, CBLAS_ORDER Order>
+void gemv (
+  const CBLAS_TRANSPOSE& transa,
+  const T& alpha,
+  const Tensor<T,M+N,Order>& a,
+  const Tensor<T,N,Order>& x,
+  const T& beta,
+        Tensor<T,M,Order>& y)
+{
+  const auto& ext_a = a.extent();
+  const auto& ext_x = x.extent();
 
-  size_t lda = (Order == CblasRowMajor) ? aCols : aRows;
+  typename Tensor<T,M,Order>::extent_type ext_y;
 
-  gemv(Order,transa,aRows,aCols,alpha,a.data(),lda,x.data(),1,beta,y.data(),1);
+  if(y.empty()) {
+    if(transa == CblasNoTrans) {
+      for(size_t i = 0; i < M; ++i) ext_y[i] = ext_a[i];
+    }
+    else {
+      for(size_t i = 0; i < M; ++i) ext_y[i] = ext_a[i+N];
+    }
+    y.resize(ext_y,T(0));
+  }
+  else {
+    ext_y = y.extent();
+  }
+
+  if(transa == CblasNoTrans) {
+    BTAS_assert(std::equal(ext_y.begin(),ext_y.end(),ext_a.begin()),  "failed by inconsistent extents (y).");
+    BTAS_assert(std::equal(ext_x.begin(),ext_x.end(),ext_a.begin()+M),"failed by inconsistent extents (x).");
+  }
+  else {
+    BTAS_assert(std::equal(ext_y.begin(),ext_y.end(),ext_a.begin()+N),"failed by inconsistent extents (y).");
+    BTAS_assert(std::equal(ext_x.begin(),ext_x.end(),ext_a.begin()),  "failed by inconsistent extents (x).");
+  }
+
+  size_t rows = y.size();
+  size_t cols = x.size();
+  if(transa != CblasNoTrans) std::swap(rows,cols);
+
+  size_t lda = (Order == CblasRowMajor) ? cols : rows;
+  gemv(Order,transa,rows,cols,alpha,a.data(),lda,x.data(),1,beta,y.data(),1);
 }
 
 /// ger
@@ -188,7 +202,7 @@ void ger (
   if(a.empty())
     a.resize(aExtChk,static_cast<T>(0));
   else
-    BTAS_ASSERT(std::equal(aExtChk.begin(),aExtChk.end(),a.extent().begin()),"failed by inconsistent extents (a).");
+    BTAS_assert(std::equal(aExtChk.begin(),aExtChk.end(),a.extent().begin()),"failed by inconsistent extents (a).");
 
   size_t lda = (Order == CblasRowMajor) ? y.size() : x.size();
 
@@ -228,17 +242,17 @@ void gemm (
 
   if(transb == CblasNoTrans) {
     for(size_t i = 0; i < M-K; ++i) cExtChk[i+L-K] = b.extent(i+K);
-    BTAS_ASSERT(std::equal(kExtChk.begin(),kExtChk.end(),b.extent().begin()),"failed by inconsistent contraction extent.");
+    BTAS_assert(std::equal(kExtChk.begin(),kExtChk.end(),b.extent().begin()),"failed by inconsistent contraction extent.");
   }
   else {
     for(size_t i = 0; i < M-K; ++i) cExtChk[i+L-K] = b.extent(i);
-    BTAS_ASSERT(std::equal(kExtChk.begin(),kExtChk.end(),b.extent().begin()+M-K),"failed by inconsistent contraction extent.");
+    BTAS_assert(std::equal(kExtChk.begin(),kExtChk.end(),b.extent().begin()+M-K),"failed by inconsistent contraction extent.");
   }
 
   if(c.empty())
     c.resize(cExtChk,static_cast<T>(0));
   else
-    BTAS_ASSERT(std::equal(cExtChk.begin(),cExtChk.end(),c.extent().begin()),"failed by inconsistent extent (c).");
+    BTAS_assert(std::equal(cExtChk.begin(),cExtChk.end(),c.extent().begin()),"failed by inconsistent extent (c).");
 
   size_t cRows = std::accumulate(cExtChk.begin(),cExtChk.begin()+L-K,1ul,std::multiplies<size_t>());
   size_t kExts = std::accumulate(kExtChk.begin(),kExtChk.end(),      1ul,std::multiplies<size_t>());

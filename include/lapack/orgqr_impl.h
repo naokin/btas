@@ -1,7 +1,7 @@
 #ifndef __BTAS_LAPACK_ORGQR_IMPL_H
 #define __BTAS_LAPACK_ORGQR_IMPL_H
 
-#include <BTAS_ASSERT.h>
+#include <BTAS_assert.h>
 
 namespace btas {
 
@@ -15,7 +15,7 @@ void orgqr (
   const size_t& ldA,
         T* tau)
 {
-  BTAS_ASSERT(false, "orgqr is not implemented.");
+  BTAS_assert(false, "orgqr is not implemented.");
 }
 
 inline void orgqr (

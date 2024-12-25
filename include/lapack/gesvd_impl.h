@@ -1,7 +1,7 @@
 #ifndef __BTAS_LAPACK_GESVD_IMPL_H
 #define __BTAS_LAPACK_GESVD_IMPL_H
 
-#include <BTAS_ASSERT.h>
+#include <BTAS_assert.h>
 
 namespace btas {
 
@@ -20,7 +20,7 @@ void gesvd (
         T* VT,
   const size_t& ldVT)
 {
-  BTAS_ASSERT(false, "gesvd is not implemented.");
+  BTAS_assert(false, "gesvd is not implemented.");
 }
 
 inline void gesvd (

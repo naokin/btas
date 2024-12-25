@@ -1,7 +1,7 @@
 #ifndef __BTAS_BLAS_NRM2_IMPL_H
 #define __BTAS_BLAS_NRM2_IMPL_H
 
-#include <BTAS_ASSERT.h>
+#include <BTAS_assert.h>
 
 namespace btas {
 
@@ -13,7 +13,7 @@ T nrm2 (
   const T* Y,
   const size_t& incY)
 {
-  BTAS_ASSERT(false, "nrm2 is not implemented.");
+  BTAS_assert(false, "nrm2 is not implemented.");
 }
 
 inline float nrm2 (

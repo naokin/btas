@@ -1,7 +1,7 @@
 #ifndef __BTAS_LAPACK_HEEV_IMPL_H
 #define __BTAS_LAPACK_HEEV_IMPL_H
 
-#include <BTAS_ASSERT.h>
+#include <BTAS_assert.h>
 
 namespace btas {
 
@@ -15,7 +15,7 @@ void heev (
   const size_t& ldA,
         RealType* W)
 {
-  BTAS_ASSERT(false, "heev is not implemented.");
+  BTAS_assert(false, "heev is not implemented.");
 }
 
 /// for float: redirect to ssyev

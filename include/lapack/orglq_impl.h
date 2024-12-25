@@ -1,7 +1,7 @@
 #ifndef __BTAS_LAPACK_ORGLQ_IMPL_H
 #define __BTAS_LAPACK_ORGLQ_IMPL_H
 
-#include <BTAS_ASSERT.h>
+#include <BTAS_assert.h>
 
 namespace btas {
 
@@ -15,7 +15,7 @@ void orglq (
   const size_t& ldA,
         T* tau)
 {
-  BTAS_ASSERT(false, "orglq is not implemented.");
+  BTAS_assert(false, "orglq is not implemented.");
 }
 
 inline void orglq (

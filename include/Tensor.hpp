@@ -97,11 +97,13 @@ public:
   { }
 
   /// Deep copy from TensorWrapper
+  explicit
   Tensor (const TensorWrapper<T*,N,Order>& x)
   : stride_holder_(x.stride_holder_), store_(x.size())
   { copy(x.size(),x.data(),1,store_.data(),1);  }
 
   /// Deep copy from TensorWrapper
+  explicit
   Tensor (const TensorWrapper<const T*,N,Order>& x)
   : stride_holder_(x.stride_holder_), store_(x.size())
   { copy(x.size(),x.data(),1,store_.data(),1);  }

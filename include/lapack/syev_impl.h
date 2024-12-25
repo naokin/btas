@@ -1,7 +1,7 @@
 #ifndef __BTAS_LAPACK_SYEV_IMPL_H
 #define __BTAS_LAPACK_SYEV_IMPL_H
 
-#include <BTAS_ASSERT.h>
+#include <BTAS_assert.h>
 
 namespace btas {
 
@@ -15,7 +15,7 @@ void syev (
   const size_t& ldA,
         T* W)
 {
-  BTAS_ASSERT(false, "syev is not implemented.");
+  BTAS_assert(false, "syev is not implemented.");
 }
 
 inline void syev (

@@ -1,7 +1,7 @@
 #ifndef __BTAS_LAPACK_SYGV_IMPL_H
 #define __BTAS_LAPACK_SYGV_IMPL_H
 
-#include <BTAS_ASSERT.h>
+#include <BTAS_assert.h>
 
 namespace btas {
 
@@ -18,7 +18,7 @@ void sygv (
   const size_t& ldB,
         T* W)
 {
-  BTAS_ASSERT(false, "sygv is not implemented.");
+  BTAS_assert(false, "sygv is not implemented.");
 }
 
 inline void sygv (

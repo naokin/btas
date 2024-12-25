@@ -3,7 +3,7 @@
 
 #include <cassert>
 
-#include <BTAS_ASSERT.h>
+#include <BTAS_assert.h>
 #include <Tensor.hpp>
 #include <reindex.hpp>
 
@@ -29,7 +29,7 @@ void tie (const Tensor<T,M,Order>& x, const Index& idx, Tensor<T,N,Order>& y)
     if(extY[idx[i]] == 0)
       extY[idx[i]] = x.extent(i);
     else
-      BTAS_ASSERT(extY[idx[i]] == x.extent(i), "failed since indices to be tied have different size.");
+      BTAS_assert(extY[idx[i]] == x.extent(i), "failed since indices to be tied have different size.");
 
     strY[idx[i]] += x.stride(i);
   }

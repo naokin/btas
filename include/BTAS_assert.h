@@ -5,7 +5,7 @@
 
 namespace btas {
 
-#define BTAS_ASSERT(flag, msg) { if(!(flag)) { throw std::runtime_error(msg); } }
+#define BTAS_assert(flag,msg) { if(!(flag)) { throw std::runtime_error(msg); } }
 
 } // namespace btas
 

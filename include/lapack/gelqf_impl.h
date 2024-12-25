@@ -1,7 +1,7 @@
 #ifndef __BTAS_LAPACK_GELQF_IMPL_H
 #define __BTAS_LAPACK_GELQF_IMPL_H
 
-#include <BTAS_ASSERT.h>
+#include <BTAS_assert.h>
 
 namespace btas {
 
@@ -14,7 +14,7 @@ void gelqf (
   const size_t& ldA,
         T* tau)
 {
-  BTAS_ASSERT(false, "gelqf is not implemented.");
+  BTAS_assert(false, "gelqf is not implemented.");
 }
 
 inline void gelqf (

@@ -1,7 +1,7 @@
 #ifndef __BTAS_LAPACK_GEQRF_IMPL_H
 #define __BTAS_LAPACK_GEQRF_IMPL_H
 
-#include <BTAS_ASSERT.h>
+#include <BTAS_assert.h>
 
 namespace btas {
 
@@ -14,7 +14,7 @@ void geqrf (
   const size_t& ldA,
         T* tau)
 {
-  BTAS_ASSERT(false, "geqrf is not implemented.");
+  BTAS_assert(false, "geqrf is not implemented.");
 }
 
 inline void geqrf (

@@ -1,7 +1,7 @@
 #ifndef __BTAS_BLAS_DOT_IMPL_H
 #define __BTAS_BLAS_DOT_IMPL_H
 
-#include <BTAS_ASSERT.h>
+#include <BTAS_assert.h>
 
 namespace btas {
 
@@ -81,7 +81,7 @@ T dot (
   const T* Y,
   const size_t& incY)
 {
-  BTAS_ASSERT(false, "dot is not implemented.");
+  BTAS_assert(false, "dot is not implemented.");
 }
 
 template<typename T>

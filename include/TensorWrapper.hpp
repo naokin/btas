@@ -53,7 +53,6 @@ public:
   { finish_ = start_+stride_holder_.size(); }
 
   /// Shallow copy
-  explicit
   TensorWrapper (const TensorWrapper& x)
   : start_(x.start_), finish_(x.finish_), stride_holder_(x.stride_holder_)
   { }
@@ -73,7 +72,7 @@ public:
   template<class Arbitral>
   TensorWrapper& operator= (const Arbitral& x)
   {
-    BTAS_ASSERT(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorWrapper::assign, extent must be the same.");
+    BTAS_assert(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorWrapper::assign, extent must be the same.");
 
     index_type index_;
     IndexedFor<1,N,Order>::loop(this->extent(),index_,std::bind(
@@ -85,7 +84,7 @@ public:
   /// Deep copy assign from Tensor (tuned)
   TensorWrapper& operator= (const Tensor<T,N,Order>& x)
   {
-    BTAS_ASSERT(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorWrapper::assign, extent must be the same.");
+    BTAS_assert(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorWrapper::assign, extent must be the same.");
 
     copy(x.size(),x.data(),1,start_,1); // Call BLAS in case T is numeric
 
@@ -95,7 +94,7 @@ public:
   /// Deep copy assign from TensorWrapper (tuned)
   TensorWrapper& operator= (const TensorWrapper& x)
   {
-    BTAS_ASSERT(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorWrapper::assign, extent must be the same.");
+    BTAS_assert(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorWrapper::assign, extent must be the same.");
 
     copy(x.size(),x.start_,1,start_,1);
 
@@ -198,7 +197,7 @@ public:
   reference at (const index_type& idx)
   {
     ordinal_type ord = this->ordinal(idx);
-    BTAS_ASSERT(ord < this->size(),"TensorWrapper::at, out of range access detected.");
+    BTAS_assert(ord < this->size(),"TensorWrapper::at, out of range access detected.");
     return start_[ord];
   }
 
@@ -206,7 +205,7 @@ public:
   const_reference at (const index_type& idx) const
   {
     ordinal_type ord = this->ordinal(idx);
-    BTAS_ASSERT(ord < this->size(),"TensorWrapper::at, out of range access detected.");
+    BTAS_assert(ord < this->size(),"TensorWrapper::at, out of range access detected.");
     return start_[ord];
   }
 
@@ -215,7 +214,7 @@ public:
   reference at (const Args&... args)
   {
     ordinal_type ord = this->ordinal(make_array<typename index_type::value_type>(args...));
-    BTAS_ASSERT(ord < this->size(),"TensorWrapper::at, out of range access detected.");
+    BTAS_assert(ord < this->size(),"TensorWrapper::at, out of range access detected.");
     return start_[ord];
   }
 
@@ -224,7 +223,7 @@ public:
   const_reference at (const Args&... args) const
   {
     ordinal_type ord = this->ordinal(make_array<typename index_type::value_type>(args...));
-    BTAS_ASSERT(ord < this->size(),"TensorWrapper::at, out of range access detected.");
+    BTAS_assert(ord < this->size(),"TensorWrapper::at, out of range access detected.");
     return start_[ord];
   }
 
@@ -299,7 +298,6 @@ public:
   { finish_ = start_+stride_holder_.size(); }
 
   /// Shallow copy
-  explicit
   TensorWrapper (const TensorWrapper& x)
   : start_(x.start_), finish_(x.finish_), stride_holder_(x.stride_holder_)
   { }
@@ -388,7 +386,7 @@ public:
   const_reference at (const index_type& idx) const
   {
     ordinal_type ord = this->ordinal(idx);
-    BTAS_ASSERT(ord < this->size(),"TensorWrapper::at, out of range access detected.");
+    BTAS_assert(ord < this->size(),"TensorWrapper::at, out of range access detected.");
     return start_[ord];
   }
 
@@ -397,7 +395,7 @@ public:
   const_reference at (const Args&... args) const
   {
     ordinal_type ord = this->ordinal(make_array<typename index_type::value_type>(args...));
-    BTAS_ASSERT(ord < this->size(),"TensorWrapper::at, out of range access detected.");
+    BTAS_assert(ord < this->size(),"TensorWrapper::at, out of range access detected.");
     return start_[ord];
   }
 

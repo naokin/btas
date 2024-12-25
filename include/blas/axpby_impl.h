@@ -1,7 +1,7 @@
 #ifndef __BTAS_BLAS_AXPBY_IMPL_H
 #define __BTAS_BLAS_AXPBY_IMPL_H
 
-#include <BTAS_ASSERT.h>
+#include <BTAS_assert.h>
 
 // only for intel MKL
 
@@ -20,7 +20,7 @@ void axpby (
         T* Y,
   const size_t& incY)
 {
-  BTAS_ASSERT(false, "axpby is not implemented.");
+  BTAS_assert(false, "axpby is not implemented.");
 }
 
 inline void axpby (

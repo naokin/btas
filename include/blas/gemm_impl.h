@@ -1,7 +1,7 @@
 #ifndef __BTAS_BLAS_GEMM_IMPL_H
 #define __BTAS_BLAS_GEMM_IMPL_H
 
-#include <BTAS_ASSERT.h>
+#include <BTAS_assert.h>
 
 namespace btas {
 
@@ -22,7 +22,7 @@ void gemm (
         T* C,
   const size_t& ldC)
 {
-  BTAS_ASSERT(false, "gemm is not implemented.");
+  BTAS_assert(false, "gemm is not implemented.");
 }
 
 inline void gemm (

@@ -1,7 +1,7 @@
 #ifndef __BTAS_BLAS_GER_IMPL_H
 #define __BTAS_BLAS_GER_IMPL_H
 
-#include <BTAS_ASSERT.h>
+#include <BTAS_assert.h>
 
 namespace btas {
 
@@ -18,7 +18,7 @@ void geru (
         T* A,
   const size_t& ldA)
 {
-  BTAS_ASSERT(false, "geru is not implemented.");
+  BTAS_assert(false, "geru is not implemented.");
 }
 
 template<typename T>
@@ -34,7 +34,7 @@ void gerc (
         T* A,
   const size_t& ldA)
 {
-  BTAS_ASSERT(false, "gerc is not implemented.");
+  BTAS_assert(false, "gerc is not implemented.");
 }
 
 inline void ger (

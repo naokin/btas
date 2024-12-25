@@ -7,7 +7,7 @@
 #include <Tensor.hpp>
 #include <TensorIterator.hpp>
 
-#include <BTAS_ASSERT.h>
+#include <BTAS_assert.h>
 
 namespace btas {
 
@@ -58,7 +58,6 @@ public:
   { this->reset(first,ext,str); }
 
   /// Shallow copy
-//explicit
   TensorView (const TensorView& x)
   : start_(x.start_), stride_holder_(x.stride_holder_), stride_hack_(x.stride_hack_)
   { }
@@ -72,7 +71,7 @@ public:
   template<class Arbitral>
   TensorView& operator= (const Arbitral& x)
   {
-    BTAS_ASSERT(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorView::assign, extent must be the same.");
+    BTAS_assert(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorView::assign, extent must be the same.");
 
     index_type index_;
     IndexedFor<1,N,Order>::loop(this->extent(),index_,std::bind(
@@ -195,7 +194,7 @@ public:
   reference at (const index_type& idx)
   {
     ordinal_type ord = this->ordinal(idx);
-    BTAS_ASSERT(ord < this->size(),"TensorView::at, out of range access detected.");
+    BTAS_assert(ord < this->size(),"TensorView::at, out of range access detected.");
     return start_[ord];
   }
 
@@ -203,7 +202,7 @@ public:
   const_reference at (const index_type& idx) const
   {
     ordinal_type ord = this->ordinal(idx);
-    BTAS_ASSERT(ord < this->size(),"TensorView::at, out of range access detected.");
+    BTAS_assert(ord < this->size(),"TensorView::at, out of range access detected.");
     return start_[ord];
   }
 
@@ -212,7 +211,7 @@ public:
   reference at (const Args&... args)
   {
     ordinal_type ord = this->ordinal(make_array<typename index_type::value_type>(args...));
-    BTAS_ASSERT(ord < this->size(),"TensorView::at, out of range access detected.");
+    BTAS_assert(ord < this->size(),"TensorView::at, out of range access detected.");
     return start_[ord];
   }
 
@@ -221,7 +220,7 @@ public:
   const_reference at (const Args&... args) const
   {
     ordinal_type ord = this->ordinal(make_array<typename index_type::value_type>(args...));
-    BTAS_ASSERT(ord < this->size(),"TensorView::at, out of range access detected.");
+    BTAS_assert(ord < this->size(),"TensorView::at, out of range access detected.");
     return start_[ord];
   }
 

@@ -1,7 +1,7 @@
 #ifndef __BTAS_LAPACK_GETRI_IMPL_H
 #define __BTAS_LAPACK_GETRI_IMPL_H
 
-#include <BTAS_ASSERT.h>
+#include <BTAS_assert.h>
 
 namespace btas {
 
@@ -13,7 +13,7 @@ void getri (
   const size_t& ldA,
         lapack_int* ipiv)
 {
-  BTAS_ASSERT(false, "getri is not implemented.");
+  BTAS_assert(false, "getri is not implemented.");
 }
 
 inline void getri (

@@ -4,7 +4,7 @@
 #include <vector>
 #include <algorithm>
 
-#include <BTAS_ASSERT.h>
+#include <BTAS_assert.h>
 #include <remove_complex.h>
 
 #include <lapack/lapack.h>
@@ -28,7 +28,7 @@ void syev (
 {
   const size_t K = N-1;
 
-  BTAS_ASSERT(std::equal(a.extent().begin(),a.extent().begin()+K,a.extent().begin()+K),"input tensor is not symmetric.");
+  BTAS_assert(std::equal(a.extent().begin(),a.extent().begin()+K,a.extent().begin()+K),"input tensor is not symmetric.");
 
   size_t aCols = std::accumulate(a.extent().begin()+K,a.extent().end(),1ul,std::multiplies<size_t>());
 
@@ -57,7 +57,7 @@ void heev (
 {
   const size_t K = N-1;
 
-  BTAS_ASSERT(std::equal(a.extent().begin(),a.extent().begin()+K,a.extent().begin()+K),"input tensor is not symmetric.");
+  BTAS_assert(std::equal(a.extent().begin(),a.extent().begin()+K,a.extent().begin()+K),"input tensor is not symmetric.");
 
   size_t aCols = std::accumulate(a.extent().begin()+K,a.extent().end(),1ul,std::multiplies<size_t>());
 
@@ -104,7 +104,7 @@ void gesvd (
 
   s.resize(sExts);
 
-  BTAS_ASSERT((jobu == 'O' || jobu == 'o' || jobvt == 'O' || jobvt == 'o'), "job* = 'O' is currently disabled.")
+  BTAS_assert((jobu == 'O' || jobu == 'o' || jobvt == 'O' || jobvt == 'o'), "job* = 'O' is currently disabled.")
 
   if(jobu  != 'N' && jobu  != 'n') u.resize(uExtent);
   if(jobvt != 'N' && jobvt != 'n') vt.resize(vtExtent);

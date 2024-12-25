@@ -14,7 +14,7 @@ template<class Array, class Index>
 inline Array make_permute (const Array& a_, const Index& idx)
 {
 #ifdef _DEBUG
-  BTAS_ASSERT(a_.size() == idx.size(),"make_permute, detected inconsistent size of argument.");
+  BTAS_assert(a_.size() == idx.size(),"make_permute, detected inconsistent size of argument.");
 #endif
   Array t_;
   for(size_t i = 0; i < idx.size(); ++i) t_[i] = a_[idx[i]];
