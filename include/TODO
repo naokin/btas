@@ -1,0 +1,18 @@
+TODO: update list
+====
+[o] TensorStride.hpp
+[o] TensorBase.hpp
+[/] Tensor.hpp
+[-] TensorWrapper.hpp
+[-] TensorView.hpp
+[-] TensorViewIterator.hpp
+[-] TensorBlas.hpp
+[-] TensorLapack.hpp
+[-] TensorContract.hpp
+[-] TensorCore.hpp
+
+[o] make_array.hpp
+[?] permute.hpp
+[?] reindex.hpp
+[?] slice.hpp
+[?] tie.hpp

@@ -33,9 +33,12 @@
 *.x
 
 # Back-up files
+backup/
 *~
 *.swp
+*.bk
 log
 
 # Work dir
 work/
+NOTE.h

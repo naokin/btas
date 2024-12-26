@@ -1,0 +1,399 @@
+#ifndef __BTAS_TENSOR_BASE_HPP
+#define __BTAS_TENSOR_BASE_HPP
+
+#include <iterator> // std::distance
+
+#include <blas/blas.h>
+#include <make_array.hpp>
+#include <TensorStride.hpp>
+
+namespace btas {
+
+/// Base class for Tensor and TensorWrapper
+/// This provides only data access functions, no user-accessible constructors.
+template<typename T, size_t N, CBLAS_ORDER Order>
+class TensorBase<T,N,Order> {
+
+private:
+
+  typedef TensorStride<N,Order> tn_stride_type;
+
+public:
+
+  typedef T value_type;
+
+  typedef T* pointer;
+
+  typedef const T* const_pointer;
+
+  typedef T& reference;
+
+  typedef const T& const_reference;
+
+  typedef typename tn_stride_type::extent_type extent_type;
+
+  typedef typename tn_stride_type::stride_type stride_type;
+
+  typedef typename tn_stride_type::index_type index_type;
+
+  typedef typename tn_stride_type::ordinal_type ordinal_type;
+
+  typedef T* iterator;
+
+  typedef const T* const_iterator;
+
+protected:
+
+  // ---------------------------------------------------------------------------------------------------- 
+
+  // constructors
+
+  // protected : prevent users from creating an instance of TensorBase directly
+  TensorBase () : start_(nullptr), finish_(nullptr)
+  { }
+
+  // shallow copy
+  explicit
+  TensorBase (const TensorBase& x)
+  : start_(x.start_), finish_(x.finish_), tn_stride_(x.tn_stride_)
+  { }
+
+public:
+
+  // ---------------------------------------------------------------------------------------------------- 
+
+  // static function to return const expression
+
+  constexpr size_t rank () { return N; }
+
+  constexpr CBLAS_ORDER order () { return Order; }
+
+  // ---------------------------------------------------------------------------------------------------- 
+
+  // size
+
+  /// No data has been allocated ( size() == 0 )
+  bool empty () const { return (start_ == finish_); }
+
+  /// # of allocated data
+  size_t size () const { return std::distance(start_,finish_); }
+
+  /// return extent object
+  const extent_type& extent () const { return tn_stride_.extent(); }
+
+  /// return extent for rank i
+  const typename extent_type::value_type& extent (size_t i) const { return tn_stride_.extent(i); }
+
+  /// return stride object
+  const stride_type& stride () const { return tn_stride_.stride(); }
+
+  /// return stride for rank i
+  const typename stride_type::value_type& stride (size_t i) const { return tn_stride_.stride(i); }
+
+  // ---------------------------------------------------------------------------------------------------- 
+
+  // iterator
+
+  /// iterator to begin
+  iterator begin () { return start_; }
+
+  /// iterator to end
+  iterator end () { return finish_; }
+
+  /// iterator to begin with const-qualifier
+  const_iterator begin () const { return start_; }
+
+  /// iterator to end with const-qualifier
+  const_iterator end () const { return finish_; }
+
+  // access
+
+  /// convert tensor index to ordinal index
+  ordinal_type ordinal (const index_type& idx) const { return tn_stride_.ordinal(idx); }
+
+  /// convert ordinal index to tensor index
+  index_type index (const ordinal_type& ord) const { return tn_stride_.index(ord); }
+
+  /// access by ordinal index
+  reference operator[] (size_t i)
+  { return start_[i]; }
+
+  /// access by ordinal index with const-qualifier
+  const_reference operator[] (size_t i) const
+  { return start_[i]; }
+
+  /// access by tensor index
+  reference operator() (const index_type& idx)
+  { return start_[this->ordinal(idx)]; }
+
+  /// access by tensor index with const-qualifier
+  const_reference operator() (const index_type& idx) const
+  { return start_[this->ordinal(idx)]; }
+
+  /// access by tensor index
+  template<typename... Args>
+  reference operator() (const Args&... args)
+  { return start_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
+
+  /// access by tensor index with const-qualifier
+  template<typename... Args>
+  const_reference operator() (const Args&... args) const
+  { return start_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
+
+  /// access by tensor index with range check
+  reference at (const index_type& idx)
+  {
+    ordinal_type ord = this->ordinal(idx);
+    BTAS_assert(ord < this->size(),"TensorBase::at, accessing data is out of range.");
+    return start_[ord];
+  }
+
+  /// access by tensor index with range check having const-qualifier
+  const_reference at (const index_type& idx) const
+  {
+    ordinal_type ord = this->ordinal(idx);
+    BTAS_assert(ord < this->size(),"TensorBase::at, accessing data is out of range.");
+    return start_[ord];
+  }
+
+  /// access by tensor index with range check
+  template<typename... Args>
+  reference at (const Args&... args)
+  {
+    ordinal_type ord = this->ordinal(make_array<typename index_type::value_type>(args...));
+    BTAS_assert(ord < this->size(),"TensorBase::at, accessing data is out of range.");
+    return start_[ord];
+  }
+
+  /// access by tensor index with range check having const-qualifier
+  template<typename... Args>
+  const_reference at (const Args&... args) const
+  {
+    ordinal_type ord = this->ordinal(make_array<typename index_type::value_type>(args...));
+    BTAS_assert(ord < this->size(),"TensorBase::at, accessing data is out of range.");
+    return start_[ord];
+  }
+
+  // ---------------------------------------------------------------------------------------------------- 
+
+  // pointer
+
+  /// return pointer to data
+  pointer data ()
+  { return start_; }
+
+  /// return const pointer to data
+  const_pointer data () const
+  { return start_; }
+
+protected:
+
+  // ---------------------------------------------------------------------------------------------------- 
+
+  // member variables
+
+  tn_stride_type tn_stride_;
+
+  pointer start_;
+
+  pointer finish_;
+
+}; // class TensorBase<T,N,Order>
+
+// ==================================================================================================== 
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+// ==================================================================================================== 
+
+/// Base class for Tensor and TensorWrapper, specialized for dynamic-rank tensor
+template<typename T, CBLAS_ORDER Order>
+class TensorBase<T,0ul,Order> {
+
+private:
+
+  typedef TensorStride<0ul,Order> tn_stride_type;
+
+public:
+
+  typedef T value_type;
+
+  typedef T* pointer;
+
+  typedef const T* const_pointer;
+
+  typedef T& reference;
+
+  typedef const T& const_reference;
+
+  typedef typename tn_stride_type::extent_type extent_type;
+
+  typedef typename tn_stride_type::stride_type stride_type;
+
+  typedef typename tn_stride_type::index_type index_type;
+
+  typedef typename tn_stride_type::ordinal_type ordinal_type;
+
+  typedef T* iterator;
+
+  typedef const T* const_iterator;
+
+protected:
+
+  // ---------------------------------------------------------------------------------------------------- 
+
+  // constructors
+
+  // protected : prevent users from creating an instance of TensorBase directly
+  TensorBase () : start_(nullptr), finish_(nullptr)
+  { }
+
+  // shallow copy
+  explicit
+  TensorBase (const TensorBase& x)
+  : start_(x.start_), finish_(x.finish_), tn_stride_(x.tn_stride_)
+  { }
+
+public:
+
+  // ---------------------------------------------------------------------------------------------------- 
+
+  // static function to return const expression
+
+  size_t rank () { return tn_stride_.rank(); }
+
+  constexpr CBLAS_ORDER order () { return Order; }
+
+  // ---------------------------------------------------------------------------------------------------- 
+
+  // size
+
+  /// No data has been allocated ( size() == 0 )
+  bool empty () const { return (start_ == finish_); }
+
+  /// # of allocated data
+  size_t size () const { return std::distance(start_,finish_); }
+
+  /// return extent object
+  const extent_type& extent () const { return tn_stride_.extent(); }
+
+  /// return extent for rank i
+  const typename extent_type::value_type& extent (size_t i) const { return tn_stride_.extent(i); }
+
+  /// return stride object
+  const stride_type& stride () const { return tn_stride_.stride(); }
+
+  /// return stride for rank i
+  const typename stride_type::value_type& stride (size_t i) const { return tn_stride_.stride(i); }
+
+  // ---------------------------------------------------------------------------------------------------- 
+
+  // iterator
+
+  /// iterator to begin
+  iterator begin () { return start_; }
+
+  /// iterator to end
+  iterator end () { return finish_; }
+
+  /// iterator to begin with const-qualifier
+  const_iterator begin () const { return start_; }
+
+  /// iterator to end with const-qualifier
+  const_iterator end () const { return finish_; }
+
+  // access
+
+  /// convert tensor index to ordinal index
+  ordinal_type ordinal (const index_type& idx) const { return tn_stride_.ordinal(idx); }
+
+  /// convert ordinal index to tensor index
+  index_type index (const ordinal_type& ord) const { return tn_stride_.index(ord); }
+
+  /// access by ordinal index
+  reference operator[] (size_t i)
+  { return start_[i]; }
+
+  /// access by ordinal index with const-qualifier
+  const_reference operator[] (size_t i) const
+  { return start_[i]; }
+
+  /// access by tensor index
+  reference operator() (const index_type& idx)
+  { return start_[this->ordinal(idx)]; }
+
+  /// access by tensor index with const-qualifier
+  const_reference operator() (const index_type& idx) const
+  { return start_[this->ordinal(idx)]; }
+
+  /// access by tensor index
+  template<typename... Args>
+  reference operator() (const Args&... args)
+  { return start_[this->ordinal(make_vector<typename index_type::value_type>(args...))]; }
+
+  /// access by tensor index with const-qualifier
+  template<typename... Args>
+  const_reference operator() (const Args&... args) const
+  { return start_[this->ordinal(make_vector<typename index_type::value_type>(args...))]; }
+
+  /// access by tensor index with range check
+  reference at (const index_type& idx)
+  {
+    ordinal_type ord = this->ordinal(idx);
+    BTAS_assert(ord < this->size(),"TensorBase::at, accessing data is out of range.");
+    return start_[ord];
+  }
+
+  /// access by tensor index with range check having const-qualifier
+  const_reference at (const index_type& idx) const
+  {
+    ordinal_type ord = this->ordinal(idx);
+    BTAS_assert(ord < this->size(),"TensorBase::at, accessing data is out of range.");
+    return start_[ord];
+  }
+
+  /// access by tensor index with range check
+  template<typename... Args>
+  reference at (const Args&... args)
+  {
+    ordinal_type ord = this->ordinal(make_vector<typename index_type::value_type>(args...));
+    BTAS_assert(ord < this->size(),"TensorBase::at, accessing data is out of range.");
+    return start_[ord];
+  }
+
+  /// access by tensor index with range check having const-qualifier
+  template<typename... Args>
+  const_reference at (const Args&... args) const
+  {
+    ordinal_type ord = this->ordinal(make_vector<typename index_type::value_type>(args...));
+    BTAS_assert(ord < this->size(),"TensorBase::at, accessing data is out of range.");
+    return start_[ord];
+  }
+
+  // ---------------------------------------------------------------------------------------------------- 
+
+  // pointer
+
+  /// return pointer to data
+  pointer data ()
+  { return start_; }
+
+  /// return const pointer to data
+  const_pointer data () const
+  { return start_; }
+
+protected:
+
+  // ---------------------------------------------------------------------------------------------------- 
+
+  // member variables
+
+  tn_stride_type tn_stride_;
+
+  pointer start_;
+
+  pointer finish_;
+
+}; // class TensorBase<T,0ul,Order>
+
+} // namespace btas
+
+#endif // __BTAS_TENSOR_BASE_HPP
