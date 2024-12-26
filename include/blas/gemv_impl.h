@@ -7,7 +7,7 @@ namespace btas {
 
 template<typename T>
 void gemv (
-  const CBLAS_ORDER& order,
+  const CBLAS_LAYOUT& order,
   const CBLAS_TRANSPOSE& transA,
   const size_t& M,
   const size_t& N,
@@ -24,7 +24,7 @@ void gemv (
 }
 
 inline void gemv (
-  const CBLAS_ORDER& order,
+  const CBLAS_LAYOUT& order,
   const CBLAS_TRANSPOSE& transA,
   const size_t& M,
   const size_t& N,
@@ -41,7 +41,7 @@ inline void gemv (
 }
 
 inline void gemv (
-  const CBLAS_ORDER& order,
+  const CBLAS_LAYOUT& order,
   const CBLAS_TRANSPOSE& transA,
   const size_t& M,
   const size_t& N,
@@ -58,7 +58,7 @@ inline void gemv (
 }
 
 inline void gemv (
-  const CBLAS_ORDER& order,
+  const CBLAS_LAYOUT& order,
   const CBLAS_TRANSPOSE& transA,
   const size_t& M,
   const size_t& N,
@@ -75,7 +75,7 @@ inline void gemv (
 }
 
 inline void gemv (
-  const CBLAS_ORDER& order,
+  const CBLAS_LAYOUT& order,
   const CBLAS_TRANSPOSE& transA,
   const size_t& M,
   const size_t& N,

@@ -52,7 +52,7 @@ make_cslice (
 
 // For Tensor
 
-template<typename T, size_t N, CBLAS_ORDER Order>
+template<typename T, size_t N, CBLAS_LAYOUT Order>
 TensorView<T*,N,Order> make_slice (
         Tensor<T,N,Order>& x,
   const typename Tensor<T,N,Order>::index_type& lower,
@@ -63,7 +63,7 @@ TensorView<T*,N,Order> make_slice (
   return TensorView<T*,N,Order>(x.data()+x.ordinal(lower),ext,x.stride());
 }
 
-template<typename T, size_t N, CBLAS_ORDER Order>
+template<typename T, size_t N, CBLAS_LAYOUT Order>
 TensorView<const T*,N,Order> make_slice (
   const Tensor<T,N,Order>& x,
   const typename Tensor<T,N,Order>::index_type& lower,
@@ -75,7 +75,7 @@ TensorView<const T*,N,Order> make_slice (
 }
 
 /// force to make const_slice
-template<typename T, size_t N, CBLAS_ORDER Order>
+template<typename T, size_t N, CBLAS_LAYOUT Order>
 TensorView<const T*,N,Order> make_cslice (
   const Tensor<T,N,Order>& x,
   const typename Tensor<T,N,Order>::index_type& lower,
@@ -88,7 +88,7 @@ TensorView<const T*,N,Order> make_cslice (
 
 // For TensorWrapper
 
-template<typename T, size_t N, CBLAS_ORDER Order>
+template<typename T, size_t N, CBLAS_LAYOUT Order>
 TensorView<T*,N,Order> make_slice (
         TensorWrapper<T*,N,Order>& x,
   const typename TensorWrapper<T*,N,Order>::index_type& lower,
@@ -99,7 +99,7 @@ TensorView<T*,N,Order> make_slice (
   return TensorView<T*,N,Order>(x.data()+x.ordinal(lower),ext,x.stride());
 }
 
-template<typename T, size_t N, CBLAS_ORDER Order>
+template<typename T, size_t N, CBLAS_LAYOUT Order>
 TensorView<const T*,N,Order> make_slice (
   const TensorWrapper<T*,N,Order>& x,
   const typename TensorWrapper<T*,N,Order>::index_type& lower,
@@ -111,7 +111,7 @@ TensorView<const T*,N,Order> make_slice (
 }
 
 /// force to make const_slice
-template<typename T, size_t N, CBLAS_ORDER Order>
+template<typename T, size_t N, CBLAS_LAYOUT Order>
 TensorView<const T*,N,Order> make_cslice (
   const TensorWrapper<T*,N,Order>& x,
   const typename TensorWrapper<T*,N,Order>::index_type& lower,
@@ -123,7 +123,7 @@ TensorView<const T*,N,Order> make_cslice (
 }
 
 /// force to make const_slice
-template<typename T, size_t N, CBLAS_ORDER Order>
+template<typename T, size_t N, CBLAS_LAYOUT Order>
 TensorView<const T*,N,Order> make_cslice (
   const TensorWrapper<const T*,N,Order>& x,
   const typename TensorWrapper<const T*,N,Order>::index_type& lower,

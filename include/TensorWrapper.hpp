@@ -5,424 +5,230 @@
 #include <functional>
 
 #include <Tensor.hpp>
-#include <TensorStride.hpp>
 
 namespace btas {
 
-template<class Iterator, size_t N, CBLAS_ORDER Order = CblasRowMajor> class TensorWrapper;
+/// This class will be specialized for Iterator derived from consecutive data, s.t. 'T*' and 'const T*'
+template<class Iterator, size_t N, CBLAS_LAYOUT Order = CblasRowMajor> class TensorWrapper;
 
 /// Specialized TensorView class wrapping a pointer to "consecutive" data
 /// In principle, this class provides a faster data access than the original TensorView class
-template<typename T, size_t N, CBLAS_ORDER Order>
-class TensorWrapper<T*,N,Order> {
+template<typename T, size_t N, CBLAS_LAYOUT Order>
+class TensorWrapper<T*,N,Order> : public TensorBase<T,N,Order> {
 
-  typedef TensorStride<N,Order> Stride;
+  typedef TensorBase<T,N,Order> base_;
+
+  using base_::tn_stride_;
+  using base_::start_;
+  using base_::finish_;
 
 public:
 
-  typedef T value_type;
+  typedef typename base_::value_type value_type;
+  typedef typename base_::reference reference;
+  typedef typename base_::const_reference const_reference;
+  typedef typename base_::pointer pointer;
+  typedef typename base_::const_pointer const_pointer;
+  typedef typename base_::extent_type extent_type;
+  typedef typename base_::stride_type stride_type;
+  typedef typename base_::index_type index_type;
+  typedef typename base_::ordinal_type ordinal_type;
+  typedef typename base_::iterator iterator;
+  typedef typename base_::const_iterator const_iterator;
 
-  typedef T* pointer;
-
-  typedef const T* const_pointer;
-
-  typedef T& reference;
-
-  typedef const T& const_reference;
-
-  typedef typename Stride::extent_type extent_type;
-
-  typedef typename Stride::stride_type stride_type;
-
-  typedef typename Stride::index_type index_type;
-
-  typedef typename Stride::ordinal_type ordinal_type;
-
-  typedef T* iterator;
-
-  typedef const T* const_iterator;
+  // ---------------------------------------------------------------------------------------------------- 
 
   // Constructors
 
-  TensorWrapper () : start_(NULL), finish_(NULL)
-  { }
+  /// default
+  TensorWrapper () { }
 
-  /// Constructor (user accessible)
+  /// construct from a pointer to the first element
   TensorWrapper (pointer first, const extent_type& ext)
-  : start_(first), stride_holder_(ext)
-  { finish_ = start_+stride_holder_.size(); }
+  {
+    base_::reset_tn_stride_(ext);
+    start_ = first;
+    finish_ = start_+tn_stride_.size();
+  }
 
-  /// Shallow copy
-  TensorWrapper (const TensorWrapper& x)
-  : start_(x.start_), finish_(x.finish_), stride_holder_(x.stride_holder_)
-  { }
+  /// construct from a pointer to the first element
+  template<typename... Args>
+  TensorWrapper (pointer first, const Args&... args)
+  {
+    base_::reset_tn_stride_(args...);
+    start_ = first;
+    finish_ = start_+tn_stride_.size();
+  }
 
-  /// Shallow copy from Tensor object
+  /// (shallow) copy constructor
   explicit
-  TensorWrapper (Tensor<T,N,Order>& x)
-  : start_(x.data()), finish_(x.data()+x.size()), stride_holder_(x.extent())
-  { }
+  TensorWrapper (const TensorWrapper& x) : base_(x) { }
+
+  /// (shallow) copy from a Tensor object
+  explicit
+  TensorWrapper (Tensor<T,N,Order>& x) : base_(x) { }
 
   /// destructor
  ~TensorWrapper () { }
 
-  // assign
+  // ---------------------------------------------------------------------------------------------------- 
 
-  /// Deep copy from arbitral tensor object
+  // (Deep) Copy assign
+
+  /// from an arbitral tensor object
   template<class Arbitral>
   TensorWrapper& operator= (const Arbitral& x)
   {
     BTAS_assert(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorWrapper::assign, extent must be the same.");
-
+    //
     index_type index_;
     IndexedFor<1,N,Order>::loop(this->extent(),index_,std::bind(
       detail::AssignTensor_<index_type,Arbitral,TensorWrapper>,std::placeholders::_1,std::cref(x),std::ref(*this)));
-
+    //
     return *this;
   }
 
-  /// Deep copy assign from Tensor (tuned)
-  TensorWrapper& operator= (const Tensor<T,N,Order>& x)
+  /// from a Tensor or TensorWrapper object
+  TensorWrapper& operator= (const TensorBase<T,N,Order>& x)
   {
     BTAS_assert(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorWrapper::assign, extent must be the same.");
-
+    //
     copy(x.size(),x.data(),1,start_,1); // Call BLAS in case T is numeric
-
+    //
     return *this;
   }
 
-  /// Deep copy assign from TensorWrapper (tuned)
-  TensorWrapper& operator= (const TensorWrapper& x)
-  {
-    BTAS_assert(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorWrapper::assign, extent must be the same.");
-
-    copy(x.size(),x.start_,1,start_,1);
-
-    return *this;
-  }
+  // ---------------------------------------------------------------------------------------------------- 
 
   // reset
 
-  /// reset the pointer
+  /// from a pointer to the first element w/ extent object
   void reset (pointer first, const extent_type& ext)
   {
-    stride_holder_.set(ext);
+    base_::reset_tn_stride_(ext);
     start_  = first;
-    finish_ = start_+stride_holder_.size();
+    finish_ = start_+tn_stride_.size();
   }
 
-  // const expression
-
-  // for C++98 compatiblity
-
-  static const size_t RANK = N;
-
-  static const CBLAS_ORDER ORDER = Order;
-
-  // as a function call
-
-  static size_t rank () { return N; }
-
-  static CBLAS_ORDER order () { return Order; }
-
-  // size
-
-  /// vector<T>::empty()
-  bool empty () const { return (start_ == finish_); }
-
-  /// vector<T>::size()
-  size_t size () const { return stride_holder_.size(); }
-
-  /// return extent object
-  const extent_type& extent () const { return stride_holder_.extent(); }
-
-  /// return extent for rank i
-  const typename extent_type::value_type& extent (size_t i) const { return stride_holder_.extent(i); }
-
-  /// return stride object
-  const stride_type& stride () const { return stride_holder_.stride(); }
-
-  /// return stride for rank i
-  const typename stride_type::value_type& stride (size_t i) const { return stride_holder_.stride(i); }
-
-  // iterator
-
-  /// iterator to begin
-  iterator begin () { return start_; }
-
-  /// iterator to end
-  iterator end () { return finish_; }
-
-  /// iterator to begin with const-qualifier
-  const_iterator begin () const { return start_; }
-
-  /// iterator to end with const-qualifier
-  const_iterator end () const { return finish_; }
-
-  // access
-
-  /// convert tensor index to ordinal index
-  ordinal_type ordinal (const index_type& idx) const { return stride_holder_.ordinal(idx); }
-
-  /// convert ordinal index to tensor index
-  index_type index (const ordinal_type& ord) const { return stride_holder_.index(ord); }
-
-  /// access by ordinal index
-  reference operator[] (size_t i)
-  { return start_[i]; }
-
-  /// access by ordinal index with const-qualifier
-  const_reference operator[] (size_t i) const
-  { return start_[i]; }
-
-  /// access by tensor index
-  reference operator() (const index_type& idx)
-  { return start_[this->ordinal(idx)]; }
-
-  /// access by tensor index with const-qualifier
-  const_reference operator() (const index_type& idx) const
-  { return start_[this->ordinal(idx)]; }
-
-  /// access by tensor index
+  /// from a pointer to the first element w/ variadic arguments list
   template<typename... Args>
-  reference operator() (const Args&... args)
-  { return start_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
-
-  /// access by tensor index with const-qualifier
-  template<typename... Args>
-  const_reference operator() (const Args&... args) const
-  { return start_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
-
-  /// access by tensor index with range check
-  reference at (const index_type& idx)
+  void reset (pointer first, const Args&... args)
   {
-    ordinal_type ord = this->ordinal(idx);
-    BTAS_assert(ord < this->size(),"TensorWrapper::at, out of range access detected.");
-    return start_[ord];
+    base_::reset_tn_stride_(args...);
+    start_  = first;
+    finish_ = start_+tn_stride_.size();
   }
 
-  /// access by tensor index with range check having const-qualifier
-  const_reference at (const index_type& idx) const
-  {
-    ordinal_type ord = this->ordinal(idx);
-    BTAS_assert(ord < this->size(),"TensorWrapper::at, out of range access detected.");
-    return start_[ord];
-  }
+  // ---------------------------------------------------------------------------------------------------- 
 
-  /// access by tensor index with range check
-  template<typename... Args>
-  reference at (const Args&... args)
-  {
-    ordinal_type ord = this->ordinal(make_array<typename index_type::value_type>(args...));
-    BTAS_assert(ord < this->size(),"TensorWrapper::at, out of range access detected.");
-    return start_[ord];
-  }
-
-  /// access by tensor index with range check having const-qualifier
-  template<typename... Args>
-  const_reference at (const Args&... args) const
-  {
-    ordinal_type ord = this->ordinal(make_array<typename index_type::value_type>(args...));
-    BTAS_assert(ord < this->size(),"TensorWrapper::at, out of range access detected.");
-    return start_[ord];
-  }
-
-  // pointer
-
-  /// return pointer to data
-  pointer data ()
-  { return start_; }
-
-  /// return const pointer to data
-  const_pointer data () const
-  { return start_; }
-
-  // others
+  // other functions
 
   /// swap objects
   void swap (TensorWrapper& x)
   {
-    std::swap(start_, x.start_);
+    tn_stride_.swap(x.tn_stride_);
+    std::swap(start_,x.start_);
     std::swap(finish_,x.finish_);
-    stride_holder_.swap(x.stride_holder_);
   }
-
-private:
-
-  Stride stride_holder_;
-
-  pointer start_;
-
-  pointer finish_;
 
 }; // class TensorWrapper<T*,N,Order>
 
-/// Tensor object wrapping a const pointer to an array
-template<typename T, size_t N, CBLAS_ORDER Order>
-class TensorWrapper<const T*,N,Order> {
+// ==================================================================================================== 
 
-  typedef TensorStride<N,Order> Stride;
+/// Specialized TensorView class wrapping a const pointer to "consecutive" data
+template<typename T, size_t N, CBLAS_LAYOUT Order>
+class TensorWrapper<const T*,N,Order> : public TensorBase<const T,N,Order> {
+
+  typedef TensorBase<T,N,Order> base_;
+
+  using base_::tn_stride_;
+  using base_::start_;
+  using base_::finish_;
 
 public:
 
-  typedef T value_type;
+  typedef typename base_::value_type value_type;
+  typedef typename base_::reference reference;
+  typedef typename base_::const_reference const_reference;
+  typedef typename base_::pointer pointer;
+  typedef typename base_::const_pointer const_pointer;
+  typedef typename base_::extent_type extent_type;
+  typedef typename base_::stride_type stride_type;
+  typedef typename base_::index_type index_type;
+  typedef typename base_::ordinal_type ordinal_type;
+  typedef typename base_::iterator iterator;
+  typedef typename base_::const_iterator const_iterator;
 
-  typedef const T& reference;
-
-  typedef const T& const_reference;
-
-  typedef const T* pointer;
-
-  typedef const T* const_pointer;
-
-  typedef typename Stride::extent_type extent_type;
-
-  typedef typename Stride::stride_type stride_type;
-
-  typedef typename Stride::index_type index_type;
-
-  typedef typename Stride::ordinal_type ordinal_type;
-
-  typedef const T* iterator;
-
-  typedef const T* const_iterator;
+  // ---------------------------------------------------------------------------------------------------- 
 
   // Constructors
 
-  TensorWrapper () : start_(NULL), finish_(NULL)
-  { }
+  TensorWrapper () { }
 
-  /// Constructor (user accessible)
+  /// construct from a pointer to the first element
   TensorWrapper (const_pointer first, const extent_type& ext)
-  : start_(first), stride_holder_(ext)
-  { finish_ = start_+stride_holder_.size(); }
+  {
+    base_::reset_tn_stride_(ext);
+    start_ = first;
+    finish_ = start_+tn_stride_.size();
+  }
 
-  /// Shallow copy
-  TensorWrapper (const TensorWrapper& x)
-  : start_(x.start_), finish_(x.finish_), stride_holder_(x.stride_holder_)
-  { }
+  /// construct from a pointer to the first element
+  template<typename... Args>
+  TensorWrapper (const_pointer first, const Args&... args)
+  {
+    base_::reset_tn_stride_(args...);
+    start_ = first;
+    finish_ = start_+tn_stride_.size();
+  }
 
-  /// Shallow copy from non-const TensorWrapper
+  /// (shallow) copy constructor
   explicit
-  TensorWrapper (const TensorWrapper<T*,N,Order>& x)
-  : start_(x.start_), finish_(x.finish_), stride_holder_(x.stride_holder_)
-  { }
+  TensorWrapper (const TensorWrapper& x) : base_(x) { }
 
-  /// Shallow copy from Tensor object
+  /// from non-const TensorWrapper
   explicit
-  TensorWrapper (const Tensor<T,N,Order>& x)
-  : start_(x.data()), finish_(x.data()+x.size()), stride_holder_(x.extent())
-  { }
+  TensorWrapper (const TensorWrapper<T*,N,Order>& x) : base_(x) { }
+
+  /// (shallow) copy from a Tensor object
+  explicit
+  TensorWrapper (const Tensor<T,N,Order>& x) : base_(x) { }
 
   /// destructor
  ~TensorWrapper () { }
 
+  // ---------------------------------------------------------------------------------------------------- 
+
   // reset
 
-  /// reset the pointer
+  /// from a pointer to the first element w/ extent object
   void reset (const_pointer first, const extent_type& ext)
   {
-    stride_holder_.set(ext);
+    base_::reset_tn_stride_(ext);
     start_  = first;
-    finish_ = start_+stride_holder_.size();
+    finish_ = start_+tn_stride_.size();
   }
 
-  // const expression
-
-  static size_t rank () { return N; }
-
-  static CBLAS_ORDER order () { return Order; }
-
-  // size
-
-  /// vector<T>::empty()
-  bool empty () const { return (start_ == finish_); }
-
-  /// vector<T>::size()
-  size_t size () const { return std::distance(start_,finish_); }
-
-  /// return extent object
-  const extent_type& extent () const { return stride_holder_.extent(); }
-
-  /// return extent for rank i
-  const typename extent_type::value_type& extent (size_t i) const { return stride_holder_.extent(i); }
-
-  /// return stride object
-  const stride_type& stride () const { return stride_holder_.stride(); }
-
-  /// return stride for rank i
-  const typename stride_type::value_type& stride (size_t i) const { return stride_holder_.stride(i); }
-
-  // iterator
-
-  /// iterator to begin with const-qualifier
-  const_iterator begin () const { return start_; }
-
-  /// iterator to end with const-qualifier
-  const_iterator end () const { return finish_; }
-
-  // access
-
-  /// convert tensor index to ordinal index
-  ordinal_type ordinal (const index_type& idx) const { return stride_holder_.ordinal(idx); }
-
-  /// convert ordinal index to tensor index
-  index_type index (const ordinal_type& ord) const { return stride_holder_.index(ord); }
-
-  /// access by ordinal index with const-qualifier
-  const_reference operator[] (size_t i) const
-  { return start_[i]; }
-
-  /// access by tensor index with const-qualifier
-  const_reference operator() (const index_type& idx) const
-  { return start_[this->ordinal(idx)]; }
-
-  /// access by tensor index with const-qualifier
+  /// from a pointer to the first element w/ variadic arguments list
   template<typename... Args>
-  const_reference operator() (const Args&... args) const
-  { return start_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
-
-  /// access by tensor index with range check having const-qualifier
-  const_reference at (const index_type& idx) const
+  void reset (const_pointer first, const Args&... args)
   {
-    ordinal_type ord = this->ordinal(idx);
-    BTAS_assert(ord < this->size(),"TensorWrapper::at, out of range access detected.");
-    return start_[ord];
+    base_::reset_tn_stride_(args...);
+    start_  = first;
+    finish_ = start_+tn_stride_.size();
   }
 
-  /// access by tensor index with range check having const-qualifier
-  template<typename... Args>
-  const_reference at (const Args&... args) const
-  {
-    ordinal_type ord = this->ordinal(make_array<typename index_type::value_type>(args...));
-    BTAS_assert(ord < this->size(),"TensorWrapper::at, out of range access detected.");
-    return start_[ord];
-  }
+  // ---------------------------------------------------------------------------------------------------- 
 
-  // pointer
-  // pointer
-
-  /// return const pointer to data
-  const_pointer data () const
-  { return start_; }
-
-  // others
+  // other functions
 
   /// swap objects
   void swap (TensorWrapper& x)
   {
+    tn_stride_.swap(x.tn_stride_);
     std::swap(start_, x.start_);
     std::swap(finish_,x.finish_);
-    stride_holder_.swap(x.stride_holder_);
   }
-
-private:
-
-  Stride stride_holder_;
-
-  const_pointer start_;
-
-  const_pointer finish_;
 
 }; // class TensorWrapper<const T*,N,Order>
 

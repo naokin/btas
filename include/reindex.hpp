@@ -4,7 +4,7 @@
 namespace btas {
 
 /// Generic ND loop to carry out tensor reindex
-template<size_t I, size_t N, CBLAS_ORDER Order> struct __Nd_loop_reindex;
+template<size_t I, size_t N, CBLAS_LAYOUT Order> struct __Nd_loop_reindex;
 
 /// ND loop for reindex, specialized for row-major stride
 template<size_t I, size_t N>
@@ -63,7 +63,7 @@ struct __Nd_loop_reindex<N,N,CblasColMajor>
 /// carry out reindex (i.e. permute) for "any-rank" tensor
 /// multiple loop is expanded at compile time
 /// with -O2 level, this gives exactly the same speed as explicit multi-loop
-template<typename T, size_t N, CBLAS_ORDER Order, class Ext_>
+template<typename T, size_t N, CBLAS_LAYOUT Order, class Ext_>
 void reindex (const T* pX, T* pY, const Ext_& strX, const Ext_& extY)
 { __Nd_loop_reindex<1,N,Order> loop(pX,pY,0,strX,extY); }
 

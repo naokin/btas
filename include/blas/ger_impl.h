@@ -7,7 +7,7 @@ namespace btas {
 
 template<typename T>
 void geru (
-  const CBLAS_ORDER& order,
+  const CBLAS_LAYOUT& order,
   const size_t& M,
   const size_t& N,
   const T& alpha,
@@ -23,7 +23,7 @@ void geru (
 
 template<typename T>
 void gerc (
-  const CBLAS_ORDER& order,
+  const CBLAS_LAYOUT& order,
   const size_t& M,
   const size_t& N,
   const T& alpha,
@@ -38,7 +38,7 @@ void gerc (
 }
 
 inline void ger (
-  const CBLAS_ORDER& order,
+  const CBLAS_LAYOUT& order,
   const size_t& M,
   const size_t& N,
   const float& alpha,
@@ -53,7 +53,7 @@ inline void ger (
 }
 
 inline void ger (
-  const CBLAS_ORDER& order,
+  const CBLAS_LAYOUT& order,
   const size_t& M,
   const size_t& N,
   const double& alpha,
@@ -68,7 +68,7 @@ inline void ger (
 }
 
 inline void geru (
-  const CBLAS_ORDER& order,
+  const CBLAS_LAYOUT& order,
   const size_t& M,
   const size_t& N,
   const std::complex<float>& alpha,
@@ -83,7 +83,7 @@ inline void geru (
 }
 
 inline void gerc (
-  const CBLAS_ORDER& order,
+  const CBLAS_LAYOUT& order,
   const size_t& M,
   const size_t& N,
   const std::complex<float>& alpha,
@@ -98,7 +98,7 @@ inline void gerc (
 }
 
 inline void geru (
-  const CBLAS_ORDER& order,
+  const CBLAS_LAYOUT& order,
   const size_t& M,
   const size_t& N,
   const std::complex<double>& alpha,
@@ -113,7 +113,7 @@ inline void geru (
 }
 
 inline void gerc (
-  const CBLAS_ORDER& order,
+  const CBLAS_LAYOUT& order,
   const size_t& M,
   const size_t& N,
   const std::complex<double>& alpha,
@@ -129,7 +129,7 @@ inline void gerc (
 
 template<typename T>
 inline void ger (
-  const CBLAS_ORDER& order,
+  const CBLAS_LAYOUT& order,
   const size_t& M,
   const size_t& N,
   const T& alpha,

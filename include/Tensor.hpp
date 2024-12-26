@@ -14,7 +14,7 @@
 
 namespace btas {
 
-template<typename T, size_t N, CBLAS_ORDER Order> class TensorWrapper; // Forward decl. of tensor wrapper
+template<typename T, size_t N, CBLAS_LAYOUT Order> class TensorWrapper; // Forward decl. of tensor wrapper
 
 namespace detail {
 
@@ -26,26 +26,28 @@ void AssignTensor_ (const Idx_& index, const T1& x, T2& y) { y(index) = x(index)
 
 } // namespace detail
 
-template<typename T, size_t N, CBLAS_ORDER Order = CblasRowMajor>
+template<typename T, size_t N, CBLAS_LAYOUT Order = CblasRowMajor>
 class Tensor : public TensorBase<T,N,Order> {
-
-  typedef TensorStride<N,Order> tn_stride_type;
 
   typedef TensorBase<T,N,Order> base_;
 
+  using base_::tn_stride_;
+  using base_::start_;
+  using base_::finish_;
+
 public:
 
-  using base_::value_type;
-  using base_::reference;
-  using base_::const_reference;
-  using base_::pointer;
-  using base_::const_pointer;
-  using base_::extent_type;
-  using base_::stride_type;
-  using base_::index_type;
-  using base_::ordinal_type;
-  using base_::iterator;
-  using base_::const_iterator;
+  typedef typename base_::value_type value_type;
+  typedef typename base_::reference reference;
+  typedef typename base_::const_reference const_reference;
+  typedef typename base_::pointer pointer;
+  typedef typename base_::const_pointer const_pointer;
+  typedef typename base_::extent_type extent_type;
+  typedef typename base_::stride_type stride_type;
+  typedef typename base_::index_type index_type;
+  typedef typename base_::ordinal_type ordinal_type;
+  typedef typename base_::iterator iterator;
+  typedef typename base_::const_iterator const_iterator;
 
   // ---------------------------------------------------------------------------------------------------- 
 
@@ -57,8 +59,8 @@ public:
   /// construct from extent object
   explicit
   Tensor (const extent_type& ext)
-  : tn_stride_(ext)
   {
+    base_::reset_tn_stride_(ext);
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
@@ -67,8 +69,8 @@ public:
   /// construct from variadic arguments list
   template<typename... Args>
   Tensor (const Args&... args)
-  : tn_stride_(make_array<typename extent_type::value_type>(args...))
   {
+    base_::reset_tn_stride_(args...);
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
@@ -76,8 +78,8 @@ public:
 
   /// construct w/ initialization of data
   Tensor (const extent_type& ext, const value_type& value)
-  : tn_stride_(ext)
   {
+    base_::reset_tn_stride_(ext);
     store_.resize(tn_stride_.size(),value);
     start_ = store_.data();
     finish_ = start_+store_.size();
@@ -87,11 +89,11 @@ public:
 
   // (Deep) Copy constructors
 
-  /// from arbitral tensor object
+  /// from an arbitral tensor object
   template<class Arbitral>
   Tensor (const Arbitral& x)
-  : tn_stride_(x.extent())
   {
+    base_::reset_tn_stride_(x.extent());
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
@@ -103,8 +105,9 @@ public:
 
   /// from a Tensor object
   Tensor (const Tensor& x)
-  : tn_stride_(x.tn_stride_), store_(x.store_)
   {
+    tn_stride_ = x.tn_stride_;
+    store_ = x.store_;
     start_ = store_.data();
     finish_ = start_+store_.size();
   }
@@ -112,8 +115,9 @@ public:
   /// from a TensorWrapper object
   explicit
   Tensor (const TensorWrapper<T*,N,Order>& x)
-  : tn_stride_(x.tn_stride_), store_(x.size())
   {
+    tn_stride_ = x.tn_stride_;
+    store_.resize(x.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
     //
@@ -123,8 +127,9 @@ public:
   /// from a TensorWrapper object (const)
   explicit
   Tensor (const TensorWrapper<const T*,N,Order>& x)
-  : tn_stride_(x.tn_stride_), store_(x.size())
   {
+    tn_stride_ = x.tn_stride_;
+    store_.resize(x.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
     //
@@ -140,11 +145,11 @@ public:
 
   // (Deep) Copy assign
 
-  /// from arbitral tensor object
+  /// from an arbitral tensor object
   template<class Arbitral>
   Tensor& operator= (const Arbitral& x)
   {
-    tn_stride_.set(x.extent());
+    base_::reset_tn_stride_(x.extent());
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
@@ -170,7 +175,7 @@ public:
   /// from a TensorWrapper object
   Tensor& operator= (const TensorWrapper<T*,N,Order>& x)
   {
-    tn_stride_.set(x.extent());
+    base_::reset_tn_stride_(x.extent());
     store_.resize(x.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
@@ -183,7 +188,7 @@ public:
   /// from a TensorWrapper object (const)
   Tensor& operator= (const TensorWrapper<const T*,N,Order>& x)
   {
-    tn_stride_.set(x.extent());
+    base_::reset_tn_stride_(x.extent());
     store_.resize(x.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
@@ -200,7 +205,7 @@ public:
   /// resize by extent
   void resize (const extent_type& ext)
   {
-    tn_stride_.set(ext);
+    base_::reset_tn_stride_(ext);
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
@@ -209,7 +214,7 @@ public:
   /// resize by extent and initialize with constant value
   void resize (const extent_type& ext, const value_type& value)
   {
-    tn_stride_.set(ext);
+    base_::reset_tn_stride_(ext);
     store_.resize(tn_stride_.size(),value);
     start_ = store_.data();
     finish_ = start_+store_.size();
@@ -219,7 +224,7 @@ public:
   template<typename... Args>
   void resize (const Args&... args)
   {
-    tn_stride_.set(make_array<typename extent_type::value_type>(args...));
+    base_::reset_tn_stride_(args...);
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
@@ -272,262 +277,219 @@ private:
 // ==================================================================================================== 
 
 /// Variable rank tensor
-template<typename T, CBLAS_ORDER Order>
+template<typename T, CBLAS_LAYOUT Order>
 class Tensor<T,0ul,Order> : public TensorBase<T,0ul,Order> {
-
-  typedef TensorStride<0ul,Order> tn_stride_type;
 
   typedef TensorBase<T,0ul,Order> base_;
 
+  using base_::tn_stride_;
+  using base_::start_;
+  using base_::finish_;
+
 public:
 
-  using base_::value_type;
-  using base_::reference;
-  using base_::const_reference;
-  using base_::pointer;
-  using base_::const_pointer;
-  using base_::extent_type;
-  using base_::stride_type;
-  using base_::index_type;
-  using base_::ordinal_type;
-  using base_::iterator;
-  using base_::const_iterator;
+  typedef typename base_::value_type value_type;
+  typedef typename base_::reference reference;
+  typedef typename base_::const_reference const_reference;
+  typedef typename base_::pointer pointer;
+  typedef typename base_::const_pointer const_pointer;
+  typedef typename base_::extent_type extent_type;
+  typedef typename base_::stride_type stride_type;
+  typedef typename base_::index_type index_type;
+  typedef typename base_::ordinal_type ordinal_type;
+  typedef typename base_::iterator iterator;
+  typedef typename base_::const_iterator const_iterator;
 
   // ---------------------------------------------------------------------------------------------------- 
-#####################################
 
-  // constructor
+  // Constructor w/ memory allocation
 
-  /// Default
+  /// default
   Tensor () { }
 
-  /// Construct
+  /// construct from extent object
   explicit
   Tensor (const extent_type& ext)
-  : tn_stride_(ext)
-  { store_.resize(tn_stride_.size()); }
+  {
+    base_::reset_tn_stride_(ext);
+    store_.resize(tn_stride_.size());
+    start_ = store_.data();
+    finish_ = start_+store_.size();
+  }
 
-  /// Construct from variadic arguments list
+  /// construct from variadic arguments list
   template<typename... Args>
   Tensor (const Args&... args)
-  : tn_stride_(make_array<typename extent_type::value_type>(args...))
-  { store_.resize(tn_stride_.size()); }
+  {
+    base_::reset_tn_stride_(args...);
+    store_.resize(tn_stride_.size());
+    start_ = store_.data();
+    finish_ = start_+store_.size();
+  }
 
-  /// Initializer
+  /// construct w/ initialization of data
   Tensor (const extent_type& ext, const value_type& value)
-  : tn_stride_(ext)
-  { store_.resize(tn_stride_.size(),value); }
+  {
+    base_::reset_tn_stride_(ext);
+    store_.resize(tn_stride_.size(),value);
+    start_ = store_.data();
+    finish_ = start_+store_.size();
+  }
 
-  /// Deep copy from arbitral tensor object
+  // ---------------------------------------------------------------------------------------------------- 
+
+  // (Deep) Copy constructors
+
+  /// from an arbitral tensor object
   template<class Arbitral>
   Tensor (const Arbitral& x)
-  : tn_stride_(x.extent())
   {
+    base_::reset_tn_stride_(x.extent());
     store_.resize(tn_stride_.size());
+    start_ = store_.data();
+    finish_ = start_+store_.size();
+    //
     index_type index_;
     IndexedFor<1,0ul,Order>::loop(this->extent(),index_,std::bind(
       detail::AssignTensor_<index_type,Arbitral,Tensor>,std::placeholders::_1,std::cref(x),std::ref(*this)));
   }
 
-  /// deep copy : FIXME using std::vector<T>'s copy constructor gave better performance rather than BLAS copy etc...
+  /// from a Tensor object
   Tensor (const Tensor& x)
-  : tn_stride_(x.tn_stride_), store_(x.store_)
-  { }
+  {
+    tn_stride_ = x.tn_stride_;
+    store_ = x.store_;
+    start_ = store_.data();
+    finish_ = start_+store_.size();
+  }
 
-  /// Deep copy from TensorWrapper
+  /// from a TensorWrapper object
   Tensor (const TensorWrapper<T*,0ul,Order>& x)
-  : tn_stride_(x.tn_stride_), store_(x.size())
-  { copy(x.size(),x.data(),1,store_.data(),1);  }
+  {
+    tn_stride_ = x.tn_stride_;
+    store_.resize(x.size());
+    start_ = store_.data();
+    finish_ = start_+store_.size();
+    //
+    copy(x.size(),x.data(),1,start_,1);
+  }
 
-  /// Deep copy from TensorWrapper
+  /// from a TensorWrapper object (const)
   Tensor (const TensorWrapper<const T*,0ul,Order>& x)
-  : tn_stride_(x.tn_stride_), store_(x.size())
-  { copy(x.size(),x.data(),1,store_.data(),1);  }
+  {
+    tn_stride_ = x.tn_stride_;
+    store_.resize(x.size());
+    start_ = store_.data();
+    finish_ = start_+store_.size();
+    //
+    copy(x.size(),x.data(),1,start_,1);
+  }
+
+  // ---------------------------------------------------------------------------------------------------- 
 
   /// destructor
  ~Tensor () { }
 
-  // assign
+  // ---------------------------------------------------------------------------------------------------- 
 
-  /// copy assign from arbitral tensor object
+  // (Deep) Copy assign
+
+  /// from an arbitral tensor object
   template<class Arbitral>
   Tensor& operator= (const Arbitral& x)
   {
-    tn_stride_.set(x.extent());
+    base_::reset_tn_stride_(x.extent());
     store_.resize(tn_stride_.size());
+    start_ = store_.data();
+    finish_ = start_+store_.size();
+    //
     index_type index_;
     IndexedFor<1,0ul,Order>::loop(this->extent(),index_,std::bind(
       detail::AssignTensor_<index_type,Arbitral,Tensor>,std::placeholders::_1,std::cref(x),std::ref(*this)));
+    //
     return *this;
   }
 
-  /// copy assign
+  /// from a Tensor object
   Tensor& operator= (const Tensor& x)
   {
     tn_stride_ = x.tn_stride_;
     store_ = x.store_;
+    start_ = store_.data();
+    finish_ = start_+store_.size();
+    //
     return *this;
   }
 
-  /// copy assign from TensorWrapper
+  /// from a TensorWrapper object
   Tensor& operator= (const TensorWrapper<T*,0ul,Order>& x)
   {
-    tn_stride_.set(x.extent());
+    base_::reset_tn_stride_(x.extent());
     store_.resize(x.size());
-    copy(x.size(),x.data(),1,store_.data(),1);
+    start_ = store_.data();
+    finish_ = start_+store_.size();
+    //
+    copy(x.size(),x.data(),1,start_,1);
+    //
     return *this;
   }
 
-  /// copy assign from TensorWrapper
+  /// from a TensorWrapper object (const)
   Tensor& operator= (const TensorWrapper<const T*,0ul,Order>& x)
   {
-    tn_stride_.set(x.extent());
+    base_::reset_tn_stride_(x.extent());
     store_.resize(x.size());
-    copy(x.size(),x.data(),1,store_.data(),1);
+    start_ = store_.data();
+    finish_ = start_+store_.size();
+    //
+    copy(x.size(),x.data(),1,start_,1);
+    //
     return *this;
   }
+
+  // ---------------------------------------------------------------------------------------------------- 
 
   // resize
 
   /// resize by extent
   void resize (const extent_type& ext)
   {
-    tn_stride_.set(ext);
+    base_::reset_tn_stride_(ext);
     store_.resize(tn_stride_.size());
+    start_ = store_.data();
+    finish_ = start_+store_.size();
+  }
+
+  /// resize by extent and initialize with constant value
+  void resize (const extent_type& ext, const value_type& value)
+  {
+    base_::reset_tn_stride_(ext);
+    store_.resize(tn_stride_.size(),value);
+    start_ = store_.data();
+    finish_ = start_+store_.size();
   }
 
   /// resize by variadic arguments list
   template<typename... Args>
   void resize (const Args&... args)
   {
-    tn_stride_.set(make_array<typename extent_type::value_type>(args...));
+    base_::reset_tn_stride_(args...);
     store_.resize(tn_stride_.size());
+    start_ = store_.data();
+    finish_ = start_+store_.size();
   }
 
-  /// resize by extent and initialize with constant value
-  void resize (const extent_type& ext, const value_type& value)
-  {
-    tn_stride_.set(ext);
-    store_.resize(tn_stride_.size(),value);
-  }
+  // ---------------------------------------------------------------------------------------------------- 
 
-  // const expression
-
-  // for C++98 compatiblity
-
-  static const size_t RANK = 0ul;
-
-  static const CBLAS_ORDER ORDER = Order;
-
-  // as a function call
-
-  static size_t rank () { return 0ul; }
-
-  static CBLAS_ORDER order () { return Order; }
-
-  // size
-
-  /// vector<T>::empty()
-  bool empty () const { return store_.empty(); }
-
-  /// vector<T>::size()
-  size_t size () const { return store_.size(); }
-
-  /// return extent object
-  const extent_type& extent () const { return tn_stride_.extent(); }
-
-  /// return extent for rank i
-  const typename extent_type::value_type& extent (size_t i) const { return tn_stride_.extent(i); }
-
-  /// return stride object
-  const stride_type& stride () const { return tn_stride_.stride(); }
-
-  /// return stride for rank i
-  const typename stride_type::value_type& stride (size_t i) const { return tn_stride_.stride(i); }
-
-  // iterator
-
-  /// iterator to begin
-  iterator begin () { return store_.begin(); }
-
-  /// iterator to end
-  iterator end () { return store_.end(); }
-
-  /// iterator to begin with const-qualifier
-  const_iterator begin () const { return store_.begin(); }
-
-  /// iterator to end with const-qualifier
-  const_iterator end () const { return store_.end(); }
-
-  // access
-
-  /// convert tensor index to ordinal index
-  ordinal_type ordinal (const index_type& idx) const { return tn_stride_.ordinal(idx); }
-
-  /// convert ordinal index to tensor index
-  index_type index (const ordinal_type& ord) const { return tn_stride_.index(ord); }
-
-  /// access by ordinal index
-  reference operator[] (size_t i)
-  { return store_[i]; }
-
-  /// access by ordinal index with const-qualifier
-  const_reference operator[] (size_t i) const
-  { return store_[i]; }
-
-  /// access by tensor index
-  reference operator() (const index_type& idx)
-  { return store_[this->ordinal(idx)]; }
-
-  /// access by tensor index with const-qualifier
-  const_reference operator() (const index_type& idx) const
-  { return store_[this->ordinal(idx)]; }
-
-  /// access by tensor index
-  template<typename... Args>
-  reference operator() (const Args&... args)
-  { return store_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
-
-  /// access by tensor index with const-qualifier
-  template<typename... Args>
-  const_reference operator() (const Args&... args) const
-  { return store_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
-
-  /// access by tensor index with range check
-  reference at (const index_type& idx)
-  { return store_.at(this->ordinal(idx)); }
-
-  /// access by tensor index with range check having const-qualifier
-  const_reference at (const index_type& idx) const
-  { return store_.at(this->ordinal(idx)); }
-
-  /// access by tensor index with range check
-  template<typename... Args>
-  reference at (const Args&... args)
-  { return store_.at(this->ordinal(make_array<typename index_type::value_type>(args...))); }
-
-  /// access by tensor index with range check having const-qualifier
-  template<typename... Args>
-  const_reference at (const Args&... args) const
-  { return store_.at(this->ordinal(make_array<typename index_type::value_type>(args...))); }
-
-  // pointer
-
-  /// return pointer to data
-  pointer data ()
-  { return store_.data(); }
-
-  /// return const pointer to data
-  const_pointer data () const
-  { return store_.data(); }
-
-  // others
+  // other functions
 
   /// swap objects
   void swap (Tensor& x)
   {
     tn_stride_.swap(x.tn_stride_);
     store_.swap(x.store_);
+    std::swap(start_,x.start_);
+    std::swap(finish_,x.finish_);
   }
 
   /// clear
@@ -535,14 +497,16 @@ public:
   {
     tn_stride_.clear();
     store_.clear();
+    start_ = nullptr;
+    finish_ = nullptr;
   }
 
   /// fill all the elements with a constant value
-  void fill (const value_type& value) { std::fill(store_.begin(),store_.end(),value); }
+  void fill (const value_type& value) { std::fill(start_,finish_,value); }
 
   /// generate elements by Generator 'T gen()'
   template<class Generator>
-  void generate (Generator gen) { std::generate(store_.begin(),store_.end(),gen); }
+  void generate (Generator gen) { std::generate(start_,finish_,gen); }
 
 private:
 
@@ -555,11 +519,15 @@ private:
 
   // members
 
-  tn_stride_type tn_stride_; ///< capsule class holds extent and stride
-
-  std::vector<value_type> store_; /// 1D array of stored elements
+  std::vector<value_type> store_; /// data is stored as 1d-array
 
 }; // class Tensor<T, 0ul, Order>
+
+// ---------------------------------------------------------------------------------------------------- 
+
+/// template alias to variable-rank tensor
+template<typename T, CBLAS_LAYOUT Order = CblasRowMajor>
+using vTensor = Tensor<T,0ul,Order>;
 
 } // namespace btas
 

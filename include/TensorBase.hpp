@@ -11,8 +11,8 @@ namespace btas {
 
 /// Base class for Tensor and TensorWrapper
 /// This provides only data access functions, no user-accessible constructors.
-template<typename T, size_t N, CBLAS_ORDER Order>
-class TensorBase<T,N,Order> {
+template<typename T, size_t N, CBLAS_LAYOUT Order>
+class TensorBase {
 
 private:
 
@@ -58,6 +58,13 @@ protected:
   : start_(x.start_), finish_(x.finish_), tn_stride_(x.tn_stride_)
   { }
 
+  // ---------------------------------------------------------------------------------------------------- 
+
+  void reset_tn_stride_ (const extent_type& ext) { tn_stride_.set(ext); }
+
+  template<typename... Args>
+  void reset_tn_stride_ (const Args&... args) { tn_stride_.set(make_array<typename extent_type::value_type>(args...)); }
+
 public:
 
   // ---------------------------------------------------------------------------------------------------- 
@@ -66,7 +73,7 @@ public:
 
   constexpr size_t rank () { return N; }
 
-  constexpr CBLAS_ORDER order () { return Order; }
+  constexpr CBLAS_LAYOUT order () { return Order; }
 
   // ---------------------------------------------------------------------------------------------------- 
 
@@ -205,7 +212,7 @@ protected:
 // ==================================================================================================== 
 
 /// Base class for Tensor and TensorWrapper, specialized for dynamic-rank tensor
-template<typename T, CBLAS_ORDER Order>
+template<typename T, CBLAS_LAYOUT Order>
 class TensorBase<T,0ul,Order> {
 
 private:
@@ -252,6 +259,13 @@ protected:
   : start_(x.start_), finish_(x.finish_), tn_stride_(x.tn_stride_)
   { }
 
+  // ---------------------------------------------------------------------------------------------------- 
+
+  void reset_tn_stride_ (const extent_type& ext) { tn_stride_.set(ext); }
+
+  template<typename... Args>
+  void reset_tn_stride_ (const Args&... args) { tn_stride_.set(make_vector<typename extent_type::value_type>(args...)); }
+
 public:
 
   // ---------------------------------------------------------------------------------------------------- 
@@ -260,7 +274,7 @@ public:
 
   size_t rank () { return tn_stride_.rank(); }
 
-  constexpr CBLAS_ORDER order () { return Order; }
+  constexpr CBLAS_LAYOUT order () { return Order; }
 
   // ---------------------------------------------------------------------------------------------------- 
 

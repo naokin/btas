@@ -2,11 +2,11 @@ TODO: update list
 ====
 [o] TensorStride.hpp
 [o] TensorBase.hpp
-[/] Tensor.hpp
+[o] Tensor.hpp
 [-] TensorWrapper.hpp
 [-] TensorView.hpp
 [-] TensorViewIterator.hpp
-[-] TensorBlas.hpp
+[/] TensorBlas.hpp
 [-] TensorLapack.hpp
 [-] TensorContract.hpp
 [-] TensorCore.hpp

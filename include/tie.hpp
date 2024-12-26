@@ -12,7 +12,7 @@ namespace btas {
 /// tie index, i.e. x[i,j,k,j] -> y[i,j,k]
 /// x[i,j,k,l], idx = {0,1,2,1} -> y[i,j,k] : x[i,j,k,j]
 /// x[i,j,k,l], idx = {0,2,1,2} -> y[i,k,l] : x[i,l,k,l]
-template<typename T, size_t M, size_t N, CBLAS_ORDER Order, class Index>
+template<typename T, size_t M, size_t N, CBLAS_LAYOUT Order, class Index>
 void tie (const Tensor<T,M,Order>& x, const Index& idx, Tensor<T,N,Order>& y)
 {
 #ifdef _DEBUG

@@ -3,14 +3,11 @@
 
 #include <vector>
 #include <algorithm>
-#include <numeric>
+#include <numeric> // accumulate
 
 #include <BTAS_assert.h>
 #include <remove_complex.h>
-
-#ifndef __BTAS_TENSOR_HPP
 #include <Tensor.hpp>
-#endif
 
 namespace btas {
 
@@ -23,16 +20,16 @@ namespace btas {
 //  COPY  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 /// deep copy
-template<typename T, size_t M, size_t N, CBLAS_ORDER Order>
-void copy (const TensorWrapper<const T*,M,Order>& x, TensorWrapper<T*,N,Order>& y)
+template<typename T, size_t M, size_t N, CBLAS_LAYOUT Order>
+void copy (const TensorBase<T,M,Order>& x, TensorBase<T,N,Order>& y)
 {
-  BTAS_assert(x.size() == y.size(), "x and y must have the same size.");
+  BTAS_assert(x.size() == y.size(),"x and y must have the same size.");
   copy(x.size(),x.data(),1,y.data(),1);
 }
 
 /// deep copy with initializing y
-template<typename T, size_t N, CBLAS_ORDER Order>
-void copy (const TensorWrapper<const T*,N,Order>& x, Tensor<T,N,Order>& y)
+template<typename T, size_t N, CBLAS_LAYOUT Order>
+void copy (const TensorBase<T,N,Order>& x, Tensor<T,N,Order>& y)
 {
   y.resize(x.extent());
   copy(x.size(),x.data(),1,y.data(),1);
@@ -41,8 +38,8 @@ void copy (const TensorWrapper<const T*,N,Order>& x, Tensor<T,N,Order>& y)
 //  SCAL  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 /// scal
-template<typename Scalar, typename T, size_t N, CBLAS_ORDER Order>
-void scal (const Scalar& alpha, TensorWrapper<T*,N,Order>& x)
+template<typename Scalar, typename T, size_t N, CBLAS_LAYOUT Order>
+void scal (const Scalar& alpha, TensorBase<T,N,Order>& x)
 {
   scal(x.size(),alpha,x.data(),1);
 }
@@ -50,16 +47,16 @@ void scal (const Scalar& alpha, TensorWrapper<T*,N,Order>& x)
 //  AXPY  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 /// axpy
-template<typename Scalar, typename T, size_t M, size_t N, CBLAS_ORDER Order>
-void axpy (const Scalar& alpha, const TensorWrapper<const T*,M,Order>& x, TensorWrapper<T*,N,Order>& y)
+template<typename Scalar, typename T, size_t M, size_t N, CBLAS_LAYOUT Order>
+void axpy (const Scalar& alpha, const TensorBase<T,M,Order>& x, TensorBase<T,N,Order>& y)
 {
   BTAS_assert(x.size() == y.size(), "x and y must have the same size.");
   axpy(x.size(),x.data(),1,y.data(),1);
 }
 
 /// axpy with initializing y if necessary
-template<typename Scalar, typename T, size_t N, CBLAS_ORDER Order>
-void axpy (const Scalar& alpha, const TensorWrapper<const T*,N,Order>& x, Tensor<T,N,Order>& y)
+template<typename Scalar, typename T, size_t N, CBLAS_LAYOUT Order>
+void axpy (const Scalar& alpha, const TensorBase<T,N,Order>& x, Tensor<T,N,Order>& y)
 {
   if(y.empty())
     y.resize(x.extent(),T(0));
@@ -72,32 +69,32 @@ void axpy (const Scalar& alpha, const TensorWrapper<const T*,N,Order>& x, Tensor
 //  DOT  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 /// dot (= dotu)
-template<typename T, size_t N, CBLAS_ORDER Order>
-T dot (const TensorWrapper<const T*,N,Order>& x, const TensorWrapper<const T*,N,Order>& y)
+template<typename T, size_t N, CBLAS_LAYOUT Order>
+T dot (const TensorBase<T,N,Order>& x, const TensorBase<T,N,Order>& y)
 {
   BTAS_assert(std::equal(x.extent().begin(),x.extent().end(),y.extent().begin()),"x and y must have the same extent.");
   return dot(x.size(),x.data(),1,y.data(),1);
 }
 
 /// dotu
-template<typename T, size_t N, CBLAS_ORDER Order>
-T dotu (const TensorWrapper<const T*,N,Order>& x, const TensorWrapper<const T*,N,Order>& y)
+template<typename T, size_t N, CBLAS_LAYOUT Order>
+T dotu (const TensorBase<T,N,Order>& x, const TensorBase<T,N,Order>& y)
 {
   BTAS_assert(std::equal(x.extent().begin(),x.extent().end(),y.extent().begin()),"x and y must have the same extent.");
   return dotu(x.size(),x.data(),1,y.data(),1);
 }
 
 /// dotc
-template<typename T, size_t N, CBLAS_ORDER Order>
-T dotc (const TensorWrapper<const T*,N,Order>& x, const TensorWrapper<const T*,N,Order>& y)
+template<typename T, size_t N, CBLAS_LAYOUT Order>
+T dotc (const TensorBase<T,N,Order>& x, const TensorBase<T,N,Order>& y)
 {
   BTAS_assert(std::equal(x.extent().begin(),x.extent().end(),y.extent().begin()),"x and y must have the same extent.");
   return dotc(x.size(),x.data(),1,y.data(),1);
 }
 
 /// nrm2 : Euclidian norm
-template<typename T, size_t N, CBLAS_ORDER Order>
-typename remove_complex<T>::type nrm2 (const TensorWrapper<const T*,N,Order>& x)
+template<typename T, size_t N, CBLAS_LAYOUT Order>
+typename remove_complex<T>::type nrm2 (const TensorBase<T,N,Order>& x)
 {
    return nrm2(x.size(),x.data(),1);
 }
@@ -111,25 +108,29 @@ typename remove_complex<T>::type nrm2 (const TensorWrapper<const T*,N,Order>& x)
 //  GEMV  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 /// gemv
-template<typename T, size_t M, size_t N, CBLAS_ORDER Order>
+template<typename T, size_t M, size_t N, CBLAS_LAYOUT Order>
 void gemv (
   const CBLAS_TRANSPOSE& transa,
   const T& alpha,
-  const TensorWrapper<const T*,M+N,Order>& a,
-  const TensorWrapper<const T*,N,Order>& x,
+  const TensorBase<T,M+N,Order>& a,
+  const TensorBase<T,N,Order>& x,
   const T& beta,
-        TensorWrapper<T*,M,Order>& y)
+        TensorBase<T,M,Order>& y)
 {
   const auto& ext_a = a.extent();
   const auto& ext_x = x.extent();
   const auto& ext_y = y.extent();
 
+  // this covers (M, N) = (0, 0), i.e. variable-rank tensor
+  const size_t m = ext_y.size();
+  const size_t n = ext_x.size();
+
   if(transa == CblasNoTrans) {
     BTAS_assert(std::equal(ext_y.begin(),ext_y.end(),ext_a.begin()),  "failed by inconsistent extents (y).");
-    BTAS_assert(std::equal(ext_x.begin(),ext_x.end(),ext_a.begin()+M),"failed by inconsistent extents (x).");
+    BTAS_assert(std::equal(ext_x.begin(),ext_x.end(),ext_a.begin()+m),"failed by inconsistent extents (x).");
   }
   else {
-    BTAS_assert(std::equal(ext_y.begin(),ext_y.end(),ext_a.begin()+N),"failed by inconsistent extents (y).");
+    BTAS_assert(std::equal(ext_y.begin(),ext_y.end(),ext_a.begin()+n),"failed by inconsistent extents (y).");
     BTAS_assert(std::equal(ext_x.begin(),ext_x.end(),ext_a.begin()),  "failed by inconsistent extents (x).");
   }
 
@@ -141,53 +142,10 @@ void gemv (
   gemv(Order,transa,rows,cols,alpha,a.data(),lda,x.data(),1,beta,y.data(),1);
 }
 
-/// gemv with initializing y if necessary
-template<typename T, size_t M, size_t N, CBLAS_ORDER Order>
-void gemv (
-  const CBLAS_TRANSPOSE& transa,
-  const T& alpha,
-  const Tensor<T,M+N,Order>& a,
-  const Tensor<T,N,Order>& x,
-  const T& beta,
-        Tensor<T,M,Order>& y)
-{
-  const auto& ext_a = a.extent();
-  const auto& ext_x = x.extent();
-
-  typename Tensor<T,M,Order>::extent_type ext_y;
-
-  if(y.empty()) {
-    if(transa == CblasNoTrans) {
-      for(size_t i = 0; i < M; ++i) ext_y[i] = ext_a[i];
-    }
-    else {
-      for(size_t i = 0; i < M; ++i) ext_y[i] = ext_a[i+N];
-    }
-    y.resize(ext_y,T(0));
-  }
-  else {
-    ext_y = y.extent();
-  }
-
-  if(transa == CblasNoTrans) {
-    BTAS_assert(std::equal(ext_y.begin(),ext_y.end(),ext_a.begin()),  "failed by inconsistent extents (y).");
-    BTAS_assert(std::equal(ext_x.begin(),ext_x.end(),ext_a.begin()+M),"failed by inconsistent extents (x).");
-  }
-  else {
-    BTAS_assert(std::equal(ext_y.begin(),ext_y.end(),ext_a.begin()+N),"failed by inconsistent extents (y).");
-    BTAS_assert(std::equal(ext_x.begin(),ext_x.end(),ext_a.begin()),  "failed by inconsistent extents (x).");
-  }
-
-  size_t rows = y.size();
-  size_t cols = x.size();
-  if(transa != CblasNoTrans) std::swap(rows,cols);
-
-  size_t lda = (Order == CblasRowMajor) ? cols : rows;
-  gemv(Order,transa,rows,cols,alpha,a.data(),lda,x.data(),1,beta,y.data(),1);
-}
+//  GER  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 /// ger
-template<typename T, size_t M, size_t N, CBLAS_ORDER Order>
+template<typename T, size_t M, size_t N, CBLAS_LAYOUT Order>
 void ger (
   const T& alpha,
   const Tensor<T,M,Order>& x,
@@ -206,7 +164,7 @@ void ger (
 
   size_t lda = (Order == CblasRowMajor) ? y.size() : x.size();
 
-  get(Order,x.size(),y.size(),alpha,x.data(),1,y.data(),1,a.data(),lda);
+  ger(Order,x.size(),y.size(),alpha,x.data(),1,y.data(),1,a.data(),lda);
 }
 
 //  ====================================================================================================
@@ -215,8 +173,10 @@ void ger (
 //
 //  ====================================================================================================
 
+//  GEMM  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 /// gemm
-template<typename T, size_t L, size_t M, size_t N, CBLAS_ORDER Order>
+template<typename T, size_t L, size_t M, size_t N, CBLAS_LAYOUT Order>
 void gemm (
   const CBLAS_TRANSPOSE& transa,
   const CBLAS_TRANSPOSE& transb,
@@ -272,7 +232,7 @@ void gemm (
 //  ====================================================================================================
 
 /// Normalization
-template<typename T, size_t N, CBLAS_ORDER Order>
+template<typename T, size_t N, CBLAS_LAYOUT Order>
 void normalize (Tensor<T,N,Order>& x)
 {
   typename remove_complex<T>::type n = nrm2(x);
@@ -280,7 +240,7 @@ void normalize (Tensor<T,N,Order>& x)
 }
 
 //! Orthogonalization
-template<typename T, size_t N, CBLAS_ORDER Order>
+template<typename T, size_t N, CBLAS_LAYOUT Order>
 void orthogonalize (const Tensor<T,N,Order>& x, Tensor<T,N,Order>& y)
 {
   T s = dotc(x,y); axpy(-s,x,y);
@@ -299,7 +259,7 @@ void orthogonalize (const Tensor<T,N,Order>& x, Tensor<T,N,Order>& y)
 /// gemm
 template<size_t M, size_t N, size_t K>
 struct blasWrapper_ {
-  template<typename T, CBLAS_ORDER Order>
+  template<typename T, CBLAS_LAYOUT Order>
   static void call (
     const CBLAS_TRANSPOSE& transa,
     const CBLAS_TRANSPOSE& transb,
@@ -316,7 +276,7 @@ struct blasWrapper_ {
 /// gemv
 template<size_t M, size_t N>
 struct blasWrapper_<M,N,N> {
-  template<typename T, CBLAS_ORDER Order>
+  template<typename T, CBLAS_LAYOUT Order>
   static void call (
     const CBLAS_TRANSPOSE& transa,
     const CBLAS_TRANSPOSE& transb,
@@ -333,7 +293,7 @@ struct blasWrapper_<M,N,N> {
 /// gemv
 template<size_t M, size_t N>
 struct blasWrapper_<M,N,M> {
-  template<typename T, CBLAS_ORDER Order>
+  template<typename T, CBLAS_LAYOUT Order>
   static void call (
     const CBLAS_TRANSPOSE& transa,
     const CBLAS_TRANSPOSE& transb,
@@ -350,7 +310,7 @@ struct blasWrapper_<M,N,M> {
 /// ger
 template<size_t M, size_t N>
 struct blasWrapper_<M,N,0> {
-  template<typename T, CBLAS_ORDER Order>
+  template<typename T, CBLAS_LAYOUT Order>
   static void call (
     const CBLAS_TRANSPOSE& transa,
     const CBLAS_TRANSPOSE& transb,
@@ -365,7 +325,7 @@ struct blasWrapper_<M,N,0> {
 };
 
 /// Wrapper function for BLAS contractions
-template<typename T, size_t L, size_t M, size_t N, CBLAS_ORDER Order>
+template<typename T, size_t L, size_t M, size_t N, CBLAS_LAYOUT Order>
 void blasCall (
       const CBLAS_TRANSPOSE& transa,
       const CBLAS_TRANSPOSE& transb,

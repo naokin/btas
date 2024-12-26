@@ -16,7 +16,7 @@ namespace btas {
 // helper class to perform multiple loop
 
 /// must be called with I > 0
-template<size_t I, size_t N, CBLAS_ORDER Order> struct IndexedFor;
+template<size_t I, size_t N, CBLAS_LAYOUT Order> struct IndexedFor;
 
 template<size_t I, size_t N>
 struct IndexedFor<I, N, CblasRowMajor> {

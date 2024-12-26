@@ -8,14 +8,14 @@ namespace btas {
 
 // reshape
 
-template<typename T, size_t M, size_t N, CBLAS_ORDER Order>
+template<typename T, size_t M, size_t N, CBLAS_LAYOUT Order>
 Tensor<T,N,Order> reshape (const Tensor<T,M,Order>& x, const typename Tensor<T,N,Order>::extent_type& newext_)
 {
   Tensor<T,N,Order> tmp_(newext_); copy(x,tmp_,true);
   return tmp_;
 }
 
-template<typename T, size_t N, CBLAS_ORDER Order, typename... Args>
+template<typename T, size_t N, CBLAS_LAYOUT Order, typename... Args>
 Tensor<T,sizeof...(Args),Order> reshape (const Tensor<T,N,Order>& x, const Args&... args)
 {
   Tensor<T,sizeof...(Args),Order> tmp_(args...);

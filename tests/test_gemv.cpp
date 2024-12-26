@@ -24,9 +24,11 @@ int main ()
 
   B.generate(std::bind(dist,rGen));
 
-  Tensor<double,2> C(3,6);
+  std::vector<double> Cv(18,0.0);
 
-  C.fill(0.0);
+  TensorWrapper<double*,2> C(Cv.data(),3,6);
+
+//C.fill(0.0);
 
   gemv(CblasNoTrans,1.0,A,B,1.0,C);
 

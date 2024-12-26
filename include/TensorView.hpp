@@ -12,7 +12,7 @@
 namespace btas {
 
 /// Tensor object wrapping TensorIterator
-template<class Iterator, size_t N, CBLAS_ORDER Order = CblasRowMajor>
+template<class Iterator, size_t N, CBLAS_LAYOUT Order = CblasRowMajor>
 class TensorView {
 
   typedef TensorStride<N,Order> Stride;
@@ -106,13 +106,13 @@ public:
 
   static const size_t RANK = N;
 
-  static const CBLAS_ORDER ORDER = Order;
+  static const CBLAS_LAYOUT ORDER = Order;
 
   // as a function call
 
   static size_t rank () { return N; }
 
-  static CBLAS_ORDER order () { return Order; }
+  static CBLAS_LAYOUT order () { return Order; }
 
   // size
 

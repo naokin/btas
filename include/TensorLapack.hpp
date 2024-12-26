@@ -18,7 +18,7 @@ namespace btas {
 /// Solve real-symmetric eigenvalue problem (SEP)
 /// Def.: A({i,j,k},{i,j,k}) = Z({i,j,k,e}) * w({e}) * Z^T({e,i,j,k})
 /// NOTE: if called with complex array, gives an error
-template<typename T, size_t N, CBLAS_ORDER Order>
+template<typename T, size_t N, CBLAS_LAYOUT Order>
 void syev (
   const char& jobz,
   const char& uplo,
@@ -47,7 +47,7 @@ void syev (
 /// Solve hermitian eigenvalue problem (HEP)
 /// Def.: A({i,j,k},{i,j,k}) = Z({i,j,k,e}) * w({e}) * Z^T({e,i,j,k})
 /// NOTE: if called with real array, redirect to Syev
-template<typename T, size_t N, CBLAS_ORDER Order>
+template<typename T, size_t N, CBLAS_LAYOUT Order>
 void heev (
   const char& jobz,
   const char& uplo,
@@ -73,7 +73,7 @@ void heev (
 }
 
 /// Solve singular value decomposition (SVD)
-template<typename T, size_t M, size_t N, CBLAS_ORDER Order>
+template<typename T, size_t M, size_t N, CBLAS_LAYOUT Order>
 void gesvd (
   const char& jobu,
   const char& jobvt,
@@ -117,7 +117,7 @@ void gesvd (
 /// \param a input tensor
 /// \param q on exit, unitary matrix is stored
 /// \param r on exit, upper trapezoidal matrix is stored
-template<typename T, size_t M, size_t N, CBLAS_ORDER Order>
+template<typename T, size_t M, size_t N, CBLAS_LAYOUT Order>
 void geqrf (
   const Tensor<T,M+N-2,Order>& a,
         Tensor<T,M,Order>& q,
@@ -180,7 +180,7 @@ void geqrf (
 /// \param a input tensor
 /// \param l on exit, lower trapezoidal matrix is stored
 /// \param q on exit, unitary matrix is stored
-template<typename T, size_t M, size_t N, CBLAS_ORDER Order>
+template<typename T, size_t M, size_t N, CBLAS_LAYOUT Order>
 void gelqf (
   const Tensor<T,M+N-2,Order>& a,
         Tensor<T,M,Order>& l,

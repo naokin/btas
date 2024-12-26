@@ -10,11 +10,11 @@
 namespace btas {
 
 /// Fwd. decl.
-template<class Iterator, size_t N, CBLAS_ORDER Order = CblasRowMajor> class TensorIterator;
+template<class Iterator, size_t N, CBLAS_LAYOUT Order = CblasRowMajor> class TensorIterator;
 
 namespace detail {
 
-template<class Iterator, size_t N, CBLAS_ORDER Order> struct TensorIterator_helper;
+template<class Iterator, size_t N, CBLAS_LAYOUT Order> struct TensorIterator_helper;
 
 /// For Row-Major stride
 template<class Iterator, size_t N>
@@ -182,7 +182,7 @@ struct __TensorIteratorConst<__gnu_cxx::__normal_iterator<const T*,Container>>
 { typedef __gnu_cxx::__normal_iterator<const T*,Container> type; };
 
 /// Specialized for a TensorIterator, to instantiate __TensorIteratorConst recursively
-template<class Iter, size_t N, CBLAS_ORDER Order>
+template<class Iter, size_t N, CBLAS_LAYOUT Order>
 struct __TensorIteratorConst<TensorIterator<Iter,N,Order>>
 {
   typedef TensorIterator<typename __TensorIteratorConst<Iter>::type,N,Order> type;
@@ -220,7 +220,7 @@ struct __TensorIteratorRemoveConst<__gnu_cxx::__normal_iterator<const T*,Contain
 { typedef __gnu_cxx::__normal_iterator<T*,Container> type; };
 
 /// Specialized for a TensorIterator, to instantiate __TensorIteratorRemoveConst recursively
-template<class Iter, size_t N, CBLAS_ORDER Order>
+template<class Iter, size_t N, CBLAS_LAYOUT Order>
 struct __TensorIteratorRemoveConst<TensorIterator<Iter,N,Order>>
 {
   typedef TensorIterator<typename __TensorIteratorRemoveConst<Iter>::type,N,Order> type;
@@ -232,7 +232,7 @@ struct __TensorIteratorRemoveConst<TensorIterator<Iter,N,Order>>
 /// \tparam Iterator an iterator type, e.g. T*, std::vector<T>::iterator, etc...
 /// \tparam N rank of tensor
 /// \tparam Order storage ordering, which affects increment/decrement operations
-template<class Iterator, size_t N, CBLAS_ORDER Order>
+template<class Iterator, size_t N, CBLAS_LAYOUT Order>
 class TensorIterator {
 
   typedef std::iterator_traits<Iterator> Traits;

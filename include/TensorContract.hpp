@@ -11,7 +11,7 @@
 namespace btas {
 
 /// tensor trace function called with indices to be contracted
-template<typename T, size_t L, size_t M, size_t N, CBLAS_ORDER Order, class Index>
+template<typename T, size_t L, size_t M, size_t N, CBLAS_LAYOUT Order, class Index>
 void contract (
   const T& alpha,
   const Tensor<T,L,Order>& a, const Index& idxa,
@@ -24,7 +24,7 @@ void contract (
 }
 
 /// tensor trace function called with index symbols of tensors
-template<typename T, size_t L, size_t M, size_t N, CBLAS_ORDER Order, class SymbolA, class SymbolB, class SymbolC>
+template<typename T, size_t L, size_t M, size_t N, CBLAS_LAYOUT Order, class SymbolA, class SymbolB, class SymbolC>
 void contract (
   const T& alpha,
   const Tensor<T,L,Order>& a, const SymbolA& symba,
