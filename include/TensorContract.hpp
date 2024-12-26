@@ -11,26 +11,26 @@
 namespace btas {
 
 /// tensor trace function called with indices to be contracted
-template<typename T, size_t L, size_t M, size_t N, CBLAS_LAYOUT Order, class Index>
+template<typename T, size_t L, size_t M, size_t N, CBLAS_LAYOUT Layout, class Index>
 void contract (
   const T& alpha,
-  const Tensor<T,L,Order>& a, const Index& idxa,
-  const Tensor<T,M,Order>& b, const Index& idxb,
+  const Tensor<T,L,Layout>& a, const Index& idxa,
+  const Tensor<T,M,Layout>& b, const Index& idxb,
   const T& beta,
-        Tensor<T,N,Order>& c)
+        Tensor<T,N,Layout>& c)
 {
-  contract_helper<Tensor<T,L,Order>,Tensor<T,M,Order>,Index> helper(a,idxa,b,idxb);
+  contract_helper<Tensor<T,L,Layout>,Tensor<T,M,Layout>,Index> helper(a,idxa,b,idxb);
   blasCall(helper.transa(),helper.transb(),alpha,helper.get_a(),helper.get_b(),beta,c);
 }
 
 /// tensor trace function called with index symbols of tensors
-template<typename T, size_t L, size_t M, size_t N, CBLAS_LAYOUT Order, class SymbolA, class SymbolB, class SymbolC>
+template<typename T, size_t L, size_t M, size_t N, CBLAS_LAYOUT Layout, class SymbolA, class SymbolB, class SymbolC>
 void contract (
   const T& alpha,
-  const Tensor<T,L,Order>& a, const SymbolA& symba,
-  const Tensor<T,M,Order>& b, const SymbolB& symbb,
+  const Tensor<T,L,Layout>& a, const SymbolA& symba,
+  const Tensor<T,M,Layout>& b, const SymbolB& symbb,
   const T& beta,
-        Tensor<T,N,Order>& c, const SymbolC& symbc)
+        Tensor<T,N,Layout>& c, const SymbolC& symbc)
 {
   const size_t K = (L+M-N)/2;
 
@@ -44,7 +44,7 @@ void contract (
     contract(alpha,a,idxa,b,idxb,beta,c);
   }
   else {
-    Tensor<T,N,Order> axb;
+    Tensor<T,N,Layout> axb;
     if(!c.empty()) permute(c,symbc,axb,symbaxb);
     contract(alpha,a,idxa,b,idxb,beta,axb);
     permute(axb,symbaxb,c,symbc);

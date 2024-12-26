@@ -3,7 +3,7 @@
 
 #include <iterator> // std::distance
 
-#include <blas/blas.h>
+#include <blas.h>
 #include <make_array.hpp>
 #include <TensorStride.hpp>
 
@@ -11,12 +11,12 @@ namespace btas {
 
 /// Base class for Tensor and TensorWrapper
 /// This provides only data access functions, no user-accessible constructors.
-template<typename T, size_t N, CBLAS_LAYOUT Order>
+template<typename T, size_t N, CBLAS_LAYOUT Layout>
 class TensorBase {
 
 private:
 
-  typedef TensorStride<N,Order> tn_stride_type;
+  typedef TensorStride<N,Layout> tn_stride_type;
 
 public:
 
@@ -73,7 +73,7 @@ public:
 
   constexpr size_t rank () { return N; }
 
-  constexpr CBLAS_LAYOUT order () { return Order; }
+  constexpr CBLAS_LAYOUT layout () { return Layout; }
 
   // ---------------------------------------------------------------------------------------------------- 
 
@@ -205,19 +205,19 @@ protected:
 
   pointer finish_;
 
-}; // class TensorBase<T,N,Order>
+}; // class TensorBase<T,N,Layout>
 
 // ==================================================================================================== 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
 // ==================================================================================================== 
 
 /// Base class for Tensor and TensorWrapper, specialized for dynamic-rank tensor
-template<typename T, CBLAS_LAYOUT Order>
-class TensorBase<T,0ul,Order> {
+template<typename T, CBLAS_LAYOUT Layout>
+class TensorBase<T,0ul,Layout> {
 
 private:
 
-  typedef TensorStride<0ul,Order> tn_stride_type;
+  typedef TensorStride<0ul,Layout> tn_stride_type;
 
 public:
 
@@ -274,7 +274,7 @@ public:
 
   size_t rank () { return tn_stride_.rank(); }
 
-  constexpr CBLAS_LAYOUT order () { return Order; }
+  constexpr CBLAS_LAYOUT layout () { return Layout; }
 
   // ---------------------------------------------------------------------------------------------------- 
 
@@ -406,7 +406,7 @@ protected:
 
   pointer finish_;
 
-}; // class TensorBase<T,0ul,Order>
+}; // class TensorBase<T,0ul,Layout>
 
 } // namespace btas
 

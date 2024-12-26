@@ -3,7 +3,7 @@ TODO: update list
 [o] TensorStride.hpp
 [o] TensorBase.hpp
 [o] Tensor.hpp
-[-] TensorWrapper.hpp
+[o] TensorWrapper.hpp
 [-] TensorView.hpp
 [-] TensorViewIterator.hpp
 [/] TensorBlas.hpp

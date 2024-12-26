@@ -12,10 +12,10 @@
 namespace btas {
 
 /// Tensor object wrapping TensorIterator
-template<class Iterator, size_t N, CBLAS_LAYOUT Order = CblasRowMajor>
+template<class Iterator, size_t N, CBLAS_LAYOUT Layout = CblasRowMajor>
 class TensorView {
 
-  typedef TensorStride<N,Order> Stride;
+  typedef TensorStride<N,Layout> Stride;
 
   typedef std::iterator_traits<Iterator> Traits;
 
@@ -39,9 +39,9 @@ public:
 
   typedef typename Stride::ordinal_type ordinal_type;
 
-  typedef TensorIterator<Iterator,N,Order> iterator;
+  typedef TensorIterator<Iterator,N,Layout> iterator;
 
-  typedef TensorIterator<typename detail::__TensorIteratorConst<Iterator>::type,N,Order> const_iterator;
+  typedef TensorIterator<typename detail::__TensorIteratorConst<Iterator>::type,N,Layout> const_iterator;
 
   // Constructors
 
@@ -74,7 +74,7 @@ public:
     BTAS_assert(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorView::assign, extent must be the same.");
 
     index_type index_;
-    IndexedFor<1,N,Order>::loop(this->extent(),index_,std::bind(
+    IndexedFor<1,N,Layout>::loop(this->extent(),index_,std::bind(
       detail::AssignTensor_<index_type,Arbitral,TensorView>,std::placeholders::_1,std::cref(x),std::ref(*this)));
 
     return *this;
@@ -106,13 +106,13 @@ public:
 
   static const size_t RANK = N;
 
-  static const CBLAS_LAYOUT ORDER = Order;
+  static const CBLAS_LAYOUT ORDER = Layout;
 
   // as a function call
 
   static size_t rank () { return N; }
 
-  static CBLAS_LAYOUT order () { return Order; }
+  static CBLAS_LAYOUT order () { return Layout; }
 
   // size
 

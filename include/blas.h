@@ -1,6 +1,8 @@
 #ifndef __BTAS_BLAS_HEADER_INCLUDED
 #define __BTAS_BLAS_HEADER_INCLUDED
 
+#include <mkl.h>
+
 #include <blas/axpby_impl.h>
 #include <blas/axpy_impl.h>
 #include <blas/copy_impl.h>

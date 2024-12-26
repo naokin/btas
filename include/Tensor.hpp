@@ -14,7 +14,7 @@
 
 namespace btas {
 
-template<typename T, size_t N, CBLAS_LAYOUT Order> class TensorWrapper; // Forward decl. of tensor wrapper
+template<typename T, size_t N, CBLAS_LAYOUT Layout> class TensorWrapper; // Forward decl. of tensor wrapper
 
 namespace detail {
 
@@ -26,10 +26,10 @@ void AssignTensor_ (const Idx_& index, const T1& x, T2& y) { y(index) = x(index)
 
 } // namespace detail
 
-template<typename T, size_t N, CBLAS_LAYOUT Order = CblasRowMajor>
-class Tensor : public TensorBase<T,N,Order> {
+template<typename T, size_t N, CBLAS_LAYOUT Layout = CblasRowMajor>
+class Tensor : public TensorBase<T,N,Layout> {
 
-  typedef TensorBase<T,N,Order> base_;
+  typedef TensorBase<T,N,Layout> base_;
 
   using base_::tn_stride_;
   using base_::start_;
@@ -99,7 +99,7 @@ public:
     finish_ = start_+store_.size();
     //
     index_type index_;
-    IndexedFor<1,N,Order>::loop(this->extent(),index_,std::bind(
+    IndexedFor<1,N,Layout>::loop(this->extent(),index_,std::bind(
       detail::AssignTensor_<index_type,Arbitral,Tensor>,std::placeholders::_1,std::cref(x),std::ref(*this)));
   }
 
@@ -114,7 +114,7 @@ public:
 
   /// from a TensorWrapper object
   explicit
-  Tensor (const TensorWrapper<T*,N,Order>& x)
+  Tensor (const TensorWrapper<T*,N,Layout>& x)
   {
     tn_stride_ = x.tn_stride_;
     store_.resize(x.size());
@@ -126,7 +126,7 @@ public:
 
   /// from a TensorWrapper object (const)
   explicit
-  Tensor (const TensorWrapper<const T*,N,Order>& x)
+  Tensor (const TensorWrapper<const T*,N,Layout>& x)
   {
     tn_stride_ = x.tn_stride_;
     store_.resize(x.size());
@@ -155,7 +155,7 @@ public:
     finish_ = start_+store_.size();
     //
     index_type index_;
-    IndexedFor<1,N,Order>::loop(this->extent(),index_,std::bind(
+    IndexedFor<1,N,Layout>::loop(this->extent(),index_,std::bind(
       detail::AssignTensor_<index_type,Arbitral,Tensor>,std::placeholders::_1,std::cref(x),std::ref(*this)));
     //
     return *this;
@@ -173,7 +173,7 @@ public:
   }
 
   /// from a TensorWrapper object
-  Tensor& operator= (const TensorWrapper<T*,N,Order>& x)
+  Tensor& operator= (const TensorWrapper<T*,N,Layout>& x)
   {
     base_::reset_tn_stride_(x.extent());
     store_.resize(x.size());
@@ -186,7 +186,7 @@ public:
   }
 
   /// from a TensorWrapper object (const)
-  Tensor& operator= (const TensorWrapper<const T*,N,Order>& x)
+  Tensor& operator= (const TensorWrapper<const T*,N,Layout>& x)
   {
     base_::reset_tn_stride_(x.extent());
     store_.resize(x.size());
@@ -272,15 +272,15 @@ private:
 
   std::vector<value_type> store_; /// data is stored as 1d-array
 
-}; // class Tensor<T, N, Order>
+}; // class Tensor<T, N, Layout>
 
 // ==================================================================================================== 
 
 /// Variable rank tensor
-template<typename T, CBLAS_LAYOUT Order>
-class Tensor<T,0ul,Order> : public TensorBase<T,0ul,Order> {
+template<typename T, CBLAS_LAYOUT Layout>
+class Tensor<T,0ul,Layout> : public TensorBase<T,0ul,Layout> {
 
-  typedef TensorBase<T,0ul,Order> base_;
+  typedef TensorBase<T,0ul,Layout> base_;
 
   using base_::tn_stride_;
   using base_::start_;
@@ -350,7 +350,7 @@ public:
     finish_ = start_+store_.size();
     //
     index_type index_;
-    IndexedFor<1,0ul,Order>::loop(this->extent(),index_,std::bind(
+    IndexedFor<1,0ul,Layout>::loop(this->extent(),index_,std::bind(
       detail::AssignTensor_<index_type,Arbitral,Tensor>,std::placeholders::_1,std::cref(x),std::ref(*this)));
   }
 
@@ -364,7 +364,7 @@ public:
   }
 
   /// from a TensorWrapper object
-  Tensor (const TensorWrapper<T*,0ul,Order>& x)
+  Tensor (const TensorWrapper<T*,0ul,Layout>& x)
   {
     tn_stride_ = x.tn_stride_;
     store_.resize(x.size());
@@ -375,7 +375,7 @@ public:
   }
 
   /// from a TensorWrapper object (const)
-  Tensor (const TensorWrapper<const T*,0ul,Order>& x)
+  Tensor (const TensorWrapper<const T*,0ul,Layout>& x)
   {
     tn_stride_ = x.tn_stride_;
     store_.resize(x.size());
@@ -404,7 +404,7 @@ public:
     finish_ = start_+store_.size();
     //
     index_type index_;
-    IndexedFor<1,0ul,Order>::loop(this->extent(),index_,std::bind(
+    IndexedFor<1,0ul,Layout>::loop(this->extent(),index_,std::bind(
       detail::AssignTensor_<index_type,Arbitral,Tensor>,std::placeholders::_1,std::cref(x),std::ref(*this)));
     //
     return *this;
@@ -422,7 +422,7 @@ public:
   }
 
   /// from a TensorWrapper object
-  Tensor& operator= (const TensorWrapper<T*,0ul,Order>& x)
+  Tensor& operator= (const TensorWrapper<T*,0ul,Layout>& x)
   {
     base_::reset_tn_stride_(x.extent());
     store_.resize(x.size());
@@ -435,7 +435,7 @@ public:
   }
 
   /// from a TensorWrapper object (const)
-  Tensor& operator= (const TensorWrapper<const T*,0ul,Order>& x)
+  Tensor& operator= (const TensorWrapper<const T*,0ul,Layout>& x)
   {
     base_::reset_tn_stride_(x.extent());
     store_.resize(x.size());
@@ -521,13 +521,13 @@ private:
 
   std::vector<value_type> store_; /// data is stored as 1d-array
 
-}; // class Tensor<T, 0ul, Order>
+}; // class Tensor<T, 0ul, Layout>
 
 // ---------------------------------------------------------------------------------------------------- 
 
 /// template alias to variable-rank tensor
-template<typename T, CBLAS_LAYOUT Order = CblasRowMajor>
-using vTensor = Tensor<T,0ul,Order>;
+template<typename T, CBLAS_LAYOUT Layout = CblasRowMajor>
+using vTensor = Tensor<T,0ul,Layout>;
 
 } // namespace btas
 

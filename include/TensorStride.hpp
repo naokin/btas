@@ -16,7 +16,7 @@
 namespace btas {
 
 /// Helper class to handle extent and stride
-template<size_t N, CBLAS_LAYOUT Order, typename T_ext = size_t, typename T_str = size_t, typename T_idx = size_t>
+template<size_t N, CBLAS_LAYOUT Layout, typename T_ext = size_t, typename T_str = size_t, typename T_idx = size_t>
 struct TensorStride;
 
 // ==================================================================================================== 
@@ -74,7 +74,7 @@ public:
 
   constexpr size_t rank () { return N; }
 
-  constexpr CBLAS_LAYOUT order () { return CblasRowMajor; }
+  constexpr CBLAS_LAYOUT layout () { return CblasRowMajor; }
 
   /// get tensor size
   size_t size () const { return extent_[0]*stride_[0]; }
@@ -197,7 +197,7 @@ public:
 
   constexpr size_t rank () { return N; }
 
-  constexpr CBLAS_LAYOUT order () { return CblasColMajor; }
+  constexpr CBLAS_LAYOUT layout () { return CblasColMajor; }
 
   /// get tensor size
   size_t size () const { return extent_[N-1]*stride_[N-1]; }
@@ -322,7 +322,7 @@ public:
 
   size_t rank () { return extent_.size(); }
 
-  constexpr CBLAS_LAYOUT order () { return CblasRowMajor; }
+  constexpr CBLAS_LAYOUT layout () { return CblasRowMajor; }
 
   /// get tensor size
   size_t size () const { return extent_.empty() ? 0ul : extent_.front()*stride_.front(); }
@@ -448,7 +448,7 @@ public:
 
   size_t rank () { return extent_.size(); }
 
-  constexpr CBLAS_LAYOUT order () { return CblasColMajor; }
+  constexpr CBLAS_LAYOUT layout () { return CblasColMajor; }
 
   /// get tensor size
   size_t size () const { return extent_.empty() ? 0ul : extent_.back()*stride_.back(); }

@@ -52,86 +52,86 @@ make_cslice (
 
 // For Tensor
 
-template<typename T, size_t N, CBLAS_LAYOUT Order>
-TensorView<T*,N,Order> make_slice (
-        Tensor<T,N,Order>& x,
-  const typename Tensor<T,N,Order>::index_type& lower,
-  const typename Tensor<T,N,Order>::index_type& upper)
+template<typename T, size_t N, CBLAS_LAYOUT Layout>
+TensorView<T*,N,Layout> make_slice (
+        Tensor<T,N,Layout>& x,
+  const typename Tensor<T,N,Layout>::index_type& lower,
+  const typename Tensor<T,N,Layout>::index_type& upper)
 {
-  typename TensorView<T*,N,Order>::extent_type ext;
+  typename TensorView<T*,N,Layout>::extent_type ext;
   for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;
-  return TensorView<T*,N,Order>(x.data()+x.ordinal(lower),ext,x.stride());
+  return TensorView<T*,N,Layout>(x.data()+x.ordinal(lower),ext,x.stride());
 }
 
-template<typename T, size_t N, CBLAS_LAYOUT Order>
-TensorView<const T*,N,Order> make_slice (
-  const Tensor<T,N,Order>& x,
-  const typename Tensor<T,N,Order>::index_type& lower,
-  const typename Tensor<T,N,Order>::index_type& upper)
+template<typename T, size_t N, CBLAS_LAYOUT Layout>
+TensorView<const T*,N,Layout> make_slice (
+  const Tensor<T,N,Layout>& x,
+  const typename Tensor<T,N,Layout>::index_type& lower,
+  const typename Tensor<T,N,Layout>::index_type& upper)
 {
-  typename TensorView<const T*,N,Order>::extent_type ext;
+  typename TensorView<const T*,N,Layout>::extent_type ext;
   for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;
-  return TensorView<const T*,N,Order>(x.data()+x.ordinal(lower),ext,x.stride());
+  return TensorView<const T*,N,Layout>(x.data()+x.ordinal(lower),ext,x.stride());
 }
 
 /// force to make const_slice
-template<typename T, size_t N, CBLAS_LAYOUT Order>
-TensorView<const T*,N,Order> make_cslice (
-  const Tensor<T,N,Order>& x,
-  const typename Tensor<T,N,Order>::index_type& lower,
-  const typename Tensor<T,N,Order>::index_type& upper)
+template<typename T, size_t N, CBLAS_LAYOUT Layout>
+TensorView<const T*,N,Layout> make_cslice (
+  const Tensor<T,N,Layout>& x,
+  const typename Tensor<T,N,Layout>::index_type& lower,
+  const typename Tensor<T,N,Layout>::index_type& upper)
 {
-  typename TensorView<const T*,N,Order>::extent_type ext;
+  typename TensorView<const T*,N,Layout>::extent_type ext;
   for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;
-  return TensorView<const T*,N,Order>(x.data()+x.ordinal(lower),ext,x.stride());
+  return TensorView<const T*,N,Layout>(x.data()+x.ordinal(lower),ext,x.stride());
 }
 
 // For TensorWrapper
 
-template<typename T, size_t N, CBLAS_LAYOUT Order>
-TensorView<T*,N,Order> make_slice (
-        TensorWrapper<T*,N,Order>& x,
-  const typename TensorWrapper<T*,N,Order>::index_type& lower,
-  const typename TensorWrapper<T*,N,Order>::index_type& upper)
+template<typename T, size_t N, CBLAS_LAYOUT Layout>
+TensorView<T*,N,Layout> make_slice (
+        TensorWrapper<T*,N,Layout>& x,
+  const typename TensorWrapper<T*,N,Layout>::index_type& lower,
+  const typename TensorWrapper<T*,N,Layout>::index_type& upper)
 {
-  typename TensorView<T*,N,Order>::extent_type ext;
+  typename TensorView<T*,N,Layout>::extent_type ext;
   for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;
-  return TensorView<T*,N,Order>(x.data()+x.ordinal(lower),ext,x.stride());
+  return TensorView<T*,N,Layout>(x.data()+x.ordinal(lower),ext,x.stride());
 }
 
-template<typename T, size_t N, CBLAS_LAYOUT Order>
-TensorView<const T*,N,Order> make_slice (
-  const TensorWrapper<T*,N,Order>& x,
-  const typename TensorWrapper<T*,N,Order>::index_type& lower,
-  const typename TensorWrapper<T*,N,Order>::index_type& upper)
+template<typename T, size_t N, CBLAS_LAYOUT Layout>
+TensorView<const T*,N,Layout> make_slice (
+  const TensorWrapper<T*,N,Layout>& x,
+  const typename TensorWrapper<T*,N,Layout>::index_type& lower,
+  const typename TensorWrapper<T*,N,Layout>::index_type& upper)
 {
-  typename TensorView<const T*,N,Order>::extent_type ext;
+  typename TensorView<const T*,N,Layout>::extent_type ext;
   for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;
-  return TensorView<const T*,N,Order>(x.data()+x.ordinal(lower),ext,x.stride());
-}
-
-/// force to make const_slice
-template<typename T, size_t N, CBLAS_LAYOUT Order>
-TensorView<const T*,N,Order> make_cslice (
-  const TensorWrapper<T*,N,Order>& x,
-  const typename TensorWrapper<T*,N,Order>::index_type& lower,
-  const typename TensorWrapper<T*,N,Order>::index_type& upper)
-{
-  typename TensorView<const T*,N,Order>::extent_type ext;
-  for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;
-  return TensorView<const T*,N,Order>(x.data()+x.ordinal(lower),ext,x.stride());
+  return TensorView<const T*,N,Layout>(x.data()+x.ordinal(lower),ext,x.stride());
 }
 
 /// force to make const_slice
-template<typename T, size_t N, CBLAS_LAYOUT Order>
-TensorView<const T*,N,Order> make_cslice (
-  const TensorWrapper<const T*,N,Order>& x,
-  const typename TensorWrapper<const T*,N,Order>::index_type& lower,
-  const typename TensorWrapper<const T*,N,Order>::index_type& upper)
+template<typename T, size_t N, CBLAS_LAYOUT Layout>
+TensorView<const T*,N,Layout> make_cslice (
+  const TensorWrapper<T*,N,Layout>& x,
+  const typename TensorWrapper<T*,N,Layout>::index_type& lower,
+  const typename TensorWrapper<T*,N,Layout>::index_type& upper)
 {
-  typename TensorView<const T*,N,Order>::extent_type ext;
+  typename TensorView<const T*,N,Layout>::extent_type ext;
   for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;
-  return TensorView<const T*,N,Order>(x.data()+x.ordinal(lower),ext,x.stride());
+  return TensorView<const T*,N,Layout>(x.data()+x.ordinal(lower),ext,x.stride());
+}
+
+/// force to make const_slice
+template<typename T, size_t N, CBLAS_LAYOUT Layout>
+TensorView<const T*,N,Layout> make_cslice (
+  const TensorWrapper<const T*,N,Layout>& x,
+  const typename TensorWrapper<const T*,N,Layout>::index_type& lower,
+  const typename TensorWrapper<const T*,N,Layout>::index_type& upper)
+{
+  typename TensorView<const T*,N,Layout>::extent_type ext;
+  for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;
+  return TensorView<const T*,N,Layout>(x.data()+x.ordinal(lower),ext,x.stride());
 }
 
 } // namespace btas

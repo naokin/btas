@@ -9,18 +9,21 @@
 namespace btas {
 
 /// This class will be specialized for Iterator derived from consecutive data, s.t. 'T*' and 'const T*'
-template<class Iterator, size_t N, CBLAS_LAYOUT Order = CblasRowMajor> class TensorWrapper;
+template<class Iterator, size_t N, CBLAS_LAYOUT Layout = CblasRowMajor> class TensorWrapper;
 
 /// Specialized TensorView class wrapping a pointer to "consecutive" data
 /// In principle, this class provides a faster data access than the original TensorView class
-template<typename T, size_t N, CBLAS_LAYOUT Order>
-class TensorWrapper<T*,N,Order> : public TensorBase<T,N,Order> {
+template<typename T, size_t N, CBLAS_LAYOUT Layout>
+class TensorWrapper<T*,N,Layout> : public TensorBase<T,N,Layout> {
 
-  typedef TensorBase<T,N,Order> base_;
+  typedef TensorBase<T,N,Layout> base_;
 
   using base_::tn_stride_;
   using base_::start_;
   using base_::finish_;
+
+  // enables conversion from non-const wrapper to const wrapper
+  friend class TensorWrapper<const T*,N,Layout>;
 
 public:
 
@@ -66,7 +69,7 @@ public:
 
   /// (shallow) copy from a Tensor object
   explicit
-  TensorWrapper (Tensor<T,N,Order>& x) : base_(x) { }
+  TensorWrapper (Tensor<T,N,Layout>& x) : base_(x) { }
 
   /// destructor
  ~TensorWrapper () { }
@@ -82,14 +85,14 @@ public:
     BTAS_assert(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorWrapper::assign, extent must be the same.");
     //
     index_type index_;
-    IndexedFor<1,N,Order>::loop(this->extent(),index_,std::bind(
+    IndexedFor<1,N,Layout>::loop(this->extent(),index_,std::bind(
       detail::AssignTensor_<index_type,Arbitral,TensorWrapper>,std::placeholders::_1,std::cref(x),std::ref(*this)));
     //
     return *this;
   }
 
   /// from a Tensor or TensorWrapper object
-  TensorWrapper& operator= (const TensorBase<T,N,Order>& x)
+  TensorWrapper& operator= (const TensorBase<T,N,Layout>& x)
   {
     BTAS_assert(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorWrapper::assign, extent must be the same.");
     //
@@ -131,15 +134,15 @@ public:
     std::swap(finish_,x.finish_);
   }
 
-}; // class TensorWrapper<T*,N,Order>
+}; // class TensorWrapper<T*,N,Layout>
 
 // ==================================================================================================== 
 
 /// Specialized TensorView class wrapping a const pointer to "consecutive" data
-template<typename T, size_t N, CBLAS_LAYOUT Order>
-class TensorWrapper<const T*,N,Order> : public TensorBase<const T,N,Order> {
+template<typename T, size_t N, CBLAS_LAYOUT Layout>
+class TensorWrapper<const T*,N,Layout> : public TensorBase<const T,N,Layout> {
 
-  typedef TensorBase<T,N,Order> base_;
+  typedef TensorBase<const T,N,Layout> base_;
 
   using base_::tn_stride_;
   using base_::start_;
@@ -188,11 +191,21 @@ public:
 
   /// from non-const TensorWrapper
   explicit
-  TensorWrapper (const TensorWrapper<T*,N,Order>& x) : base_(x) { }
+  TensorWrapper (const TensorWrapper<T*,N,Layout>& x)
+  {
+    tn_stride_ = x.tn_stride_;
+    start_ = x.start_;
+    finish_ = x.finish_;
+  }
 
   /// (shallow) copy from a Tensor object
   explicit
-  TensorWrapper (const Tensor<T,N,Order>& x) : base_(x) { }
+  TensorWrapper (const Tensor<T,N,Layout>& x)
+  {
+    tn_stride_ = x.tn_stride_;
+    start_ = x.start_;
+    finish_ = x.finish_;
+  }
 
   /// destructor
  ~TensorWrapper () { }
@@ -230,7 +243,7 @@ public:
     std::swap(finish_,x.finish_);
   }
 
-}; // class TensorWrapper<const T*,N,Order>
+}; // class TensorWrapper<const T*,N,Layout>
 
 } // namespace btas
 

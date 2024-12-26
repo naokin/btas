@@ -10,11 +10,11 @@
 namespace btas {
 
 /// Fwd. decl.
-template<class Iterator, size_t N, CBLAS_LAYOUT Order = CblasRowMajor> class TensorIterator;
+template<class Iterator, size_t N, CBLAS_LAYOUT Layout = CblasRowMajor> class TensorIterator;
 
 namespace detail {
 
-template<class Iterator, size_t N, CBLAS_LAYOUT Order> struct TensorIterator_helper;
+template<class Iterator, size_t N, CBLAS_LAYOUT Layout> struct TensorIterator_helper;
 
 /// For Row-Major stride
 template<class Iterator, size_t N>
@@ -182,10 +182,10 @@ struct __TensorIteratorConst<__gnu_cxx::__normal_iterator<const T*,Container>>
 { typedef __gnu_cxx::__normal_iterator<const T*,Container> type; };
 
 /// Specialized for a TensorIterator, to instantiate __TensorIteratorConst recursively
-template<class Iter, size_t N, CBLAS_LAYOUT Order>
-struct __TensorIteratorConst<TensorIterator<Iter,N,Order>>
+template<class Iter, size_t N, CBLAS_LAYOUT Layout>
+struct __TensorIteratorConst<TensorIterator<Iter,N,Layout>>
 {
-  typedef TensorIterator<typename __TensorIteratorConst<Iter>::type,N,Order> type;
+  typedef TensorIterator<typename __TensorIteratorConst<Iter>::type,N,Layout> type;
 };
 
 /// Get iterator type
@@ -220,10 +220,10 @@ struct __TensorIteratorRemoveConst<__gnu_cxx::__normal_iterator<const T*,Contain
 { typedef __gnu_cxx::__normal_iterator<T*,Container> type; };
 
 /// Specialized for a TensorIterator, to instantiate __TensorIteratorRemoveConst recursively
-template<class Iter, size_t N, CBLAS_LAYOUT Order>
-struct __TensorIteratorRemoveConst<TensorIterator<Iter,N,Order>>
+template<class Iter, size_t N, CBLAS_LAYOUT Layout>
+struct __TensorIteratorRemoveConst<TensorIterator<Iter,N,Layout>>
 {
-  typedef TensorIterator<typename __TensorIteratorRemoveConst<Iter>::type,N,Order> type;
+  typedef TensorIterator<typename __TensorIteratorRemoveConst<Iter>::type,N,Layout> type;
 };
 
 } // namespace detail
@@ -231,18 +231,18 @@ struct __TensorIteratorRemoveConst<TensorIterator<Iter,N,Order>>
 /// A tensor wrapper of iterator to provide a multi-dimensional iterator (similar to nditer in NumPy)
 /// \tparam Iterator an iterator type, e.g. T*, std::vector<T>::iterator, etc...
 /// \tparam N rank of tensor
-/// \tparam Order storage ordering, which affects increment/decrement operations
-template<class Iterator, size_t N, CBLAS_LAYOUT Order>
+/// \tparam Layout storage ordering, which affects increment/decrement operations
+template<class Iterator, size_t N, CBLAS_LAYOUT Layout>
 class TensorIterator {
 
   typedef std::iterator_traits<Iterator> Traits;
 
-  typedef TensorStride<N,Order> Stride;
+  typedef TensorStride<N,Layout> Stride;
 
-  typedef detail::TensorIterator_helper<Iterator,N,Order> Helper;
+  typedef detail::TensorIterator_helper<Iterator,N,Layout> Helper;
 
   // enable conversion from iterator to const_iterator
-  friend class TensorIterator<typename detail::__TensorIteratorConst<Iterator>::type,N,Order>;
+  friend class TensorIterator<typename detail::__TensorIteratorConst<Iterator>::type,N,Layout>;
 
 public:
 
@@ -309,9 +309,9 @@ public:
   }
 
   /// Copy constructor
-  /// NOTE: this could give an error at compile time if Tensor<Arbitral,N,Order> is either this type or friend (i.e. non-const iterator).
+  /// NOTE: this could give an error at compile time if Tensor<Arbitral,N,Layout> is either this type or friend (i.e. non-const iterator).
   template<class Arbitral>
-  TensorIterator (const TensorIterator<Arbitral,N,Order>& x)
+  TensorIterator (const TensorIterator<Arbitral,N,Layout>& x)
   : start_(x.start_), current_(x.current_), index_(x.index_), stride_holder_(x.stride_holder_), stride_hack_(x.stride_hack_)
   { }
 

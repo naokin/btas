@@ -1,6 +1,8 @@
 #ifndef __BTAS_LAPACK_HEADER_INCLUDED
 #define __BTAS_LAPACK_HEADER_INCLUDED
 
+#include <mkl.h>
+
 #include <lapack/gesvd_impl.h>
 #include <lapack/geqrf_impl.h>
 #include <lapack/orgqr_impl.h>

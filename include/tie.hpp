@@ -12,17 +12,17 @@ namespace btas {
 /// tie index, i.e. x[i,j,k,j] -> y[i,j,k]
 /// x[i,j,k,l], idx = {0,1,2,1} -> y[i,j,k] : x[i,j,k,j]
 /// x[i,j,k,l], idx = {0,2,1,2} -> y[i,k,l] : x[i,l,k,l]
-template<typename T, size_t M, size_t N, CBLAS_LAYOUT Order, class Index>
-void tie (const Tensor<T,M,Order>& x, const Index& idx, Tensor<T,N,Order>& y)
+template<typename T, size_t M, size_t N, CBLAS_LAYOUT Layout, class Index>
+void tie (const Tensor<T,M,Layout>& x, const Index& idx, Tensor<T,N,Layout>& y)
 {
 #ifdef _DEBUG
   assert(idx.size() == x.rank());
 #endif
 
-  typename Tensor<T,N,Order>::extent_type extY;
+  typename Tensor<T,N,Layout>::extent_type extY;
   std::fill(extY.begin(),extY.end(),0);
 
-  typename Tensor<T,N,Order>::stride_type strY;
+  typename Tensor<T,N,Layout>::stride_type strY;
   std::fill(strY.begin(),strY.end(),0);
 
   for(size_t i = 0; i < idx.size(); ++i) {

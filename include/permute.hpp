@@ -22,54 +22,54 @@ inline Array make_permute (const Array& a_, const Index& idx)
 }
 
 /// Specialized for Tensor
-template<typename T, size_t N, CBLAS_LAYOUT Order, class Index>
-Tensor<T,N,Order> make_permute (const Tensor<T,N,Order>& x, const Index& idx)
+template<typename T, size_t N, CBLAS_LAYOUT Layout, class Index>
+Tensor<T,N,Layout> make_permute (const Tensor<T,N,Layout>& x, const Index& idx)
 {
-  Tensor<T,N,Order> y(make_permute(x.extent(),idx));
-  reindex<T,N,Order>(x.data(),y.data(),make_permute(x.stride(),idx),y.extent());
+  Tensor<T,N,Layout> y(make_permute(x.extent(),idx));
+  reindex<T,N,Layout>(x.data(),y.data(),make_permute(x.stride(),idx),y.extent());
   return y;
 }
 
 /// Specialized for TensorWrapper
-template<typename T, size_t N, CBLAS_LAYOUT Order, class Index>
-Tensor<T,N,Order> make_permute (const TensorWrapper<T*,N,Order>& x, const Index& idx)
+template<typename T, size_t N, CBLAS_LAYOUT Layout, class Index>
+Tensor<T,N,Layout> make_permute (const TensorWrapper<T*,N,Layout>& x, const Index& idx)
 {
-  Tensor<T,N,Order> y(make_permute(x.extent(),idx));
-  reindex<T,N,Order>(x.data(),y.data(),make_permute(x.stride(),idx),y.extent());
+  Tensor<T,N,Layout> y(make_permute(x.extent(),idx));
+  reindex<T,N,Layout>(x.data(),y.data(),make_permute(x.stride(),idx),y.extent());
   return y;
 }
 
 /// Specialized for TensorWrapper
-template<typename T, size_t N, CBLAS_LAYOUT Order, class Index>
-Tensor<T,N,Order> make_permute (const TensorWrapper<const T*,N,Order>& x, const Index& idx)
+template<typename T, size_t N, CBLAS_LAYOUT Layout, class Index>
+Tensor<T,N,Layout> make_permute (const TensorWrapper<const T*,N,Layout>& x, const Index& idx)
 {
-  Tensor<T,N,Order> y(make_permute(x.extent(),idx));
-  reindex<T,N,Order>(x.data(),y.data(),make_permute(x.stride(),idx),y.extent());
+  Tensor<T,N,Layout> y(make_permute(x.extent(),idx));
+  reindex<T,N,Layout>(x.data(),y.data(),make_permute(x.stride(),idx),y.extent());
   return y;
 }
 
 /// Specialized for TensorView
-template<class Iter, size_t N, CBLAS_LAYOUT Order, class Index>
-TensorView<TensorIterator<Iter,N,Order>,N,Order> make_permute (const TensorView<Iter,N,Order>& x, const Index& idx)
+template<class Iter, size_t N, CBLAS_LAYOUT Layout, class Index>
+TensorView<TensorIterator<Iter,N,Layout>,N,Layout> make_permute (const TensorView<Iter,N,Layout>& x, const Index& idx)
 {
-  return TensorView<TensorIterator<Iter,N,Order>,N,Order>(x.begin(),make_permute(x.extent(),idx),make_permute(x.stride(),idx));
+  return TensorView<TensorIterator<Iter,N,Layout>,N,Layout>(x.begin(),make_permute(x.extent(),idx),make_permute(x.stride(),idx));
 }
 
 /// permute self
-template<typename T, size_t N, CBLAS_LAYOUT Order, class Index>
-void permute (Tensor<T,N,Order>& x, const Index& idx)
+template<typename T, size_t N, CBLAS_LAYOUT Layout, class Index>
+void permute (Tensor<T,N,Layout>& x, const Index& idx)
 {
-  Tensor<T,N,Order> y(make_permute(x.extent(),idx));
-  reindex<T,N,Order>(x.data(),y.data(),make_permute(x.stride(),idx),y.extent());
+  Tensor<T,N,Layout> y(make_permute(x.extent(),idx));
+  reindex<T,N,Layout>(x.data(),y.data(),make_permute(x.stride(),idx),y.extent());
   x.swap(y);
 }
 
 /// permute self
-template<typename T, size_t N, CBLAS_LAYOUT Order, class Index>
-void permute (TensorWrapper<T*,N,Order>& x, const Index& idx)
+template<typename T, size_t N, CBLAS_LAYOUT Layout, class Index>
+void permute (TensorWrapper<T*,N,Layout>& x, const Index& idx)
 {
-  Tensor<T,N,Order> y(make_permute(x.extent(),idx));
-  reindex<T,N,Order>(x.data(),y.data(),make_permute(x.stride(),idx),y.extent());
+  Tensor<T,N,Layout> y(make_permute(x.extent(),idx));
+  reindex<T,N,Layout>(x.data(),y.data(),make_permute(x.stride(),idx),y.extent());
   x = y;
 }
 
