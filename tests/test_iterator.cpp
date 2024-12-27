@@ -30,7 +30,7 @@ int main ()
 
   Tensor<double,4>::index_type lbn = { 1, 1, 1, 1 };
   Tensor<double,4>::index_type idx = { 0, 0, 0, 0 };
-  TensorIterator<double*,4> it(A.data()+A.ordinal(lbn),idx,shape(2,2,2,2),A.stride());
+  TensorViewIterator<double*,4> it(A.data()+A.ordinal(lbn),idx,shape(2,2,2,2),A.stride());
 
   std::cout << "Slice of A" << std::endl;
   for(size_t i = 0; i < 4; ++i) {

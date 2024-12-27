@@ -5,17 +5,17 @@
 #include <functional>
 
 #include <Tensor.hpp>
-#include <TensorIterator.hpp>
+#include <TensorViewIterator.hpp>
 
 #include <BTAS_assert.h>
 
 namespace btas {
 
-/// Tensor object wrapping TensorIterator
+/// Tensor object wrapping TensorViewIterator
 template<class Iterator, size_t N, CBLAS_LAYOUT Layout = CblasRowMajor>
 class TensorView {
 
-  typedef TensorStride<N,Layout> Stride;
+  typedef TensorStride<N,Layout> tn_stride_type;
 
   typedef std::iterator_traits<Iterator> Traits;
 
@@ -31,17 +31,17 @@ public:
 
   typedef const pointer const_pointer;
 
-  typedef typename Stride::extent_type extent_type;
+  typedef typename tn_stride_type::extent_type extent_type;
 
-  typedef typename Stride::stride_type stride_type;
+  typedef typename tn_stride_type::stride_type stride_type;
 
-  typedef typename Stride::index_type index_type;
+  typedef typename tn_stride_type::index_type index_type;
 
-  typedef typename Stride::ordinal_type ordinal_type;
+  typedef typename tn_stride_type::ordinal_type ordinal_type;
 
-  typedef TensorIterator<Iterator,N,Layout> iterator;
+  typedef TensorViewIterator<Iterator,N,Layout> iterator;
 
-  typedef TensorIterator<typename detail::__TensorIteratorConst<Iterator>::type,N,Layout> const_iterator;
+  typedef TensorViewIterator<typename detail::__TensorViewIteratorConst<Iterator>::type,N,Layout> const_iterator;
 
   // Constructors
 
@@ -59,7 +59,7 @@ public:
 
   /// Shallow copy
   TensorView (const TensorView& x)
-  : start_(x.start_), stride_holder_(x.stride_holder_), stride_hack_(x.stride_hack_)
+  : start_(x.start_), tn_stride_(x.tn_stride_), stride_hack_(x.stride_hack_)
   { }
 
   /// destructor
@@ -85,19 +85,19 @@ public:
   /// reset the iterator
   void reset (Iterator first, const extent_type& ext)
   {
-    stride_holder_.set(ext);
-    stride_hack_ = stride_holder_.stride();
+    tn_stride_.set(ext);
+    stride_hack_ = tn_stride_.stride();
     index_type idx; for(size_t i = 0; i < N; ++i) idx[i] = 0;
-    start_ = iterator(first,idx,stride_holder_.extent(),stride_hack_);
+    start_ = iterator(first,idx,tn_stride_.extent(),stride_hack_);
   }
 
   /// reset the iterator with stride hack
   void reset (Iterator first, const extent_type& ext, const stride_type& str)
   {
-    stride_holder_.set(ext);
+    tn_stride_.set(ext);
     stride_hack_ = str;
     index_type idx; for(size_t i = 0; i < N; ++i) idx[i] = 0;
-    start_ = iterator(first,idx,stride_holder_.extent(),stride_hack_);
+    start_ = iterator(first,idx,tn_stride_.extent(),stride_hack_);
   }
 
   // const expression
@@ -120,19 +120,19 @@ public:
   bool empty () const { return (this->size() == 0); }
 
   /// like vector<T>::size()
-  size_t size () const { return stride_holder_.size(); }
+  size_t size () const { return tn_stride_.size(); }
 
   /// return extent object
-  const extent_type& extent () const { return stride_holder_.extent(); }
+  const extent_type& extent () const { return tn_stride_.extent(); }
 
   /// return extent for rank i
-  const typename extent_type::value_type& extent (size_t i) const { return stride_holder_.extent(i); }
+  const typename extent_type::value_type& extent (size_t i) const { return tn_stride_.extent(i); }
 
   /// return stride object
-  const stride_type& stride () const { return stride_holder_.stride(); }
+  const stride_type& stride () const { return tn_stride_.stride(); }
 
   /// return stride for rank i
-  const typename stride_type::value_type& stride (size_t i) const { return stride_holder_.stride(i); }
+  const typename stride_type::value_type& stride (size_t i) const { return tn_stride_.stride(i); }
 
   // iterator
 
@@ -143,7 +143,7 @@ public:
 
   /// iterator to end
   iterator end () {
-    return start_+stride_holder_.size();
+    return start_+tn_stride_.size();
   }
 
   /// iterator to begin with const-qualifier
@@ -153,16 +153,16 @@ public:
 
   /// iterator to end with const-qualifier
   const_iterator end () const {
-    return start_+stride_holder_.size();
+    return start_+tn_stride_.size();
   }
 
   // access
 
   /// convert tensor index to ordinal index
-  ordinal_type ordinal (const index_type& idx) const { return stride_holder_.ordinal(idx); }
+  ordinal_type ordinal (const index_type& idx) const { return tn_stride_.ordinal(idx); }
 
   /// convert ordinal index to tensor index
-  index_type index (const ordinal_type& ord) const { return stride_holder_.index(ord); }
+  index_type index (const ordinal_type& ord) const { return tn_stride_.index(ord); }
 
   /// access by ordinal index
   reference operator[] (size_t i)
@@ -230,7 +230,7 @@ public:
   void swap (TensorView& x)
   {
     std::swap(start_,x.start_);
-    std::swap(stride_holder_,x.stride_holder_);
+    std::swap(tn_stride_,x.tn_stride_);
     std::swap(stride_hack_,x.stride_hack_);
   }
 
@@ -240,7 +240,7 @@ private:
   iterator start_;
 
   /// stride of a tensor view
-  Stride stride_holder_;
+  tn_stride_type tn_stride_;
 
   /// stride to hack
   stride_type stride_hack_;

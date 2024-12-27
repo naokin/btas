@@ -93,7 +93,8 @@ public:
   template<class Arbitral>
   Tensor (const Arbitral& x)
   {
-    base_::reset_tn_stride_(x.extent());
+//  base_::reset_tn_stride_(x.extent());
+    base_::reset_tn_stride_(convert_to_array<typename extent_type::value_type,N>(x.extent()));
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
@@ -149,7 +150,8 @@ public:
   template<class Arbitral>
   Tensor& operator= (const Arbitral& x)
   {
-    base_::reset_tn_stride_(x.extent());
+//  base_::reset_tn_stride_(x.extent());
+    base_::reset_tn_stride_(convert_to_array<typename extent_type::value_type,N>(x.extent()));
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
@@ -344,7 +346,8 @@ public:
   template<class Arbitral>
   Tensor (const Arbitral& x)
   {
-    base_::reset_tn_stride_(x.extent());
+//  base_::reset_tn_stride_(x.extent());
+    base_::reset_tn_stride_(convert_to_vector<typename extent_type::value_type>(x.extent()));
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
@@ -398,7 +401,8 @@ public:
   template<class Arbitral>
   Tensor& operator= (const Arbitral& x)
   {
-    base_::reset_tn_stride_(x.extent());
+//  base_::reset_tn_stride_(x.extent());
+    base_::reset_tn_stride_(convert_to_vector<typename extent_type::value_type>(x.extent()));
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();

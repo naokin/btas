@@ -72,9 +72,9 @@ public:
 
   // static function to return const expression
 
-  constexpr size_t rank () { return N; }
+  static constexpr size_t rank () { return N; }
 
-  constexpr CBLAS_LAYOUT layout () { return CblasRowMajor; }
+  static constexpr CBLAS_LAYOUT layout () { return CblasRowMajor; }
 
   /// get tensor size
   size_t size () const { return extent_[0]*stride_[0]; }
@@ -92,7 +92,8 @@ public:
   const typename stride_type::value_type& stride (size_t i) const { return stride_[i]; }
 
   /// tensor index to ordinal index (calculated in term of 'stride_')
-  ordinal_type ordinal (const index_type& idx) const
+  template<class Index>
+  ordinal_type ordinal (const Index& idx) const
   {
     ordinal_type ord = 0; for(size_t i = 0; i < N; ++i) ord += idx[i]*stride_[i];
     return ord;
@@ -195,9 +196,9 @@ public:
 
   // static function to return const expression
 
-  constexpr size_t rank () { return N; }
+  static constexpr size_t rank () { return N; }
 
-  constexpr CBLAS_LAYOUT layout () { return CblasColMajor; }
+  static constexpr CBLAS_LAYOUT layout () { return CblasColMajor; }
 
   /// get tensor size
   size_t size () const { return extent_[N-1]*stride_[N-1]; }
@@ -215,7 +216,8 @@ public:
   const typename stride_type::value_type& stride (size_t i) const { return stride_[i]; }
 
   /// tensor index to ordinal index (calculated in term of 'stride_')
-  ordinal_type ordinal (const index_type& idx) const
+  template<class Index>
+  ordinal_type ordinal (const Index& idx) const
   {
     ordinal_type ord = 0; for(size_t i = 0; i < N; ++i) ord += idx[i]*stride_[i];
     return ord;
@@ -322,7 +324,7 @@ public:
 
   size_t rank () { return extent_.size(); }
 
-  constexpr CBLAS_LAYOUT layout () { return CblasRowMajor; }
+  static constexpr CBLAS_LAYOUT layout () { return CblasRowMajor; }
 
   /// get tensor size
   size_t size () const { return extent_.empty() ? 0ul : extent_.front()*stride_.front(); }
@@ -340,7 +342,8 @@ public:
   const typename stride_type::value_type& stride (size_t i) const { return stride_[i]; }
 
   /// tensor index to ordinal index (calculated in term of 'stride_')
-  ordinal_type ordinal (const index_type& idx) const
+  template<class Index>
+  ordinal_type ordinal (const Index& idx) const
   {
     ordinal_type ord = 0; for(size_t i = 0; i < idx.size(); ++i) ord += idx[i]*stride_[i];
     return ord;
@@ -448,7 +451,7 @@ public:
 
   size_t rank () { return extent_.size(); }
 
-  constexpr CBLAS_LAYOUT layout () { return CblasColMajor; }
+  static constexpr CBLAS_LAYOUT layout () { return CblasColMajor; }
 
   /// get tensor size
   size_t size () const { return extent_.empty() ? 0ul : extent_.back()*stride_.back(); }
@@ -466,7 +469,8 @@ public:
   const typename stride_type::value_type& stride (size_t i) const { return stride_[i]; }
 
   /// tensor index to ordinal index (calculated in term of 'stride_')
-  ordinal_type ordinal (const index_type& idx) const
+  template<class Index>
+  ordinal_type ordinal (const Index& idx) const
   {
     ordinal_type ord = 0; for(size_t i = 0; i < idx.size(); ++i) ord += idx[i]*stride_[i];
     return ord;

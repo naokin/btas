@@ -5,11 +5,12 @@ TODO: update list
 [o] Tensor.hpp
 [o] TensorWrapper.hpp
 [-] TensorView.hpp
-[-] TensorViewIterator.hpp
+[o] TensorViewIterator.hpp
 [/] TensorBlas.hpp
 [-] TensorLapack.hpp
 [-] TensorContract.hpp
 [-] TensorCore.hpp
+[/] IndexedFor.hpp --- specialization for variable-rank tensor
 
 [o] make_array.hpp
 [?] permute.hpp

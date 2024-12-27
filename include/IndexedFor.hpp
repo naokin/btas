@@ -19,7 +19,7 @@ namespace btas {
 template<size_t I, size_t N, CBLAS_LAYOUT Layout> struct IndexedFor;
 
 template<size_t I, size_t N>
-struct IndexedFor<I, N, CblasRowMajor> {
+struct IndexedFor<I,N,CblasRowMajor> {
   /// loop and examine op(index)
   template<class Ext_, class Idx_, class Op_>
   static void loop (const Ext_& extent, Idx_& index, Op_ op)
@@ -30,7 +30,7 @@ struct IndexedFor<I, N, CblasRowMajor> {
 };
 
 template<size_t N>
-struct IndexedFor<1, N, CblasRowMajor> {
+struct IndexedFor<1,N,CblasRowMajor> {
   /// loop and examine op(index)
   template<class Ext_, class Idx_, class Op_>
   static void loop (const Ext_& extent, Idx_& index, Op_ op)
@@ -41,7 +41,7 @@ struct IndexedFor<1, N, CblasRowMajor> {
 };
 
 template<size_t N>
-struct IndexedFor<N, N, CblasRowMajor> {
+struct IndexedFor<N,N,CblasRowMajor> {
   /// loop and examine op(index)
   template<class Ext_, class Idx_, class Op_>
   static void loop (const Ext_& extent, Idx_& index, Op_ op)
@@ -51,7 +51,7 @@ struct IndexedFor<N, N, CblasRowMajor> {
 };
 
 template<size_t I, size_t N>
-struct IndexedFor<I, N, CblasColMajor> {
+struct IndexedFor<I,N,CblasColMajor> {
   /// loop and examine op(index)
   template<class Ext_, class Idx_, class Op_>
   static void loop (const Ext_& extent, Idx_& index, Op_ op)
@@ -62,7 +62,7 @@ struct IndexedFor<I, N, CblasColMajor> {
 };
 
 template<size_t N>
-struct IndexedFor<1, N, CblasColMajor> {
+struct IndexedFor<1,N,CblasColMajor> {
   /// loop and examine op(index)
   template<class Ext_, class Idx_, class Op_>
   static void loop (const Ext_& extent, Idx_& index, Op_ op)
@@ -73,7 +73,7 @@ struct IndexedFor<1, N, CblasColMajor> {
 };
 
 template<size_t N>
-struct IndexedFor<N, N, CblasColMajor> {
+struct IndexedFor<N,N,CblasColMajor> {
   /// loop and examine op(index)
   template<class Ext_, class Idx_, class Op_>
   static void loop (const Ext_& extent, Idx_& index, Op_ op)

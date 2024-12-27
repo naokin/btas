@@ -50,9 +50,9 @@ Tensor<T,N,Layout> make_permute (const TensorWrapper<const T*,N,Layout>& x, cons
 
 /// Specialized for TensorView
 template<class Iter, size_t N, CBLAS_LAYOUT Layout, class Index>
-TensorView<TensorIterator<Iter,N,Layout>,N,Layout> make_permute (const TensorView<Iter,N,Layout>& x, const Index& idx)
+TensorView<TensorViewIterator<Iter,N,Layout>,N,Layout> make_permute (const TensorView<Iter,N,Layout>& x, const Index& idx)
 {
-  return TensorView<TensorIterator<Iter,N,Layout>,N,Layout>(x.begin(),make_permute(x.extent(),idx),make_permute(x.stride(),idx));
+  return TensorView<TensorViewIterator<Iter,N,Layout>,N,Layout>(x.begin(),make_permute(x.extent(),idx),make_permute(x.stride(),idx));
 }
 
 /// permute self

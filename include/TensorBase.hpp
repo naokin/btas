@@ -71,9 +71,9 @@ public:
 
   // static function to return const expression
 
-  constexpr size_t rank () { return N; }
+  static constexpr size_t rank () { return N; }
 
-  constexpr CBLAS_LAYOUT layout () { return Layout; }
+  static constexpr CBLAS_LAYOUT layout () { return Layout; }
 
   // ---------------------------------------------------------------------------------------------------- 
 
@@ -116,7 +116,8 @@ public:
   // access
 
   /// convert tensor index to ordinal index
-  ordinal_type ordinal (const index_type& idx) const { return tn_stride_.ordinal(idx); }
+  template<class Index>
+  ordinal_type ordinal (const Index& idx) const { return tn_stride_.ordinal(idx); }
 
   /// convert ordinal index to tensor index
   index_type index (const ordinal_type& ord) const { return tn_stride_.index(ord); }
@@ -130,11 +131,13 @@ public:
   { return start_[i]; }
 
   /// access by tensor index
-  reference operator() (const index_type& idx)
+  template<class Index>
+  reference operator() (const Index& idx)
   { return start_[this->ordinal(idx)]; }
 
   /// access by tensor index with const-qualifier
-  const_reference operator() (const index_type& idx) const
+  template<class Index>
+  const_reference operator() (const Index& idx) const
   { return start_[this->ordinal(idx)]; }
 
   /// access by tensor index
@@ -148,7 +151,8 @@ public:
   { return start_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
 
   /// access by tensor index with range check
-  reference at (const index_type& idx)
+  template<class Index>
+  reference at (const Index& idx)
   {
     ordinal_type ord = this->ordinal(idx);
     BTAS_assert(ord < this->size(),"TensorBase::at, accessing data is out of range.");
@@ -156,7 +160,8 @@ public:
   }
 
   /// access by tensor index with range check having const-qualifier
-  const_reference at (const index_type& idx) const
+  template<class Index>
+  const_reference at (const Index& idx) const
   {
     ordinal_type ord = this->ordinal(idx);
     BTAS_assert(ord < this->size(),"TensorBase::at, accessing data is out of range.");
@@ -274,7 +279,7 @@ public:
 
   size_t rank () { return tn_stride_.rank(); }
 
-  constexpr CBLAS_LAYOUT layout () { return Layout; }
+  static constexpr CBLAS_LAYOUT layout () { return Layout; }
 
   // ---------------------------------------------------------------------------------------------------- 
 
@@ -317,7 +322,8 @@ public:
   // access
 
   /// convert tensor index to ordinal index
-  ordinal_type ordinal (const index_type& idx) const { return tn_stride_.ordinal(idx); }
+  template<class Index>
+  ordinal_type ordinal (const Index& idx) const { return tn_stride_.ordinal(idx); }
 
   /// convert ordinal index to tensor index
   index_type index (const ordinal_type& ord) const { return tn_stride_.index(ord); }
@@ -331,11 +337,13 @@ public:
   { return start_[i]; }
 
   /// access by tensor index
-  reference operator() (const index_type& idx)
+  template<class Index>
+  reference operator() (const Index& idx)
   { return start_[this->ordinal(idx)]; }
 
   /// access by tensor index with const-qualifier
-  const_reference operator() (const index_type& idx) const
+  template<class Index>
+  const_reference operator() (const Index& idx) const
   { return start_[this->ordinal(idx)]; }
 
   /// access by tensor index
@@ -349,7 +357,8 @@ public:
   { return start_[this->ordinal(make_vector<typename index_type::value_type>(args...))]; }
 
   /// access by tensor index with range check
-  reference at (const index_type& idx)
+  template<class Index>
+  reference at (const Index& idx)
   {
     ordinal_type ord = this->ordinal(idx);
     BTAS_assert(ord < this->size(),"TensorBase::at, accessing data is out of range.");
@@ -357,7 +366,8 @@ public:
   }
 
   /// access by tensor index with range check having const-qualifier
-  const_reference at (const index_type& idx) const
+  template<class Index>
+  const_reference at (const Index& idx) const
   {
     ordinal_type ord = this->ordinal(idx);
     BTAS_assert(ord < this->size(),"TensorBase::at, accessing data is out of range.");
