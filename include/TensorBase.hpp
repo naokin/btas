@@ -60,10 +60,12 @@ protected:
 
   // ---------------------------------------------------------------------------------------------------- 
 
-  void reset_tn_stride_ (const extent_type& ext) { tn_stride_.set(ext); }
+  void reset_tn_stride_ (const extent_type& ext)
+  { tn_stride_.set(ext); }
 
   template<typename... Args>
-  void reset_tn_stride_ (const Args&... args) { tn_stride_.set(make_array<typename extent_type::value_type>(args...)); }
+  void reset_tn_stride_ (const size_t& i, const Args&... args)
+  { tn_stride_.set(make_array<typename extent_type::value_type>(i,args...)); }
 
 public:
 
@@ -142,13 +144,13 @@ public:
 
   /// access by tensor index
   template<typename... Args>
-  reference operator() (const Args&... args)
-  { return start_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
+  reference operator() (const size_t& i, const Args&... args)
+  { return start_[this->ordinal(make_array<typename index_type::value_type>(i,args...))]; }
 
   /// access by tensor index with const-qualifier
   template<typename... Args>
-  const_reference operator() (const Args&... args) const
-  { return start_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
+  const_reference operator() (const size_t& i, const Args&... args) const
+  { return start_[this->ordinal(make_array<typename index_type::value_type>(i,args...))]; }
 
   /// access by tensor index with range check
   template<class Index>
@@ -170,18 +172,18 @@ public:
 
   /// access by tensor index with range check
   template<typename... Args>
-  reference at (const Args&... args)
+  reference at (const size_t& i, const Args&... args)
   {
-    ordinal_type ord = this->ordinal(make_array<typename index_type::value_type>(args...));
+    ordinal_type ord = this->ordinal(make_array<typename index_type::value_type>(i,args...));
     BTAS_assert(ord < this->size(),"TensorBase::at, accessing data is out of range.");
     return start_[ord];
   }
 
   /// access by tensor index with range check having const-qualifier
   template<typename... Args>
-  const_reference at (const Args&... args) const
+  const_reference at (const size_t& i, const Args&... args) const
   {
-    ordinal_type ord = this->ordinal(make_array<typename index_type::value_type>(args...));
+    ordinal_type ord = this->ordinal(make_array<typename index_type::value_type>(i,args...));
     BTAS_assert(ord < this->size(),"TensorBase::at, accessing data is out of range.");
     return start_[ord];
   }
@@ -266,10 +268,12 @@ protected:
 
   // ---------------------------------------------------------------------------------------------------- 
 
-  void reset_tn_stride_ (const extent_type& ext) { tn_stride_.set(ext); }
+  void reset_tn_stride_ (const extent_type& ext)
+  { tn_stride_.set(ext); }
 
   template<typename... Args>
-  void reset_tn_stride_ (const Args&... args) { tn_stride_.set(make_vector<typename extent_type::value_type>(args...)); }
+  void reset_tn_stride_ (const size_t& i, const Args&... args)
+  { tn_stride_.set(make_vector<typename extent_type::value_type>(i,args...)); }
 
 public:
 
@@ -348,13 +352,13 @@ public:
 
   /// access by tensor index
   template<typename... Args>
-  reference operator() (const Args&... args)
-  { return start_[this->ordinal(make_vector<typename index_type::value_type>(args...))]; }
+  reference operator() (const size_t& i, const Args&... args)
+  { return start_[this->ordinal(make_vector<typename index_type::value_type>(i,args...))]; }
 
   /// access by tensor index with const-qualifier
   template<typename... Args>
-  const_reference operator() (const Args&... args) const
-  { return start_[this->ordinal(make_vector<typename index_type::value_type>(args...))]; }
+  const_reference operator() (const size_t& i, const Args&... args) const
+  { return start_[this->ordinal(make_vector<typename index_type::value_type>(i,args...))]; }
 
   /// access by tensor index with range check
   template<class Index>
@@ -376,18 +380,18 @@ public:
 
   /// access by tensor index with range check
   template<typename... Args>
-  reference at (const Args&... args)
+  reference at (const size_t& i, const Args&... args)
   {
-    ordinal_type ord = this->ordinal(make_vector<typename index_type::value_type>(args...));
+    ordinal_type ord = this->ordinal(make_vector<typename index_type::value_type>(i,args...));
     BTAS_assert(ord < this->size(),"TensorBase::at, accessing data is out of range.");
     return start_[ord];
   }
 
   /// access by tensor index with range check having const-qualifier
   template<typename... Args>
-  const_reference at (const Args&... args) const
+  const_reference at (const size_t& i, const Args&... args) const
   {
-    ordinal_type ord = this->ordinal(make_vector<typename index_type::value_type>(args...));
+    ordinal_type ord = this->ordinal(make_vector<typename index_type::value_type>(i,args...));
     BTAS_assert(ord < this->size(),"TensorBase::at, accessing data is out of range.");
     return start_[ord];
   }

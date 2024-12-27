@@ -43,46 +43,51 @@ public:
 
   typedef TensorViewIterator<typename detail::__TensorViewIteratorConst<Iterator>::type,N,Layout> const_iterator;
 
-  // Constructors
+  // ---------------------------------------------------------------------------------------------------- 
+
+  // constructors
 
   TensorView ()
   { }
 
-  /// Construct from iterator to the first and extent
+  /// from an iterator to the first and extent
   TensorView (Iterator first, const extent_type& ext)
   { this->reset(first,ext); }
 
-  /// Construct from specific extent and stride.
-  /// To make permute, slice, tie, etc...
+  /// from an iterator to the first and extent w/ stride-hack.
   TensorView (Iterator first, const extent_type& ext, const stride_type& str)
   { this->reset(first,ext,str); }
 
-  /// Shallow copy
+  /// shallow copy
   TensorView (const TensorView& x)
-  : start_(x.start_), tn_stride_(x.tn_stride_), stride_hack_(x.stride_hack_)
+  : tn_stride_(x.tn_stride_), stride_hack_(x.stride_hack_), start_(x.start_), finish_(x.finish_)
   { }
 
   /// destructor
  ~TensorView () { }
 
-  // assign
+  // ---------------------------------------------------------------------------------------------------- 
 
-  /// Deep copy from arbitral tensor object
+  // (Deep) Copy assign
+
+  /// from an arbitral tensor object
   template<class Arbitral>
   TensorView& operator= (const Arbitral& x)
   {
     BTAS_assert(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorView::assign, extent must be the same.");
-
+    //
     index_type index_;
-    IndexedFor<1,N,Layout>::loop(this->extent(),index_,std::bind(
+    IndexedFor<N,Layout>::loop(this->extent(),index_,std::bind(
       detail::AssignTensor_<index_type,Arbitral,TensorView>,std::placeholders::_1,std::cref(x),std::ref(*this)));
-
+    //
     return *this;
   }
 
+  // ---------------------------------------------------------------------------------------------------- 
+
   // reset
 
-  /// reset the iterator
+  /// from an iterator to the first and extent
   void reset (Iterator first, const extent_type& ext)
   {
     tn_stride_.set(ext);
@@ -91,7 +96,7 @@ public:
     start_ = iterator(first,idx,tn_stride_.extent(),stride_hack_);
   }
 
-  /// reset the iterator with stride hack
+  /// from an iterator to the first and extent w/ stride-hack
   void reset (Iterator first, const extent_type& ext, const stride_type& str)
   {
     tn_stride_.set(ext);
@@ -100,19 +105,15 @@ public:
     start_ = iterator(first,idx,tn_stride_.extent(),stride_hack_);
   }
 
-  // const expression
+  // ---------------------------------------------------------------------------------------------------- 
 
-  // for C++98 compatiblity
+  // static function to return const expression
 
-  static const size_t RANK = N;
+  static constexpr size_t rank () { return N; }
 
-  static const CBLAS_LAYOUT ORDER = Layout;
+  static constexpr CBLAS_LAYOUT order () { return Layout; }
 
-  // as a function call
-
-  static size_t rank () { return N; }
-
-  static CBLAS_LAYOUT order () { return Layout; }
+  // ---------------------------------------------------------------------------------------------------- 
 
   // size
 
@@ -133,6 +134,8 @@ public:
 
   /// return stride for rank i
   const typename stride_type::value_type& stride (size_t i) const { return tn_stride_.stride(i); }
+
+  // ---------------------------------------------------------------------------------------------------- 
 
   // iterator
 
@@ -236,14 +239,17 @@ public:
 
 private:
 
-  /// iterator to the first
-  iterator start_;
-
   /// stride of a tensor view
   tn_stride_type tn_stride_;
 
   /// stride to hack
   stride_type stride_hack_;
+
+  /// iterator to the first
+  iterator start_;
+
+  /// iterator at the end
+  iterator finish_;
 
 }; // class TensorView
 

@@ -1,19 +1,20 @@
-TODO: update list
+TODO: update list, [S] = static-rank, [D] = dynamic-rank
 ====
-[o] TensorStride.hpp
-[o] TensorBase.hpp
-[o] Tensor.hpp
-[o] TensorWrapper.hpp
-[-] TensorView.hpp
-[o] TensorViewIterator.hpp
-[/] TensorBlas.hpp
-[-] TensorLapack.hpp
-[-] TensorContract.hpp
-[-] TensorCore.hpp
-[/] IndexedFor.hpp --- specialization for variable-rank tensor
+[S][D]
+[o][o] TensorStride.hpp
+[o][o] TensorBase.hpp
+[o][o] Tensor.hpp
+[o][o] TensorWrapper.hpp
+[?][?] TensorView.hpp
+[o][-] TensorViewIterator.hpp
+[/][-] TensorBlas.hpp
+[-][-] TensorLapack.hpp
+[-][-] TensorContract.hpp
+[-][-] TensorCore.hpp
+[o][o] IndexedFor.hpp
 
-[o] make_array.hpp
-[?] permute.hpp
-[?] reindex.hpp
-[?] slice.hpp
-[?] tie.hpp
+[o][o] make_array.hpp
+[?][?] permute.hpp
+[?][?] reindex.hpp
+[?][?] slice.hpp
+[?][?] tie.hpp

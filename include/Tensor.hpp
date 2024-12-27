@@ -14,8 +14,6 @@
 
 namespace btas {
 
-template<typename T, size_t N, CBLAS_LAYOUT Layout> class TensorWrapper; // Forward decl. of tensor wrapper
-
 namespace detail {
 
 /// Assign y(index) as x(index) via IndexFor, to make a deep copy from an arbitral tensor or tensor-view object. 
@@ -68,9 +66,9 @@ public:
 
   /// construct from variadic arguments list
   template<typename... Args>
-  Tensor (const Args&... args)
+  Tensor (const size_t& i, const Args&... args)
   {
-    base_::reset_tn_stride_(args...);
+    base_::reset_tn_stride_(i,args...);
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
@@ -93,18 +91,18 @@ public:
   template<class Arbitral>
   Tensor (const Arbitral& x)
   {
-//  base_::reset_tn_stride_(x.extent());
     base_::reset_tn_stride_(convert_to_array<typename extent_type::value_type,N>(x.extent()));
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
-    //
+    // Copy by IndexedFor might be slow 
     index_type index_;
-    IndexedFor<1,N,Layout>::loop(this->extent(),index_,std::bind(
+    IndexedFor<N,Layout>::loop(this->extent(),index_,std::bind(
       detail::AssignTensor_<index_type,Arbitral,Tensor>,std::placeholders::_1,std::cref(x),std::ref(*this)));
   }
 
   /// from a Tensor object
+  explicit
   Tensor (const Tensor& x)
   {
     tn_stride_ = x.tn_stride_;
@@ -113,9 +111,8 @@ public:
     finish_ = start_+store_.size();
   }
 
-  /// from a TensorWrapper object
-  explicit
-  Tensor (const TensorWrapper<T*,N,Layout>& x)
+  /// from a TensorBase object
+  Tensor (const TensorBase<T,N,Layout>& x)
   {
     tn_stride_ = x.tn_stride_;
     store_.resize(x.size());
@@ -125,11 +122,32 @@ public:
     copy(x.size(),x.data(),1,start_,1);
   }
 
-  /// from a TensorWrapper object (const)
-  explicit
-  Tensor (const TensorWrapper<const T*,N,Layout>& x)
+  /// from a TensorBase const object (aka TensorWrapper<const T*,N,Layout>)
+  Tensor (const TensorBase<const T,N,Layout>& x)
   {
     tn_stride_ = x.tn_stride_;
+    store_.resize(x.size());
+    start_ = store_.data();
+    finish_ = start_+store_.size();
+    //
+    copy(x.size(),x.data(),1,start_,1);
+  }
+
+  /// from a variable-rank TensorBase object
+  Tensor (const TensorBase<T,0ul,Layout>& x)
+  {
+    base_::reset_tn_stride_(convert_to_array<typename extent_type::value_type,N>(x.extent()));
+    store_.resize(x.size());
+    start_ = store_.data();
+    finish_ = start_+store_.size();
+    //
+    copy(x.size(),x.data(),1,start_,1);
+  }
+
+  /// from a variable-rank TensorBase const object (aka TensorWrapper<const T*,0ul,Layout>)
+  Tensor (const TensorBase<const T,0ul,Layout>& x)
+  {
+    base_::reset_tn_stride_(convert_to_array<typename extent_type::value_type,N>(x.extent()));
     store_.resize(x.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
@@ -150,14 +168,13 @@ public:
   template<class Arbitral>
   Tensor& operator= (const Arbitral& x)
   {
-//  base_::reset_tn_stride_(x.extent());
     base_::reset_tn_stride_(convert_to_array<typename extent_type::value_type,N>(x.extent()));
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
-    //
+    // Copy by IndexedFor might be slow 
     index_type index_;
-    IndexedFor<1,N,Layout>::loop(this->extent(),index_,std::bind(
+    IndexedFor<N,Layout>::loop(this->extent(),index_,std::bind(
       detail::AssignTensor_<index_type,Arbitral,Tensor>,std::placeholders::_1,std::cref(x),std::ref(*this)));
     //
     return *this;
@@ -174,10 +191,10 @@ public:
     return *this;
   }
 
-  /// from a TensorWrapper object
-  Tensor& operator= (const TensorWrapper<T*,N,Layout>& x)
+  /// from a TensorBase object
+  Tensor& operator= (const TensorBase<T,N,Layout>& x)
   {
-    base_::reset_tn_stride_(x.extent());
+    tn_stride_ = x.tn_stride_;
     store_.resize(x.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
@@ -187,10 +204,36 @@ public:
     return *this;
   }
 
-  /// from a TensorWrapper object (const)
-  Tensor& operator= (const TensorWrapper<const T*,N,Layout>& x)
+  /// from a TensorBase const object (aka TensorWrapper<const T*,N,Layout>)
+  Tensor& operator= (const TensorBase<const T,N,Layout>& x)
   {
-    base_::reset_tn_stride_(x.extent());
+    tn_stride_ = x.tn_stride_;
+    store_.resize(x.size());
+    start_ = store_.data();
+    finish_ = start_+store_.size();
+    //
+    copy(x.size(),x.data(),1,start_,1);
+    //
+    return *this;
+  }
+
+  /// from a variable-rank TensorBase object
+  Tensor& operator= (const TensorBase<T,0ul,Layout>& x)
+  {
+    base_::reset_tn_stride_(convert_to_array<typename extent_type::value_type,N>(x.extent()));
+    store_.resize(x.size());
+    start_ = store_.data();
+    finish_ = start_+store_.size();
+    //
+    copy(x.size(),x.data(),1,start_,1);
+    //
+    return *this;
+  }
+
+  /// from a variable-rank TensorBase const object (aka TensorWrapper<const T*,0ul,Layout>)
+  Tensor& operator= (const TensorBase<const T,0ul,Layout>& x)
+  {
+    base_::reset_tn_stride_(convert_to_array<typename extent_type::value_type,N>(x.extent()));
     store_.resize(x.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
@@ -224,9 +267,9 @@ public:
 
   /// resize by variadic arguments list
   template<typename... Args>
-  void resize (const Args&... args)
+  void resize (const size_t& i, const Args&... args)
   {
-    base_::reset_tn_stride_(args...);
+    base_::reset_tn_stride_(i,args...);
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
@@ -321,9 +364,9 @@ public:
 
   /// construct from variadic arguments list
   template<typename... Args>
-  Tensor (const Args&... args)
+  Tensor (const size_t& i, const Args&... args)
   {
-    base_::reset_tn_stride_(args...);
+    base_::reset_tn_stride_(i,args...);
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
@@ -346,18 +389,18 @@ public:
   template<class Arbitral>
   Tensor (const Arbitral& x)
   {
-//  base_::reset_tn_stride_(x.extent());
     base_::reset_tn_stride_(convert_to_vector<typename extent_type::value_type>(x.extent()));
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
-    //
+    // Copy by IndexedFor might be slow 
     index_type index_;
-    IndexedFor<1,0ul,Layout>::loop(this->extent(),index_,std::bind(
+    IndexedFor<0ul,Layout>::loop(this->extent(),index_,std::bind(
       detail::AssignTensor_<index_type,Arbitral,Tensor>,std::placeholders::_1,std::cref(x),std::ref(*this)));
   }
 
   /// from a Tensor object
+  explicit
   Tensor (const Tensor& x)
   {
     tn_stride_ = x.tn_stride_;
@@ -366,8 +409,8 @@ public:
     finish_ = start_+store_.size();
   }
 
-  /// from a TensorWrapper object
-  Tensor (const TensorWrapper<T*,0ul,Layout>& x)
+  /// from a TensorBase object
+  Tensor (const TensorBase<T,0ul,Layout>& x)
   {
     tn_stride_ = x.tn_stride_;
     store_.resize(x.size());
@@ -377,10 +420,34 @@ public:
     copy(x.size(),x.data(),1,start_,1);
   }
 
-  /// from a TensorWrapper object (const)
-  Tensor (const TensorWrapper<const T*,0ul,Layout>& x)
+  /// from a TensorBase const object (aka TensorWrapper<const T*,0ul,Layout>)
+  Tensor (const TensorBase<const T,0ul,Layout>& x)
   {
     tn_stride_ = x.tn_stride_;
+    store_.resize(x.size());
+    start_ = store_.data();
+    finish_ = start_+store_.size();
+    //
+    copy(x.size(),x.data(),1,start_,1);
+  }
+
+  /// from a static-rank TensorBase object
+  template<size_t N>
+  Tensor (const TensorBase<T,N,Layout>& x)
+  {
+    base_::reset_tn_stride_(convert_to_vector<typename extent_type::value_type>(x.extent()));
+    store_.resize(x.size());
+    start_ = store_.data();
+    finish_ = start_+store_.size();
+    //
+    copy(x.size(),x.data(),1,start_,1);
+  }
+
+  /// from a static-rank TensorBase const object (aka TensorWrapper<const T*,N,Layout>)
+  template<size_t N>
+  Tensor (const TensorBase<const T,N,Layout>& x)
+  {
+    base_::reset_tn_stride_(convert_to_vector<typename extent_type::value_type>(x.extent()));
     store_.resize(x.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
@@ -401,14 +468,13 @@ public:
   template<class Arbitral>
   Tensor& operator= (const Arbitral& x)
   {
-//  base_::reset_tn_stride_(x.extent());
     base_::reset_tn_stride_(convert_to_vector<typename extent_type::value_type>(x.extent()));
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
-    //
+    // Copy by IndexedFor might be slow 
     index_type index_;
-    IndexedFor<1,0ul,Layout>::loop(this->extent(),index_,std::bind(
+    IndexedFor<0ul,Layout>::loop(this->extent(),index_,std::bind(
       detail::AssignTensor_<index_type,Arbitral,Tensor>,std::placeholders::_1,std::cref(x),std::ref(*this)));
     //
     return *this;
@@ -425,8 +491,8 @@ public:
     return *this;
   }
 
-  /// from a TensorWrapper object
-  Tensor& operator= (const TensorWrapper<T*,0ul,Layout>& x)
+  /// from a TensorBase object
+  Tensor& operator= (const TensorBase<T,0ul,Layout>& x)
   {
     base_::reset_tn_stride_(x.extent());
     store_.resize(x.size());
@@ -438,10 +504,38 @@ public:
     return *this;
   }
 
-  /// from a TensorWrapper object (const)
-  Tensor& operator= (const TensorWrapper<const T*,0ul,Layout>& x)
+  /// from a TensorBase const object (aka TensorWrapper<const T*,0ul,Layout>)
+  Tensor& operator= (const TensorBase<const T,0ul,Layout>& x)
   {
     base_::reset_tn_stride_(x.extent());
+    store_.resize(x.size());
+    start_ = store_.data();
+    finish_ = start_+store_.size();
+    //
+    copy(x.size(),x.data(),1,start_,1);
+    //
+    return *this;
+  }
+
+  /// from a static-rank TensorBase object
+  template<size_t N>
+  Tensor& operator= (const TensorBase<T,N,Layout>& x)
+  {
+    base_::reset_tn_stride_(convert_to_vector<typename extent_type::value_type>(x.extent()));
+    store_.resize(x.size());
+    start_ = store_.data();
+    finish_ = start_+store_.size();
+    //
+    copy(x.size(),x.data(),1,start_,1);
+    //
+    return *this;
+  }
+
+  /// from a static-rank TensorBase const object (aka TensorWrapper<const T*,N,Layout>)
+  template<size_t N>
+  Tensor& operator= (const TensorBase<const T,N,Layout>& x)
+  {
+    base_::reset_tn_stride_(convert_to_vector<typename extent_type::value_type>(x.extent()));
     store_.resize(x.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
@@ -475,9 +569,9 @@ public:
 
   /// resize by variadic arguments list
   template<typename... Args>
-  void resize (const Args&... args)
+  void resize (const size_t& i, const Args&... args)
   {
-    base_::reset_tn_stride_(args...);
+    base_::reset_tn_stride_(i,args...);
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
@@ -529,9 +623,9 @@ private:
 
 // ---------------------------------------------------------------------------------------------------- 
 
-/// template alias to variable-rank tensor
+/// template alias to a variable-rank tensor
 template<typename T, CBLAS_LAYOUT Layout = CblasRowMajor>
-using vTensor = Tensor<T,0ul,Layout>;
+using tensor = Tensor<T,0ul,Layout>;
 
 } // namespace btas
 

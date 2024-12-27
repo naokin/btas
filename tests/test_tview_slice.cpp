@@ -1,7 +1,8 @@
 #include <iostream>
 #include <iomanip>
 
-#include <boost/bind.hpp>
+#include <functional>
+
 #include <btas.h>
 #include <TensorView.hpp>
 
@@ -31,7 +32,7 @@ int main ()
   //    for(size_t k = 0; k < A.extent(2); ++k)
   //      A(i,j,k) = 0.1*i+0.01*j+0.001*k;
   Tensor<double,3>::index_type index;
-  IndexedFor<1,3,CblasRowMajor>::loop(A.extent(),index,boost::bind(foo<3>,_1,boost::ref(A)));
+  IndexedFor<3,CblasRowMajor>::loop(A.extent(),index,std::bind(foo<3>,std::placeholders::_1,std::ref(A)));
 
   std::cout << "A" << std::endl;
   for(size_t i = 0; i < A.extent(0); ++i)

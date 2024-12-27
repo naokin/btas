@@ -4,9 +4,7 @@
 #include <array>
 #include <vector>
 
-#ifdef _DEBUG
 #include <BTAS_assert.h>
-#endif
 
 namespace btas {
 
@@ -23,9 +21,9 @@ std::array<T,1+sizeof...(Args)> make_array (const T& x, const Args&... xs)
 template<typename T, size_t N, class Array>
 std::array<T,N> convert_to_array (const Array& x)
 {
-#ifdef _DEBUG
+  // tensor-rank mismatched
   BTAS_assert(x.size() == N,"convert_to_array, conversion from Array to std::array<T,N> failed.");
-#endif
+  //
   std::array<T,N> y; for(size_t i = 0; i < N; ++i) y[i] = x[i];
   //
   return y;

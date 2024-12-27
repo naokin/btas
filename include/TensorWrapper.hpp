@@ -85,14 +85,24 @@ public:
     BTAS_assert(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorWrapper::assign, extent must be the same.");
     //
     index_type index_;
-    IndexedFor<1,N,Layout>::loop(this->extent(),index_,std::bind(
+    IndexedFor<N,Layout>::loop(this->extent(),index_,std::bind(
       detail::AssignTensor_<index_type,Arbitral,TensorWrapper>,std::placeholders::_1,std::cref(x),std::ref(*this)));
     //
     return *this;
   }
 
-  /// from a Tensor or TensorWrapper object
+  /// from a Tensor or TensorBase object
   TensorWrapper& operator= (const TensorBase<T,N,Layout>& x)
+  {
+    BTAS_assert(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorWrapper::assign, extent must be the same.");
+    //
+    copy(x.size(),x.data(),1,start_,1); // Call BLAS in case T is numeric
+    //
+    return *this;
+  }
+
+  /// from a Tensor or TensorBase const object
+  TensorWrapper& operator= (const TensorBase<const T,N,Layout>& x)
   {
     BTAS_assert(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorWrapper::assign, extent must be the same.");
     //
@@ -244,6 +254,18 @@ public:
   }
 
 }; // class TensorWrapper<const T*,N,Layout>
+
+/// template alias to a tensor wrapper (const)
+template<typename T, size_t N, CBLAS_LAYOUT Layout = CblasRowMajor>
+using ConstTensorWrapper = TensorWrapper<const T*,N,Layout>;
+
+/// template alias to a variable-rank tensor wrapper
+template<typename T, CBLAS_LAYOUT Layout = CblasRowMajor>
+using tensor_wrapper = TensorWrapper<T*,0ul,Layout>;
+
+/// template alias to a variable-rank tensor wrapper (const)
+template<typename T, CBLAS_LAYOUT Layout = CblasRowMajor>
+using const_tensor_wrapper = TensorWrapper<const T*,0ul,Layout>;
 
 } // namespace btas
 

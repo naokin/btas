@@ -1,7 +1,6 @@
 #include <iostream>
 #include <iomanip>
 
-#include <boost/bind.hpp>
 #include <btas.h>
 
 int main ()
