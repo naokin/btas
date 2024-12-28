@@ -2,6 +2,7 @@
 #define __BTAS_TENSOR_VIEW_ITERATOR_HPP
 
 #include <iterator>
+#include <type_traits>
 #include <TensorStride.hpp>
 
 namespace btas {
@@ -271,29 +272,6 @@ public:
   typedef typename tn_stride_type::index_type index_type;
   typedef typename tn_stride_type::ordinal_type ordinal_type;
 
-private:
-
-  //
-  //  Member variables
-  //
-
-  /// iterator to the first
-  Iterator start_;
-
-  /// iterator to current (keep to make fast access)
-  Iterator current_;
-
-  /// tensor index
-  index_type index_;
-
-  /// extent and stride for this a tensor-view
-  tn_stride_type tn_stride_;
-
-  /// stride hack
-  stride_type stride_hack_;
-
-public:
-
 // ---------------------------------------------------------------------------------------------------- 
 
   //
@@ -302,7 +280,7 @@ public:
 
   /// Default constructor
   TensorViewIterator ()
-  : start_(Iterator()), current_(Iterator())
+  : current_(Iterator())
   { }
 
   /// Destructor
@@ -311,28 +289,30 @@ public:
 
   /// Construct from iterator, index, and extent
   TensorViewIterator (Iterator p, const index_type& idx, const extent_type& ext)
-  : start_(p), index_(idx), tn_stride_(ext)
+  : current_(p), index_(idx), tn_stride_(ext)
   {
     stride_hack_ = tn_stride_.stride();
-    current_ = this->get_address(index_);
+    for(size_t i = 0; i < index_.size(); ++i) current_ += index_[i]*stride_hack_[i];
   }
 
   /// Construct from iterator, index, extent, and stride(hack)
   TensorViewIterator (Iterator p, const index_type& idx, const extent_type& ext, const stride_type& str)
-  : start_(p), index_(idx), tn_stride_(ext), stride_hack_(str)
+  : current_(p), index_(idx), tn_stride_(ext), stride_hack_(str)
   {
-    current_ = this->get_address(index_);
+    for(size_t i = 0; i < index_.size(); ++i) current_ += index_[i]*stride_hack_[i];
   }
 
   /// Copy constructor
-  /// NOTE: this could give an error at compile time if Tensor<Arbitral,N,Layout> is either this type or friend (i.e. non-const iterator).
-  template<class Arbitral>
-  TensorViewIterator (const TensorViewIterator<Arbitral,N,Layout>& x)
-  : start_(x.start_), current_(x.current_), index_(x.index_), tn_stride_(x.tn_stride_), stride_hack_(x.stride_hack_)
+  TensorViewIterator (const TensorViewIterator& x)
+  : current_(x.current_), index_(x.index_), tn_stride_(x.tn_stride_), stride_hack_(x.stride_hack_)
   { }
 
-  TensorViewIterator (const TensorViewIterator& x)
-  : start_(x.start_), current_(x.current_), index_(x.index_), tn_stride_(x.tn_stride_), stride_hack_(x.stride_hack_)
+  /// Convert from non-const iterator to const iterator
+  /// This is instanciated when NonConstIter == 'Iterator' that removed const
+  template<class NonConstIter, class = typename std::enable_if<
+    std::is_same<NonConstIter, typename detail::__TensorViewIteratorRemoveConst<Iterator>::type>::value>::type>
+  TensorViewIterator (const TensorViewIterator<NonConstIter,N,Layout>& x)
+  : current_(x.current_), index_(x.index_), tn_stride_(x.tn_stride_), stride_hack_(x.stride_hack_)
   { }
 
 // ---------------------------------------------------------------------------------------------------- 
@@ -376,27 +356,19 @@ public:
   //
 
   bool operator<  (const TensorViewIterator& x) const {
-    size_t i = 0;
-    for(; i < index_.size()-1; ++i) if(index_[i] != x.index_[i]) break;
-    return (index_[i] <  x.index_[i]);
+    return this->ordinal() <  x.ordinal();
   }
 
   bool operator<= (const TensorViewIterator& x) const {
-    size_t i = 0;
-    for(; i < index_.size()-1; ++i) if(index_[i] != x.index_[i]) break;
-    return (index_[i] <= x.index_[i]);
+    return this->ordinal() <= x.ordinal();
   }
 
   bool operator>  (const TensorViewIterator& x) const {
-    size_t i = 0;
-    for(; i < index_.size()-1; ++i) if(index_[i] != x.index_[i]) break;
-    return (index_[i] >  x.index_[i]);
+    return this->ordinal() >  x.ordinal();
   }
 
   bool operator>= (const TensorViewIterator& x) const {
-    size_t i = 0;
-    for(; i < index_.size()-1; ++i) if(index_[i] != x.index_[i]) break;
-    return (index_[i] >= x.index_[i]);
+    return this->ordinal() >= x.ordinal();
   }
 
 // ---------------------------------------------------------------------------------------------------- 
@@ -446,30 +418,37 @@ public:
   /// access to the reference specified by a relative offset
   reference operator[] (const difference_type& n) const
   {
-    return *(this->get_address(tn_stride_.index(this->ordinal()+n)));
+    return *(current_+this->offset(n));
   }
 
   TensorViewIterator& operator+= (const difference_type& n)
-  { return this->offset(n); }
+  {
+    current_ += this->offset(n);
+    return *this;
+  }
 
   TensorViewIterator  operator+  (const difference_type& n) const
   {
-    TensorViewIterator it(*this); it.offset(n);
+    TensorViewIterator it(*this);
+    it += n;
     return it;
   }
 
   TensorViewIterator& operator-= (const difference_type& n)
-  { return this->offset(-n); }
+  {
+    current_ += this->offset(-n);
+    return *this;
+  }
 
   TensorViewIterator  operator-  (const difference_type& n) const
   {
-    TensorViewIterator it(*this); it.offset(-n);
+    TensorViewIterator it(*this);
+    it -= n;
     return it;
   }
 
   difference_type operator- (const TensorViewIterator& x) const
   {
-    assert(start_ == x.start_);
     return (this->ordinal()-x.ordinal());
   }
 
@@ -477,7 +456,6 @@ public:
 
   void swap (TensorViewIterator& x)
   {
-    std::swap(start_,x.start_);
     std::swap(current_,x.current_);
     index_.swap(x.index_);
     tn_stride_.swap(x.tn_stride_);
@@ -490,24 +468,19 @@ private:
   // supportive functions
   //
 
-  /// return iterator address, i.e. calculated in term of hacked stride
-  Iterator get_address (const index_type& idx) const
+  /// convert offset in view-iterator to offset in base-iterator
+  difference_type offset (difference_type n) const
   {
-#ifdef _DEBUG
-    // this is only for TensorViewIterator<Iterator,0ul,Layout>
-    BTAS_assert(idx.size() == stride_hack_.size(),"TensorViewIterator::get_address, invalid size (rank) of idx.");
-#endif
-    ordinal_type ord = 0;
-    for(size_t i = 0; i < idx.size(); ++i) ord += idx[i]*stride_hack_[i];
-    return start_+ord;
-  }
-
-  /// offset index and return current iterator, TODO: To improve the implementation (this is not efficient)
-  Iterator offset (difference_type n)
-  {
-    index_ = tn_stride_.index(this->ordinal()+n);
-    current_ = this->get_address(index_);
-    return current_;
+    difference_type m = tn_stride_.size();
+    difference_type l = tn_stride_.ordinal(index_)+n;
+    if(l < 0) { l = 0; }
+    if(l > m) { l = m; }
+    index_type index_to_ = tn_stride_.index(l);
+    //
+    difference_type p = 0;
+    for(size_t i = 0; i < index_.size(); ++i) p += (index_to_[i]-index_[i])*stride_hack_[i];
+    //
+    return p;
   }
 
   /// increment
@@ -515,6 +488,22 @@ private:
 
   /// decrement
   void decrement () { current_ += itFunctor::decrement(index_,this->extent(),stride_hack_); }
+
+  //
+  //  Member variables
+  //
+
+  /// iterator to current (keep to make fast access)
+  Iterator current_;
+
+  /// tensor index
+  index_type index_;
+
+  /// extent and stride for this a tensor-view
+  tn_stride_type tn_stride_;
+
+  /// stride hack
+  stride_type stride_hack_;
 
 };
 

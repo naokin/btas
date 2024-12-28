@@ -6,7 +6,7 @@ TODO: update list, [S] = static-rank, [D] = dynamic-rank
 [o][o] Tensor.hpp
 [o][o] TensorWrapper.hpp
 [?][?] TensorView.hpp
-[o][-] TensorViewIterator.hpp
+[o][o] TensorViewIterator.hpp
 [/][-] TensorBlas.hpp
 [-][-] TensorLapack.hpp
 [-][-] TensorContract.hpp

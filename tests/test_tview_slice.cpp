@@ -45,6 +45,10 @@ int main ()
 
   TensorView<double*,2> A_ref(A.data(),shape(16,4));
 
+  const TensorView<double*,2>& AA_ref(A_ref);
+  auto it = AA_ref.begin();
+//*it = 1.0;
+
   std::cout << "A_ref" << std::endl;
   for(size_t i = 0; i < A_ref.extent(0); ++i) {
     for(size_t j = 0; j < A_ref.extent(1); ++j) {
