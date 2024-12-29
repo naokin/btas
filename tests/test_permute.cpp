@@ -8,71 +8,48 @@ int main ()
   using namespace btas;
 
   std::cout.setf(std::ios::fixed,std::ios::floatfield);
-  std::cout.precision(2);
 
-  Tensor<double,2> A(10,10);
+  // ---------------------------------------------------------------------------------------------------- 
 
-  for(size_t i = 0; i < A.extent(0); ++i)
-    for(size_t j = 0; j < A.extent(1); ++j) A(i,j) = 0.1*i+0.01*j;
+  Tensor<double,3> A1(3,4,5); // row-major layout
 
-  std::cout << "A" << std::endl;
+  for(size_t i = 0; i < A1.extent(0); ++i)
+    for(size_t j = 0; j < A1.extent(1); ++j)
+      for(size_t k = 0; k < A1.extent(2); ++k) A1(i,j,k) = 0.1*i+0.01*j+0.001*k;
 
-  for(size_t i = 0; i < A.extent(0); ++i) {
-    std::cout << "\t";
-    for(size_t j = 0; j < A.extent(1); ++j) {
-      std::cout << std::setw(6) << A(i,j);
+  std::cout << "--------------------------------------------------" << std::endl;
+  std::cout << "Tensor<double,3> A1(3,4,5)                        " << std::endl;
+  std::cout << "--------------------------------------------------" << std::endl;
+
+  std::cout.precision(3);
+  for(size_t i = 0; i < A1.extent(0); ++i) {
+    for(size_t j = 0; j < A1.extent(1); ++j) {
+      std::cout << "[" << std::setw(2) << i << "," << std::setw(2) << j << ",**] : ";
+      for(size_t k = 0; k < A1.extent(2); ++k) {
+        std::cout << "  " << std::setw(5) << A1(i,j,k);
+      }
+      std::cout << std::endl;
     }
-    std::cout << std::endl;
   }
 
-  std::cout << std::endl;
+  // ---------------------------------------------------------------------------------------------------- 
 
-  Tensor<double,2> B;
+  Tensor<double,3> A2 = make_permute(A1,{1,2,0}); // row-major layout
 
-  B = make_permute(A,shape(1,0));
+  std::cout << "--------------------------------------------------" << std::endl;
+  std::cout << "Tensor<double,3> A2 = make_permute(A1,{1,2,0})    " << std::endl;
+  std::cout << "--------------------------------------------------" << std::endl;
 
-  std::cout << "B = make_permute(A,shape(1,0))" << std::endl;
-
-  for(size_t i = 0; i < B.extent(0); ++i) {
-    std::cout << "\t";
-    for(size_t j = 0; j < B.extent(1); ++j) {
-      std::cout << std::setw(6) << B(i,j);
+  std::cout.precision(3);
+  for(size_t i = 0; i < A2.extent(0); ++i) {
+    for(size_t j = 0; j < A2.extent(1); ++j) {
+      std::cout << "[" << std::setw(2) << i << "," << std::setw(2) << j << ",**] : ";
+      for(size_t k = 0; k < A2.extent(2); ++k) {
+        std::cout << "  " << std::setw(7) << std::setfill('0') << A2(i,j,k)+100*i+10*j+k;
+      }
+      std::cout << std::endl;
     }
-    std::cout << std::endl;
   }
-
-  std::cout << std::endl;
-
-  std::vector<double> v(100);
-  for(size_t i = 0; i < v.size(); ++i) v[i] = i*0.01;
-
-  TensorWrapper<double*,2> C(v.data(),shape(10,10));
-
-  std::cout << "C" << std::endl;
-
-  for(size_t i = 0; i < C.extent(0); ++i) {
-    std::cout << "\t";
-    for(size_t j = 0; j < C.extent(1); ++j) {
-      std::cout << std::setw(6) << C(i,j);
-    }
-    std::cout << std::endl;
-  }
-
-  std::cout << std::endl;
-
-  permute(C,shape(1,0));
-
-  std::cout << "permute(C,shape(1,0))" << std::endl;
-
-  for(size_t i = 0; i < C.extent(0); ++i) {
-    std::cout << "\t";
-    for(size_t j = 0; j < C.extent(1); ++j) {
-      std::cout << std::setw(6) << C(i,j);
-    }
-    std::cout << std::endl;
-  }
-
-  A = C;
 
   return 0;
 }

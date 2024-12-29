@@ -1,15 +1,17 @@
 #ifndef __BTAS_TENSOR_WRAPPER_HPP
 #define __BTAS_TENSOR_WRAPPER_HPP
 
-#include <algorithm> // std::copy -- actually involved in Tensor.hpp
+#include <functional> // std::bind, std::ref, std::cref
+#include <type_traits> // std::enable_if
 
 #include <BTAS_assert.h>
 #include <Tensor.hpp>
+#include <IndexedFor.hpp>
 
 namespace btas {
 
 /// This class will be specialized for Iterator derived from consecutive data, s.t. 'T*' and 'const T*'
-template<class Iterator, size_t N, CBLAS_LAYOUT Layout> class TensorWrapper;
+template<class Iterator, size_t N, CBLAS_LAYOUT Layout = CblasRowMajor> class TensorWrapper;
 
 /// Specialized TensorView class wrapping a pointer to "consecutive" data
 /// In principle, this class provides a faster data access than the original TensorView class
@@ -83,8 +85,10 @@ public:
   TensorWrapper& operator= (const Arbitral& x)
   {
     BTAS_assert(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorWrapper::assign, extent must be the same.");
-    // copy by iterator
-    std::copy(x.begin(),x.end(),start_);
+    // copy by index (TODO: sometimes not efficient)
+    index_type index_;
+    IndexedFor<N,Layout>::loop(this->extent(),index_,std::bind(
+      detail::AssignTensor_<index_type,Arbitral,TensorWrapper>,std::placeholders::_1,std::cref(x),std::ref(*this)));
     //
     return *this;
   }

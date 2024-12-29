@@ -5,16 +5,17 @@ TODO: update list, [S] = static-rank, [D] = dynamic-rank
 [o][o] TensorBase.hpp
 [o][o] Tensor.hpp
 [o][o] TensorWrapper.hpp
-[?][?] TensorView.hpp
+[o][o] TensorView.hpp
 [o][o] TensorViewIterator.hpp
 [/][-] TensorBlas.hpp
 [-][-] TensorLapack.hpp
 [-][-] TensorContract.hpp
 [-][-] TensorCore.hpp
-[o][o] IndexedFor.hpp
-
+*supportive functions
 [o][o] make_array.hpp
-[?][?] permute.hpp
-[?][?] reindex.hpp
+[o][o] IndexedFor.hpp
+[o][o] reindex.hpp
+*external functions
+[o][o] permute.hpp
 [?][?] slice.hpp
 [?][?] tie.hpp

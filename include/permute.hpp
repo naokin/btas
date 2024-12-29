@@ -1,52 +1,88 @@
 #ifndef __BTAS_PERMUTE_HPP
 #define __BTAS_PERMUTE_HPP
 
-#include <Tensor.hpp>
-#include <TensorWrapper.hpp>
-#include <TensorView.hpp>
+#include <array>
+#include <vector>
 
+#include <Tensor.hpp>
+#include <TensorView.hpp>
 #include <reindex.hpp>
 
 namespace btas {
 
-/// permute on 1D array object by idx
-template<class Array, class Index>
-inline Array make_permute (const Array& a_, const Index& idx)
+/// permute std::array<T,N> by idx
+template<typename T, size_t N, class Index>
+std::array<T,N> make_permute (const std::array<T,N>& a_, const Index& idx)
 {
 #ifdef _DEBUG
   BTAS_assert(a_.size() == idx.size(),"make_permute, detected inconsistent size of argument.");
 #endif
-  Array t_;
+  std::array<T,N> t_;
   for(size_t i = 0; i < idx.size(); ++i) t_[i] = a_[idx[i]];
   return t_;
 }
 
-/// Specialized for Tensor
-template<typename T, size_t N, CBLAS_LAYOUT Layout, class Index>
-Tensor<T,N,Layout> make_permute (const Tensor<T,N,Layout>& x, const Index& idx)
+/// permute std::array<T,N> by idx (initializer_list is acceptable)
+template<typename T, size_t N>
+std::array<T,N> make_permute (const std::array<T,N>& a_, const std::array<size_t,N>& idx)
 {
-  Tensor<T,N,Layout> y(make_permute(x.extent(),idx));
-  reindex<T,N,Layout>(x.data(),y.data(),make_permute(x.stride(),idx),y.extent());
+#ifdef _DEBUG
+  BTAS_assert(a_.size() == idx.size(),"make_permute, detected inconsistent size of argument.");
+#endif
+  std::array<T,N> t_;
+  for(size_t i = 0; i < idx.size(); ++i) t_[i] = a_[idx[i]];
+  return t_;
+}
+
+// ---------------------------------------------------------------------------------------------------- 
+
+/// permute std::vector<T> by idx
+template<typename T, class Index>
+std::vector<T> make_permute (const std::vector<T>& a_, const Index& idx)
+{
+#ifdef _DEBUG
+  BTAS_assert(a_.size() == idx.size(),"make_permute, detected inconsistent size of argument.");
+#endif
+  std::vector<T> t_(a_.size());
+  for(size_t i = 0; i < idx.size(); ++i) t_[i] = a_[idx[i]];
+  return t_;
+}
+
+/// permute std::vector<T> by idx (initializer_list is acceptable)
+template<typename T>
+std::vector<T> make_permute (const std::vector<T>& a_, const std::vector<size_t>& idx)
+{
+#ifdef _DEBUG
+  BTAS_assert(a_.size() == idx.size(),"make_permute, detected inconsistent size of argument.");
+#endif
+  std::vector<T> t_(a_.size());
+  for(size_t i = 0; i < idx.size(); ++i) t_[i] = a_[idx[i]];
+  return t_;
+}
+
+// ---------------------------------------------------------------------------------------------------- 
+
+/// Specialized for TensorBase (Tensor<T,N>, TensorWrapper<T*,N>, and TensorWrapper<const T*,N>)
+template<typename T, size_t N, CBLAS_LAYOUT Layout, class Index>
+Tensor<typename std::remove_const<T>::type,N,Layout> make_permute (const TensorBase<T,N,Layout>& x, const Index& idx)
+{
+  typedef typename std::remove_const<T>::type value_t;
+  Tensor<value_t,N,Layout> y(make_permute(x.extent(),idx));
+  reindex<value_t,N,Layout>(x.data(),y.data(),make_permute(x.stride(),idx),y.extent());
   return y;
 }
 
-/// Specialized for TensorWrapper
-template<typename T, size_t N, CBLAS_LAYOUT Layout, class Index>
-Tensor<T,N,Layout> make_permute (const TensorWrapper<T*,N,Layout>& x, const Index& idx)
+/// Specialized for TensorBase (Tensor<T,N>, TensorWrapper<T*,N>, and TensorWrapper<const T*,N>)
+template<typename T, size_t N, CBLAS_LAYOUT Layout>
+Tensor<typename std::remove_const<T>::type,N,Layout> make_permute (const TensorBase<T,N,Layout>& x, const typename TensorBase<T,N,Layout>::index_type& idx)
 {
-  Tensor<T,N,Layout> y(make_permute(x.extent(),idx));
-  reindex<T,N,Layout>(x.data(),y.data(),make_permute(x.stride(),idx),y.extent());
+  typedef typename std::remove_const<T>::type value_t;
+  Tensor<value_t,N,Layout> y(make_permute(x.extent(),idx));
+  reindex<value_t,N,Layout>(x.data(),y.data(),make_permute(x.stride(),idx),y.extent());
   return y;
 }
 
-/// Specialized for TensorWrapper
-template<typename T, size_t N, CBLAS_LAYOUT Layout, class Index>
-Tensor<T,N,Layout> make_permute (const TensorWrapper<const T*,N,Layout>& x, const Index& idx)
-{
-  Tensor<T,N,Layout> y(make_permute(x.extent(),idx));
-  reindex<T,N,Layout>(x.data(),y.data(),make_permute(x.stride(),idx),y.extent());
-  return y;
-}
+// ---------------------------------------------------------------------------------------------------- 
 
 /// Specialized for TensorView
 template<class Iter, size_t N, CBLAS_LAYOUT Layout, class Index>
@@ -55,7 +91,16 @@ TensorView<TensorViewIterator<Iter,N,Layout>,N,Layout> make_permute (const Tenso
   return TensorView<TensorViewIterator<Iter,N,Layout>,N,Layout>(x.begin(),make_permute(x.extent(),idx),make_permute(x.stride(),idx));
 }
 
-/// permute self
+/// Specialized for TensorView
+template<class Iter, size_t N, CBLAS_LAYOUT Layout>
+TensorView<TensorViewIterator<Iter,N,Layout>,N,Layout> make_permute (const TensorView<Iter,N,Layout>& x, const typename TensorView<Iter,N,Layout>::index_type& idx)
+{
+  return TensorView<TensorViewIterator<Iter,N,Layout>,N,Layout>(x.begin(),make_permute(x.extent(),idx),make_permute(x.stride(),idx));
+}
+
+// ---------------------------------------------------------------------------------------------------- 
+
+/// permute self (only for resizable object; Tensor<T,N>)
 template<typename T, size_t N, CBLAS_LAYOUT Layout, class Index>
 void permute (Tensor<T,N,Layout>& x, const Index& idx)
 {
@@ -64,13 +109,13 @@ void permute (Tensor<T,N,Layout>& x, const Index& idx)
   x.swap(y);
 }
 
-/// permute self
-template<typename T, size_t N, CBLAS_LAYOUT Layout, class Index>
-void permute (TensorWrapper<T*,N,Layout>& x, const Index& idx)
+/// permute self (only for resizable object; Tensor<T,N>)
+template<typename T, size_t N, CBLAS_LAYOUT Layout>
+void permute (Tensor<T,N,Layout>& x, const typename Tensor<T,N,Layout>::index_type& idx)
 {
   Tensor<T,N,Layout> y(make_permute(x.extent(),idx));
   reindex<T,N,Layout>(x.data(),y.data(),make_permute(x.stride(),idx),y.extent());
-  x = y;
+  x.swap(y);
 }
 
 } // namespace btas

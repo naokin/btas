@@ -1,10 +1,13 @@
 #ifndef __BTAS_TENSOR_VIEW_HPP
 #define __BTAS_TENSOR_VIEW_HPP
 
-#include <algorithm> // std::copy
+#include <functional> // std::bind, std::ref, std::cref
+#include <type_traits> // std::enable_if
 
 #include <BTAS_assert.h>
+#include <Tensor.hpp>
 #include <TensorViewIterator.hpp>
+#include <IndexedFor.hpp>
 
 namespace btas {
 
@@ -73,8 +76,10 @@ public:
   TensorView& operator= (const Arbitral& x)
   {
     BTAS_assert(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorView::assign, extent must be the same.");
-    //
-    std::copy(x.begin(),x.end(),first_);
+    // copy by index (TODO: sometimes not efficient)
+    index_type index_;
+    IndexedFor<N,Layout>::loop(this->extent(),index_,std::bind(
+      detail::AssignTensor_<index_type,Arbitral,TensorView>,std::placeholders::_1,std::cref(x),std::ref(*this)));
     //
     return *this;
   }
@@ -300,8 +305,10 @@ public:
   TensorView& operator= (const Arbitral& x)
   {
     BTAS_assert(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorView::assign, extent must be the same.");
-    //
-    std::copy(x.begin(),x.end(),first_);
+    // copy by index (TODO: sometimes not efficient)
+    index_type index_;
+    IndexedFor<0ul,Layout>::loop(this->extent(),index_,std::bind(
+      detail::AssignTensor_<index_type,Arbitral,Tensor>,std::placeholders::_1,std::cref(x),std::ref(*this)));
     //
     return *this;
   }

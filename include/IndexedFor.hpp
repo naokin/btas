@@ -94,14 +94,14 @@ struct IndexedFor<0,CblasRowMajor> {
 private:
   /// loop and examine op(index) by passing the rank as an argument
   template<class Ext_, class Idx_, class Op_>
-  static void __loop (const size_t& i, const size_t& n, const Ext_& extent, Idx_& index, Op_ op)
+  static void __loop (const size_t& i, const size_t& m, const Ext_& extent, Idx_& index, Op_ op)
   {
-    if(i == n) {
-      for(index[n] = 0; index[n] < extent[n]; ++index[n]) op(index);
+    if(i == m) {
+      for(index[m] = 0; index[m] < extent[m]; ++index[m]) op(index);
     }
     else {
       for(index[i] = 0; index[i] < extent[i]; ++index[i])
-        IndexedFor<0,CblasRowMajor>::__loop(i+1,n,extent,index,op);
+        IndexedFor<0,CblasRowMajor>::__loop(i+1,m,extent,index,op);
     }
   }
 };
@@ -118,14 +118,14 @@ struct IndexedFor<0,CblasColMajor> {
 private:
   /// loop and examine op(index) by passing the rank as an argument
   template<class Ext_, class Idx_, class Op_>
-  static void __loop (const size_t& i, const size_t& n, const Ext_& extent, Idx_& index, Op_ op)
+  static void __loop (const size_t& i, const size_t& m, const Ext_& extent, Idx_& index, Op_ op)
   {
     if(i == 0) {
       for(index[0] = 0; index[0] < extent[0]; ++index[0]) op(index);
     }
     else {
       for(index[i] = 0; index[i] < extent[i]; ++index[i])
-        IndexedFor<0,CblasColMajor>::__loop(i-1,n,extent,index,op);
+        IndexedFor<0,CblasColMajor>::__loop(i-1,m,extent,index,op);
     }
   }
 };

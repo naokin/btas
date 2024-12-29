@@ -2,11 +2,13 @@
 #define __BTAS_TENSOR_HPP
 
 #include <vector>
-#include <algorithm> // std::copy, std::fill
-#include <type_traits>
+#include <algorithm> // std::fill
+#include <functional> // std::bind, std::ref, std::cref
+#include <type_traits> // std::enable_if
 
 #include <blas.h>
 #include <TensorBase.hpp>
+#include <IndexedFor.hpp>
 
 #ifdef _ENABLE_BOOST_SERIALIZE
 #include <boost/serialization/serialization.hpp>
@@ -14,6 +16,16 @@
 #endif
 
 namespace btas {
+
+namespace detail {
+
+/// Assign y(index) as x(index) via IndexFor, to make a deep copy from an arbitral tensor or tensor-view object. 
+/// NOTE: if using std::bind, 2nd & 3rd arguments should be passed via std::cref & std::ref
+///       otherwise, because the copy constructor is called, assignment cannot be done correctly.
+template<class Idx_, class T1, class T2>
+void AssignTensor_ (const Idx_& index, const T1& x, T2& y) { y(index) = x(index); }
+
+} // namespace detail
 
 template<typename T, size_t N, CBLAS_LAYOUT Layout = CblasRowMajor>
 class Tensor : public TensorBase<T,N,Layout> {
@@ -86,8 +98,10 @@ public:
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
-    // copy by iterator
-    std::copy(x.begin(),x.end(),start_);
+    // copy by index (TODO: sometimes not efficient)
+    index_type index_;
+    IndexedFor<N,Layout>::loop(this->extent(),index_,std::bind(
+      detail::AssignTensor_<index_type,Arbitral,Tensor>,std::placeholders::_1,std::cref(x),std::ref(*this)));
   }
 
   /// from a Tensor object
@@ -161,8 +175,10 @@ public:
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
-    // copy by iterator
-    std::copy(x.begin(),x.end(),start_);
+    // copy by index (TODO: sometimes not efficient)
+    index_type index_;
+    IndexedFor<N,Layout>::loop(this->extent(),index_,std::bind(
+      detail::AssignTensor_<index_type,Arbitral,Tensor>,std::placeholders::_1,std::cref(x),std::ref(*this)));
     //
     return *this;
   }
@@ -373,29 +389,17 @@ public:
   // (Deep) Copy constructors
 
   /// from an arbitral tensor object
-  template<class Arbitral, class = typename std::enable_if<Arbitral.layout() == Layout>::type>
+  template<class Arbitral>
   Tensor (const Arbitral& x)
   {
     base_::reset_tn_stride_(convert_to_vector<typename extent_type::value_type>(x.extent()));
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
-    // copy by iterator
-    std::copy(x.begin(),x.end(),start_);
-  }
-
-  /// from an arbitral tensor object for a different layout
-  template<class Arbitral, class = typename std::enable_if<Arbitral.layout() != Layout>::type>
-  Tensor (const Arbitral& x)
-  {
-    base_::reset_tn_stride_(convert_to_vector<typename extent_type::value_type>(x.extent()));
-    store_.resize(tn_stride_.size());
-    start_ = store_.data();
-    finish_ = start_+store_.size();
-    // copy by index
+    // copy by index (TODO: sometimes not efficient)
     index_type index_;
-    IndexedFor<N,Layout>::loop(tn_stride_.extent(),index_,std::bind<
-    std::copy(x.begin(),x.end(),start_);
+    IndexedFor<0ul,Layout>::loop(this->extent(),index_,std::bind(
+      detail::AssignTensor_<index_type,Arbitral,Tensor>,std::placeholders::_1,std::cref(x),std::ref(*this)));
   }
 
   /// from a Tensor object
@@ -471,8 +475,10 @@ public:
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
-    // copy by iterator
-    std::copy(x.begin(),x.end(),start_);
+    // copy by index (TODO: sometimes not efficient)
+    index_type index_;
+    IndexedFor<0ul,Layout>::loop(this->extent(),index_,std::bind(
+      detail::AssignTensor_<index_type,Arbitral,Tensor>,std::placeholders::_1,std::cref(x),std::ref(*this)));
     //
     return *this;
   }
