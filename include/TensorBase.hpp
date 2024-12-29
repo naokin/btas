@@ -121,6 +121,9 @@ public:
   template<class Index>
   ordinal_type ordinal (const Index& idx) const { return tn_stride_.ordinal(idx); }
 
+  /// convert tensor index to ordinal index
+  ordinal_type ordinal (const index_type& idx) const { return tn_stride_.ordinal(idx); }
+
   /// convert ordinal index to tensor index
   index_type index (const ordinal_type& ord) const { return tn_stride_.index(ord); }
 
@@ -137,9 +140,17 @@ public:
   reference operator() (const Index& idx)
   { return start_[this->ordinal(idx)]; }
 
+  /// access by tensor index
+  reference operator() (const index_type& idx)
+  { return start_[this->ordinal(idx)]; }
+
   /// access by tensor index with const-qualifier
   template<class Index>
   const_reference operator() (const Index& idx) const
+  { return start_[this->ordinal(idx)]; }
+
+  /// access by tensor index with const-qualifier
+  const_reference operator() (const index_type& idx) const
   { return start_[this->ordinal(idx)]; }
 
   /// access by tensor index
@@ -161,9 +172,25 @@ public:
     return start_[ord];
   }
 
+  /// access by tensor index with range check
+  reference at (const index_type& idx)
+  {
+    ordinal_type ord = this->ordinal(idx);
+    BTAS_assert(ord < this->size(),"TensorBase::at, accessing data is out of range.");
+    return start_[ord];
+  }
+
   /// access by tensor index with range check having const-qualifier
   template<class Index>
   const_reference at (const Index& idx) const
+  {
+    ordinal_type ord = this->ordinal(idx);
+    BTAS_assert(ord < this->size(),"TensorBase::at, accessing data is out of range.");
+    return start_[ord];
+  }
+
+  /// access by tensor index with range check having const-qualifier
+  const_reference at (const index_type& idx) const
   {
     ordinal_type ord = this->ordinal(idx);
     BTAS_assert(ord < this->size(),"TensorBase::at, accessing data is out of range.");
@@ -329,6 +356,9 @@ public:
   template<class Index>
   ordinal_type ordinal (const Index& idx) const { return tn_stride_.ordinal(idx); }
 
+  /// convert tensor index to ordinal index
+  ordinal_type ordinal (const index_type& idx) const { return tn_stride_.ordinal(idx); }
+
   /// convert ordinal index to tensor index
   index_type index (const ordinal_type& ord) const { return tn_stride_.index(ord); }
 
@@ -345,9 +375,17 @@ public:
   reference operator() (const Index& idx)
   { return start_[this->ordinal(idx)]; }
 
+  /// access by tensor index
+  reference operator() (const index_type& idx)
+  { return start_[this->ordinal(idx)]; }
+
   /// access by tensor index with const-qualifier
   template<class Index>
   const_reference operator() (const Index& idx) const
+  { return start_[this->ordinal(idx)]; }
+
+  /// access by tensor index with const-qualifier
+  const_reference operator() (const index_type& idx) const
   { return start_[this->ordinal(idx)]; }
 
   /// access by tensor index
@@ -369,9 +407,25 @@ public:
     return start_[ord];
   }
 
+  /// access by tensor index with range check
+  reference at (const index_type& idx)
+  {
+    ordinal_type ord = this->ordinal(idx);
+    BTAS_assert(ord < this->size(),"TensorBase::at, accessing data is out of range.");
+    return start_[ord];
+  }
+
   /// access by tensor index with range check having const-qualifier
   template<class Index>
   const_reference at (const Index& idx) const
+  {
+    ordinal_type ord = this->ordinal(idx);
+    BTAS_assert(ord < this->size(),"TensorBase::at, accessing data is out of range.");
+    return start_[ord];
+  }
+
+  /// access by tensor index with range check having const-qualifier
+  const_reference at (const index_type& idx) const
   {
     ordinal_type ord = this->ordinal(idx);
     BTAS_assert(ord < this->size(),"TensorBase::at, accessing data is out of range.");

@@ -17,6 +17,9 @@
 
 namespace btas {
 
+/// Fwd. decl.
+template<class Iterator, size_t N, CBLAS_LAYOUT Layout> class TensorView;
+
 namespace detail {
 
 /// Assign y(index) as x(index) via IndexFor, to make a deep copy from an arbitral tensor or tensor-view object. 

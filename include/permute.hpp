@@ -86,16 +86,16 @@ Tensor<typename std::remove_const<T>::type,N,Layout> make_permute (const TensorB
 
 /// Specialized for TensorView
 template<class Iter, size_t N, CBLAS_LAYOUT Layout, class Index>
-TensorView<TensorViewIterator<Iter,N,Layout>,N,Layout> make_permute (const TensorView<Iter,N,Layout>& x, const Index& idx)
+TensorView<typename TensorView<Iter,N,Layout>::const_iterator,N,Layout> make_permute (const TensorView<Iter,N,Layout>& x, const Index& idx)
 {
-  return TensorView<TensorViewIterator<Iter,N,Layout>,N,Layout>(x.begin(),make_permute(x.extent(),idx),make_permute(x.stride(),idx));
+  return TensorView<typename TensorView<Iter,N,Layout>::const_iterator,N,Layout>(x.begin(),make_permute(x.extent(),idx),make_permute(x.stride(),idx));
 }
 
 /// Specialized for TensorView
 template<class Iter, size_t N, CBLAS_LAYOUT Layout>
-TensorView<TensorViewIterator<Iter,N,Layout>,N,Layout> make_permute (const TensorView<Iter,N,Layout>& x, const typename TensorView<Iter,N,Layout>::index_type& idx)
+TensorView<typename TensorView<Iter,N,Layout>::const_iterator,N,Layout> make_permute (const TensorView<Iter,N,Layout>& x, const typename TensorView<Iter,N,Layout>::index_type& idx)
 {
-  return TensorView<TensorViewIterator<Iter,N,Layout>,N,Layout>(x.begin(),make_permute(x.extent(),idx),make_permute(x.stride(),idx));
+  return TensorView<typename TensorView<Iter,N,Layout>::const_iterator,N,Layout>(x.begin(),make_permute(x.extent(),idx),make_permute(x.stride(),idx));
 }
 
 // ---------------------------------------------------------------------------------------------------- 

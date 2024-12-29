@@ -1,137 +1,272 @@
 #ifndef __BTAS_SLICE_HPP
 #define __BTAS_SLICE_HPP
 
+#include <type_traits>
+
 #include <Tensor.hpp>
 #include <TensorWrapper.hpp>
 #include <TensorView.hpp>
 
 namespace btas {
 
-// make_slice
+// For TensorBase (Tensor and TensorWrapper)
 
-// For Arbitral type
-
-template<class Arbitral>
-TensorView<typename Arbitral::iterator,Arbitral::RANK,Arbitral::ORDER>
+template<typename T, size_t N, CBLAS_LAYOUT Layout, class Index>
+TensorView<T*,N,Layout>
 make_slice (
-        Arbitral& x,
-  const typename Arbitral::index_type& lower,
-  const typename Arbitral::index_type& upper)
+        TensorBase<T,N,Layout>& x,
+  const Index& lower,
+  const Index& upper)
 {
-  typedef TensorView<typename Arbitral::iterator,Arbitral::RANK,Arbitral::ORDER> return_type;
+  typedef TensorView<T*,N,Layout> return_type;
   typename return_type::extent_type ext;
-  for(size_t i = 0; i < Arbitral::RANK; ++i) ext[i] = upper[i]-lower[i]+1;
-  return return_type(x.begin()+x.ordinal(lower),ext,x.stride());
+  for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;
+  return return_type(x.data()+x.ordinal(lower),ext,x.stride());
 }
 
-template<class Arbitral>
-TensorView<typename Arbitral::const_iterator,Arbitral::RANK,Arbitral::ORDER>
+template<typename T, size_t N, CBLAS_LAYOUT Layout>
+TensorView<T*,N,Layout>
 make_slice (
-  const Arbitral& x,
-  const typename Arbitral::index_type& lower,
-  const typename Arbitral::index_type& upper)
+        TensorBase<T,N,Layout>& x,
+  const typename TensorBase<T,N,Layout>::index_type& lower,
+  const typename TensorBase<T,N,Layout>::index_type& upper)
 {
-  typedef TensorView<typename Arbitral::const_iterator,Arbitral::RANK,Arbitral::ORDER> return_type;
+  typedef TensorView<T*,N,Layout> return_type;
   typename return_type::extent_type ext;
-  for(size_t i = 0; i < Arbitral::RANK; ++i) ext[i] = upper[i]-lower[i]+1;
-  return return_type(x.begin()+x.ordinal(lower),ext,x.stride());
+  for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;
+  return return_type(x.data()+x.ordinal(lower),ext,x.stride());
 }
 
-template<class Arbitral>
-TensorView<typename Arbitral::const_iterator,Arbitral::RANK,Arbitral::ORDER>
+// ---------------------------------------------------------------------------------------------------- 
+
+template<typename T, size_t N, CBLAS_LAYOUT Layout, class Index>
+TensorView<const typename std::remove_const<T>::type*,N,Layout>
+make_slice (
+  const TensorBase<T,N,Layout>& x,
+  const Index& lower,
+  const Index& upper)
+{
+  typedef TensorView<const typename std::remove_const<T>::type*,N,Layout> return_type;
+  typename return_type::extent_type ext;
+  for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;
+  return return_type(x.data()+x.ordinal(lower),ext,x.stride());
+}
+
+template<typename T, size_t N, CBLAS_LAYOUT Layout>
+TensorView<const typename std::remove_const<T>::type*,N,Layout>
+make_slice (
+  const TensorBase<T,N,Layout>& x,
+  const typename TensorBase<T,N,Layout>::index_type& lower,
+  const typename TensorBase<T,N,Layout>::index_type& upper)
+{
+  typedef TensorView<const typename std::remove_const<T>::type*,N,Layout> return_type;
+  typename return_type::extent_type ext;
+  for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;
+  return return_type(x.data()+x.ordinal(lower),ext,x.stride());
+}
+
+// ---------------------------------------------------------------------------------------------------- 
+
+// force to make const slice
+
+template<typename T, size_t N, CBLAS_LAYOUT Layout, class Index>
+TensorView<const typename std::remove_const<T>::type*,N,Layout>
 make_cslice (
-  const Arbitral& x,
-  const typename Arbitral::index_type& lower,
-  const typename Arbitral::index_type& upper)
+  const TensorBase<T,N,Layout>& x,
+  const Index& lower,
+  const Index& upper)
 {
-  typedef TensorView<typename Arbitral::const_iterator,Arbitral::RANK,Arbitral::ORDER> return_type;
+  typedef TensorView<const typename std::remove_const<T>::type*,N,Layout> return_type;
   typename return_type::extent_type ext;
-  for(size_t i = 0; i < Arbitral::RANK; ++i) ext[i] = upper[i]-lower[i]+1;
+  for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;
+  return return_type(x.data()+x.ordinal(lower),ext,x.stride());
+}
+
+template<typename T, size_t N, CBLAS_LAYOUT Layout>
+TensorView<const typename std::remove_const<T>::type*,N,Layout>
+make_cslice (
+  const TensorBase<T,N,Layout>& x,
+  const typename TensorBase<T,N,Layout>::index_type& lower,
+  const typename TensorBase<T,N,Layout>::index_type& upper)
+{
+  typedef TensorView<const typename std::remove_const<T>::type*,N,Layout> return_type;
+  typename return_type::extent_type ext;
+  for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;
+  return return_type(x.data()+x.ordinal(lower),ext,x.stride());
+}
+
+// ==================================================================================================== 
+
+// For variable-rank TensorBase (Tensor and TensorWrapper)
+
+template<typename T, CBLAS_LAYOUT Layout, class Index>
+TensorView<T*,0ul,Layout>
+make_slice (
+        TensorBase<T,0ul,Layout>& x,
+  const Index& lower,
+  const Index& upper)
+{
+  typedef TensorView<T*,0ul,Layout> return_type;
+  typename return_type::extent_type ext(x.rank());
+  for(size_t i = 0; i < ext.size(); ++i) ext[i] = upper[i]-lower[i]+1;
+  return return_type(x.data()+x.ordinal(lower),ext,x.stride());
+}
+
+template<typename T, CBLAS_LAYOUT Layout>
+TensorView<T*,0ul,Layout>
+make_slice (
+        TensorBase<T,0ul,Layout>& x,
+  const typename TensorBase<T,0ul,Layout>::index_type& lower,
+  const typename TensorBase<T,0ul,Layout>::index_type& upper)
+{
+  typedef TensorView<T*,0ul,Layout> return_type;
+  typename return_type::extent_type ext(x.rank());
+  for(size_t i = 0; i < ext.size(); ++i) ext[i] = upper[i]-lower[i]+1;
+  return return_type(x.data()+x.ordinal(lower),ext,x.stride());
+}
+
+// ---------------------------------------------------------------------------------------------------- 
+
+template<typename T, CBLAS_LAYOUT Layout, class Index>
+TensorView<const typename std::remove_const<T>::type*,0ul,Layout>
+make_slice (
+  const TensorBase<T,0ul,Layout>& x,
+  const Index& lower,
+  const Index& upper)
+{
+  typedef TensorView<const typename std::remove_const<T>::type*,0ul,Layout> return_type;
+  typename return_type::extent_type ext(x.rank());
+  for(size_t i = 0; i < ext.size(); ++i) ext[i] = upper[i]-lower[i]+1;
+  return return_type(x.data()+x.ordinal(lower),ext,x.stride());
+}
+
+template<typename T, CBLAS_LAYOUT Layout>
+TensorView<const typename std::remove_const<T>::type*,0ul,Layout>
+make_slice (
+  const TensorBase<T,0ul,Layout>& x,
+  const typename TensorBase<T,0ul,Layout>::index_type& lower,
+  const typename TensorBase<T,0ul,Layout>::index_type& upper)
+{
+  typedef TensorView<const typename std::remove_const<T>::type*,0ul,Layout> return_type;
+  typename return_type::extent_type ext(x.rank());
+  for(size_t i = 0; i < ext.size(); ++i) ext[i] = upper[i]-lower[i]+1;
+  return return_type(x.data()+x.ordinal(lower),ext,x.stride());
+}
+
+// ---------------------------------------------------------------------------------------------------- 
+
+// force to make const slice
+
+template<typename T, CBLAS_LAYOUT Layout, class Index>
+TensorView<const typename std::remove_const<T>::type*,0ul,Layout>
+make_cslice (
+  const TensorBase<T,0ul,Layout>& x,
+  const Index& lower,
+  const Index& upper)
+{
+  typedef TensorView<const typename std::remove_const<T>::type*,0ul,Layout> return_type;
+  typename return_type::extent_type ext(x.rank());
+  for(size_t i = 0; i < ext.size(); ++i) ext[i] = upper[i]-lower[i]+1;
+  return return_type(x.data()+x.ordinal(lower),ext,x.stride());
+}
+
+template<typename T, CBLAS_LAYOUT Layout>
+TensorView<const typename std::remove_const<T>::type*,0ul,Layout>
+make_cslice (
+  const TensorBase<T,0ul,Layout>& x,
+  const typename TensorBase<T,0ul,Layout>::index_type& lower,
+  const typename TensorBase<T,0ul,Layout>::index_type& upper)
+{
+  typedef TensorView<const typename std::remove_const<T>::type*,0ul,Layout> return_type;
+  typename return_type::extent_type ext(x.rank());
+  for(size_t i = 0; i < ext.size(); ++i) ext[i] = upper[i]-lower[i]+1;
+  return return_type(x.data()+x.ordinal(lower),ext,x.stride());
+}
+
+// ==================================================================================================== 
+
+// For TensorView
+
+template<class Iterator, size_t N, CBLAS_LAYOUT Layout, class Index>
+TensorView<typename TensorView<Iterator,N,Layout>::iterator,N,Layout>
+make_slice (
+        TensorView<Iterator,N,Layout>& x,
+  const Index& lower,
+  const Index& upper)
+{
+  typedef TensorView<typename TensorView<Iterator,N,Layout>::iterator,N,Layout> return_type;
+  typename return_type::extent_type ext;
+  for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;
   return return_type(x.begin()+x.ordinal(lower),ext,x.stride());
 }
 
-// For Tensor
-
-template<typename T, size_t N, CBLAS_LAYOUT Layout>
-TensorView<T*,N,Layout> make_slice (
-        Tensor<T,N,Layout>& x,
-  const typename Tensor<T,N,Layout>::index_type& lower,
-  const typename Tensor<T,N,Layout>::index_type& upper)
+template<class Iterator, size_t N, CBLAS_LAYOUT Layout>
+TensorView<typename TensorView<Iterator,N,Layout>::iterator,N,Layout>
+make_slice (
+        TensorView<Iterator,N,Layout>& x,
+  const typename TensorView<Iterator,N,Layout>::index_type& lower,
+  const typename TensorView<Iterator,N,Layout>::index_type& upper)
 {
-  typename TensorView<T*,N,Layout>::extent_type ext;
+  typedef TensorView<typename TensorView<Iterator,N,Layout>::iterator,N,Layout> return_type;
+  typename return_type::extent_type ext;
   for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;
-  return TensorView<T*,N,Layout>(x.data()+x.ordinal(lower),ext,x.stride());
+  return return_type(x.begin()+x.ordinal(lower),ext,x.stride());
 }
 
-template<typename T, size_t N, CBLAS_LAYOUT Layout>
-TensorView<const T*,N,Layout> make_slice (
-  const Tensor<T,N,Layout>& x,
-  const typename Tensor<T,N,Layout>::index_type& lower,
-  const typename Tensor<T,N,Layout>::index_type& upper)
+// ---------------------------------------------------------------------------------------------------- 
+
+template<class Iterator, size_t N, CBLAS_LAYOUT Layout, class Index>
+TensorView<typename TensorView<Iterator,N,Layout>::const_iterator,N,Layout>
+make_slice (
+  const TensorView<Iterator,N,Layout>& x,
+  const Index& lower,
+  const Index& upper)
 {
-  typename TensorView<const T*,N,Layout>::extent_type ext;
+  typedef TensorView<typename TensorView<Iterator,N,Layout>::const_iterator,N,Layout> return_type;
+  typename return_type::extent_type ext;
   for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;
-  return TensorView<const T*,N,Layout>(x.data()+x.ordinal(lower),ext,x.stride());
+  return return_type(x.begin()+x.ordinal(lower),ext,x.stride());
 }
 
-/// force to make const_slice
-template<typename T, size_t N, CBLAS_LAYOUT Layout>
-TensorView<const T*,N,Layout> make_cslice (
-  const Tensor<T,N,Layout>& x,
-  const typename Tensor<T,N,Layout>::index_type& lower,
-  const typename Tensor<T,N,Layout>::index_type& upper)
+template<class Iterator, size_t N, CBLAS_LAYOUT Layout>
+TensorView<typename TensorView<Iterator,N,Layout>::const_iterator,N,Layout>
+make_slice (
+  const TensorView<Iterator,N,Layout>& x,
+  const typename TensorView<Iterator,N,Layout>::index_type& lower,
+  const typename TensorView<Iterator,N,Layout>::index_type& upper)
 {
-  typename TensorView<const T*,N,Layout>::extent_type ext;
+  typedef TensorView<typename TensorView<Iterator,N,Layout>::const_iterator,N,Layout> return_type;
+  typename return_type::extent_type ext;
   for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;
-  return TensorView<const T*,N,Layout>(x.data()+x.ordinal(lower),ext,x.stride());
+  return return_type(x.begin()+x.ordinal(lower),ext,x.stride());
 }
 
-// For TensorWrapper
+// ---------------------------------------------------------------------------------------------------- 
 
-template<typename T, size_t N, CBLAS_LAYOUT Layout>
-TensorView<T*,N,Layout> make_slice (
-        TensorWrapper<T*,N,Layout>& x,
-  const typename TensorWrapper<T*,N,Layout>::index_type& lower,
-  const typename TensorWrapper<T*,N,Layout>::index_type& upper)
+template<class Iterator, size_t N, CBLAS_LAYOUT Layout, class Index>
+TensorView<typename TensorView<Iterator,N,Layout>::const_iterator,N,Layout>
+make_cslice (
+  const TensorView<Iterator,N,Layout>& x,
+  const Index& lower,
+  const Index& upper)
 {
-  typename TensorView<T*,N,Layout>::extent_type ext;
+  typedef TensorView<typename TensorView<Iterator,N,Layout>::const_iterator,N,Layout> return_type;
+  typename return_type::extent_type ext;
   for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;
-  return TensorView<T*,N,Layout>(x.data()+x.ordinal(lower),ext,x.stride());
+  return return_type(x.begin()+x.ordinal(lower),ext,x.stride());
 }
 
-template<typename T, size_t N, CBLAS_LAYOUT Layout>
-TensorView<const T*,N,Layout> make_slice (
-  const TensorWrapper<T*,N,Layout>& x,
-  const typename TensorWrapper<T*,N,Layout>::index_type& lower,
-  const typename TensorWrapper<T*,N,Layout>::index_type& upper)
+template<class Iterator, size_t N, CBLAS_LAYOUT Layout>
+TensorView<typename TensorView<Iterator,N,Layout>::const_iterator,N,Layout>
+make_cslice (
+  const TensorView<Iterator,N,Layout>& x,
+  const typename TensorView<Iterator,N,Layout>::index_type& lower,
+  const typename TensorView<Iterator,N,Layout>::index_type& upper)
 {
-  typename TensorView<const T*,N,Layout>::extent_type ext;
+  typedef TensorView<typename TensorView<Iterator,N,Layout>::const_iterator,N,Layout> return_type;
+  typename return_type::extent_type ext;
   for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;
-  return TensorView<const T*,N,Layout>(x.data()+x.ordinal(lower),ext,x.stride());
-}
-
-/// force to make const_slice
-template<typename T, size_t N, CBLAS_LAYOUT Layout>
-TensorView<const T*,N,Layout> make_cslice (
-  const TensorWrapper<T*,N,Layout>& x,
-  const typename TensorWrapper<T*,N,Layout>::index_type& lower,
-  const typename TensorWrapper<T*,N,Layout>::index_type& upper)
-{
-  typename TensorView<const T*,N,Layout>::extent_type ext;
-  for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;
-  return TensorView<const T*,N,Layout>(x.data()+x.ordinal(lower),ext,x.stride());
-}
-
-/// force to make const_slice
-template<typename T, size_t N, CBLAS_LAYOUT Layout>
-TensorView<const T*,N,Layout> make_cslice (
-  const TensorWrapper<const T*,N,Layout>& x,
-  const typename TensorWrapper<const T*,N,Layout>::index_type& lower,
-  const typename TensorWrapper<const T*,N,Layout>::index_type& upper)
-{
-  typename TensorView<const T*,N,Layout>::extent_type ext;
-  for(size_t i = 0; i < N; ++i) ext[i] = upper[i]-lower[i]+1;
-  return TensorView<const T*,N,Layout>(x.data()+x.ordinal(lower),ext,x.stride());
+  return return_type(x.begin()+x.ordinal(lower),ext,x.stride());
 }
 
 } // namespace btas

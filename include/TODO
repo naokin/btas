@@ -17,5 +17,5 @@ TODO: update list, [S] = static-rank, [D] = dynamic-rank
 [o][o] reindex.hpp
 *external functions
 [o][o] permute.hpp
-[?][?] slice.hpp
+[o][o] slice.hpp
 [?][?] tie.hpp

@@ -24,7 +24,7 @@ struct IndexedFor<N,CblasRowMajor> {
   template<class Ext_, class Idx_, class Op_>
   static void loop (const Ext_& extent, Idx_& index, Op_ op)
   {
-    __impl<0,N-1>::__loop(extent,index,op);
+    __impl<0ul,N-1>::__loop(extent,index,op);
   }
 private:
   template<size_t I, size_t M>
@@ -54,7 +54,7 @@ struct IndexedFor<N,CblasColMajor> {
   template<class Ext_, class Idx_, class Op_>
   static void loop (const Ext_& extent, Idx_& index, Op_ op)
   {
-    __impl<0,N-1>::__loop(extent,index,op);
+    __impl<0ul,N-1>::__loop(extent,index,op);
   }
 private:
   template<size_t I, size_t M>
@@ -83,13 +83,13 @@ private:
 // Specialization for variable-rank tensor
 
 template<>
-struct IndexedFor<0,CblasRowMajor> {
+struct IndexedFor<0ul,CblasRowMajor> {
   /// loop and examine op(index)
   template<class Ext_, class Idx_, class Op_>
   static void loop (const Ext_& extent, Idx_& index, Op_ op)
   {
     size_t rank = extent.size(); index.resize(rank);
-    if(rank > 0) IndexedFor<0,CblasRowMajor>::__loop(0,rank-1,extent,index,op);
+    if(rank > 0) IndexedFor<0ul,CblasRowMajor>::__loop(0,rank-1,extent,index,op);
   }
 private:
   /// loop and examine op(index) by passing the rank as an argument
@@ -101,19 +101,19 @@ private:
     }
     else {
       for(index[i] = 0; index[i] < extent[i]; ++index[i])
-        IndexedFor<0,CblasRowMajor>::__loop(i+1,m,extent,index,op);
+        IndexedFor<0ul,CblasRowMajor>::__loop(i+1,m,extent,index,op);
     }
   }
 };
 
 template<>
-struct IndexedFor<0,CblasColMajor> {
+struct IndexedFor<0ul,CblasColMajor> {
   /// loop and examine op(index)
   template<class Ext_, class Idx_, class Op_>
   static void loop (const Ext_& extent, Idx_& index, Op_ op)
   {
     size_t rank = extent.size(); index.resize(rank);
-    if(rank > 0) IndexedFor<0,CblasColMajor>::__loop(rank-1,rank-1,extent,index,op);
+    if(rank > 0) IndexedFor<0ul,CblasColMajor>::__loop(rank-1,rank-1,extent,index,op);
   }
 private:
   /// loop and examine op(index) by passing the rank as an argument
@@ -125,7 +125,7 @@ private:
     }
     else {
       for(index[i] = 0; index[i] < extent[i]; ++index[i])
-        IndexedFor<0,CblasColMajor>::__loop(i-1,m,extent,index,op);
+        IndexedFor<0ul,CblasColMajor>::__loop(i-1,m,extent,index,op);
     }
   }
 };

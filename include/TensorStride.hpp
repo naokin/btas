@@ -92,8 +92,7 @@ public:
   const typename stride_type::value_type& stride (size_t i) const { return stride_[i]; }
 
   /// tensor index to ordinal index (calculated in term of 'stride_')
-  template<class Index>
-  ordinal_type ordinal (const Index& idx) const
+  ordinal_type ordinal (const index_type& idx) const
   {
     ordinal_type ord = 0; for(size_t i = 0; i < N; ++i) ord += idx[i]*stride_[i];
     return ord;
@@ -216,8 +215,7 @@ public:
   const typename stride_type::value_type& stride (size_t i) const { return stride_[i]; }
 
   /// tensor index to ordinal index (calculated in term of 'stride_')
-  template<class Index>
-  ordinal_type ordinal (const Index& idx) const
+  ordinal_type ordinal (const index_type& idx) const
   {
     ordinal_type ord = 0; for(size_t i = 0; i < N; ++i) ord += idx[i]*stride_[i];
     return ord;
@@ -342,8 +340,7 @@ public:
   const typename stride_type::value_type& stride (size_t i) const { return stride_[i]; }
 
   /// tensor index to ordinal index (calculated in term of 'stride_')
-  template<class Index>
-  ordinal_type ordinal (const Index& idx) const
+  ordinal_type ordinal (const index_type& idx) const
   {
     ordinal_type ord = 0; for(size_t i = 0; i < idx.size(); ++i) ord += idx[i]*stride_[i];
     return ord;
@@ -469,8 +466,7 @@ public:
   const typename stride_type::value_type& stride (size_t i) const { return stride_[i]; }
 
   /// tensor index to ordinal index (calculated in term of 'stride_')
-  template<class Index>
-  ordinal_type ordinal (const Index& idx) const
+  ordinal_type ordinal (const index_type& idx) const
   {
     ordinal_type ord = 0; for(size_t i = 0; i < idx.size(); ++i) ord += idx[i]*stride_[i];
     return ord;

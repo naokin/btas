@@ -16,7 +16,7 @@ struct Nd_loop_reindex<N,CblasRowMajor>
   template<typename T, class Ext_>
   static void loop (const T*& px_, T*& py_, size_t addr_x, const Ext_& str_x, const Ext_& ext_y)
   {
-    __impl<0,N-1>::__loop(px_,py_,addr_x,str_x,ext_y);
+    __impl<0ul,N-1>::__loop(px_,py_,addr_x,str_x,ext_y);
   }
 private:
   template<size_t I, size_t M>
@@ -48,7 +48,7 @@ struct Nd_loop_reindex<N,CblasColMajor>
   template<typename T, class Ext_>
   static void loop (const T*& px_, T*& py_, size_t addr_x, const Ext_& str_x, const Ext_& ext_y)
   {
-    __impl<0,N-1>::__loop(px_,py_,addr_x,str_x,ext_y);
+    __impl<0ul,N-1>::__loop(px_,py_,addr_x,str_x,ext_y);
   }
 private:
   template<size_t I, size_t M>
@@ -76,7 +76,7 @@ private:
 
 /// ND loop for reindex, specialized for row-major stride
 template<>
-struct Nd_loop_reindex<0,CblasRowMajor>
+struct Nd_loop_reindex<0ul,CblasRowMajor>
 {
   /// loop upon construction
   /// NOTE: px_ and py_ are passed as a reference of pointer to the next loop
@@ -85,7 +85,7 @@ struct Nd_loop_reindex<0,CblasRowMajor>
   static void loop (const T*& px_, T*& py_, size_t addr_x, const Ext_& str_x, const Ext_& ext_y)
   {
     size_t rank = ext_y.size();
-    if(rank > 0) Nd_loop_reindex<0,CblasRowMajor>::__loop_impl(0,rank-1,px_,py_,addr_x,str_x,ext_y);
+    if(rank > 0) Nd_loop_reindex<0ul,CblasRowMajor>::__loop_impl(0,rank-1,px_,py_,addr_x,str_x,ext_y);
   }
 private:
   template<typename T, class Ext_>
@@ -96,14 +96,14 @@ private:
     }
     else {
       for(size_t i = 0; i < ext_y[i]; ++i)
-        Nd_loop_reindex<0,CblasRowMajor>::__loop_impl(i+1,m,px_,py_,addr_x+i*str_x[i],str_x,ext_y);
+        Nd_loop_reindex<0ul,CblasRowMajor>::__loop_impl(i+1,m,px_,py_,addr_x+i*str_x[i],str_x,ext_y);
     }
   }
 };
 
 /// ND loop class for reindex, specialized for column-major stride
 template<>
-struct Nd_loop_reindex<0,CblasColMajor>
+struct Nd_loop_reindex<0ul,CblasColMajor>
 {
   /// loop upon construction
   /// NOTE: px_ and py_ are passed as a reference of pointer to the next loop
@@ -112,7 +112,7 @@ struct Nd_loop_reindex<0,CblasColMajor>
   static void loop (const T*& px_, T*& py_, size_t addr_x, const Ext_& str_x, const Ext_& ext_y)
   {
     size_t rank = ext_y.size();
-    if(rank > 0) Nd_loop_reindex<0,CblasColMajor>::__loop_impl(rank-1,rank-1,px_,py_,addr_x,str_x,ext_y);
+    if(rank > 0) Nd_loop_reindex<0ul,CblasColMajor>::__loop_impl(rank-1,rank-1,px_,py_,addr_x,str_x,ext_y);
   }
 private:
   template<typename T, class Ext_>
@@ -123,7 +123,7 @@ private:
     }
     else {
       for(size_t i = 0; i < ext_y[i]; ++i)
-        Nd_loop_reindex<0,CblasColMajor>::__loop_impl(i-1,m,px_,py_,addr_x+i*str_x[i],str_x,ext_y);
+        Nd_loop_reindex<0ul,CblasColMajor>::__loop_impl(i-1,m,px_,py_,addr_x+i*str_x[i],str_x,ext_y);
     }
   }
 };

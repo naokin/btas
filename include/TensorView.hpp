@@ -162,6 +162,16 @@ public:
 
   // access
 
+  /// convert tensor index to ordinal index
+  template<class Index>
+  ordinal_type ordinal (const Index& idx) const { return first_.tn_stride_.ordinal(idx); }
+
+  /// convert tensor index to ordinal index
+  ordinal_type ordinal (const index_type& idx) const { return first_.tn_stride_.ordinal(idx); }
+
+  /// convert ordinal index to tensor index
+  index_type index (const ordinal_type& ord) const { return first_.tn_stride_.index(ord); }
+
   /// access by ordinal index
   reference operator[] (size_t i)
   { return first_[i]; }
@@ -171,8 +181,18 @@ public:
   { return first_[i]; }
 
   /// access by tensor index
+  template<class Index>
+  reference operator() (const Index& idx)
+  { return *(iterator(first_.current_,idx,first_.tn_stride_,first_.hack_stride_)); }
+
+  /// access by tensor index
   reference operator() (const index_type& idx)
   { return *(iterator(first_.current_,idx,first_.tn_stride_,first_.hack_stride_)); }
+
+  /// access by tensor index with const-qualifier
+  template<class Index>
+  const_reference operator() (const Index& idx) const
+  { return *(const_iterator(first_.current_,idx,first_.tn_stride_,first_.hack_stride_)); }
 
   /// access by tensor index with const-qualifier
   const_reference operator() (const index_type& idx) const
@@ -189,11 +209,29 @@ public:
   { return *(const_iterator(first_.current_,make_array<typename index_type::value_type>(args...),first_.tn_stride_,first_.hack_stride_)); }
 
   /// access by tensor index with range check
+  template<class Index>
+  reference at (const Index& idx)
+  {
+    for(size_t i = 0; i < N; ++i)
+      BTAS_assert(idx[i] < first_.tn_stride_.extent(i),"TensorView::at, out of range access detected.");
+    return *(iterator(first_.current_,idx,first_.tn_stride_,first_.hack_stride_));
+  }
+
+  /// access by tensor index with range check
   reference at (const index_type& idx)
   {
     for(size_t i = 0; i < N; ++i)
       BTAS_assert(idx[i] < first_.tn_stride_.extent(i),"TensorView::at, out of range access detected.");
     return *(iterator(first_.current_,idx,first_.tn_stride_,first_.hack_stride_));
+  }
+
+  /// access by tensor index with range check having const-qualifier
+  template<class Index>
+  const_reference at (const Index& idx) const
+  {
+    for(size_t i = 0; i < N; ++i)
+      BTAS_assert(idx[i] < first_.tn_stride_.extent(i),"TensorView::at, out of range access detected.");
+    return *(const_iterator(first_.current_,idx,first_.tn_stride_,first_.hack_stride_));
   }
 
   /// access by tensor index with range check having const-qualifier
@@ -389,6 +427,16 @@ public:
 
   // access
 
+  /// convert tensor index to ordinal index
+  template<class Index>
+  ordinal_type ordinal (const Index& idx) const { return first_.tn_stride_.ordinal(idx); }
+
+  /// convert tensor index to ordinal index
+  ordinal_type ordinal (const index_type& idx) const { return first_.tn_stride_.ordinal(idx); }
+
+  /// convert ordinal index to tensor index
+  index_type index (const ordinal_type& ord) const { return first_.tn_stride_.index(ord); }
+
   /// access by ordinal index
   reference operator[] (size_t i)
   { return first_[i]; }
@@ -398,8 +446,18 @@ public:
   { return first_[i]; }
 
   /// access by tensor index
+  template<class Index>
+  reference operator() (const Index& idx)
+  { return *(iterator(first_.current_,idx,first_.tn_stride_,first_.hack_stride_)); }
+
+  /// access by tensor index
   reference operator() (const index_type& idx)
   { return *(iterator(first_.current_,idx,first_.tn_stride_,first_.hack_stride_)); }
+
+  /// access by tensor index with const-qualifier
+  template<class Index>
+  const_reference operator() (const Index& idx) const
+  { return *(const_iterator(first_.current_,idx,first_.tn_stride_,first_.hack_stride_)); }
 
   /// access by tensor index with const-qualifier
   const_reference operator() (const index_type& idx) const
@@ -416,11 +474,29 @@ public:
   { return *(const_iterator(first_.current_,make_array<typename index_type::value_type>(args...),first_.tn_stride_,first_.hack_stride_)); }
 
   /// access by tensor index with range check
+  template<class Index>
+  reference at (const Index& idx)
+  {
+    for(size_t i = 0; i < idx.size(); ++i)
+      BTAS_assert(idx[i] < first_.tn_stride_.extent(i),"TensorView::at, out of range access detected.");
+    return *(iterator(first_.current_,idx,first_.tn_stride_,first_.hack_stride_));
+  }
+
+  /// access by tensor index with range check
   reference at (const index_type& idx)
   {
     for(size_t i = 0; i < idx.size(); ++i)
       BTAS_assert(idx[i] < first_.tn_stride_.extent(i),"TensorView::at, out of range access detected.");
     return *(iterator(first_.current_,idx,first_.tn_stride_,first_.hack_stride_));
+  }
+
+  /// access by tensor index with range check having const-qualifier
+  template<class Index>
+  const_reference at (const Index& idx) const
+  {
+    for(size_t i = 0; i < idx.size(); ++i)
+      BTAS_assert(idx[i] < first_.tn_stride_.extent(i),"TensorView::at, out of range access detected.");
+    return *(const_iterator(first_.current_,idx,first_.tn_stride_,first_.hack_stride_));
   }
 
   /// access by tensor index with range check having const-qualifier
