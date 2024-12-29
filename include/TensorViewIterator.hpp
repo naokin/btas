@@ -288,16 +288,16 @@ public:
   { }
 
   /// Construct from iterator, index, and extent
-  TensorViewIterator (Iterator p, const index_type& idx, const extent_type& ext)
-  : current_(p), index_(idx), tn_stride_(ext)
+  TensorViewIterator (Iterator first, const index_type& idx, const extent_type& ext)
+  : current_(first), index_(idx), tn_stride_(ext)
   {
     stride_hack_ = tn_stride_.stride();
     for(size_t i = 0; i < index_.size(); ++i) current_ += index_[i]*stride_hack_[i];
   }
 
   /// Construct from iterator, index, extent, and stride(hack)
-  TensorViewIterator (Iterator p, const index_type& idx, const extent_type& ext, const stride_type& str)
-  : current_(p), index_(idx), tn_stride_(ext), stride_hack_(str)
+  TensorViewIterator (Iterator first, const index_type& idx, const extent_type& ext, const stride_type& str)
+  : current_(first), index_(idx), tn_stride_(ext), stride_hack_(str)
   {
     for(size_t i = 0; i < index_.size(); ++i) current_ += index_[i]*stride_hack_[i];
   }

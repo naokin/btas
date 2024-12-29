@@ -60,7 +60,7 @@ public:
 
   /// shallow copy
   TensorView (const TensorView& x)
-  : tn_stride_(x.tn_stride_), stride_hack_(x.stride_hack_), start_(x.start_), finish_(x.finish_)
+  : first_(x.first_)
   { }
 
   /// destructor
@@ -90,19 +90,17 @@ public:
   /// from an iterator to the first and extent
   void reset (Iterator first, const extent_type& ext)
   {
-    tn_stride_.set(ext);
-    stride_hack_ = tn_stride_.stride();
-    index_type idx; for(size_t i = 0; i < N; ++i) idx[i] = 0;
-    start_ = iterator(first,idx,tn_stride_.extent(),stride_hack_);
+    index_type idx;
+    for(size_t i = 0; i < N; ++i) idx[i] = 0;
+    first_ = iterator(first,idx,ext);
   }
 
   /// from an iterator to the first and extent w/ stride-hack
   void reset (Iterator first, const extent_type& ext, const stride_type& str)
   {
-    tn_stride_.set(ext);
-    stride_hack_ = str;
-    index_type idx; for(size_t i = 0; i < N; ++i) idx[i] = 0;
-    start_ = iterator(first,idx,tn_stride_.extent(),stride_hack_);
+    index_type idx;
+    for(size_t i = 0; i < N; ++i) idx[i] = 0;
+    first_ = iterator(first,idx,ext,str);
   }
 
   // ---------------------------------------------------------------------------------------------------- 
@@ -141,22 +139,22 @@ public:
 
   /// iterator to begin
   iterator begin () {
-    return start_;
+    return first_;
   }
 
   /// iterator to end
   iterator end () {
-    return start_+tn_stride_.size();
+    return first_+tn_stride_.size();
   }
 
   /// iterator to begin with const-qualifier
   const_iterator begin () const {
-    return start_;
+    return first_;
   }
 
   /// iterator to end with const-qualifier
   const_iterator end () const {
-    return start_+tn_stride_.size();
+    return first_+tn_stride_.size();
   }
 
   // access
@@ -169,36 +167,36 @@ public:
 
   /// access by ordinal index
   reference operator[] (size_t i)
-  { return start_[i]; }
+  { return first_[i]; }
 
   /// access by ordinal index with const-qualifier
   const_reference operator[] (size_t i) const
-  { return start_[i]; }
+  { return first_[i]; }
 
   /// access by tensor index
   reference operator() (const index_type& idx)
-  { return start_[this->ordinal(idx)]; }
+  { return first_[this->ordinal(idx)]; }
 
   /// access by tensor index with const-qualifier
   const_reference operator() (const index_type& idx) const
-  { return start_[this->ordinal(idx)]; }
+  { return first_[this->ordinal(idx)]; }
 
   /// access by tensor index
   template<typename... Args>
   reference operator() (const Args&... args)
-  { return start_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
+  { return first_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
 
   /// access by tensor index with const-qualifier
   template<typename... Args>
   const_reference operator() (const Args&... args) const
-  { return start_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
+  { return first_[this->ordinal(make_array<typename index_type::value_type>(args...))]; }
 
   /// access by tensor index with range check
   reference at (const index_type& idx)
   {
     ordinal_type ord = this->ordinal(idx);
     BTAS_assert(ord < this->size(),"TensorView::at, out of range access detected.");
-    return start_[ord];
+    return first_[ord];
   }
 
   /// access by tensor index with range check having const-qualifier
@@ -206,7 +204,7 @@ public:
   {
     ordinal_type ord = this->ordinal(idx);
     BTAS_assert(ord < this->size(),"TensorView::at, out of range access detected.");
-    return start_[ord];
+    return first_[ord];
   }
 
   /// access by tensor index with range check
@@ -215,7 +213,7 @@ public:
   {
     ordinal_type ord = this->ordinal(make_array<typename index_type::value_type>(args...));
     BTAS_assert(ord < this->size(),"TensorView::at, out of range access detected.");
-    return start_[ord];
+    return first_[ord];
   }
 
   /// access by tensor index with range check having const-qualifier
@@ -224,32 +222,18 @@ public:
   {
     ordinal_type ord = this->ordinal(make_array<typename index_type::value_type>(args...));
     BTAS_assert(ord < this->size(),"TensorView::at, out of range access detected.");
-    return start_[ord];
+    return first_[ord];
   }
 
   // others
 
   /// swap objects
-  void swap (TensorView& x)
-  {
-    std::swap(start_,x.start_);
-    std::swap(tn_stride_,x.tn_stride_);
-    std::swap(stride_hack_,x.stride_hack_);
-  }
+  void swap (TensorView& x) { first_.swap(x.first_); }
 
 private:
 
-  /// stride of a tensor view
-  tn_stride_type tn_stride_;
-
-  /// stride to hack
-  stride_type stride_hack_;
-
   /// iterator to the first
-  iterator start_;
-
-  /// iterator at the end
-  iterator finish_;
+  iterator first_;
 
 }; // class TensorView
 

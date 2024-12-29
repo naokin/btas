@@ -1,10 +1,8 @@
 #ifndef __BTAS_TENSOR_WRAPPER_HPP
 #define __BTAS_TENSOR_WRAPPER_HPP
 
-#include <algorithm>
-#include <functional>
-
 #include <Tensor.hpp>
+#include <algorithm> // std::copy -- actually involved in Tensor.hpp
 
 namespace btas {
 
@@ -83,10 +81,8 @@ public:
   TensorWrapper& operator= (const Arbitral& x)
   {
     BTAS_assert(std::equal(this->extent().begin(),this->extent().end(),x.extent().begin()),"TensorWrapper::assign, extent must be the same.");
-    //
-    index_type index_;
-    IndexedFor<N,Layout>::loop(this->extent(),index_,std::bind(
-      detail::AssignTensor_<index_type,Arbitral,TensorWrapper>,std::placeholders::_1,std::cref(x),std::ref(*this)));
+    // copy by iterator
+    std::copy(x.begin(),x.end(),start_);
     //
     return *this;
   }

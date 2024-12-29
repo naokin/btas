@@ -2,9 +2,8 @@
 #define __BTAS_TENSOR_HPP
 
 #include <vector>
-#include <functional>
+#include <algorithm> // std::copy, std::fill
 
-#include <IndexedFor.hpp>
 #include <TensorBase.hpp>
 
 #ifdef _ENABLE_BOOST_SERIALIZE
@@ -13,16 +12,6 @@
 #endif
 
 namespace btas {
-
-namespace detail {
-
-/// Assign y(index) as x(index) via IndexFor, to make a deep copy from an arbitral tensor or tensor-view object. 
-/// NOTE: if using std::bind, 2nd & 3rd arguments should be passed via std::cref & std::ref
-///       otherwise, because the copy constructor is called, assignment cannot be done correctly.
-template<class Idx_, class T1, class T2>
-void AssignTensor_ (const Idx_& index, const T1& x, T2& y) { y(index) = x(index); }
-
-} // namespace detail
 
 template<typename T, size_t N, CBLAS_LAYOUT Layout = CblasRowMajor>
 class Tensor : public TensorBase<T,N,Layout> {
@@ -95,10 +84,8 @@ public:
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
-    // Copy by IndexedFor might be slow 
-    index_type index_;
-    IndexedFor<N,Layout>::loop(this->extent(),index_,std::bind(
-      detail::AssignTensor_<index_type,Arbitral,Tensor>,std::placeholders::_1,std::cref(x),std::ref(*this)));
+    // copy by iterator
+    std::copy(x.begin(),x.end(),start_);
   }
 
   /// from a Tensor object
@@ -172,10 +159,8 @@ public:
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
-    // Copy by IndexedFor might be slow 
-    index_type index_;
-    IndexedFor<N,Layout>::loop(this->extent(),index_,std::bind(
-      detail::AssignTensor_<index_type,Arbitral,Tensor>,std::placeholders::_1,std::cref(x),std::ref(*this)));
+    // copy by iterator
+    std::copy(x.begin(),x.end(),start_);
     //
     return *this;
   }
@@ -393,10 +378,8 @@ public:
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
-    // Copy by IndexedFor might be slow 
-    index_type index_;
-    IndexedFor<0ul,Layout>::loop(this->extent(),index_,std::bind(
-      detail::AssignTensor_<index_type,Arbitral,Tensor>,std::placeholders::_1,std::cref(x),std::ref(*this)));
+    // copy by iterator
+    std::copy(x.begin(),x.end(),start_);
   }
 
   /// from a Tensor object
@@ -472,10 +455,8 @@ public:
     store_.resize(tn_stride_.size());
     start_ = store_.data();
     finish_ = start_+store_.size();
-    // Copy by IndexedFor might be slow 
-    index_type index_;
-    IndexedFor<0ul,Layout>::loop(this->extent(),index_,std::bind(
-      detail::AssignTensor_<index_type,Arbitral,Tensor>,std::placeholders::_1,std::cref(x),std::ref(*this)));
+    // copy by iterator
+    std::copy(x.begin(),x.end(),start_);
     //
     return *this;
   }
