@@ -3,7 +3,7 @@
 
 #include <iterator> // std::distance
 
-#include <blas.h>
+#include <BTAS_assert.h>
 #include <make_array.hpp>
 #include <TensorStride.hpp>
 
@@ -61,11 +61,11 @@ protected:
   // ---------------------------------------------------------------------------------------------------- 
 
   void reset_tn_stride_ (const extent_type& ext)
-  { tn_stride_.set(ext); }
+  { tn_stride_.reset(ext); }
 
   template<typename... Args>
   void reset_tn_stride_ (const size_t& i, const Args&... args)
-  { tn_stride_.set(make_array<typename extent_type::value_type>(i,args...)); }
+  { tn_stride_.reset(make_array<typename extent_type::value_type>(i,args...)); }
 
 public:
 
@@ -269,11 +269,11 @@ protected:
   // ---------------------------------------------------------------------------------------------------- 
 
   void reset_tn_stride_ (const extent_type& ext)
-  { tn_stride_.set(ext); }
+  { tn_stride_.reset(ext); }
 
   template<typename... Args>
   void reset_tn_stride_ (const size_t& i, const Args&... args)
-  { tn_stride_.set(make_vector<typename extent_type::value_type>(i,args...)); }
+  { tn_stride_.reset(make_vector<typename extent_type::value_type>(i,args...)); }
 
 public:
 
@@ -414,6 +414,7 @@ protected:
 
   // member variables
 
+  /// extent and stride
   tn_stride_type tn_stride_;
 
   pointer start_;

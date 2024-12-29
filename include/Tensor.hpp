@@ -3,7 +3,9 @@
 
 #include <vector>
 #include <algorithm> // std::copy, std::fill
+#include <type_traits>
 
+#include <blas.h>
 #include <TensorBase.hpp>
 
 #ifdef _ENABLE_BOOST_SERIALIZE
@@ -371,7 +373,7 @@ public:
   // (Deep) Copy constructors
 
   /// from an arbitral tensor object
-  template<class Arbitral>
+  template<class Arbitral, class = typename std::enable_if<Arbitral.layout() == Layout>::type>
   Tensor (const Arbitral& x)
   {
     base_::reset_tn_stride_(convert_to_vector<typename extent_type::value_type>(x.extent()));
@@ -379,6 +381,20 @@ public:
     start_ = store_.data();
     finish_ = start_+store_.size();
     // copy by iterator
+    std::copy(x.begin(),x.end(),start_);
+  }
+
+  /// from an arbitral tensor object for a different layout
+  template<class Arbitral, class = typename std::enable_if<Arbitral.layout() != Layout>::type>
+  Tensor (const Arbitral& x)
+  {
+    base_::reset_tn_stride_(convert_to_vector<typename extent_type::value_type>(x.extent()));
+    store_.resize(tn_stride_.size());
+    start_ = store_.data();
+    finish_ = start_+store_.size();
+    // copy by index
+    index_type index_;
+    IndexedFor<N,Layout>::loop(tn_stride_.extent(),index_,std::bind<
     std::copy(x.begin(),x.end(),start_);
   }
 

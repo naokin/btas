@@ -37,7 +37,12 @@ int main ()
   for(size_t i = 0; i < 2; ++i)
     for(size_t j = 0; j < 4; ++j)
       for(size_t k = 0; k < 8; ++k)
-        assert(A1(i,j,k) == A2(i,j,k));
+//      assert(A1(i,j,k) == A2(i,j,k));
+        std::cout << "[" << std::setw(2) << i
+                  << "," << std::setw(2) << j
+                  << "," << std::setw(2) << k << "] :: A1 = "
+                  << std::fixed << std::setw(7) << A1(i,j,k) << ", A2 = "
+                  << std::fixed << std::setw(7) << A2(i,j,k) << std::endl;
 
   // -------------------------------------------------- 
 

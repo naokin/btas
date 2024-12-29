@@ -16,7 +16,7 @@
 namespace btas {
 
 /// Helper class to handle extent and stride
-template<size_t N, CBLAS_LAYOUT Layout, typename T_ext = size_t, typename T_str = size_t, typename T_idx = size_t>
+template<size_t N, CBLAS_LAYOUT Layout = CblasRowMajor, typename T_ext = size_t, typename T_str = size_t, typename T_idx = size_t>
 struct TensorStride;
 
 // ==================================================================================================== 
@@ -56,7 +56,7 @@ public:
   : extent_(x.extent_), stride_(x.stride_)
   { }
 
-  void set (const extent_type& ext)
+  void reset (const extent_type& ext)
   {
     extent_ = ext;
     stride_[N-1] = 1;
@@ -64,7 +64,7 @@ public:
       stride_[i-1] = extent_[i]*stride_[i];
   }
 
-  void set (const extent_type& ext, const stride_type& str)
+  void reset (const extent_type& ext, const stride_type& str)
   {
     extent_ = ext;
     stride_ = str;
@@ -180,7 +180,7 @@ public:
   : extent_(x.extent_), stride_(x.stride_)
   { }
 
-  void set (const extent_type& ext)
+  void reset (const extent_type& ext)
   {
     extent_ = ext;
     stride_[0] = 1;
@@ -188,7 +188,7 @@ public:
       stride_[i+1] = extent_[i]*stride_[i];
   }
 
-  void set (const extent_type& ext, const stride_type& str)
+  void reset (const extent_type& ext, const stride_type& str)
   {
     extent_ = ext;
     stride_ = str;
@@ -303,7 +303,7 @@ public:
   : extent_(x.extent_), stride_(x.stride_)
   { }
 
-  void set (const extent_type& ext)
+  void reset (const extent_type& ext)
   {
     extent_ = ext;
     size_t N = extent_.size();
@@ -313,9 +313,9 @@ public:
       stride_[i-1] = extent_[i]*stride_[i];
   }
 
-  void set (const extent_type& ext, const stride_type& str)
+  void reset (const extent_type& ext, const stride_type& str)
   {
-    BTAS_assert(ext.size() == str.size(),"TensorStride::set, ranks of extent and stride mismatched.");
+    BTAS_assert(ext.size() == str.size(),"TensorStride::reset, ranks of extent and stride mismatched.");
     extent_ = ext;
     stride_ = str;
   }
@@ -430,7 +430,7 @@ public:
   : extent_(x.extent_), stride_(x.stride_)
   { }
 
-  void set (const extent_type& ext)
+  void reset (const extent_type& ext)
   {
     extent_ = ext;
     size_t N = extent_.size();
@@ -440,9 +440,9 @@ public:
       stride_[i+1] = extent_[i]*stride_[i];
   }
 
-  void set (const extent_type& ext, const stride_type& str)
+  void reset (const extent_type& ext, const stride_type& str)
   {
-    BTAS_assert(ext.size() == str.size(),"TensorStride::set, ranks of extent and stride mismatched.");
+    BTAS_assert(ext.size() == str.size(),"TensorStride::reset, ranks of extent and stride mismatched.");
     extent_ = ext;
     stride_ = str;
   }
@@ -520,6 +520,12 @@ private:
   stride_type stride_; ///< tensor stride
 
 };
+
+// ---------------------------------------------------------------------------------------------------- 
+
+/// template alias to a variable-rank tensor
+template<CBLAS_LAYOUT Layout = CblasRowMajor, typename T_ext = size_t, typename T_str = size_t, typename T_idx = size_t>
+using tensor_stride = TensorStride<0ul,Layout,T_ext,T_str,T_idx>;
 
 } // namespace btas
 

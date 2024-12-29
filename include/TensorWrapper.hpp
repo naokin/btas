@@ -1,13 +1,15 @@
 #ifndef __BTAS_TENSOR_WRAPPER_HPP
 #define __BTAS_TENSOR_WRAPPER_HPP
 
-#include <Tensor.hpp>
 #include <algorithm> // std::copy -- actually involved in Tensor.hpp
+
+#include <BTAS_assert.h>
+#include <Tensor.hpp>
 
 namespace btas {
 
 /// This class will be specialized for Iterator derived from consecutive data, s.t. 'T*' and 'const T*'
-template<class Iterator, size_t N, CBLAS_LAYOUT Layout = CblasRowMajor> class TensorWrapper;
+template<class Iterator, size_t N, CBLAS_LAYOUT Layout> class TensorWrapper;
 
 /// Specialized TensorView class wrapping a pointer to "consecutive" data
 /// In principle, this class provides a faster data access than the original TensorView class

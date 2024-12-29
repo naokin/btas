@@ -3,12 +3,17 @@
 
 #include <iterator>
 #include <type_traits>
+
+#include <BTAS_assert.h>
 #include <TensorStride.hpp>
 
 namespace btas {
 
 /// Fwd. decl.
-template<class Iterator, size_t N, CBLAS_LAYOUT Layout = CblasRowMajor> class TensorViewIterator;
+template<class Iterator, size_t N, CBLAS_LAYOUT Layout> class TensorViewIterator;
+
+/// Fwd. decl.
+template<class Iterator, size_t N, CBLAS_LAYOUT Layout> class TensorView;
 
 namespace detail {
 
@@ -259,6 +264,9 @@ class TensorViewIterator {
   // enable conversion from iterator to const_iterator
   friend class TensorViewIterator<typename detail::__TensorViewIteratorConst<Iterator>::type,N,Layout>;
 
+  // enable back-end access tn_stride_ and stride_hack_ from TensorView
+  friend class TensorView<Iterator,N,Layout>;
+
 public:
 
   typedef typename Traits::iterator_category iterator_category;
@@ -287,17 +295,16 @@ public:
  ~TensorViewIterator ()
   { }
 
-  /// Construct from iterator, index, and extent
-  TensorViewIterator (Iterator first, const index_type& idx, const extent_type& ext)
-  : current_(first), index_(idx), tn_stride_(ext)
+  /// Construct from iterator, index, and TensorStride object
+  TensorViewIterator (Iterator first, const index_type& idx, const tn_stride_type& tn_str)
+  : current_(first), index_(idx), tn_stride_(tn_str), stride_hack_(tn_stride_.stride())
   {
-    stride_hack_ = tn_stride_.stride();
     for(size_t i = 0; i < index_.size(); ++i) current_ += index_[i]*stride_hack_[i];
   }
 
-  /// Construct from iterator, index, extent, and stride(hack)
-  TensorViewIterator (Iterator first, const index_type& idx, const extent_type& ext, const stride_type& str)
-  : current_(first), index_(idx), tn_stride_(ext), stride_hack_(str)
+  /// Construct from iterator, index, TensorStride object, and stride(hack)
+  TensorViewIterator (Iterator first, const index_type& idx, const tn_stride_type& tn_str, const stride_type& str)
+  : current_(first), index_(idx), tn_stride_(tn_str), stride_hack_(str)
   {
     for(size_t i = 0; i < index_.size(); ++i) current_ += index_[i]*stride_hack_[i];
   }
@@ -321,13 +328,13 @@ public:
   const extent_type& extent () const { return tn_stride_.extent(); }
 
   /// \return nth extent (index(n) < extent(n))
-  const typename extent_type::value_type& extent (const size_t& n) const { return tn_stride_.extent(n); }
+  const typename extent_type::value_type& extent (const size_t& i) const { return tn_stride_.extent(i); }
 
   /// \return stride of indices
   const stride_type& stride () const { return tn_stride_.stride(); }
 
   /// \return nth stride 
-  const typename stride_type::value_type& stride (const size_t& n) const { return tn_stride_.stride(n); }
+  const typename stride_type::value_type& stride (const size_t& i) const { return tn_stride_.stride(i); }
 
   /// \return number of elements traversed during full iteration
   size_t size () const { return tn_stride_.size(); }
@@ -336,7 +343,7 @@ public:
   const index_type& index () const { return index_; }
 
   /// \return n-th index
-  const typename index_type::value_type& index (const size_t& n) const { return index_[n]; }
+  const typename index_type::value_type& index (const size_t& i) const { return index_[i]; }
 
   /// \return ordinal index in tensor-view
   ordinal_type ordinal () const { return tn_stride_.ordinal(index_); }
@@ -499,7 +506,7 @@ private:
   /// tensor index
   index_type index_;
 
-  /// extent and stride for this a tensor-view
+  /// extent and stride for the view
   tn_stride_type tn_stride_;
 
   /// stride hack
